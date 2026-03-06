@@ -1,54 +1,92 @@
 #include "../unity/unity.h"
 #include "../../src/systems/tzolkin/haab.h"
-
+#include "../../src/systems/tzolkin/tzolkin.h"
 #include <string.h>
 
 void setUp(void) {}
 void tearDown(void) {}
 
-/* Known Haab dates: 1-3 */
+/* ===== 1. Epoch date ===== */
 
-/* Reference: 2012-12-21 (JD 2456282.5) = 3 Kankin in the Haab.
- * Using GMT 584283 correlation. The Haab epoch (0 Pop) starts at
- * a specific point in the Long Count. Let's verify relative consistency. */
-
-void test_haab_from_jd_reference(void)
+void test_haab_epoch_date(void)
 {
-    /* JD 2456282.5 = 2012-12-21. The Maya Long Count was 13.0.0.0.0.
-     * Haab date: 3 Kankin (month 14, day 3) */
-    haab_date_t h = haab_from_jd(2456282.5);
-    TEST_ASSERT_TRUE(h.month >= 0 && h.month <= 18);
-    TEST_ASSERT_TRUE(h.day >= 0 && h.day <= 19);
+    /* JD 584283 (Long Count 0.0.0.0.0) = 8 Kumk'u (month 17, day 8) */
+    haab_date_t h = haab_from_jd(584283.0);
+    TEST_ASSERT_EQUAL_INT(17, h.month);
+    TEST_ASSERT_EQUAL_INT(8, h.day);
 }
 
-void test_haab_advances_daily(void)
-{
-    /* Each day, Haab day advances by 1 */
-    haab_date_t h1 = haab_from_jd(2451545.0);
-    haab_date_t h2 = haab_from_jd(2451546.0);
+/* ===== 2. Next day from epoch ===== */
 
-    /* Either day increments or month changes */
-    if (h1.month == h2.month) {
-        TEST_ASSERT_EQUAL_INT(h1.day + 1, h2.day);
-    } else {
-        /* Month changed, day should be 0 */
-        TEST_ASSERT_EQUAL_INT(0, h2.day);
-    }
+void test_haab_epoch_next_day(void)
+{
+    /* JD 584284 = 9 Kumk'u */
+    haab_date_t h = haab_from_jd(584284.0);
+    TEST_ASSERT_EQUAL_INT(17, h.month);
+    TEST_ASSERT_EQUAL_INT(9, h.day);
 }
 
-void test_haab_365_cycle(void)
+/* ===== 3. Dec 21, 2012 ===== */
+
+void test_haab_2012_dec_21(void)
 {
-    /* After 365 days, same Haab date */
-    double jd = 2451545.0;
-    haab_date_t h1 = haab_from_jd(jd);
-    haab_date_t h2 = haab_from_jd(jd + 365.0);
-    TEST_ASSERT_EQUAL_INT(h1.month, h2.month);
-    TEST_ASSERT_EQUAL_INT(h1.day, h2.day);
+    /* JD 2456283.0 (noon Dec 21, 2012).
+     * day_count = 2456283 - 584283 = 1872000
+     * 1872000 % 365 = 280
+     * (280 + 348) % 365 = 628 % 365 = 263
+     * 263 / 20 = 13 (month), 263 % 20 = 3 (day)
+     * = 3 K'ank'in */
+    haab_date_t h = haab_from_jd(2456283.0);
+    TEST_ASSERT_EQUAL_INT(13, h.month);
+    TEST_ASSERT_EQUAL_INT(3, h.day);
 }
 
-/* Month names: 4-6 */
+/* ===== 4. Pop 0 (New Year) ===== */
 
-void test_month_names_all(void)
+void test_haab_pop_0_new_year(void)
+{
+    /* From epoch: position=0 when day_count=17 (584283 + 17 = 584300)
+     * (17 % 365 + 348) % 365 = 365 % 365 = 0 => 0 Pop */
+    haab_date_t h = haab_from_jd(584300.0);
+    TEST_ASSERT_EQUAL_INT(0, h.month);
+    TEST_ASSERT_EQUAL_INT(0, h.day);
+}
+
+/* ===== 5. Wayeb boundary ===== */
+
+void test_haab_kumku_last_day(void)
+{
+    /* day-of-year 359 = month 17, day 19 = last day of Kumk'u
+     * Need position=359: day_count such that (day_count%365 + 348)%365 = 359
+     * day_count = 359 - 348 = 11 => JD = 584283 + 11 = 584294 */
+    haab_date_t h = haab_from_jd(584294.0);
+    TEST_ASSERT_EQUAL_INT(17, h.month);
+    TEST_ASSERT_EQUAL_INT(19, h.day);
+}
+
+void test_haab_wayeb_first_day(void)
+{
+    /* day-of-year 360 = Wayeb day 0
+     * day_count = 360 - 348 = 12 => JD = 584283 + 12 = 584295 */
+    haab_date_t h = haab_from_jd(584295.0);
+    TEST_ASSERT_EQUAL_INT(18, h.month);
+    TEST_ASSERT_EQUAL_INT(0, h.day);
+}
+
+/* ===== 6. End of Wayeb ===== */
+
+void test_haab_wayeb_last_day(void)
+{
+    /* day-of-year 364 = Wayeb day 4 (last day of Haab year)
+     * day_count = 364 - 348 = 16 => JD = 584283 + 16 = 584299 */
+    haab_date_t h = haab_from_jd(584299.0);
+    TEST_ASSERT_EQUAL_INT(18, h.month);
+    TEST_ASSERT_EQUAL_INT(4, h.day);
+}
+
+/* ===== 7. Month names ===== */
+
+void test_haab_month_names_all(void)
 {
     const char *expected[] = {
         "Pop", "Wo", "Sip", "Sotz'", "Sek",
@@ -61,148 +99,247 @@ void test_month_names_all(void)
     }
 }
 
-void test_month_name_invalid(void)
+/* ===== 8. Month lengths ===== */
+
+void test_haab_month_length_regular(void)
+{
+    for (int i = 0; i < 18; i++) {
+        TEST_ASSERT_EQUAL_INT(20, haab_month_length(i));
+    }
+}
+
+void test_haab_month_length_wayeb(void)
+{
+    TEST_ASSERT_EQUAL_INT(5, haab_month_length(18));
+}
+
+void test_haab_month_length_invalid(void)
+{
+    TEST_ASSERT_EQUAL_INT(0, haab_month_length(-1));
+    TEST_ASSERT_EQUAL_INT(0, haab_month_length(19));
+}
+
+/* ===== 9. Day-of-year ===== */
+
+void test_haab_day_of_year_pop_0(void)
+{
+    haab_date_t h = {0, 0};
+    TEST_ASSERT_EQUAL_INT(0, haab_day_of_year(h));
+}
+
+void test_haab_day_of_year_pop_19(void)
+{
+    haab_date_t h = {0, 19};
+    TEST_ASSERT_EQUAL_INT(19, haab_day_of_year(h));
+}
+
+void test_haab_day_of_year_wo_0(void)
+{
+    haab_date_t h = {1, 0};
+    TEST_ASSERT_EQUAL_INT(20, haab_day_of_year(h));
+}
+
+void test_haab_day_of_year_kumku_19(void)
+{
+    haab_date_t h = {17, 19};
+    TEST_ASSERT_EQUAL_INT(359, haab_day_of_year(h));
+}
+
+void test_haab_day_of_year_wayeb_0(void)
+{
+    haab_date_t h = {18, 0};
+    TEST_ASSERT_EQUAL_INT(360, haab_day_of_year(h));
+}
+
+void test_haab_day_of_year_wayeb_4(void)
+{
+    haab_date_t h = {18, 4};
+    TEST_ASSERT_EQUAL_INT(364, haab_day_of_year(h));
+}
+
+/* ===== 10. Formatting ===== */
+
+void test_haab_fmt_kumku(void)
+{
+    haab_date_t h = {17, 8};
+    char buf[32];
+    haab_fmt(h, buf, sizeof(buf));
+    TEST_ASSERT_EQUAL_STRING("8 Kumk'u", buf);
+}
+
+void test_haab_fmt_kankin(void)
+{
+    haab_date_t h = {13, 3};
+    char buf[32];
+    haab_fmt(h, buf, sizeof(buf));
+    TEST_ASSERT_EQUAL_STRING("3 K'ank'in", buf);
+}
+
+void test_haab_fmt_pop_0(void)
+{
+    haab_date_t h = {0, 0};
+    char buf[32];
+    haab_fmt(h, buf, sizeof(buf));
+    TEST_ASSERT_EQUAL_STRING("0 Pop", buf);
+}
+
+void test_haab_fmt_wayeb(void)
+{
+    haab_date_t h = {18, 2};
+    char buf[32];
+    haab_fmt(h, buf, sizeof(buf));
+    TEST_ASSERT_EQUAL_STRING("2 Wayeb", buf);
+}
+
+/* ===== 11. Calendar Round from JD ===== */
+
+void test_calendar_round_epoch(void)
+{
+    /* Long Count 0.0.0.0.0 (JD 584283):
+     * Traditional Tzolkin: 4 Ahau, Haab: 8 Kumk'u
+     * But this project uses Dreamspell Tzolkin, so Tzolkin values
+     * come from tzolkin_from_jd(). Haab should be 8 Kumk'u. */
+    calendar_round_t cr = calendar_round_from_jd(584283.0);
+    TEST_ASSERT_EQUAL_INT(17, cr.haab_month);
+    TEST_ASSERT_EQUAL_INT(8, cr.haab_day);
+    /* Tzolkin fields should be valid ranges */
+    TEST_ASSERT_TRUE(cr.kin >= 1 && cr.kin <= 260);
+    TEST_ASSERT_TRUE(cr.tone >= 1 && cr.tone <= 13);
+    TEST_ASSERT_TRUE(cr.seal >= 0 && cr.seal <= 19);
+}
+
+void test_calendar_round_2012_dec_21(void)
+{
+    /* JD 2456283.0: Haab = 3 K'ank'in */
+    calendar_round_t cr = calendar_round_from_jd(2456283.0);
+    TEST_ASSERT_EQUAL_INT(13, cr.haab_month);
+    TEST_ASSERT_EQUAL_INT(3, cr.haab_day);
+    TEST_ASSERT_TRUE(cr.kin >= 1 && cr.kin <= 260);
+}
+
+/* ===== 12. Calendar Round formatting ===== */
+
+void test_calendar_round_fmt_contains_parts(void)
+{
+    calendar_round_t cr = calendar_round_from_jd(2456283.0);
+    char buf[64];
+    calendar_round_fmt(cr, buf, sizeof(buf));
+    /* Should contain haab month name */
+    TEST_ASSERT_NOT_NULL(strstr(buf, "K'ank'in"));
+    /* Should contain the tone number as a string */
+    char tone_str[4];
+    snprintf(tone_str, sizeof(tone_str), "%d", cr.tone);
+    TEST_ASSERT_NOT_NULL(strstr(buf, tone_str));
+}
+
+/* ===== 13. Pre-epoch dates ===== */
+
+void test_haab_pre_epoch(void)
+{
+    /* JD before 584283 (negative day_count) — should still give valid Haab */
+    haab_date_t h = haab_from_jd(584200.0);
+    TEST_ASSERT_TRUE(h.month >= 0 && h.month <= 18);
+    if (h.month < 18) {
+        TEST_ASSERT_TRUE(h.day >= 0 && h.day <= 19);
+    } else {
+        TEST_ASSERT_TRUE(h.day >= 0 && h.day <= 4);
+    }
+}
+
+void test_haab_pre_epoch_very_early(void)
+{
+    /* Much earlier date */
+    haab_date_t h = haab_from_jd(100000.0);
+    TEST_ASSERT_TRUE(h.month >= 0 && h.month <= 18);
+    if (h.month < 18) {
+        TEST_ASSERT_TRUE(h.day >= 0 && h.day <= 19);
+    } else {
+        TEST_ASSERT_TRUE(h.day >= 0 && h.day <= 4);
+    }
+}
+
+/* ===== 14. Large date ===== */
+
+void test_haab_large_date(void)
+{
+    haab_date_t h = haab_from_jd(2460000.0);
+    TEST_ASSERT_TRUE(h.month >= 0 && h.month <= 18);
+    if (h.month < 18) {
+        TEST_ASSERT_TRUE(h.day >= 0 && h.day <= 19);
+    } else {
+        TEST_ASSERT_TRUE(h.day >= 0 && h.day <= 4);
+    }
+}
+
+/* ===== 15. Invalid month name ===== */
+
+void test_haab_month_name_invalid(void)
 {
     TEST_ASSERT_EQUAL_STRING("?", haab_month_name(-1));
     TEST_ASSERT_EQUAL_STRING("?", haab_month_name(19));
+    TEST_ASSERT_EQUAL_STRING("?", haab_month_name(100));
 }
 
-void test_month_count(void)
+/* ===== 16. Invalid month length ===== */
+
+void test_haab_month_length_out_of_range(void)
 {
-    TEST_ASSERT_EQUAL_INT(19, haab_month_count());
+    TEST_ASSERT_EQUAL_INT(0, haab_month_length(-1));
+    TEST_ASSERT_EQUAL_INT(0, haab_month_length(19));
+    TEST_ASSERT_EQUAL_INT(0, haab_month_length(100));
 }
 
-/* Wayeb: 7-8 */
+/* ===== 17. Purity ===== */
 
-void test_wayeb_days(void)
+void test_purity_haab(void)
 {
-    /* Wayeb is month 18, has only 5 days (0-4) */
-    /* Find a Wayeb day by scanning */
-    int found_wayeb = 0;
-    for (int d = 0; d < 365; d++) {
-        haab_date_t h = haab_from_jd(2451545.0 + d);
-        if (h.month == 18) {
-            found_wayeb++;
-            TEST_ASSERT_TRUE(h.day >= 0 && h.day <= 4);
-        }
+    haab_date_t a = haab_from_jd(2451545.0);
+    haab_date_t b = haab_from_jd(2451545.0);
+    TEST_ASSERT_EQUAL_INT(a.month, b.month);
+    TEST_ASSERT_EQUAL_INT(a.day, b.day);
+}
+
+void test_purity_calendar_round(void)
+{
+    calendar_round_t a = calendar_round_from_jd(2451545.0);
+    calendar_round_t b = calendar_round_from_jd(2451545.0);
+    TEST_ASSERT_EQUAL_INT(a.kin, b.kin);
+    TEST_ASSERT_EQUAL_INT(a.tone, b.tone);
+    TEST_ASSERT_EQUAL_INT(a.seal, b.seal);
+    TEST_ASSERT_EQUAL_INT(a.haab_month, b.haab_month);
+    TEST_ASSERT_EQUAL_INT(a.haab_day, b.haab_day);
+}
+
+/* ===== 18. 365-day cycle ===== */
+
+void test_haab_365_cycle(void)
+{
+    double jd = 2451545.0;
+    haab_date_t h1 = haab_from_jd(jd);
+    haab_date_t h2 = haab_from_jd(jd + 365.0);
+    TEST_ASSERT_EQUAL_INT(h1.month, h2.month);
+    TEST_ASSERT_EQUAL_INT(h1.day, h2.day);
+}
+
+/* ===== 19. Daily advancement ===== */
+
+void test_haab_advances_daily(void)
+{
+    haab_date_t h1 = haab_from_jd(2451545.0);
+    haab_date_t h2 = haab_from_jd(2451546.0);
+    if (h1.month == h2.month) {
+        TEST_ASSERT_EQUAL_INT(h1.day + 1, h2.day);
+    } else {
+        TEST_ASSERT_EQUAL_INT(0, h2.day);
     }
-    TEST_ASSERT_EQUAL_INT(5, found_wayeb);
 }
 
-void test_regular_month_days(void)
+/* ===== 20. Full year coverage ===== */
+
+void test_haab_full_year_coverage(void)
 {
-    /* Regular months (0-17) have 20 days (0-19) */
-    int month_max[19];
-    for (int i = 0; i < 19; i++) month_max[i] = -1;
-
-    for (int d = 0; d < 365; d++) {
-        haab_date_t h = haab_from_jd(2451545.0 + d);
-        if (h.day > month_max[h.month]) {
-            month_max[h.month] = h.day;
-        }
-    }
-    for (int i = 0; i < 18; i++) {
-        TEST_ASSERT_EQUAL_INT(19, month_max[i]); /* 0-19 */
-    }
-    TEST_ASSERT_EQUAL_INT(4, month_max[18]); /* Wayeb: 0-4 */
-}
-
-/* Format: 9-10 */
-
-void test_format_regular(void)
-{
-    haab_date_t h = {0, 5};
-    char buf[32];
-    haab_format(h, buf, sizeof(buf));
-    TEST_ASSERT_NOT_NULL(strstr(buf, "5"));
-    TEST_ASSERT_NOT_NULL(strstr(buf, "Pop"));
-}
-
-void test_format_wayeb(void)
-{
-    haab_date_t h = {18, 3};
-    char buf[32];
-    haab_format(h, buf, sizeof(buf));
-    TEST_ASSERT_NOT_NULL(strstr(buf, "Wayeb"));
-}
-
-/* Month meanings: 11-12 */
-
-void test_month_meanings(void)
-{
-    const char *m = haab_month_meaning(0);
-    TEST_ASSERT_NOT_NULL(m);
-    TEST_ASSERT_TRUE(strcmp(m, "?") != 0);
-}
-
-void test_month_meaning_invalid(void)
-{
-    TEST_ASSERT_EQUAL_STRING("?", haab_month_meaning(-1));
-    TEST_ASSERT_EQUAL_STRING("?", haab_month_meaning(19));
-}
-
-/* Calendar Round: 13-16 */
-
-void test_calendar_round_from_jd(void)
-{
-    calendar_round_t cr = calendar_round_from_jd(2451545.0);
-    TEST_ASSERT_TRUE(cr.tzolkin_tone >= 1 && cr.tzolkin_tone <= 13);
-    TEST_ASSERT_TRUE(cr.tzolkin_seal >= 0 && cr.tzolkin_seal <= 19);
-    TEST_ASSERT_TRUE(cr.haab_month >= 0 && cr.haab_month <= 18);
-    TEST_ASSERT_TRUE(cr.haab_day >= 0 && cr.haab_day <= 19);
-}
-
-void test_calendar_round_cycle(void)
-{
-    TEST_ASSERT_EQUAL_INT(18980, calendar_round_cycle());
-}
-
-void test_calendar_round_repeats(void)
-{
-    /* After 18980 days, same Calendar Round */
-    double jd = 2451545.0;
-    calendar_round_t cr1 = calendar_round_from_jd(jd);
-    calendar_round_t cr2 = calendar_round_from_jd(jd + 18980.0);
-    TEST_ASSERT_EQUAL_INT(cr1.tzolkin_tone, cr2.tzolkin_tone);
-    TEST_ASSERT_EQUAL_INT(cr1.tzolkin_seal, cr2.tzolkin_seal);
-    TEST_ASSERT_EQUAL_INT(cr1.haab_month, cr2.haab_month);
-    TEST_ASSERT_EQUAL_INT(cr1.haab_day, cr2.haab_day);
-}
-
-void test_calendar_round_next_same(void)
-{
-    /* If already on target date, returns 0 */
-    double jd = 2451545.0;
-    calendar_round_t cr = calendar_round_from_jd(jd);
-    TEST_ASSERT_EQUAL_INT(0, calendar_round_next(jd, cr));
-}
-
-/* Next occurrence: 17-18 */
-
-void test_calendar_round_next_tomorrow(void)
-{
-    double jd = 2451545.0;
-    calendar_round_t tomorrow = calendar_round_from_jd(jd + 1.0);
-    int days = calendar_round_next(jd, tomorrow);
-    TEST_ASSERT_EQUAL_INT(1, days);
-}
-
-void test_calendar_round_next_range(void)
-{
-    double jd = 2451545.0;
-    calendar_round_t target = calendar_round_from_jd(jd + 100.0);
-    int days = calendar_round_next(jd, target);
-    TEST_ASSERT_TRUE(days >= 1 && days <= 18980);
-}
-
-/* Day count in full year: 19 */
-
-void test_full_year_coverage(void)
-{
-    /* 365 consecutive days should cover all 18 regular months + Wayeb */
     int months_seen[19];
     for (int i = 0; i < 19; i++) months_seen[i] = 0;
-
     for (int d = 0; d < 365; d++) {
         haab_date_t h = haab_from_jd(2451545.0 + d);
         months_seen[h.month] = 1;
@@ -212,9 +349,48 @@ void test_full_year_coverage(void)
     }
 }
 
-/* All meanings non-null: 20 */
+/* ===== 21. Wayeb has exactly 5 days in a full cycle ===== */
 
-void test_all_meanings_valid(void)
+void test_haab_wayeb_count(void)
+{
+    int wayeb_count = 0;
+    for (int d = 0; d < 365; d++) {
+        haab_date_t h = haab_from_jd(2451545.0 + d);
+        if (h.month == 18) wayeb_count++;
+    }
+    TEST_ASSERT_EQUAL_INT(5, wayeb_count);
+}
+
+/* ===== 22. Calendar Round cycle ===== */
+
+void test_calendar_round_cycle_value(void)
+{
+    TEST_ASSERT_EQUAL_INT(18980, calendar_round_cycle());
+}
+
+/* ===== 23. Calendar Round repeats after 18980 days ===== */
+
+void test_calendar_round_repeats(void)
+{
+    double jd = 2451545.0;
+    calendar_round_t cr1 = calendar_round_from_jd(jd);
+    calendar_round_t cr2 = calendar_round_from_jd(jd + 18980.0);
+    TEST_ASSERT_EQUAL_INT(cr1.haab_month, cr2.haab_month);
+    TEST_ASSERT_EQUAL_INT(cr1.haab_day, cr2.haab_day);
+    /* Note: Tzolkin fields use Dreamspell which handles leap years
+     * differently, so we only verify Haab repetition here. */
+}
+
+/* ===== 24. Month count ===== */
+
+void test_haab_month_count(void)
+{
+    TEST_ASSERT_EQUAL_INT(19, haab_month_count());
+}
+
+/* ===== 25. Month meanings valid ===== */
+
+void test_haab_month_meanings_all_valid(void)
 {
     for (int i = 0; i < 19; i++) {
         const char *m = haab_month_meaning(i);
@@ -224,54 +400,79 @@ void test_all_meanings_valid(void)
     }
 }
 
-/* Invalid format: 21 */
-
-void test_format_null_safety(void)
+void test_haab_month_meaning_invalid(void)
 {
-    haab_date_t h = {0, 0};
-    char *result = haab_format(h, NULL, 0);
-    TEST_ASSERT_NULL(result);
+    TEST_ASSERT_EQUAL_STRING("?", haab_month_meaning(-1));
+    TEST_ASSERT_EQUAL_STRING("?", haab_month_meaning(19));
 }
 
-/* Purity: 22 */
+/* ===== 27. Day-of-year round-trip with haab_from_jd ===== */
 
-void test_purity(void)
+void test_haab_day_of_year_round_trip(void)
 {
-    haab_date_t a = haab_from_jd(2451545.0);
-    haab_date_t b = haab_from_jd(2451545.0);
-    TEST_ASSERT_EQUAL_INT(a.month, b.month);
-    TEST_ASSERT_EQUAL_INT(a.day, b.day);
-
-    calendar_round_t ca = calendar_round_from_jd(2451545.0);
-    calendar_round_t cb = calendar_round_from_jd(2451545.0);
-    TEST_ASSERT_EQUAL_INT(ca.haab_month, cb.haab_month);
-    TEST_ASSERT_EQUAL_INT(ca.tzolkin_tone, cb.tzolkin_tone);
+    /* For any JD, haab_day_of_year(haab_from_jd(jd)) should be 0-364 */
+    for (int d = 0; d < 365; d++) {
+        haab_date_t h = haab_from_jd(584300.0 + d); /* Start from 0 Pop */
+        int doy = haab_day_of_year(h);
+        TEST_ASSERT_EQUAL_INT(d, doy);
+    }
 }
 
 int main(void)
 {
     UNITY_BEGIN();
-    RUN_TEST(test_haab_from_jd_reference);
-    RUN_TEST(test_haab_advances_daily);
+    /* Epoch and known dates */
+    RUN_TEST(test_haab_epoch_date);
+    RUN_TEST(test_haab_epoch_next_day);
+    RUN_TEST(test_haab_2012_dec_21);
+    RUN_TEST(test_haab_pop_0_new_year);
+    /* Wayeb boundary */
+    RUN_TEST(test_haab_kumku_last_day);
+    RUN_TEST(test_haab_wayeb_first_day);
+    RUN_TEST(test_haab_wayeb_last_day);
+    /* Month names */
+    RUN_TEST(test_haab_month_names_all);
+    /* Month lengths */
+    RUN_TEST(test_haab_month_length_regular);
+    RUN_TEST(test_haab_month_length_wayeb);
+    RUN_TEST(test_haab_month_length_invalid);
+    /* Day-of-year */
+    RUN_TEST(test_haab_day_of_year_pop_0);
+    RUN_TEST(test_haab_day_of_year_pop_19);
+    RUN_TEST(test_haab_day_of_year_wo_0);
+    RUN_TEST(test_haab_day_of_year_kumku_19);
+    RUN_TEST(test_haab_day_of_year_wayeb_0);
+    RUN_TEST(test_haab_day_of_year_wayeb_4);
+    /* Formatting */
+    RUN_TEST(test_haab_fmt_kumku);
+    RUN_TEST(test_haab_fmt_kankin);
+    RUN_TEST(test_haab_fmt_pop_0);
+    RUN_TEST(test_haab_fmt_wayeb);
+    /* Calendar Round */
+    RUN_TEST(test_calendar_round_epoch);
+    RUN_TEST(test_calendar_round_2012_dec_21);
+    RUN_TEST(test_calendar_round_fmt_contains_parts);
+    /* Pre-epoch and edge cases */
+    RUN_TEST(test_haab_pre_epoch);
+    RUN_TEST(test_haab_pre_epoch_very_early);
+    RUN_TEST(test_haab_large_date);
+    /* Invalid inputs */
+    RUN_TEST(test_haab_month_name_invalid);
+    RUN_TEST(test_haab_month_length_out_of_range);
+    /* Purity */
+    RUN_TEST(test_purity_haab);
+    RUN_TEST(test_purity_calendar_round);
+    /* Cycle properties */
     RUN_TEST(test_haab_365_cycle);
-    RUN_TEST(test_month_names_all);
-    RUN_TEST(test_month_name_invalid);
-    RUN_TEST(test_month_count);
-    RUN_TEST(test_wayeb_days);
-    RUN_TEST(test_regular_month_days);
-    RUN_TEST(test_format_regular);
-    RUN_TEST(test_format_wayeb);
-    RUN_TEST(test_month_meanings);
-    RUN_TEST(test_month_meaning_invalid);
-    RUN_TEST(test_calendar_round_from_jd);
-    RUN_TEST(test_calendar_round_cycle);
+    RUN_TEST(test_haab_advances_daily);
+    RUN_TEST(test_haab_full_year_coverage);
+    RUN_TEST(test_haab_wayeb_count);
+    RUN_TEST(test_calendar_round_cycle_value);
     RUN_TEST(test_calendar_round_repeats);
-    RUN_TEST(test_calendar_round_next_same);
-    RUN_TEST(test_calendar_round_next_tomorrow);
-    RUN_TEST(test_calendar_round_next_range);
-    RUN_TEST(test_full_year_coverage);
-    RUN_TEST(test_all_meanings_valid);
-    RUN_TEST(test_format_null_safety);
-    RUN_TEST(test_purity);
+    /* Supplementary */
+    RUN_TEST(test_haab_month_count);
+    RUN_TEST(test_haab_month_meanings_all_valid);
+    RUN_TEST(test_haab_month_meaning_invalid);
+    RUN_TEST(test_haab_day_of_year_round_trip);
     return UNITY_END();
 }
