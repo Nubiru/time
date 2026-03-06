@@ -1,21 +1,34 @@
 # Prompts Flow — Research Extraction Pipeline
 
-**Method**: NotebookLM chat mode. One question at a time, paste answer back into the prompt file.
 **Location**: `.context/research/prompts/NNN-topic.md`
 
 ---
 
-## How to Use
+## Extraction Methods
 
-1. Open the next prompt file (e.g., `001-webgl-context-canvas.md`)
-2. Copy **Q1** into NotebookLM chat (with the correct book selected as source)
-3. Paste NotebookLM's answer under **A1:** in the same file
-4. Copy **Q2**, paste answer under **A2:**
-5. Continue until all Q's have A's
-6. Mark **Status** as `done` in the file header
-7. Move to next file
+### Method 1: Agent Direct (preferred for PDFs we have)
+Agent reads PDF via Read tool, extracts answers, writes to prompt file and/or digest.
+```
+Agent claims research task -> reads manifest.json -> reads PDF pages
+-> writes answers in prompt file -> writes digest to .context/research/digested/
+-> updates manifest.json extraction status -> updates contributors.json
+```
 
-Questions build on each other — NotebookLM's conversation context carries forward.
+### Method 2: NotebookLM (for multi-source synthesis, non-PDF formats)
+Gabriel uses NotebookLM chat mode. One question at a time, paste answer back.
+```
+Open prompt file -> copy Q into NotebookLM -> paste answer under A
+-> repeat -> mark status done
+```
+
+### Method 3: WebFetch (for open data)
+Agent fetches data directly from JPL, IAU, arXiv, GitHub catalogs.
+```
+Agent identifies data need -> WebSearch/WebFetch -> writes digest
+-> uses data in module implementation
+```
+
+Any method can answer any card. Agent Direct is fastest when PDFs are available.
 
 ---
 

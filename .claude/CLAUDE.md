@@ -28,11 +28,22 @@
 
 ## Critical Rules
 
-- NEVER run ACTIVE git commands (add, commit, push, branch, checkout, merge, rebase) — draft commit messages in `.context/active/commits/NEXT_COMMIT.md` via `/commit`
-- ONLY PASSIVE git commands allowed (status, log, diff, show, blame)
 - No npm, no node, no TypeScript, no JavaScript build tools
 - All source code is C11 and GLSL
-- Gabriel handles git init/commit/push himself
+- No branching — all work on `main`
+
+### Git Authority
+
+**MEGA session**: Passive git only (status, log, diff, show, blame). Drafts commits in `.context/active/commits/NEXT_COMMIT.md` via `/commit` for Gabriel to review.
+
+**Orchestrator sessions (ALPHA, BETA, ...)**: Authorized to commit and push after Phase 5 MAINTAIN passes. Rules:
+- Only commit files the agent created or modified in the current task
+- `git add` specific files by name — NEVER `git add -A` or `git add .`
+- Commit message format: `feat(agent-{SLOT}): {module} — {description}`
+- Push to `origin main` after commit
+- If push fails (other agent pushed first): `git pull --rebase origin main && git push origin main`
+- NEVER force push, NEVER amend, NEVER reset, NEVER branch, NEVER checkout
+- Commit happens in Phase 6 DOCUMENT, after Maintainer PASS
 
 ---
 
@@ -44,6 +55,10 @@
 3. Read `docs/DECISIONS.md` — Architecture Decision Records
 4. Read `docs/LEARNING_LOG.md` — Past mistakes and lessons
 5. Read `.context/standards/CONVENTIONS.md` — C coding standards
+
+**MEGA SESSION — ALSO DO ON STARTUP:**
+6. Scan `~/Desktop/temp/time/inbox/` for uncatalogued books
+7. If inbox has files: catalog in `docs/checklists/books.md` + `.context/library/manifest.json`, move to `new/`
 
 **Core Rules**:
 - Check sources, cite file paths
@@ -166,7 +181,7 @@ This applies to all documentation, code, test, and configuration files.
 
 ## Terminal Safeguards
 
-**Git**: NEVER run active git commands — draft commit messages in `.context/active/commits/NEXT_COMMIT.md`, only Gabriel executes
+**Git**: See "Git Authority" above. MEGA drafts only. Orchestrators commit+push after Maintainer PASS.
 
 **Build**: Use Makefile targets, not raw gcc/emcc commands (unless debugging build issues)
 
@@ -176,7 +191,7 @@ This applies to all documentation, code, test, and configuration files.
 
 **Human <-> Agent**: Goals -> questions -> approach -> approval -> updates -> escalation
 
-**Commit messages**: Agent drafts -> `.context/active/commits/NEXT_COMMIT.md` (via `/commit` command) -> Gabriel reviews, stages, commits, pushes
+**Commit messages**: MEGA drafts in `.context/active/commits/NEXT_COMMIT.md` for Gabriel. Orchestrators commit directly after Maintainer PASS.
 
 **Staging actions**: Agent writes commands -> `.context/active/staging/actions.md` -> Gabriel executes
 
@@ -195,6 +210,10 @@ This applies to all documentation, code, test, and configuration files.
 **USER_CONTROLS.md**: Keyboard/mouse controls reference.
 **VISUAL_DESIGN.md**: UI/UX architecture, view modes, screen layout.
 **ENVIRONMENT.md**: Reproducible host setup checklist.
+**books.md**: Living catalog of all reference books, PDFs, acquisition targets. MEGA maintains.
+**reference-library.md**: Full 78-file catalog with extraction priority and status.
+**manifest.json**: `.context/library/manifest.json` — structured PDF catalog for agent access.
+**contributors.json**: `data/contributors.json` — attribution database for every human whose work feeds this codebase.
 
 **Verbosity**: KISS. Simple, terse, actionable. No fluff.
 
@@ -217,14 +236,62 @@ This applies to all documentation, code, test, and configuration files.
 
 ## Multi-Session Architecture
 
-This project may run N parallel Claude Code sessions simultaneously. See `.context/execute/PROTOCOL.md` for coordination rules.
+This project runs N parallel Claude Code sessions simultaneously. See `.context/execute/PROTOCOL.md` for coordination rules.
 
-| Session | Role |
-|---------|------|
-| MEGA | Primary — planning, mentoring, vision, SOUL.md, integration |
-| ORCHESTRATOR | Autonomous — `/execute ALPHA`, `/execute BETA`, etc. |
+Each session reads CLAUDE.md but operates according to its role layer below.
 
-Each orchestrator self-governs: find work, claim it, build (Writer subagent), validate (Checker subagent), report, loop.
+### Role Layers & Priority Horizons
+
+```
+MEGA (primary session — Gabriel's direct partner)
+  Horizon: LONG-TERM first, mid-term second, short-term least
+  Focus: Vision, roadmap, architecture, knowledge pipeline, books.md,
+         SOUL.md, integration, mentoring, monitoring agents
+  Does NOT: Write code modules (delegates to agents)
+  Priority: Future roadmap > agent coordination > mid-term planning
+            > short-term fixes. Writing code yourself is the LAST resort.
+  Manages: docs/ORCHESTRATOR_ROADMAP.md, docs/checklists/books.md,
+           .context/library/manifest.json, SOUL.md, CLAUDE.md
+  Reads: Agent report.md files -> translates Knowledge Gaps into
+         books.md entries + roadmap growth
+
+ALPHA (orchestrator — geometry & rendering infrastructure)
+  Horizon: MID-TERM — current + next phase rendering needs
+  Focus: Vertex data, mesh generation, projection math, GPU-ready data,
+         spatial calculations, star catalogs, constellation data
+  Concern: Accuracy of astronomical data, geometric correctness,
+           render pipeline readiness
+  Directories: src/render/, src/math/ (geometry)
+
+BETA (orchestrator — data, formatting & knowledge systems)
+  Horizon: MID-TERM — current + next phase knowledge system needs
+  Focus: UI data, time formatting, system-specific visuals, knowledge
+         system extensions, display logic, calendar algorithms
+  Concern: Cultural accuracy, data completeness, format correctness
+  Directories: src/ui/, src/systems/, src/math/ (non-geometry)
+
+GAMMA+ (orchestrator — domain assigned by MEGA)
+  Horizon: MID-TERM — as defined in priority.md
+  Focus: Whatever MEGA assigns or what roadmap offers
+  Check: .context/execute/{SLOT}/priority.md for domain definition
+
+Writer subagent (launched by orchestrator)
+  Horizon: SHORT-TERM — this task only
+  Focus: TDD implementation. Tests -> header -> code -> compile -> pass.
+  Concern: Code quality, test coverage, compilation, purity
+
+Checker subagent (launched by orchestrator)
+  Horizon: SHORT-TERM — this task only
+  Focus: Independent validation of Writer output
+  Concern: Standards compliance, purity rules, naming, duplication
+
+Maintainer subagent (launched by orchestrator)
+  Horizon: SHORT-TERM — this task + regression
+  Focus: Health sweep, regression gate, metrics, attribution
+  Concern: Codebase integrity, dead code, naked TODOs, attribution
+```
+
+Each layer reads CLAUDE.md but focuses on its own horizon. MEGA never gets pulled into short-term implementation details. Agents never make long-term architectural decisions.
 
 ---
 

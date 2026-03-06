@@ -381,6 +381,169 @@ The artistic frontier. Zooming OUT from the solar system.
 
 ---
 
+## TRACK 8: True-Color Planetary Rendering
+
+Gas giants and rocky planets with scientifically accurate colors, atmospheric effects, and real physical data.
+
+### 8.1 Agent: Planetary Physical Data (Agent B)
+- [ ] Pure module: `src/systems/astronomy/planet_data.h/.c`
+- [ ] Per-planet: equatorial radius (km), mass, albedo, axial tilt, rotation period
+- [ ] Surface/atmosphere color profiles from JPL/NASA data (RGB triplets)
+- [ ] Jupiter: banded atmosphere (orange/white/brown), Great Red Spot latitude
+- [ ] Saturn: pale gold, ring system inner/outer radii + opacity
+- [ ] Mars: rusty iron oxide (187, 98, 56), polar cap albedo variation
+- [ ] Earth: ocean blue (35, 65, 130), cloud white, land green/brown
+- [ ] Gas giant color gradients: latitude-dependent banding data
+- [ ] Data source: NASA Planetary Fact Sheet + JPL Horizons
+- [ ] Book needed: **"Fundamentals of Planetary Science"** (Lissauer & de Pater)
+
+### 8.2 Agent: Planet Atmosphere Shader Data (Agent A)
+- [ ] Pure module: geometry for atmospheric limb glow
+- [ ] Rayleigh scattering approximation: blue scatter at edges
+- [ ] Per-planet atmosphere thickness ratio (relative to radius)
+- [ ] Ring geometry for Saturn (inner/outer radius, gap positions, opacity)
+- [ ] Output: vertex data for atmosphere shells + ring quads
+
+### 8.3 Planet Surface Shader — Orchestrator
+- [ ] Enhanced planet shader: per-planet color from planet_data module
+- [ ] Latitude-dependent banding for gas giants (procedural)
+- [ ] Atmospheric limb glow (Fresnel-like edge brightening)
+- [ ] Saturn ring rendering (textured ring plane, shadow on planet)
+- [ ] Toggle: T(rue) color mode vs simple color mode
+
+### 8.4 Agent: Moon Data (Agent B)
+- [ ] Pure module: major moons of each planet (orbital elements + physical data)
+- [ ] Earth: Moon (phase, libration, distance)
+- [ ] Jupiter: Io, Europa, Ganymede, Callisto (Galilean moons)
+- [ ] Saturn: Titan, Enceladus
+- [ ] Moon positions from simplified orbital elements
+- [ ] Data source: JPL ephemerides + Meeus Chapter 53
+
+### 8.5 Moon Rendering — Orchestrator
+- [ ] Render major moons as small spheres at computed positions
+- [ ] Moon trails (optional, same VertexID technique)
+- [ ] Visible at Scale 1-2 (Earth-Moon to Inner Solar System)
+- [ ] Galilean moon dance visible when time accelerated
+
+---
+
+## TRACK 9: Deep Star Field (Planetarium Quality)
+
+From 200 stars to 9000+. Real sky as seen from Earth.
+
+### 9.1 Agent: Extended Star Catalog (Agent A)
+- [ ] Pure module: `src/render/star_catalog_extended.h/.c`
+- [ ] Data: Yale Bright Star Catalogue (BSC5) — 9110 stars to V=6.5
+- [ ] Source: FREE open data (VizieR / Yale archives)
+- [ ] Per star: RA, Dec, V mag, B-V color, spectral type, proper name (if any)
+- [ ] Split into brightness tiers for LOD (Level of Detail):
+  - Tier 0: V < 1.5 (21 stars — always visible, named, labeled)
+  - Tier 1: V < 3.0 (~170 stars — visible at medium zoom)
+  - Tier 2: V < 4.5 (~1000 stars — visible at wide view)
+  - Tier 3: V < 6.5 (~9000 stars — full sky, close zoom only)
+- [ ] Book needed: **Yale Bright Star Catalogue (BSC5)** — FREE data download
+
+### 9.2 Agent: Star Spectral Classification Colors (Agent A)
+- [ ] Pure module: accurate B-V to RGB conversion using Planck blackbody
+- [ ] Spectral types: O (blue) → B → A → F → G (yellow) → K (orange) → M (red)
+- [ ] Color temperature from B-V index (Ballesteros formula or Sekiguchi/Fukugita)
+- [ ] Verify against real photographs of Betelgeuse (red), Rigel (blue), Sun (yellow-white)
+- [ ] Book needed: **"Astrophysical Quantities"** (Allen) or **"Stellar Atmospheres"** (Gray)
+
+### 9.3 Star LOD Shader System — Orchestrator
+- [ ] Tiered rendering: draw brightest tier always, add tiers as zoom increases
+- [ ] Point size varies with magnitude AND camera distance
+- [ ] Star twinkle: subtle animated brightness variation (atmospheric scintillation)
+- [ ] Star diffraction spikes on brightest stars (procedural cross pattern in fragment shader)
+- [ ] Bloom/glow pass for magnitude < 1.5 stars
+
+### 9.4 Proper Motion Animation — Future
+- [ ] Stars move! Proper motion data from Hipparcos/Gaia catalogs
+- [ ] Visible only at extreme time scales (thousands of years)
+- [ ] Constellation shapes deform over millennia
+- [ ] Data source: Hipparcos catalog (FREE) or Gaia DR3
+
+---
+
+## TRACK 10: Nebulae & Deep Sky Objects
+
+The gas clouds, the stellar nurseries, the remnants.
+
+### 10.1 Agent: Deep Sky Object Catalog (Agent B)
+- [ ] Pure module: `src/render/deep_sky.h/.c`
+- [ ] Data: ~110 Messier objects + brightest NGC objects
+- [ ] Per object: RA, Dec, type (nebula/galaxy/cluster), angular size, brightness
+- [ ] Type classification: emission nebula, planetary nebula, open cluster, globular cluster, galaxy
+- [ ] Visual properties: color hint (red=H-alpha emission, blue=reflection, green=O-III)
+- [ ] Data source: SIMBAD / NED databases (FREE open access)
+
+### 10.2 Nebula Shader — Orchestrator
+- [ ] Procedural nebula rendering from catalog positions + angular sizes
+- [ ] Soft gaussian blobs with type-dependent coloring
+- [ ] H-II regions: warm red/pink (hydrogen alpha emission)
+- [ ] Reflection nebulae: blue scattered light
+- [ ] Planetary nebulae: green/teal (O-III emission)
+- [ ] Opacity from surface brightness, scale-gated to LAYER_STARS range
+- [ ] NOT photographic textures — procedural from data (consistent with project philosophy)
+
+### 10.3 Milky Way Band — Orchestrator
+- [ ] Dense star field along galactic plane
+- [ ] Procedural glow following galactic coordinates
+- [ ] Dark lanes (Rift) as opacity reduction zones
+- [ ] Visible at Scales 2-4, dominant at Scale 3
+- [ ] Combines with individual star rendering for depth
+
+---
+
+## TRACK 11: Advanced Knowledge System Visuals
+
+Beyond cards — immersive visual representations.
+
+### 11.1 Agent: Hexagram Visual Renderer Data (Agent B)
+- [ ] Pure module: 6-line hexagram as vertex data (broken/solid lines)
+- [ ] Changing lines highlighted (old yang → yin, old yin → yang)
+- [ ] Trigram decomposition shown visually (upper/lower split)
+- [ ] Nuclear hexagram derivation (lines 2-3-4, 3-4-5)
+
+### 11.2 Agent: Human Design Bodygraph Data (Agent A)
+- [ ] Pure module: bodygraph geometry (9 centers, 36 channels, 64 gates)
+- [ ] Center positions as 2D coordinates (head, ajna, throat, G, heart, spleen, sacral, root, solar plexus)
+- [ ] Channel line segments connecting centers
+- [ ] Gate positions on channels (for planetary activation highlighting)
+- [ ] Defined vs undefined centers from planetary gate activations
+
+### 11.3 Tzolkin Grid Visual — Orchestrator
+- [ ] 13x20 grid (260 kin) rendered as colored cells
+- [ ] Current kin highlighted with glow
+- [ ] Wavespell highlighted (13-day wave)
+- [ ] Castle coloring (Red/White/Blue/Yellow/Green)
+- [ ] Harmonic families visible as columns
+
+### 11.4 Natal Chart Wheel — Orchestrator
+- [ ] Traditional circular chart with 12 houses
+- [ ] Planet glyphs at their zodiacal positions
+- [ ] Aspect lines drawn between planets
+- [ ] House cusp markers
+- [ ] Rotates with Ascendant at 9 o'clock position (Western convention)
+
+---
+
+## TRACK 12: Data Pipeline Automation
+
+### 12.1 Agent: Catalog Ingestion Framework (Agent A)
+- [ ] Pure module: parse CSV/TSV star catalog format into C struct arrays
+- [ ] Validate data ranges (RA 0-24h, Dec -90 to +90, mag reasonable)
+- [ ] Generate `static const` C arrays from parsed data (code generation)
+- [ ] Used by: converting BSC5 CSV → star_catalog_extended.c at build time
+
+### 12.2 Research Digest Automation
+- [ ] Agents extract algorithms from PDFs → write .context/research/digested/ files
+- [ ] Each digest: source, page range, algorithm pseudocode, C implementation plan
+- [ ] Digest feeds directly into task.md API design section
+- [ ] Attribution automatically added to data/contributors.json
+
+---
+
 ## Execution Priority Order
 
 Work these tracks interleaved, not sequentially. Priority by impact:
