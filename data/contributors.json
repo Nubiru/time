@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 43
+    "total_contributors": 44
   },
   "contributors": [
     {
@@ -732,6 +732,21 @@
       ],
       "references": [
         { "file": "src/render/star_catalog.c", "line": 7, "note": "Star names and B-V color indices from Yale BSC" }
+      ]
+    },
+    {
+      "id": "christophe-schlick",
+      "name": "Christophe Schlick",
+      "category": ["computer-scientist", "researcher"],
+      "contributions": [
+        {
+          "work": "An Inexpensive BRDF Model for Physically-based Rendering",
+          "description": "Schlick's Fresnel approximation: F = F0 + (1-F0)(1-cos(theta))^5. Used for atmospheric limb brightening.",
+          "year": 1994
+        }
+      ],
+      "references": [
+        { "file": "src/render/atmo_ring.c", "line": 7, "note": "Fresnel limb glow approximation for planetary atmospheres" }
       ]
     },
     {
