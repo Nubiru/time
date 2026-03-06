@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 41
+    "total_contributors": 43
   },
   "contributors": [
     {
@@ -694,6 +694,38 @@
       ],
       "references": [
         { "file": "docs/checklists/books.md", "line": 84, "note": "Not yet acquired, MEDIUM priority" }
+      ]
+    },
+    {
+      "id": "esa-hipparcos",
+      "name": "European Space Agency (Hipparcos mission)",
+      "category": ["research-organization"],
+      "contributions": [
+        {
+          "work": "The Hipparcos and Tycho Catalogues",
+          "description": "High-precision astrometry: positions, parallaxes, proper motions for 118,218 stars. Primary source for star RA, Dec, and photometry.",
+          "year": 1997
+        }
+      ],
+      "references": [
+        { "file": "src/render/star_catalog.c", "line": 7, "note": "Star positions (RA, Dec) and magnitudes from Hipparcos catalog" }
+      ]
+    },
+    {
+      "id": "dorrit-hoffleit",
+      "name": "Dorrit Hoffleit",
+      "born": 1907,
+      "died": 2007,
+      "category": ["astronomer", "author"],
+      "contributions": [
+        {
+          "work": "Yale Bright Star Catalogue (5th revised edition)",
+          "description": "Comprehensive catalog of 9,110 stars visible to naked eye. Star names, spectral types, B-V color indices.",
+          "year": 1991
+        }
+      ],
+      "references": [
+        { "file": "src/render/star_catalog.c", "line": 7, "note": "Star names and B-V color indices from Yale BSC" }
       ]
     },
     {

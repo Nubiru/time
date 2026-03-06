@@ -10,12 +10,12 @@
 void setUp(void) {}
 void tearDown(void) {}
 
-/* 1. Catalog has expected count */
+/* 1. Catalog has expected count (190-250 for expanded catalog) */
 void test_catalog_count(void)
 {
     int count = star_catalog_count();
-    TEST_ASSERT_TRUE(count >= 90);
-    TEST_ASSERT_TRUE(count <= 200);
+    TEST_ASSERT_TRUE(count >= 190);
+    TEST_ASSERT_TRUE(count <= 250);
 }
 
 /* 2. First entry is Sirius (brightest star) */
@@ -70,11 +70,14 @@ void test_dec_range(void)
     }
 }
 
-/* 8. Catalog sorted by magnitude (brightest first) */
+/* 8. Original catalog (0-98) sorted by magnitude (brightest first) */
 void test_sorted_by_magnitude(void)
 {
+    /* Original 99 stars sorted by magnitude */
+    int limit = 99;
     int n = star_catalog_count();
-    for (int i = 1; i < n; i++) {
+    if (limit > n) limit = n;
+    for (int i = 1; i < limit; i++) {
         star_entry_t prev = star_catalog_entry(i - 1);
         star_entry_t cur = star_catalog_entry(i);
         TEST_ASSERT_TRUE(cur.magnitude >= prev.magnitude - 0.01f);
@@ -146,8 +149,8 @@ void test_ecliptic_north_pole(void)
 {
     /* Equatorial north pole (Dec=90) -> ecliptic: tilted by obliquity */
     star_xyz_t p = star_to_ecliptic_xyz(0.0f, 90.0f, 23.44f);
-    /* Ecliptic north: project Y should be cos(23.44°) ≈ 0.917 */
-    /* Ecliptic Z should be sin(23.44°) ≈ 0.398 (from equatorial pole tilt) */
+    /* Ecliptic north: project Y should be cos(23.44) ~ 0.917 */
+    /* Ecliptic Z should be sin(23.44) ~ 0.398 (from equatorial pole tilt) */
     float obl_rad = 23.44f * (float)PI / 180.0f;
     TEST_ASSERT_TRUE(NEAR(0.0f, p.x));
     TEST_ASSERT_TRUE(NEAR(cosf(obl_rad), p.y));
@@ -234,6 +237,60 @@ void test_purity(void)
     TEST_ASSERT_TRUE(pa.z == pb.z);
 }
 
+/* 24. Last entries have valid data */
+void test_last_entries_valid(void)
+{
+    int n = star_catalog_count();
+    for (int i = n - 3; i < n; i++) {
+        star_entry_t s = star_catalog_entry(i);
+        TEST_ASSERT_TRUE(s.ra_hours >= 0.0f && s.ra_hours < 24.0f);
+        TEST_ASSERT_TRUE(s.dec_deg >= -90.0f && s.dec_deg <= 90.0f);
+        TEST_ASSERT_TRUE(s.magnitude < 10.0f);
+        const char *name = star_catalog_name(i);
+        TEST_ASSERT_NOT_NULL(name);
+        TEST_ASSERT_TRUE(name[0] != '\0');
+    }
+}
+
+/* 25. No two stars share exact RA+Dec (no duplicate positions) */
+void test_no_duplicate_positions(void)
+{
+    int n = star_catalog_count();
+    for (int i = 0; i < n; i++) {
+        star_entry_t si = star_catalog_entry(i);
+        for (int j = i + 1; j < n; j++) {
+            star_entry_t sj = star_catalog_entry(j);
+            int same_ra = (fabsf(si.ra_hours - sj.ra_hours) < 0.001f);
+            int same_dec = (fabsf(si.dec_deg - sj.dec_deg) < 0.001f);
+            /* Fail if both RA and Dec match exactly */
+            TEST_ASSERT_FALSE(same_ra && same_dec);
+        }
+    }
+}
+
+/* 26. Index 1 is still Canopus */
+void test_canopus_is_second(void)
+{
+    star_entry_t s = star_catalog_entry(1);
+    TEST_ASSERT_TRUE(NEAR(6.40f, s.ra_hours));
+    TEST_ASSERT_TRUE(NEAR(-52.70f, s.dec_deg));
+    TEST_ASSERT_TRUE(s.magnitude < 0.0f); /* Canopus: -0.74 */
+    const char *name = star_catalog_name(1);
+    TEST_ASSERT_NOT_NULL(name);
+    TEST_ASSERT_TRUE(name[0] == 'C'); /* "Canopus" */
+}
+
+/* 27. All names are non-null */
+void test_all_names_valid(void)
+{
+    int n = star_catalog_count();
+    for (int i = 0; i < n; i++) {
+        const char *name = star_catalog_name(i);
+        TEST_ASSERT_NOT_NULL(name);
+        TEST_ASSERT_TRUE(name[0] != '\0');
+    }
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -260,5 +317,9 @@ int main(void)
     RUN_TEST(test_mag_size_positive);
     RUN_TEST(test_mag_size_scales);
     RUN_TEST(test_purity);
+    RUN_TEST(test_last_entries_valid);
+    RUN_TEST(test_no_duplicate_positions);
+    RUN_TEST(test_canopus_is_second);
+    RUN_TEST(test_all_names_valid);
     return UNITY_END();
 }

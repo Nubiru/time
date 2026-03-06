@@ -9,7 +9,7 @@ void tearDown(void) {}
 void test_count(void)
 {
     int n = constellation_count();
-    TEST_ASSERT_TRUE(n >= 20);
+    TEST_ASSERT_TRUE(n >= 35);
     TEST_ASSERT_TRUE(n <= 50);
 }
 
@@ -360,6 +360,66 @@ void test_pegasus_exists(void)
     TEST_ASSERT_TRUE(c.line_count >= 4);
 }
 
+/* 34. Virgo exists with Spica */
+void test_virgo_exists(void)
+{
+    int idx = constellation_find("Virgo");
+    TEST_ASSERT_TRUE(idx >= 0);
+    constellation_t c = constellation_get(idx);
+    TEST_ASSERT_TRUE(c.line_count >= 2);
+    int found = 0;
+    for (int j = 0; j < c.line_count; j++) {
+        if (c.lines[j].star_a == 15 || c.lines[j].star_b == 15) {
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found); /* Spica (index 15) */
+}
+
+/* 35. Cancer exists */
+void test_cancer_exists(void)
+{
+    int idx = constellation_find("Cancer");
+    TEST_ASSERT_TRUE(idx >= 0);
+    constellation_t c = constellation_get(idx);
+    TEST_ASSERT_TRUE(c.line_count >= 1);
+}
+
+/* 36. Hercules exists with Kornephoros */
+void test_hercules_exists(void)
+{
+    int idx = constellation_find("Hercules");
+    TEST_ASSERT_TRUE(idx >= 0);
+    constellation_t c = constellation_get(idx);
+    TEST_ASSERT_TRUE(c.line_count >= 3);
+    int found = 0;
+    for (int j = 0; j < c.line_count; j++) {
+        if (c.lines[j].star_a == 89 || c.lines[j].star_b == 89) {
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found); /* Kornephoros (index 89) */
+}
+
+/* 37. Canis Minor exists with Procyon */
+void test_canis_minor_exists(void)
+{
+    int idx = constellation_find("Canis Minor");
+    TEST_ASSERT_TRUE(idx >= 0);
+    constellation_t c = constellation_get(idx);
+    TEST_ASSERT_TRUE(c.line_count >= 1);
+    int found = 0;
+    for (int j = 0; j < c.line_count; j++) {
+        if (c.lines[j].star_a == 7 || c.lines[j].star_b == 7) {
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found); /* Procyon (index 7) */
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -396,5 +456,9 @@ int main(void)
     RUN_TEST(test_ursa_major_expanded);
     RUN_TEST(test_leo_has_regulus);
     RUN_TEST(test_pegasus_exists);
+    RUN_TEST(test_virgo_exists);
+    RUN_TEST(test_cancer_exists);
+    RUN_TEST(test_hercules_exists);
+    RUN_TEST(test_canis_minor_exists);
     return UNITY_END();
 }
