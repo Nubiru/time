@@ -347,7 +347,9 @@
         { "file": "docs/checklists/books.md", "line": 11, "note": "Calendrical Calculations book" },
         { "file": "src/systems/chinese/chinese.c", "line": 4, "note": "Chinese calendar cycle epoch reference" },
         { "file": "src/systems/hebrew/hebrew.h", "line": 4, "note": "Hebrew calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/hebrew/hebrew.c", "line": 3, "note": "Hebrew calendar implementation (Calendrical Calculations)" }
+        { "file": "src/systems/hebrew/hebrew.c", "line": 3, "note": "Hebrew calendar implementation (Calendrical Calculations)" },
+        { "file": "src/systems/islamic/hijri.h", "line": 4, "note": "Hijri calendar algorithm (Dershowitz & Reingold)" },
+        { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" }
       ]
     },
     {
@@ -366,7 +368,9 @@
         { "file": "docs/checklists/books.md", "line": 11, "note": "Calendrical Calculations book" },
         { "file": "src/systems/chinese/chinese.c", "line": 4, "note": "Chinese calendar cycle epoch reference" },
         { "file": "src/systems/hebrew/hebrew.h", "line": 4, "note": "Hebrew calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/hebrew/hebrew.c", "line": 3, "note": "Hebrew calendar implementation (Calendrical Calculations)" }
+        { "file": "src/systems/hebrew/hebrew.c", "line": 3, "note": "Hebrew calendar implementation (Calendrical Calculations)" },
+        { "file": "src/systems/islamic/hijri.h", "line": 4, "note": "Hijri calendar algorithm (Dershowitz & Reingold)" },
+        { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" }
       ]
     },
     {
