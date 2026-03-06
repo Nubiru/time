@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 51
+    "total_contributors": 55
   },
   "contributors": [
     {
@@ -933,6 +933,70 @@
       ],
       "references": [
         { "file": "src/systems/buddhist/kalpa.c", "line": 1, "note": "Maha-kalpa phases, antarakalpa lifespan cycles, cosmic time hierarchy" }
+      ]
+    },
+    {
+      "id": "sefer-yetzirah",
+      "name": "Sefer Yetzirah (Book of Formation, anonymous)",
+      "category": ["mystical-text"],
+      "contributions": [
+        {
+          "work": "Sefer Yetzirah",
+          "description": "Foundational Kabbalistic text (~1st-3rd century CE). Source for 3 mother letters (elements), 7 double letters (planets), 12 simple letters (zodiac), and 231 Gates (two-letter combinations).",
+          "year": 200
+        }
+      ],
+      "references": [
+        { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "22 Hebrew letter classifications, 231 Gates" }
+      ]
+    },
+    {
+      "id": "golden-dawn",
+      "name": "Hermetic Order of the Golden Dawn",
+      "category": ["esoteric-order"],
+      "contributions": [
+        {
+          "work": "Golden Dawn correspondence tables",
+          "description": "Late 19th century synthesis mapping 22 Hebrew letters to Tarot Major Arcana, zodiac signs, planets, and elements on the Tree of Life paths.",
+          "year": 1888
+        }
+      ],
+      "references": [
+        { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "Path-to-Sefirot connections, Tarot attributions, zodiac/planet/element correspondences" }
+      ]
+    },
+    {
+      "id": "aleister-crowley",
+      "name": "Aleister Crowley",
+      "born": 1875,
+      "died": 1947,
+      "category": ["occultist", "author"],
+      "contributions": [
+        {
+          "work": "777 and Other Qabalistic Writings",
+          "description": "Comprehensive correspondence tables systematizing Golden Dawn attributions: Hebrew letters, paths, Tarot, zodiac, planets, elements, colors.",
+          "year": 1909
+        }
+      ],
+      "references": [
+        { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "Correspondence tables for 22 paths" }
+      ]
+    },
+    {
+      "id": "athanasius-kircher",
+      "name": "Athanasius Kircher",
+      "born": 1602,
+      "died": 1680,
+      "category": ["scholar", "polymath"],
+      "contributions": [
+        {
+          "work": "Oedipus Aegyptiacus",
+          "description": "Published the Tree of Life path layout (Kircher Tree) that became the standard Western Kabbalistic topology: 22 paths connecting 10 Sefirot.",
+          "year": 1652
+        }
+      ],
+      "references": [
+        { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "Kircher Tree topology: 22 path connections between Sefirot" }
       ]
     }
   ]
