@@ -838,6 +838,38 @@
       "references": [
         { "file": "src/systems/geology/geo_time.c", "line": 1, "note": "ICS 2024 chronostratigraphic data: 4 eons, 10 eras, 22 periods, 34 epochs" }
       ]
+    },
+    {
+      "id": "charles-messier",
+      "name": "Charles Messier",
+      "born": 1730,
+      "died": 1817,
+      "category": ["astronomer"],
+      "contributions": [
+        {
+          "work": "Catalogue des Nebuleuses et des Amas d'Etoiles",
+          "description": "110 deep sky objects: nebulae, star clusters, and galaxies. The foundational observational catalog.",
+          "year": 1771
+        }
+      ],
+      "references": [
+        { "file": "src/render/deep_sky.c", "line": 1, "note": "All 110 Messier objects: positions, types, magnitudes, angular sizes" }
+      ]
+    },
+    {
+      "id": "simbad-cds",
+      "name": "SIMBAD / Centre de Donnees astronomiques de Strasbourg",
+      "category": ["research-organization"],
+      "contributions": [
+        {
+          "work": "SIMBAD Astronomical Database",
+          "description": "Reference database for astronomical object data: positions, magnitudes, classifications",
+          "year": 2000
+        }
+      ],
+      "references": [
+        { "file": "src/render/deep_sky.c", "line": 9, "note": "Messier object positions, magnitudes, and classifications" }
+      ]
     }
   ]
 }
