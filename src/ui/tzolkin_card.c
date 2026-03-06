@@ -1,4 +1,7 @@
 #include "tzolkin_card.h"
+#include "../systems/tzolkin/tzolkin.h"
+#include <stdio.h>
+#include <string.h>
 
 /*
  * Dreamspell color families: seals cycle Red, White, Blue, Yellow.
@@ -147,4 +150,168 @@ int tzolkin_wavespell_seal(int wavespell)
     /* Kin that starts this wavespell */
     int start_kin = (wavespell - 1) * 13 + 1;
     return (start_kin - 1) % 20;
+}
+
+/* --- Castle --- */
+
+static const char *CASTLE_SHORT_NAMES[5] = {
+    "Red Eastern", "White Northern", "Blue Western",
+    "Yellow Southern", "Green Central"
+};
+
+static const char *CASTLE_FULL_NAMES[5] = {
+    "Red Eastern Castle of Turning",
+    "White Northern Castle of Crossing",
+    "Blue Western Castle of Burning",
+    "Yellow Southern Castle of Giving",
+    "Green Central Castle of Enchantment"
+};
+
+static const char *CASTLE_COLOR_NAMES[5] = {
+    "Red", "White", "Blue", "Yellow", "Green"
+};
+
+/* Seal keywords (Dreamspell "power" or action for each solar seal) */
+static const char *SEAL_KEYWORDS[20] = {
+    "Birth",            /* 0  Dragon */
+    "Spirit",           /* 1  Wind */
+    "Abundance",        /* 2  Night */
+    "Flowering",        /* 3  Seed */
+    "Life Force",       /* 4  Serpent */
+    "Death",            /* 5  Worldbridger */
+    "Accomplishment",   /* 6  Hand */
+    "Elegance",         /* 7  Star */
+    "Universal Water",  /* 8  Moon */
+    "Heart",            /* 9  Dog */
+    "Magic",            /* 10 Monkey */
+    "Free Will",        /* 11 Human */
+    "Space",            /* 12 Skywalker */
+    "Timelessness",     /* 13 Wizard */
+    "Vision",           /* 14 Eagle */
+    "Intelligence",     /* 15 Warrior */
+    "Navigation",       /* 16 Earth */
+    "Endlessness",      /* 17 Mirror */
+    "Self-Generation",  /* 18 Storm */
+    "Universal Fire"    /* 19 Sun */
+};
+
+tzolkin_castle_t tzolkin_castle(int kin)
+{
+    if (kin < 1) kin = 1;
+    if (kin > 260) kin = 260;
+    return (tzolkin_castle_t)(((kin - 1) / 52) + 1);
+}
+
+const char *tzolkin_castle_short_name(tzolkin_castle_t castle)
+{
+    if (castle < 1 || castle > 5) return "?";
+    return CASTLE_SHORT_NAMES[castle - 1];
+}
+
+const char *tzolkin_castle_full_name(tzolkin_castle_t castle)
+{
+    if (castle < 1 || castle > 5) return "?";
+    return CASTLE_FULL_NAMES[castle - 1];
+}
+
+const char *tzolkin_castle_name(tzolkin_castle_t castle)
+{
+    return tzolkin_castle_short_name(castle);
+}
+
+const char *tzolkin_castle_color_name(tzolkin_castle_t castle)
+{
+    if (castle < 1 || castle > 5) return "?";
+    return CASTLE_COLOR_NAMES[castle - 1];
+}
+
+int tzolkin_wavespell_position(int kin)
+{
+    if (kin < 1) kin = 1;
+    if (kin > 260) kin = 260;
+    return ((kin - 1) % 13) + 1;
+}
+
+const char *tzolkin_seal_keyword(int seal)
+{
+    if (seal < 0 || seal > 19) return "?";
+    return SEAL_KEYWORDS[seal];
+}
+
+/* --- Display formatter --- */
+
+/* Extract base seal name (skip color prefix).
+ * "Blue Hand" -> "Hand", "White Worldbridger" -> "Worldbridger" */
+static const char *base_seal_name(const char *full_name)
+{
+    const char *sp = strchr(full_name, ' ');
+    if (sp) return sp + 1;
+    return full_name;
+}
+
+static void safe_copy(char *dst, size_t n, const char *src)
+{
+    strncpy(dst, src, n - 1);
+    dst[n - 1] = '\0';
+}
+
+tzolkin_display_t tzolkin_display_from_kin(int kin)
+{
+    tzolkin_display_t d;
+    memset(&d, 0, sizeof(d));
+
+    if (kin < 1) kin = 1;
+    if (kin > 260) kin = 260;
+
+    d.kin  = kin;
+    d.seal = (kin - 1) % 20;
+    d.tone = ((kin - 1) % 13) + 1;
+    d.wavespell = tzolkin_wavespell(kin);
+    d.wavespell_position = tzolkin_wavespell_position(kin);
+    d.castle = (int)tzolkin_castle(kin);
+    d.color  = tzolkin_seal_color(d.seal);
+
+    /* String lookups */
+    const char *seal_full  = tzolkin_seal_name(d.seal);
+    const char *seal_base  = base_seal_name(seal_full);
+    const char *tone_nm    = tzolkin_tone_name(d.tone);
+    const char *col_nm     = tzolkin_color_name(d.color);
+    const char *castle_fnm = tzolkin_castle_full_name((tzolkin_castle_t)d.castle);
+    const char *castle_snm = tzolkin_castle_short_name((tzolkin_castle_t)d.castle);
+    const char *kw         = tzolkin_tone_keyword(d.tone);
+    const char *act        = tzolkin_tone_action(d.tone);
+    const char *seal_kw    = tzolkin_seal_keyword(d.seal);
+
+    /* Oracle */
+    tzolkin_oracle_t orc = tzolkin_oracle(d.seal, d.tone);
+    safe_copy(d.oracle_guide,    sizeof(d.oracle_guide),    tzolkin_seal_name(orc.guide));
+    safe_copy(d.oracle_analog,   sizeof(d.oracle_analog),   tzolkin_seal_name(orc.analog));
+    safe_copy(d.oracle_antipode, sizeof(d.oracle_antipode), tzolkin_seal_name(orc.antipode));
+    safe_copy(d.oracle_occult,   sizeof(d.oracle_occult),   tzolkin_seal_name(orc.occult));
+
+    /* Copy short strings */
+    safe_copy(d.color_name,   sizeof(d.color_name),   col_nm);
+    safe_copy(d.castle_name,  sizeof(d.castle_name),  castle_fnm);
+    safe_copy(d.tone_keyword, sizeof(d.tone_keyword), kw);
+    safe_copy(d.tone_action,  sizeof(d.tone_action),  act);
+    safe_copy(d.seal_keyword, sizeof(d.seal_keyword), seal_kw);
+
+    /* Title: "Kin N · Color Tone Seal" */
+    snprintf(d.title, sizeof(d.title),
+             "Kin %d \xc2\xb7 %s %s %s",
+             d.kin, col_nm, tone_nm, seal_base);
+
+    /* Summary: "Color Tone Seal · WS N · Castle N CastleShortName" */
+    snprintf(d.summary, sizeof(d.summary),
+             "%s %s %s \xc2\xb7 WS %d \xc2\xb7 Castle %d %s",
+             col_nm, tone_nm, seal_base,
+             d.wavespell, d.castle, castle_snm);
+
+    return d;
+}
+
+tzolkin_display_t tzolkin_display_from_jd(double jd)
+{
+    tzolkin_day_t day = tzolkin_from_jd(jd);
+    return tzolkin_display_from_kin(day.kin);
 }

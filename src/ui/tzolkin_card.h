@@ -54,4 +54,62 @@ int tzolkin_wavespell(int kin);
 /* Get the seal that initiates a given wavespell (1-20). Returns seal index 0-19. */
 int tzolkin_wavespell_seal(int wavespell);
 
+/* Castle type (5 castles of 52 kin each) */
+typedef enum {
+    CASTLE_RED_EASTERN     = 1,
+    CASTLE_WHITE_NORTHERN  = 2,
+    CASTLE_BLUE_WESTERN    = 3,
+    CASTLE_YELLOW_SOUTHERN = 4,
+    CASTLE_GREEN_CENTRAL   = 5
+} tzolkin_castle_t;
+
+/* Unified display data for Tzolkin Kin Card */
+typedef struct {
+    int kin;                    /* 1-260 */
+    int seal;                   /* 0-19 */
+    int tone;                   /* 1-13 */
+    int castle;                 /* 1-5 */
+    int wavespell;              /* 1-20 */
+    int wavespell_position;     /* 1-13 (position within wavespell) */
+    tzolkin_color_t color;
+    char title[64];             /* "Kin 207 · Blue Crystal Hand" */
+    char color_name[8];         /* "Blue" */
+    char castle_name[48];       /* "Green Central Castle of Enchantment" */
+    char tone_keyword[20];      /* "Cooperation" */
+    char tone_action[16];       /* "Dedicate" */
+    char seal_keyword[24];      /* "Accomplishment" */
+    char oracle_guide[24];      /* seal name of guide */
+    char oracle_analog[24];     /* seal name of analog */
+    char oracle_antipode[24];   /* seal name of antipode */
+    char oracle_occult[24];     /* seal name of occult */
+    char summary[96];           /* "Blue Crystal Hand · WS 16 · Castle 4 Yellow Southern" */
+} tzolkin_display_t;
+
+/* Castle number (1-5) from kin (1-260). Returns 1 for invalid. */
+tzolkin_castle_t tzolkin_castle(int kin);
+
+/* Castle short name: "Red Eastern", "White Northern", etc. */
+const char *tzolkin_castle_short_name(tzolkin_castle_t castle);
+
+/* Castle full name: "Red Eastern Castle of Turning", etc. */
+const char *tzolkin_castle_full_name(tzolkin_castle_t castle);
+
+/* Castle name (alias for short name). */
+const char *tzolkin_castle_name(tzolkin_castle_t castle);
+
+/* Castle color: "Red", "White", "Blue", "Yellow", "Green" */
+const char *tzolkin_castle_color_name(tzolkin_castle_t castle);
+
+/* Wavespell position within wavespell (1-13). Returns 1 for invalid. */
+int tzolkin_wavespell_position(int kin);
+
+/* Seal keyword (Dreamspell). e.g. Dragon="Birth", Wind="Spirit" */
+const char *tzolkin_seal_keyword(int seal);
+
+/* Build complete display from kin number (1-260). */
+tzolkin_display_t tzolkin_display_from_kin(int kin);
+
+/* Build complete display from Julian Day. */
+tzolkin_display_t tzolkin_display_from_jd(double jd);
+
 #endif
