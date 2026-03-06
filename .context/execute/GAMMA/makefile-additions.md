@@ -7,6 +7,7 @@ src/systems/unified/structural_map.c
 src/systems/geology/climate_history.c
 src/systems/geology/fossil_milestones.c
 src/systems/earth/surf_spots.c
+src/systems/earth/ski_resorts.c
 
 ## New test targets:
 test-four-worlds: $(BUILD_DIR)
@@ -37,8 +38,12 @@ test-surf-spots: $(BUILD_DIR)
 	$(CC) $(CFLAGS) tests/systems/earth/test_surf_spots.c src/systems/earth/surf_spots.c $(UNITY) -o $(BUILD_DIR)/test_surf_spots $(LDFLAGS)
 	./$(BUILD_DIR)/test_surf_spots
 
+test-ski-resorts: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_ski_resorts.c src/systems/earth/ski_resorts.c $(UNITY) -o $(BUILD_DIR)/test_ski_resorts $(LDFLAGS)
+	./$(BUILD_DIR)/test_ski_resorts
+
 ## Add to test: dependency list:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts
 
 ## Add to .PHONY:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts
