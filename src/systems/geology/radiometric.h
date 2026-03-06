@@ -1,83 +1,64 @@
 /* radiometric.h — Radiometric dating constants and decay math.
- * Isotope half-lives, decay fractions, age estimation, decay curves.
- * All pure functions, no side effects. IUPAC recommended values. */
+ * 8 isotope systems with half-lives, decay fractions, age estimation,
+ * and decay curves. All pure functions, no side effects.
+ * IUPAC recommended values. */
 
 #ifndef TIME_RADIOMETRIC_H
 #define TIME_RADIOMETRIC_H
 
+#include <stdbool.h>
+
 #define RADIOMETRIC_SYSTEM_COUNT 8
 
-/* Decay system identifiers */
-typedef enum {
-    DECAY_U238_PB206 = 0,   /* Uranium-238 to Lead-206 */
-    DECAY_U235_PB207,        /* Uranium-235 to Lead-207 */
-    DECAY_K40_AR40,          /* Potassium-40 to Argon-40 */
-    DECAY_RB87_SR87,         /* Rubidium-87 to Strontium-87 */
-    DECAY_C14_N14,           /* Carbon-14 to Nitrogen-14 */
-    DECAY_SM147_ND143,       /* Samarium-147 to Neodymium-143 */
-    DECAY_LU176_HF176,       /* Lutetium-176 to Hafnium-176 */
-    DECAY_TH232_PB208,       /* Thorium-232 to Lead-208 */
-    DECAY_SYSTEM_COUNT
-} decay_system_t;
-
-/* Isotope decay system data */
 typedef struct {
-    decay_system_t id;
-    const char *parent;         /* parent isotope name */
-    const char *daughter;       /* daughter isotope name */
-    double half_life_years;     /* half-life in years */
-    double decay_constant;      /* lambda = ln(2) / half_life */
-    double useful_range_min_yr; /* minimum datable age (years) */
-    double useful_range_max_yr; /* maximum datable age (years) */
-} decay_data_t;
+    int id;
+    const char *parent;
+    const char *daughter;
+    double half_life_years;
+    double decay_constant;    /* lambda = ln(2) / half_life */
+    const char *method_name;
+    double useful_range_min;
+    double useful_range_max;
+} radiometric_system_t;
 
-/* Decay curve sample point */
 typedef struct {
-    float time_fraction;     /* 0.0 = t=0, 1.0 = t=max_time */
-    float parent_fraction;   /* remaining parent (0-1) */
-    float daughter_fraction; /* accumulated daughter (0-1) */
+    double time;              /* elapsed time (in half-lives) */
+    double parent_fraction;
+    double daughter_fraction;
 } decay_point_t;
 
-/* Get decay system data by ID. Returns zeroed struct for invalid ID. */
-decay_data_t radiometric_system(decay_system_t id);
+/* Get isotope system data by index (0..7). Returns id=-1 for invalid. */
+radiometric_system_t radiometric_system_get(int index);
 
-/* Parent isotope name. Returns NULL for invalid ID. */
-const char *radiometric_parent(decay_system_t id);
+/* Number of isotope systems (always 8). */
+int radiometric_system_count(void);
 
-/* Daughter isotope name. Returns NULL for invalid ID. */
-const char *radiometric_daughter(decay_system_t id);
+/* Find system by parent isotope name (strcmp match). id=-1 if not found. */
+radiometric_system_t radiometric_find_by_parent(const char *parent_name);
 
-/* Half-life in years. Returns 0 for invalid ID. */
-double radiometric_half_life(decay_system_t id);
+/* Fraction of parent remaining: N/N0 = e^(-lambda * t). */
+double radiometric_remaining_fraction(double half_life_years, double elapsed_years);
 
-/* Fraction of parent remaining after elapsed_years.
- * N/N0 = (1/2)^(t/t_half). Uses pow(0.5,...) for stability. */
-double decay_fraction(double half_life_years, double elapsed_years);
+/* Fraction decayed to daughter: D/N0 = 1 - e^(-lambda * t). */
+double radiometric_daughter_fraction(double half_life_years, double elapsed_years);
 
-/* Age estimate from parent/daughter ratio.
- * t = (t_half / ln(2)) * ln(1 + daughter/parent)
- * Returns age in years. Returns 0 if parent <= 0. */
-double age_from_ratio(double parent_amount, double daughter_amount,
-                      double half_life_years);
+/* Age from parent/daughter ratio: t = ln(1 + D/P) / lambda.
+ * Returns -1.0 for invalid inputs (parent_ratio <= 0, daughter_ratio < 0). */
+double radiometric_age_from_ratio(double half_life_years, double parent_ratio, double daughter_ratio);
 
-/* Number of half-lives elapsed. */
-double half_lives_elapsed(double half_life_years, double elapsed_years);
+/* Generate decay curve: n_points from time=0 to time=max_half_lives.
+ * Returns count written, or 0 on error. */
+int radiometric_decay_curve(double max_half_lives, decay_point_t *out_points, int n_points);
 
-/* Generate decay curve sample points for visualization.
- * points: output array of at least n_points elements.
- * max_time_years: time span to sample.
- * Returns number of points written (= n_points), or 0 on error. */
-int decay_curve(decay_system_t id, decay_point_t *points,
-                int n_points, double max_time_years);
+/* Check if elapsed_years falls within system's useful range.
+ * Returns false for out-of-bounds index. */
+bool radiometric_in_range(int system_index, double elapsed_years);
 
-/* Is a given age within the useful dating range of this system?
- * Returns 1 if in range, 0 otherwise. */
-int radiometric_in_range(decay_system_t id, double age_years);
+/* Find best system for a given age. Prefers C-14 for young samples.
+ * Returns -1 if no system covers the age. */
+int radiometric_best_system(double elapsed_years);
 
-/* Suggest best dating system for a given age (years).
- * Returns the system whose useful range best covers the age.
- * Prefers the system where age is closest to center of range in log space.
- * Returns DECAY_SYSTEM_COUNT if no system covers it. */
-decay_system_t radiometric_best_system(double age_years);
+/* Compute decay constant: lambda = ln(2) / half_life. */
+double radiometric_decay_constant(double half_life_years);
 
 #endif /* TIME_RADIOMETRIC_H */
