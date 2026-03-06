@@ -47,7 +47,7 @@ wasm: $(BUILD_DIR)
 	cp web/style.css $(BUILD_DIR)/style.css
 
 # Run all tests
-test: test-vec3 test-mat4 test-julian test-kepler test-sidereal test-camera test-camera-scale test-render-layers test-orbit test-ecliptic test-gregorian test-zodiac test-tzolkin test-planets test-time-hud test-aspects test-chinese test-observer test-houses test-easing test-font-atlas test-cross-validation test-dignity test-lunar test-iching test-arc-geometry test-fmt test-human-design test-planetary-hours test-precession test-solar-events test-numerology test-color test-bezier test-sacred-geometry test-animation test-glyph-layout test-wheel-layout test-color-palette test-card-data test-cosmic-time test-ring-geometry test-aspect-lines test-moon-nodes test-zodiac-glyphs test-projection test-cusp-lines test-galaxy-geometry test-billboard test-date-parse test-ring-data test-astro-wheel-layout test-retrograde test-card-layout test-hexagram-visual test-location-presets test-scale-hud test-system-scale-map test-time-format
+test: test-vec3 test-mat4 test-julian test-kepler test-sidereal test-camera test-camera-scale test-render-layers test-orbit test-ecliptic test-gregorian test-zodiac test-tzolkin test-planets test-planet-data test-time-hud test-aspects test-chinese test-observer test-houses test-easing test-font-atlas test-cross-validation test-dignity test-lunar test-iching test-arc-geometry test-fmt test-human-design test-planetary-hours test-precession test-solar-events test-numerology test-color test-bezier test-sacred-geometry test-animation test-glyph-layout test-wheel-layout test-color-palette test-card-data test-cosmic-time test-ring-geometry test-aspect-lines test-moon-nodes test-zodiac-glyphs test-projection test-cusp-lines test-galaxy-geometry test-billboard test-date-parse test-ring-data test-astro-wheel-layout test-retrograde test-card-layout test-hexagram-visual test-location-presets test-scale-hud test-system-scale-map test-time-format
 
 # Individual test targets
 test-vec3: $(BUILD_DIR)
@@ -97,6 +97,10 @@ test-tzolkin: $(BUILD_DIR)
 test-planets: $(BUILD_DIR)
 	$(CC) $(CFLAGS) tests/systems/test_planets.c src/systems/astronomy/planets.c src/systems/astronomy/orbit.c src/math/kepler.c $(UNITY) -o $(BUILD_DIR)/test_planets $(LDFLAGS)
 	./$(BUILD_DIR)/test_planets
+
+test-planet-data: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/test_planet_data.c src/systems/astronomy/planet_data.c $(UNITY) -o $(BUILD_DIR)/test_planet_data $(LDFLAGS)
+	./$(BUILD_DIR)/test_planet_data
 
 test-time-hud: $(BUILD_DIR)
 	$(CC) $(CFLAGS) tests/ui/test_time_hud.c src/ui/time_hud.c src/systems/gregorian/gregorian.c src/math/julian.c src/math/sidereal.c src/systems/tzolkin/tzolkin.c src/systems/astrology/zodiac.c src/systems/astronomy/planets.c src/systems/astronomy/orbit.c src/math/kepler.c $(UNITY) -o $(BUILD_DIR)/test_time_hud $(LDFLAGS)
@@ -303,4 +307,4 @@ clean:
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-.PHONY: native wasm test test-vec3 test-mat4 test-julian test-kepler test-sidereal test-camera test-camera-scale test-render-layers test-orbit test-ecliptic test-gregorian test-zodiac test-tzolkin test-planets test-time-hud test-aspects test-chinese test-observer test-houses test-easing test-font-atlas test-cross-validation test-dignity test-lunar test-iching test-arc-geometry test-fmt test-human-design test-planetary-hours test-precession test-solar-events test-numerology test-color test-bezier test-sacred-geometry test-animation test-glyph-layout test-wheel-layout test-color-palette test-card-data test-cosmic-time test-ring-geometry test-aspect-lines test-moon-nodes test-zodiac-glyphs test-projection test-cusp-lines test-galaxy-geometry test-billboard test-date-parse test-ring-data test-astro-wheel-layout test-retrograde test-card-layout test-hexagram-visual test-location-presets test-scale-hud test-system-scale-map test-time-format dev serve clean
+.PHONY: native wasm test test-vec3 test-mat4 test-julian test-kepler test-sidereal test-camera test-camera-scale test-render-layers test-orbit test-ecliptic test-gregorian test-zodiac test-tzolkin test-planets test-planet-data test-time-hud test-aspects test-chinese test-observer test-houses test-easing test-font-atlas test-cross-validation test-dignity test-lunar test-iching test-arc-geometry test-fmt test-human-design test-planetary-hours test-precession test-solar-events test-numerology test-color test-bezier test-sacred-geometry test-animation test-glyph-layout test-wheel-layout test-color-palette test-card-data test-cosmic-time test-ring-geometry test-aspect-lines test-moon-nodes test-zodiac-glyphs test-projection test-cusp-lines test-galaxy-geometry test-billboard test-date-parse test-ring-data test-astro-wheel-layout test-retrograde test-card-layout test-hexagram-visual test-location-presets test-scale-hud test-system-scale-map test-time-format dev serve clean

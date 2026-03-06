@@ -312,11 +312,17 @@
           "work": "Approximate Positions of the Planets",
           "description": "Keplerian orbital elements for all 8 planets, J2000.0 epoch, valid 1800-2050 AD",
           "year": 2013
+        },
+        {
+          "work": "NASA Planetary Fact Sheet",
+          "description": "Physical properties: equatorial radii, masses, albedos, axial tilts, rotation periods, ring data for all 8 planets",
+          "year": 2024
         }
       ],
       "references": [
         { "file": "src/systems/astronomy/orbit.c", "line": 16, "note": "JPL Approximate Positions of the Planets" },
-        { "file": "src/systems/astronomy/orbit.c", "line": 58, "note": "Earth orbital elements (JPL Table 1)" }
+        { "file": "src/systems/astronomy/orbit.c", "line": 58, "note": "Earth orbital elements (JPL Table 1)" },
+        { "file": "src/systems/astronomy/planet_data.c", "line": 1, "note": "NASA Planetary Fact Sheet: radii, masses, albedos, tilts, rotations, colors" }
       ]
     },
     {
