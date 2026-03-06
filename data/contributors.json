@@ -818,6 +818,21 @@
       "references": [
         { "file": "docs/checklists/books.md", "line": 85, "note": "Not yet acquired, MEDIUM priority" }
       ]
+    },
+    {
+      "id": "ics",
+      "name": "International Commission on Stratigraphy",
+      "category": ["research-organization"],
+      "contributions": [
+        {
+          "work": "International Chronostratigraphic Chart",
+          "description": "Standard geological time scale: eons, eras, periods, epochs with boundaries and colors. ICS 2024 revision.",
+          "year": 2024
+        }
+      ],
+      "references": [
+        { "file": "src/systems/geology/geo_time.c", "line": 1, "note": "ICS 2024 chronostratigraphic data: 4 eons, 10 eras, 22 periods, 34 epochs" }
+      ]
     }
   ]
 }
