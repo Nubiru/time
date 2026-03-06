@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 44
+    "total_contributors": 47
   },
   "contributors": [
     {
@@ -757,6 +757,51 @@
       ],
       "references": [
         { "file": "src/render/atmo_ring.c", "line": 7, "note": "Fresnel limb glow approximation for planetary atmospheres" }
+      ]
+    },
+    {
+      "id": "francisco-ballesteros",
+      "name": "F. J. Ballesteros",
+      "category": ["astrophysicist", "researcher"],
+      "contributions": [
+        {
+          "work": "New insights into the HR diagram",
+          "description": "B-V color index to effective temperature formula: T = 4600*(1/(0.92*BV+1.7) + 1/(0.92*BV+0.62))",
+          "year": 2012
+        }
+      ],
+      "references": [
+        { "file": "src/render/star_colors.c", "line": 5, "note": "Ballesteros (2012) B-V to temperature formula" }
+      ]
+    },
+    {
+      "id": "tanner-helland",
+      "name": "Tanner Helland",
+      "category": ["programmer", "researcher"],
+      "contributions": [
+        {
+          "work": "Color temperature to RGB approximation",
+          "description": "Attempt to approximate Planck blackbody as simple piecewise functions for color temperature to RGB conversion",
+          "year": 2012
+        }
+      ],
+      "references": [
+        { "file": "src/render/star_colors.c", "line": 8, "note": "Temperature-to-RGB approximation algorithm" }
+      ]
+    },
+    {
+      "id": "mitchell-charity",
+      "name": "Mitchell Charity",
+      "category": ["physicist", "researcher"],
+      "contributions": [
+        {
+          "work": "Blackbody color datapage",
+          "description": "Original CIE-based blackbody radiation color data underlying the Helland approximation",
+          "year": 2001
+        }
+      ],
+      "references": [
+        { "file": "src/render/star_colors.c", "line": 9, "note": "Original blackbody color data" }
       ]
     },
     {
