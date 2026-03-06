@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 47
+    "total_contributors": 48
   },
   "contributors": [
     {
@@ -869,6 +869,21 @@
       ],
       "references": [
         { "file": "src/render/deep_sky.c", "line": 9, "note": "Messier object positions, magnitudes, and classifications" }
+      ]
+    },
+    {
+      "id": "iupac",
+      "name": "International Union of Pure and Applied Chemistry",
+      "category": ["research-organization"],
+      "contributions": [
+        {
+          "work": "Recommended Isotope Half-Life Values",
+          "description": "IUPAC recommended half-lives for radiometric dating systems: U-238, U-235, K-40, Rb-87, C-14, Sm-147, Lu-176, Th-232",
+          "year": 2016
+        }
+      ],
+      "references": [
+        { "file": "src/systems/geology/radiometric.c", "line": 12, "note": "Isotope half-life constants for all 8 decay systems" }
       ]
     }
   ]
