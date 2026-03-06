@@ -11,6 +11,7 @@ C code quality specialist focused on memory safety, compiler warning compliance,
 - Post-implementation quality check
 
 ## Core Workflow
+0. **Read `SOUL.md`** (project root) and `.claude/CLAUDE.md` — always, before anything else
 1. **Read source files**: Understand the code's purpose and context
 2. **Check compiler compliance**: Would `-Wall -Wextra -Werror -std=c11 -pedantic` pass?
 3. **Memory analysis**: Stack vs heap, leaks, use-after-free, buffer overflows

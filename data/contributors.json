@@ -1,0 +1,715 @@
+{
+  "meta": {
+    "description": "Every human whose intellectual work feeds the Time codebase",
+    "last_updated": "2026-03-06",
+    "total_contributors": 41
+  },
+  "contributors": [
+    {
+      "id": "jean-meeus",
+      "name": "Jean Meeus",
+      "born": 1928,
+      "category": ["astronomer", "mathematician", "author"],
+      "contributions": [
+        {
+          "work": "Astronomical Algorithms",
+          "description": "Julian Day conversion, Kepler's equation, GMST, nutation, obliquity, ecliptic coordinates, planetary positions, lunar nodes, solar events",
+          "year": 1991
+        }
+      ],
+      "references": [
+        { "file": "src/math/julian.c", "line": 4, "note": "Chapter 7: Julian Day algorithm" },
+        { "file": "src/math/kepler.c", "line": 6, "note": "Chapter 30: Kepler's equation" },
+        { "file": "src/math/sidereal.c", "line": 4, "note": "Chapter 12: GMST/GAST (Eq. 12.3, 12.4)" },
+        { "file": "src/math/sidereal.c", "line": 42, "note": "Chapter 22: nutation, low-accuracy" },
+        { "file": "src/math/sidereal.c", "line": 67, "note": "Eq. 22.2: mean obliquity" },
+        { "file": "src/math/ecliptic.h", "line": 15, "note": "Chapter 22: obliquity formula" },
+        { "file": "src/math/ecliptic.c", "line": 34, "note": "Eq. 22.2: mean obliquity of ecliptic" },
+        { "file": "src/systems/astronomy/solar_events.c", "line": 19, "note": "Simplified Meeus/NOAA solar position" },
+        { "file": "src/systems/astronomy/moon_nodes.c", "line": 18, "note": "Chapter 47: mean longitude of ascending node" },
+        { "file": "src/ui/time_hud.c", "line": 13, "note": "Sidereal rate reference" }
+      ]
+    },
+    {
+      "id": "jose-arguelles",
+      "name": "Jose Arguelles",
+      "born": 1939,
+      "died": 2011,
+      "category": ["visionary", "philosopher", "author"],
+      "contributions": [
+        {
+          "work": "The Mayan Factor",
+          "description": "Foundational text for Dreamspell/Tzolkin system, 13:20 frequency",
+          "year": 1987
+        },
+        {
+          "work": "Dreamspell: The Journey of Timeship Earth 2013",
+          "description": "260-kin Tzolkin system, galactic signatures, wavespell structure",
+          "year": 1990
+        },
+        {
+          "work": "Time and the Technosphere",
+          "description": "Law of Time theory (12:60 vs 13:20 paradigm)",
+          "year": 2002
+        }
+      ],
+      "references": [
+        { "file": "src/systems/tzolkin/tzolkin.h", "line": 4, "note": "Dreamspell/Arguelles system types" },
+        { "file": "src/systems/tzolkin/tzolkin.h", "line": 12, "note": "GMT correlation 584283 (Dreamspell count)" },
+        { "file": "src/systems/tzolkin/tzolkin.c", "line": 5, "note": "Dreamspell day reference value" },
+        { "file": "src/systems/tzolkin/tzolkin.c", "line": 47, "note": "Dreamspell Feb 29 rule (0.0 Hunab Ku)" },
+        { "file": "src/ui/tzolkin_card.c", "line": 4, "note": "Dreamspell color families" },
+        { "file": "src/ui/tzolkin_card.c", "line": 18, "note": "Tone keywords (Arguelles/Dreamspell)" },
+        { "file": "src/ui/tzolkin_card.c", "line": 42, "note": "Wavespell initiating seals" },
+        { "file": "src/ui/tzolkin_card.c", "line": 52, "note": "Oracle relationships (Dreamspell)" },
+        { "file": "src/systems/tzolkin/haab.c", "line": 9, "note": "GMT correlation 584283 for Haab" },
+        { "file": "docs/DECISIONS.md", "line": 44, "note": "ADR-002: Arguelles-only decision" }
+      ]
+    },
+    {
+      "id": "johannes-kepler",
+      "name": "Johannes Kepler",
+      "born": 1571,
+      "died": 1630,
+      "category": ["astronomer", "mathematician"],
+      "contributions": [
+        {
+          "work": "Astronomia Nova / Harmonices Mundi",
+          "description": "Laws of planetary motion, Kepler's equation (M = E - e*sin(E))",
+          "year": 1609
+        }
+      ],
+      "references": [
+        { "file": "src/math/kepler.h", "line": 4, "note": "Kepler's equation solver declaration" },
+        { "file": "src/math/kepler.c", "line": 7, "note": "Kepler's equation implementation" },
+        { "file": "src/systems/astronomy/orbit.c", "line": 194, "note": "Kepler solve in orbital position" }
+      ]
+    },
+    {
+      "id": "isaac-newton",
+      "name": "Isaac Newton",
+      "born": 1643,
+      "died": 1727,
+      "category": ["mathematician", "physicist"],
+      "contributions": [
+        {
+          "work": "Philosophiae Naturalis Principia Mathematica",
+          "description": "Newton-Raphson iterative method used to solve Kepler's equation",
+          "year": 1687
+        }
+      ],
+      "references": [
+        { "file": "src/math/kepler.h", "line": 7, "note": "Newton-Raphson iteration method" },
+        { "file": "src/math/kepler.c", "line": 7, "note": "Newton-Raphson implementation for Kepler's equation" }
+      ]
+    },
+    {
+      "id": "ptolemy",
+      "name": "Claudius Ptolemy",
+      "born": 100,
+      "died": 170,
+      "category": ["astronomer", "mathematician"],
+      "contributions": [
+        {
+          "work": "Tetrabiblos",
+          "description": "Ptolemaic aspect system (conjunction, sextile, square, trine, opposition)",
+          "year": 150
+        }
+      ],
+      "references": [
+        { "file": "src/systems/astrology/aspects.h", "line": 4, "note": "Ptolemaic aspect types" },
+        { "file": "src/systems/astrology/aspects.c", "line": 4, "note": "Exact angles for Ptolemaic aspects" }
+      ]
+    },
+    {
+      "id": "king-wen",
+      "name": "King Wen of Zhou",
+      "born": -1112,
+      "died": -1050,
+      "category": ["philosopher", "ruler"],
+      "contributions": [
+        {
+          "work": "I Ching hexagram arrangement",
+          "description": "Traditional 64-hexagram sequence ordering used in divination and philosophy",
+          "year": -1050
+        }
+      ],
+      "references": [
+        { "file": "src/systems/iching/iching.c", "line": 15, "note": "King Wen sequence data table" },
+        { "file": "src/systems/iching/iching.h", "line": 8, "note": "king_wen field in hexagram_t" },
+        { "file": "src/systems/iching/iching.h", "line": 27, "note": "iching_lines_to_king_wen() function" },
+        { "file": "src/ui/hexagram_visual.c", "line": 17, "note": "Unicode hexagram symbols in King Wen order" }
+      ]
+    },
+    {
+      "id": "bk-lahiri",
+      "name": "B.K. Lahiri",
+      "born": 1886,
+      "died": 1958,
+      "category": ["astronomer"],
+      "contributions": [
+        {
+          "work": "Lahiri Ayanamsa",
+          "description": "Standard ayanamsa (tropical-to-sidereal offset) adopted by Indian government",
+          "year": 1955
+        }
+      ],
+      "references": [
+        { "file": "src/systems/astronomy/precession.c", "line": 10, "note": "Lahiri ayanamsa at J2000.0" },
+        { "file": "src/systems/astronomy/precession.c", "line": 60, "note": "prec_ayanamsa_lahiri() implementation" },
+        { "file": "src/systems/astronomy/precession.h", "line": 17, "note": "prec_ayanamsa_lahiri() declaration" }
+      ]
+    },
+    {
+      "id": "ra-uru-hu",
+      "name": "Ra Uru Hu",
+      "born": 1948,
+      "died": 2011,
+      "category": ["visionary", "author"],
+      "contributions": [
+        {
+          "work": "Human Design System",
+          "description": "64-gate system mapped to I Ching hexagrams on the ecliptic, incarnation cross, types and authority",
+          "year": 1992
+        }
+      ],
+      "references": [
+        { "file": "src/systems/human_design/human_design.c", "line": 7, "note": "Gate sequence around the ecliptic" },
+        { "file": "src/systems/human_design/human_design.h", "line": 21, "note": "Gate name accessor" },
+        { "file": "docs/checklists/books.md", "line": 46, "note": "The Definitive Book of Human Design" }
+      ]
+    },
+    {
+      "id": "lynda-bunnell",
+      "name": "Lynda Bunnell",
+      "category": ["author"],
+      "contributions": [
+        {
+          "work": "The Definitive Book of Human Design (co-author with Ra Uru Hu)",
+          "description": "Comprehensive reference for Human Design system implementation",
+          "year": 2011
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 46, "note": "The Definitive Book of Human Design" }
+      ]
+    },
+    {
+      "id": "carl-jung",
+      "name": "Carl Gustav Jung",
+      "born": 1875,
+      "died": 1961,
+      "category": ["psychologist", "philosopher"],
+      "contributions": [
+        {
+          "work": "Synchronicity: An Acausal Connecting Principle",
+          "description": "Framework for astrology as archetypal pattern recognition, not prediction",
+          "year": 1952
+        }
+      ],
+      "references": [
+        { "file": "docs/DECISIONS.md", "line": 70, "note": "ADR-003: Include Jung's perspective" },
+        { "file": "docs/DECISIONS.md", "line": 81, "note": "Synchronicity framework for astrology" },
+        { "file": "docs/checklists/books.md", "line": 39, "note": "Synchronicity reference" }
+      ]
+    },
+    {
+      "id": "safron-rossi",
+      "name": "Safron Rossi",
+      "category": ["scholar", "author"],
+      "contributions": [
+        {
+          "work": "Jung on Astrology (co-editor with Le Grice)",
+          "description": "Collected Jung's writings on astrology and synchronicity",
+          "year": 2017
+        }
+      ],
+      "references": [
+        { "file": "docs/DECISIONS.md", "line": 89, "note": "Jung on Astrology reference" },
+        { "file": "docs/checklists/books.md", "line": 38, "note": "Jung on Astrology book" }
+      ]
+    },
+    {
+      "id": "keiron-le-grice",
+      "name": "Keiron Le Grice",
+      "category": ["scholar", "author"],
+      "contributions": [
+        {
+          "work": "Jung on Astrology (co-editor with Rossi)",
+          "description": "Collected Jung's writings on astrology and synchronicity",
+          "year": 2017
+        }
+      ],
+      "references": [
+        { "file": "docs/DECISIONS.md", "line": 89, "note": "Jung on Astrology reference" },
+        { "file": "docs/checklists/books.md", "line": 38, "note": "Jung on Astrology book" }
+      ]
+    },
+    {
+      "id": "richard-wilhelm",
+      "name": "Richard Wilhelm",
+      "born": 1873,
+      "died": 1930,
+      "category": ["translator", "sinologist"],
+      "contributions": [
+        {
+          "work": "The I Ching or Book of Changes (German translation)",
+          "description": "Definitive Western translation of I Ching, hexagram names used in Time",
+          "year": 1923
+        }
+      ],
+      "references": [
+        { "file": "src/systems/iching/iching.c", "line": 15, "note": "Hexagram names from Wilhelm translation" },
+        { "file": "docs/checklists/books.md", "line": 43, "note": "Wilhelm/Baynes I Ching" }
+      ]
+    },
+    {
+      "id": "cary-baynes",
+      "name": "Cary F. Baynes",
+      "born": 1883,
+      "died": 1977,
+      "category": ["translator"],
+      "contributions": [
+        {
+          "work": "The I Ching or Book of Changes (English translation from Wilhelm's German)",
+          "description": "English translator of Wilhelm's I Ching",
+          "year": 1950
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 43, "note": "Wilhelm/Baynes I Ching" }
+      ]
+    },
+    {
+      "id": "alfred-huang",
+      "name": "Alfred Huang",
+      "born": 1928,
+      "died": 2019,
+      "category": ["author", "scholar"],
+      "contributions": [
+        {
+          "work": "The Complete I Ching",
+          "description": "Comprehensive I Ching reference with traditional Chinese interpretation",
+          "year": 1998
+        },
+        {
+          "work": "The Numerology of the I Ching",
+          "description": "Hexagram-number mapping system",
+          "year": 2000
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 44, "note": "The Complete I Ching" },
+        { "file": "docs/checklists/books.md", "line": 45, "note": "The Numerology of the I Ching" }
+      ]
+    },
+    {
+      "id": "jpl-nasa",
+      "name": "Jet Propulsion Laboratory (NASA)",
+      "category": ["research-organization"],
+      "contributions": [
+        {
+          "work": "Approximate Positions of the Planets",
+          "description": "Keplerian orbital elements for all 8 planets, J2000.0 epoch, valid 1800-2050 AD",
+          "year": 2013
+        }
+      ],
+      "references": [
+        { "file": "src/systems/astronomy/orbit.c", "line": 16, "note": "JPL Approximate Positions of the Planets" },
+        { "file": "src/systems/astronomy/orbit.c", "line": 58, "note": "Earth orbital elements (JPL Table 1)" }
+      ]
+    },
+    {
+      "id": "nachum-dershowitz",
+      "name": "Nachum Dershowitz",
+      "born": 1951,
+      "category": ["mathematician", "computer-scientist"],
+      "contributions": [
+        {
+          "work": "Calendrical Calculations (co-author with Reingold)",
+          "description": "Algorithms for calendar conversions: Gregorian, Chinese, Hebrew, Islamic, and more",
+          "year": 1997
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 11, "note": "Calendrical Calculations book" },
+        { "file": "src/systems/chinese/chinese.c", "line": 4, "note": "Chinese calendar cycle epoch reference" }
+      ]
+    },
+    {
+      "id": "edward-reingold",
+      "name": "Edward M. Reingold",
+      "born": 1945,
+      "category": ["computer-scientist"],
+      "contributions": [
+        {
+          "work": "Calendrical Calculations (co-author with Dershowitz)",
+          "description": "Algorithms for calendar conversions: Gregorian, Chinese, Hebrew, Islamic, and more",
+          "year": 1997
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 11, "note": "Calendrical Calculations book" },
+        { "file": "src/systems/chinese/chinese.c", "line": 4, "note": "Chinese calendar cycle epoch reference" }
+      ]
+    },
+    {
+      "id": "peter-duffett-smith",
+      "name": "Peter Duffett-Smith",
+      "category": ["astronomer", "author"],
+      "contributions": [
+        {
+          "work": "Practical Astronomy with your Calculator or Spreadsheet",
+          "description": "Accessible astronomical computation reference, orbit calculations",
+          "year": 1979
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 15, "note": "P1 Active Development reference" }
+      ]
+    },
+    {
+      "id": "david-ewing-duncan",
+      "name": "David Ewing Duncan",
+      "category": ["author", "historian"],
+      "contributions": [
+        {
+          "work": "The Calendar: The 5000-year Struggle to Align the Clock and the Heavens",
+          "description": "Calendar history informing design decisions for multiple calendar systems",
+          "year": 1998
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 47, "note": "Calendar history reference" }
+      ]
+    },
+    {
+      "id": "brian-kernighan",
+      "name": "Brian Kernighan",
+      "born": 1942,
+      "category": ["programmer", "author"],
+      "contributions": [
+        {
+          "work": "The C Programming Language (co-author with Ritchie)",
+          "description": "Foundational C reference; Gabriel learned C from this book",
+          "year": 1978
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 5, "note": "P0 Foundation book (K&R)" }
+      ]
+    },
+    {
+      "id": "dennis-ritchie",
+      "name": "Dennis Ritchie",
+      "born": 1941,
+      "died": 2011,
+      "category": ["programmer", "language-designer"],
+      "contributions": [
+        {
+          "work": "The C Programming Language (co-author with Kernighan)",
+          "description": "Created the C language; every line of this project exists because of his work",
+          "year": 1978
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 5, "note": "P0 Foundation book (K&R)" }
+      ]
+    },
+    {
+      "id": "ben-klemens",
+      "name": "Ben Klemens",
+      "category": ["programmer", "author"],
+      "contributions": [
+        {
+          "work": "21st Century C",
+          "description": "Modern C techniques and idioms for deepening C mastery",
+          "year": 2012
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 48, "note": "C deepening reference" }
+      ]
+    },
+    {
+      "id": "patricio-gonzalez-vivo",
+      "name": "Patricio Gonzalez Vivo",
+      "category": ["programmer", "artist"],
+      "contributions": [
+        {
+          "work": "The Book of Shaders",
+          "description": "GLSL shader writing reference, fragment shader techniques",
+          "year": 2015
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 7, "note": "P0 Foundation (online, Phase 1-7)" }
+      ]
+    },
+    {
+      "id": "mark-matsuda",
+      "name": "Mark Matsuda",
+      "category": ["programmer", "author"],
+      "contributions": [
+        {
+          "work": "WebGL Programming Guide (co-author with Lea)",
+          "description": "WebGL2 pipeline, buffer management, shader program setup",
+          "year": 2013
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 12, "note": "P1 Active Development: WebGL guide" }
+      ]
+    },
+    {
+      "id": "jake-lea",
+      "name": "Jake Lea",
+      "category": ["programmer", "author"],
+      "contributions": [
+        {
+          "work": "WebGL Programming Guide (co-author with Matsuda)",
+          "description": "WebGL2 pipeline, buffer management, shader program setup",
+          "year": 2013
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 12, "note": "P1 Active Development: WebGL guide" }
+      ]
+    },
+    {
+      "id": "eric-lengyel",
+      "name": "Eric Lengyel",
+      "category": ["mathematician", "programmer"],
+      "contributions": [
+        {
+          "work": "Mathematics for 3D Game Programming and Computer Graphics",
+          "description": "vec3/mat4 operations, projection matrices, 3D math reference",
+          "year": 2002
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 13, "note": "P1 Active Development: 3D math" }
+      ]
+    },
+    {
+      "id": "robert-penner",
+      "name": "Robert Penner",
+      "category": ["programmer", "author"],
+      "contributions": [
+        {
+          "work": "Easing Functions",
+          "description": "Standard easing equations for animation (ease-in, ease-out, bounce, elastic, etc.)",
+          "year": 2001
+        }
+      ],
+      "references": [
+        { "file": "src/math/easing.h", "line": 1, "note": "Easing function library" },
+        { "file": "src/math/easing.c", "line": 1, "note": "Easing function implementations" },
+        { "file": "src/render/camera_scale.c", "line": 2, "note": "Easing used in camera transitions" }
+      ]
+    },
+    {
+      "id": "daniel-shiffman",
+      "name": "Daniel Shiffman",
+      "category": ["programmer", "educator"],
+      "contributions": [
+        {
+          "work": "The Nature of Code",
+          "description": "Generative coding, simulation of natural systems",
+          "year": 2012
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 49, "note": "Phase 7-8: generative/creative coding" }
+      ]
+    },
+    {
+      "id": "golan-levin",
+      "name": "Golan Levin",
+      "category": ["artist", "educator"],
+      "contributions": [
+        {
+          "work": "Code as Creative Medium",
+          "description": "Creative coding fundamentals, code as artistic practice",
+          "year": 2021
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 86, "note": "Not yet acquired, planned Phase 7-8" }
+      ]
+    },
+    {
+      "id": "john-f-hughes",
+      "name": "John F. Hughes",
+      "category": ["computer-scientist", "author"],
+      "contributions": [
+        {
+          "work": "Computer Graphics: Principles and Practice (lead author)",
+          "description": "Comprehensive graphics reference: render pipeline, camera, mesh, transformations",
+          "year": 2013
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 14, "note": "P1 Active Development: CG reference (Hughes et al.)" }
+      ]
+    },
+    {
+      "id": "andries-van-dam",
+      "name": "Andries van Dam",
+      "born": 1938,
+      "category": ["computer-scientist", "author"],
+      "contributions": [
+        {
+          "work": "Computer Graphics: Principles and Practice (co-author)",
+          "description": "Foundational computer graphics textbook",
+          "year": 2013
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 14, "note": "CG: Principles and Practice co-author" }
+      ]
+    },
+    {
+      "id": "robert-bringhurst",
+      "name": "Robert Bringhurst",
+      "born": 1946,
+      "category": ["typographer", "author"],
+      "contributions": [
+        {
+          "work": "The Elements of Typographic Style",
+          "description": "Typography and font rendering principles for glyph atlas and text display",
+          "year": 1992
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 50, "note": "Phase 7: font rendering, typography" }
+      ]
+    },
+    {
+      "id": "jenifer-tidwell",
+      "name": "Jenifer Tidwell",
+      "category": ["designer", "author"],
+      "contributions": [
+        {
+          "work": "Designing Interfaces (lead author)",
+          "description": "UI pattern library informing card layout and interaction design",
+          "year": 2005
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 51, "note": "Phase 4-7: UI patterns" }
+      ]
+    },
+    {
+      "id": "don-norman",
+      "name": "Don Norman",
+      "born": 1935,
+      "category": ["designer", "cognitive-scientist"],
+      "contributions": [
+        {
+          "work": "The Design of Everyday Things",
+          "description": "UX fundamentals: affordances, feedback, mapping for user controls",
+          "year": 1988
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 52, "note": "Phase 4-7: UX fundamentals" }
+      ]
+    },
+    {
+      "id": "robert-lawlor",
+      "name": "Robert Lawlor",
+      "category": ["author", "philosopher"],
+      "contributions": [
+        {
+          "work": "Sacred Geometry: Philosophy and Practice",
+          "description": "Circle-square-pentagon relationships, PHI as organizing system",
+          "year": 1982
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 81, "note": "Not yet acquired, HIGH priority for Phase 7" }
+      ]
+    },
+    {
+      "id": "gyorgy-doczi",
+      "name": "Gyorgy Doczi",
+      "born": 1909,
+      "died": 1995,
+      "category": ["architect", "author"],
+      "contributions": [
+        {
+          "work": "The Power of Limits",
+          "description": "Golden ratio in nature, art, and architecture",
+          "year": 1981
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 82, "note": "Not yet acquired, HIGH priority for Phase 7" }
+      ]
+    },
+    {
+      "id": "gary-meisner",
+      "name": "Gary Meisner",
+      "category": ["author"],
+      "contributions": [
+        {
+          "work": "The Golden Ratio: The Divine Beauty of Mathematics",
+          "description": "Visual PHI reference for sacred geometry rendering",
+          "year": 2018
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 83, "note": "Not yet acquired, MEDIUM priority" }
+      ]
+    },
+    {
+      "id": "aristid-lindenmayer",
+      "name": "Aristid Lindenmayer",
+      "born": 1925,
+      "died": 1989,
+      "category": ["biologist", "mathematician"],
+      "contributions": [
+        {
+          "work": "L-systems (formal grammar for modeling plant growth)",
+          "description": "Foundational concept for algorithmic/fractal geometry",
+          "year": 1968
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 84, "note": "The Algorithmic Beauty of Plants (not yet acquired)" }
+      ]
+    },
+    {
+      "id": "przemyslaw-prusinkiewicz",
+      "name": "Przemyslaw Prusinkiewicz",
+      "born": 1952,
+      "category": ["computer-scientist", "author"],
+      "contributions": [
+        {
+          "work": "The Algorithmic Beauty of Plants (co-author with Lindenmayer)",
+          "description": "L-systems rendered as graphics, fractal growth patterns",
+          "year": 1990
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 84, "note": "Not yet acquired, MEDIUM priority" }
+      ]
+    },
+    {
+      "id": "gary-william-flake",
+      "name": "Gary William Flake",
+      "category": ["computer-scientist", "author"],
+      "contributions": [
+        {
+          "work": "The Computational Beauty of Nature",
+          "description": "Fractals, chaos, complex systems — conceptual foundation for generative visuals",
+          "year": 1998
+        }
+      ],
+      "references": [
+        { "file": "docs/checklists/books.md", "line": 85, "note": "Not yet acquired, MEDIUM priority" }
+      ]
+    }
+  ]
+}

@@ -11,6 +11,7 @@ Deep analysis specialist responsible for comprehensive research, pattern extract
 - Breaking complex phases into concrete tasks
 
 ## Core Workflow
+0. **Read `SOUL.md`** (project root) and `.claude/CLAUDE.md` — always, before anything else
 1. **Read research sources**: Books, papers, online references relevant to the topic
 2. **Extract patterns**: Identify algorithms, data structures, approaches
 3. **Compare approaches**: Pros/cons matrix for implementation choices

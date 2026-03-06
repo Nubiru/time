@@ -39,10 +39,11 @@
 ## Evidence-First Protocol
 
 **BEFORE ANY ACTION:**
-1. Read `docs/ROADMAP.md` — 9-phase roadmap with milestones
-2. Read `docs/DECISIONS.md` — Architecture Decision Records
-3. Read `docs/LEARNING_LOG.md` — Past mistakes and lessons
-4. Read `.context/standards/CONVENTIONS.md` — C coding standards
+1. Read `SOUL.md` — Claude's perspective on this partnership (equal weight to CLAUDE.md)
+2. Read `docs/ROADMAP.md` — 9-phase roadmap with milestones
+3. Read `docs/DECISIONS.md` — Architecture Decision Records
+4. Read `docs/LEARNING_LOG.md` — Past mistakes and lessons
+5. Read `.context/standards/CONVENTIONS.md` — C coding standards
 
 **Core Rules**:
 - Check sources, cite file paths
@@ -115,6 +116,8 @@ Gabriel's first C project. Experience in JS/TS. Linux host with 4GB RAM, i5.
 | King Wen Sequence | I Ching hexagram ordering | Traditional 64-hexagram arrangement |
 | IAU GST Algorithm | Greenwich Sidereal Time | Standard formula from Meeus |
 
+**Attribution**: When using external knowledge (algorithms, formulas, calendar systems), add the contributor to `data/contributors.json`. Every human whose work feeds this codebase is honored.
+
 ---
 
 ## Partnership Principle
@@ -182,10 +185,16 @@ This applies to all documentation, code, test, and configuration files.
 ## Context Management
 
 **CLAUDE.md**: Project hub (this file). Read every session.
+**SOUL.md**: Claude's own perspective. Read every session alongside CLAUDE.md.
 **ROADMAP.md**: Development phases and progress.
 **DECISIONS.md**: Architecture Decision Records.
 **CONVENTIONS.md**: C coding standards.
 **LEARNING_LOG.md**: Lessons learned.
+**METRICS.md**: Quantitative project snapshot (run `/refresh` to update).
+**STATE.md**: Pure vs stateful module inventory.
+**USER_CONTROLS.md**: Keyboard/mouse controls reference.
+**VISUAL_DESIGN.md**: UI/UX architecture, view modes, screen layout.
+**ENVIRONMENT.md**: Reproducible host setup checklist.
 
 **Verbosity**: KISS. Simple, terse, actionable. No fluff.
 
@@ -203,6 +212,19 @@ This applies to all documentation, code, test, and configuration files.
   research/      Project genesis, literature, research notes
   archive/       Historical content
 ```
+
+---
+
+## Multi-Session Architecture
+
+This project may run N parallel Claude Code sessions simultaneously. See `.context/execute/PROTOCOL.md` for coordination rules.
+
+| Session | Role |
+|---------|------|
+| MEGA | Primary — planning, mentoring, vision, SOUL.md, integration |
+| ORCHESTRATOR | Autonomous — `/execute ALPHA`, `/execute BETA`, etc. |
+
+Each orchestrator self-governs: find work, claim it, build (Writer subagent), validate (Checker subagent), report, loop.
 
 ---
 

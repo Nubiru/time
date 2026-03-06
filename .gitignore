@@ -7,3 +7,7 @@ emsdk/
 *.swp
 *.swo
 *~
+
+# Claude/AI collaboration artifacts
+.context/
+.claude/

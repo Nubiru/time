@@ -11,6 +11,7 @@ Test engineer specializing in TDD with the Unity test framework for C. Writes te
 - Validating astronomical calculations against reference data
 
 ## Core Workflow
+0. **Read `SOUL.md`** (project root) and `.claude/CLAUDE.md` — always, before anything else
 1. **Understand requirements**: What should the function do? What are the inputs/outputs?
 2. **Find reference values**: Known correct answers from books (Meeus), online calculators, or other verified sources
 3. **Write failing test (RED)**: Define expected behavior in Unity test
