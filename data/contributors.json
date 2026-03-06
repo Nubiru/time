@@ -317,12 +317,18 @@
           "work": "NASA Planetary Fact Sheet",
           "description": "Physical properties: equatorial radii, masses, albedos, axial tilts, rotation periods, ring data for all 8 planets",
           "year": 2024
+        },
+        {
+          "work": "Planetary Satellite Physical Parameters",
+          "description": "Orbital elements and physical data for major planetary moons: Moon, Phobos, Deimos, Io, Europa, Ganymede, Callisto, Titan, Enceladus",
+          "year": 2024
         }
       ],
       "references": [
         { "file": "src/systems/astronomy/orbit.c", "line": 16, "note": "JPL Approximate Positions of the Planets" },
         { "file": "src/systems/astronomy/orbit.c", "line": 58, "note": "Earth orbital elements (JPL Table 1)" },
-        { "file": "src/systems/astronomy/planet_data.c", "line": 1, "note": "NASA Planetary Fact Sheet: radii, masses, albedos, tilts, rotations, colors" }
+        { "file": "src/systems/astronomy/planet_data.c", "line": 1, "note": "NASA Planetary Fact Sheet: radii, masses, albedos, tilts, rotations, colors" },
+        { "file": "src/systems/astronomy/moon_data.c", "line": 1, "note": "JPL Planetary Satellite Physical Parameters: moon orbital elements and radii" }
       ]
     },
     {
