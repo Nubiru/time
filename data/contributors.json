@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 50
+    "total_contributors": 51
   },
   "contributors": [
     {
@@ -917,6 +917,22 @@
       ],
       "references": [
         { "file": "src/systems/islamic/prayer_times.c", "line": 1, "note": "Prayer time algorithms: hour angle, Asr shadow, 5 calculation methods" }
+      ]
+    },
+    {
+      "id": "buddhaghosa",
+      "name": "Buddhaghosa",
+      "born": 370,
+      "category": ["scholar", "commentator"],
+      "contributions": [
+        {
+          "work": "Visuddhimagga (The Path of Purification)",
+          "description": "5th-century Theravada commentary systematizing Abhidhamma cosmology. Source for maha-kalpa structure (4 phases), antarakalpa lifespan cycles, and cosmic time hierarchy.",
+          "year": 430
+        }
+      ],
+      "references": [
+        { "file": "src/systems/buddhist/kalpa.c", "line": 1, "note": "Maha-kalpa phases, antarakalpa lifespan cycles, cosmic time hierarchy" }
       ]
     }
   ]
