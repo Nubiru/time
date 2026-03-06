@@ -2,403 +2,650 @@
 #include "../../src/render/glyph_batch.h"
 
 #include <math.h>
+#include <string.h>
 
-#define TOL 0.001f
-#define NEAR(exp, act) ((act) >= (exp) - TOL && (act) <= (exp) + TOL)
+#define TOL 0.0001f
+#define NEAR(exp, act) (fabsf((exp) - (act)) < TOL)
 
 void setUp(void) {}
 void tearDown(void) {}
 
-/* Camera facing +Z: right=(1,0,0), up=(0,1,0) */
-#define CR_X 1.0f
-#define CR_Y 0.0f
-#define CR_Z 0.0f
-#define CU_X 0.0f
-#define CU_Y 1.0f
-#define CU_Z 0.0f
+/* ===== UV computation tests ===== */
 
-static glyph_instance_t make_instance(float px, float py, float pz,
-                                       float w, float h,
-                                       float u0, float v0, float u1, float v1,
-                                       float r, float g, float b, float a)
+/* 1. UV for first glyph in 4x4 atlas */
+void test_uv_first_glyph(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    float u0, v0, u1, v1;
+    glyph_batch_uv(atlas, 0, &u0, &v0, &u1, &v1);
+    /* glyph 0 -> idx 0, col=0, row=0 */
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f,  u0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f,  v0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, u1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, v1);
+}
+
+/* 2. UV for last glyph in 4x4 atlas */
+void test_uv_last_glyph(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    float u0, v0, u1, v1;
+    glyph_batch_uv(atlas, 15, &u0, &v0, &u1, &v1);
+    /* glyph 15 -> idx 15, col=3, row=3 */
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.75f, u0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.75f, v0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f,  u1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f,  v1);
+}
+
+/* 3. UV for glyph in middle of 4x4 atlas */
+void test_uv_middle_glyph(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    float u0, v0, u1, v1;
+    glyph_batch_uv(atlas, 5, &u0, &v0, &u1, &v1);
+    /* glyph 5 -> idx 5, col=1, row=1 */
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, u0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, v0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.5f,  u1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.5f,  v1);
+}
+
+/* 4. UV with non-zero first_id */
+void test_uv_offset_first_id(void)
+{
+    glyph_atlas_t atlas = {4, 4, 32, 47};
+    float u0, v0, u1, v1;
+    glyph_batch_uv(atlas, 33, &u0, &v0, &u1, &v1);
+    /* glyph 33 -> idx 1, col=1, row=0 */
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, u0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f,  v0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.5f,  u1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, v1);
+}
+
+/* 5. UV for non-square atlas (8 cols, 2 rows) */
+void test_uv_non_square_atlas(void)
+{
+    glyph_atlas_t atlas = {8, 2, 0, 15};
+    float u0, v0, u1, v1;
+    glyph_batch_uv(atlas, 9, &u0, &v0, &u1, &v1);
+    /* glyph 9 -> idx 9, col=1, row=1 */
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.125f, u0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.5f,   v0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f,  u1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f,   v1);
+}
+
+/* 6. UV for out-of-range glyph_id (below first_id) -> fallback (0,0,0,0) */
+void test_uv_below_range(void)
+{
+    glyph_atlas_t atlas = {4, 4, 10, 25};
+    float u0, v0, u1, v1;
+    glyph_batch_uv(atlas, 5, &u0, &v0, &u1, &v1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, u0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, v0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, u1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, v1);
+}
+
+/* 7. UV for out-of-range glyph_id (above last_id) -> fallback (0,0,0,0) */
+void test_uv_above_range(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    float u0, v0, u1, v1;
+    glyph_batch_uv(atlas, 20, &u0, &v0, &u1, &v1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, u0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, v0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, u1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, v1);
+}
+
+/* ===== glyph_batch_create tests ===== */
+
+/* Helper: camera facing +Z: right=(1,0,0), up=(0,1,0) */
+static const vec3_t CAM_RIGHT = {1.0f, 0.0f, 0.0f};
+static const vec3_t CAM_UP    = {0.0f, 1.0f, 0.0f};
+
+static glyph_instance_t make_inst(int glyph_id, float x, float y, float z,
+                                   float scale, float r, float g, float b, float a)
 {
     glyph_instance_t inst;
-    inst.px = px; inst.py = py; inst.pz = pz;
-    inst.width = w; inst.height = h;
-    inst.u0 = u0; inst.v0 = v0; inst.u1 = u1; inst.v1 = v1;
-    inst.r = r; inst.g = g; inst.b = b; inst.a = a;
+    inst.glyph_id = glyph_id;
+    inst.position = vec3_create(x, y, z);
+    inst.scale = scale;
+    inst.color.r = r;
+    inst.color.g = g;
+    inst.color.b = b;
+    inst.color.a = a;
     return inst;
 }
 
-/* 1. Stride is 9 */
-void test_stride(void)
+/* 8. Single glyph — correct vertex/index counts */
+void test_create_single_counts(void)
 {
-    TEST_ASSERT_EQUAL_INT(9, glyph_batch_stride());
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 2.0f, 2.0f);
+    TEST_ASSERT_EQUAL_INT(4, batch.vertex_count);
+    TEST_ASSERT_EQUAL_INT(6, batch.index_count);
+    TEST_ASSERT_EQUAL_INT(1, batch.glyph_count);
 }
 
-/* 2. Position offset is 0 */
-void test_position_offset(void)
+/* 9. Empty batch — count=0 */
+void test_create_empty(void)
 {
-    TEST_ASSERT_EQUAL_INT(0, glyph_batch_position_offset());
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_batch_t batch = glyph_batch_create(NULL, 0, atlas,
+                                              CAM_RIGHT, CAM_UP, 2.0f, 2.0f);
+    TEST_ASSERT_EQUAL_INT(0, batch.vertex_count);
+    TEST_ASSERT_EQUAL_INT(0, batch.index_count);
+    TEST_ASSERT_EQUAL_INT(0, batch.glyph_count);
 }
 
-/* 3. UV offset is 3 */
-void test_uv_offset(void)
+/* 10. Clamp to GLYPH_BATCH_MAX */
+void test_create_clamped(void)
 {
-    TEST_ASSERT_EQUAL_INT(3, glyph_batch_uv_offset());
+    glyph_atlas_t atlas = {16, 16, 0, 255};
+    glyph_instance_t insts[200];
+    for (int i = 0; i < 200; i++)
+        insts[i] = make_inst(i % 256, (float)i, 0.0f, 0.0f,
+                              1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(insts, 200, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
+    TEST_ASSERT_EQUAL_INT(GLYPH_BATCH_MAX, batch.glyph_count);
+    TEST_ASSERT_EQUAL_INT(GLYPH_BATCH_MAX * 4, batch.vertex_count);
+    TEST_ASSERT_EQUAL_INT(GLYPH_BATCH_MAX * 6, batch.index_count);
 }
 
-/* 4. Color offset is 5 */
-void test_color_offset(void)
+/* 11. Single glyph at origin — billboard quad positions */
+void test_create_single_positions(void)
 {
-    TEST_ASSERT_EQUAL_INT(5, glyph_batch_color_offset());
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 2.0f, 2.0f);
+    float x, y, z, u, v, r, g, b, a;
+
+    /* v0: bottom-left = center - right*1 - up*1 = (-1,-1,0) */
+    glyph_batch_read_vertex(&batch, 0, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -1.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -1.0f, y);
+    TEST_ASSERT_FLOAT_WITHIN(TOL,  0.0f, z);
+
+    /* v1: bottom-right = center + right*1 - up*1 = (1,-1,0) */
+    glyph_batch_read_vertex(&batch, 1, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -1.0f, y);
+
+    /* v2: top-right = (1,1,0) */
+    glyph_batch_read_vertex(&batch, 2, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, y);
+
+    /* v3: top-left = (-1,1,0) */
+    glyph_batch_read_vertex(&batch, 3, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -1.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL,  1.0f, y);
 }
 
-/* 5. Size for 1 glyph: 4 verts, 6 indices */
-void test_size_one(void)
+/* 12. Glyph at offset position */
+void test_create_offset_position(void)
 {
-    glyph_batch_info_t info = glyph_batch_size(1);
-    TEST_ASSERT_EQUAL_INT(4, info.vertex_count);
-    TEST_ASSERT_EQUAL_INT(6, info.index_count);
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 5.0f, 3.0f, -2.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
+    float x, y, z, u, v, r, g, b, a;
+
+    /* v0: (5,3,-2) - right*0.5 - up*0.5 = (4.5, 2.5, -2) */
+    glyph_batch_read_vertex(&batch, 0, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 4.5f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 2.5f, y);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -2.0f, z);
 }
 
-/* 6. Size for 5 glyphs */
-void test_size_five(void)
+/* 13. Per-glyph scale */
+void test_create_scale(void)
 {
-    glyph_batch_info_t info = glyph_batch_size(5);
-    TEST_ASSERT_EQUAL_INT(20, info.vertex_count);
-    TEST_ASSERT_EQUAL_INT(30, info.index_count);
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 2.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 2.0f, 2.0f);
+    float x, y, z, u, v, r, g, b, a;
+
+    /* base_width=2, scale=2 -> half_w = (2*2)/2 = 2 */
+    /* v0: (-2,-2,0), v2: (2,2,0) */
+    glyph_batch_read_vertex(&batch, 0, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -2.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -2.0f, y);
+
+    glyph_batch_read_vertex(&batch, 2, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 2.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 2.0f, y);
 }
 
-/* 7. Size for 0 glyphs */
-void test_size_zero(void)
+/* 14. UV mapping in created batch — glyph 0 in 4x4 atlas */
+void test_create_uv_mapping(void)
 {
-    glyph_batch_info_t info = glyph_batch_size(0);
-    TEST_ASSERT_EQUAL_INT(0, info.vertex_count);
-    TEST_ASSERT_EQUAL_INT(0, info.index_count);
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
+    float x, y, z, u, v, r, g, b, a;
+
+    /* glyph 0: u0=0, v0=0, u1=0.25, v1=0.25 */
+    /* v0 (bottom-left): (u0, v1) = (0, 0.25) */
+    glyph_batch_read_vertex(&batch, 0, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f,  u);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, v);
+
+    /* v1 (bottom-right): (u1, v1) = (0.25, 0.25) */
+    glyph_batch_read_vertex(&batch, 1, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, u);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, v);
+
+    /* v2 (top-right): (u1, v0) = (0.25, 0) */
+    glyph_batch_read_vertex(&batch, 2, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, u);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f,  v);
+
+    /* v3 (top-left): (u0, v0) = (0, 0) */
+    glyph_batch_read_vertex(&batch, 3, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, u);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, v);
 }
 
-/* 8. Size clamped to GLYPH_BATCH_MAX */
-void test_size_clamped(void)
+/* 15. Color stored in all 4 vertices */
+void test_create_color(void)
 {
-    glyph_batch_info_t info = glyph_batch_size(999);
-    TEST_ASSERT_EQUAL_INT(GLYPH_BATCH_MAX * 4, info.vertex_count);
-    TEST_ASSERT_EQUAL_INT(GLYPH_BATCH_MAX * 6, info.index_count);
-}
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 0.8f, 0.2f, 0.5f, 0.7f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
+    float x, y, z, u, v, r, g, b, a;
 
-/* 9. Single glyph at origin — 4 corners form a billboard quad */
-void test_single_glyph_positions(void)
-{
-    glyph_instance_t inst = make_instance(
-        0.0f, 0.0f, 0.0f,   /* position */
-        2.0f, 2.0f,          /* size */
-        0.0f, 0.0f, 1.0f, 1.0f, /* UVs */
-        1.0f, 1.0f, 1.0f, 1.0f  /* color */
-    );
-    float verts[4 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[6];
-    glyph_batch_generate(&inst, 1, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
-
-    /* half-width=1, half-height=1 */
-    /* v0: center - right*hw - up*hh = (-1, -1, 0) */
-    TEST_ASSERT_TRUE(NEAR(-1.0f, verts[0 * GLYPH_BATCH_STRIDE + 0]));
-    TEST_ASSERT_TRUE(NEAR(-1.0f, verts[0 * GLYPH_BATCH_STRIDE + 1]));
-    TEST_ASSERT_TRUE(NEAR( 0.0f, verts[0 * GLYPH_BATCH_STRIDE + 2]));
-
-    /* v1: center + right*hw - up*hh = (1, -1, 0) */
-    TEST_ASSERT_TRUE(NEAR( 1.0f, verts[1 * GLYPH_BATCH_STRIDE + 0]));
-    TEST_ASSERT_TRUE(NEAR(-1.0f, verts[1 * GLYPH_BATCH_STRIDE + 1]));
-
-    /* v2: center + right*hw + up*hh = (1, 1, 0) */
-    TEST_ASSERT_TRUE(NEAR( 1.0f, verts[2 * GLYPH_BATCH_STRIDE + 0]));
-    TEST_ASSERT_TRUE(NEAR( 1.0f, verts[2 * GLYPH_BATCH_STRIDE + 1]));
-
-    /* v3: center - right*hw + up*hh = (-1, 1, 0) */
-    TEST_ASSERT_TRUE(NEAR(-1.0f, verts[3 * GLYPH_BATCH_STRIDE + 0]));
-    TEST_ASSERT_TRUE(NEAR( 1.0f, verts[3 * GLYPH_BATCH_STRIDE + 1]));
-}
-
-/* 10. Glyph at offset position */
-void test_glyph_offset_position(void)
-{
-    glyph_instance_t inst = make_instance(
-        5.0f, 3.0f, -2.0f,
-        1.0f, 1.0f,
-        0.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f
-    );
-    float verts[4 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[6];
-    glyph_batch_generate(&inst, 1, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
-
-    /* v0: (5,3,-2) - (0.5,0,0) - (0,0.5,0) = (4.5, 2.5, -2) */
-    TEST_ASSERT_TRUE(NEAR(4.5f, verts[0 * GLYPH_BATCH_STRIDE + 0]));
-    TEST_ASSERT_TRUE(NEAR(2.5f, verts[0 * GLYPH_BATCH_STRIDE + 1]));
-    TEST_ASSERT_TRUE(NEAR(-2.0f, verts[0 * GLYPH_BATCH_STRIDE + 2]));
-}
-
-/* 11. UV mapping — corners match instance UVs */
-void test_uv_mapping(void)
-{
-    glyph_instance_t inst = make_instance(
-        0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f,
-        0.25f, 0.5f, 0.75f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f
-    );
-    float verts[4 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[6];
-    glyph_batch_generate(&inst, 1, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
-
-    int uv = glyph_batch_uv_offset();
-    /* v0 (bottom-left): u0, v0 */
-    TEST_ASSERT_TRUE(NEAR(0.25f, verts[0 * GLYPH_BATCH_STRIDE + uv + 0]));
-    TEST_ASSERT_TRUE(NEAR(0.5f,  verts[0 * GLYPH_BATCH_STRIDE + uv + 1]));
-    /* v1 (bottom-right): u1, v0 */
-    TEST_ASSERT_TRUE(NEAR(0.75f, verts[1 * GLYPH_BATCH_STRIDE + uv + 0]));
-    TEST_ASSERT_TRUE(NEAR(0.5f,  verts[1 * GLYPH_BATCH_STRIDE + uv + 1]));
-    /* v2 (top-right): u1, v1 */
-    TEST_ASSERT_TRUE(NEAR(0.75f, verts[2 * GLYPH_BATCH_STRIDE + uv + 0]));
-    TEST_ASSERT_TRUE(NEAR(1.0f,  verts[2 * GLYPH_BATCH_STRIDE + uv + 1]));
-    /* v3 (top-left): u0, v1 */
-    TEST_ASSERT_TRUE(NEAR(0.25f, verts[3 * GLYPH_BATCH_STRIDE + uv + 0]));
-    TEST_ASSERT_TRUE(NEAR(1.0f,  verts[3 * GLYPH_BATCH_STRIDE + uv + 1]));
-}
-
-/* 12. Color written to all 4 vertices */
-void test_color_all_vertices(void)
-{
-    glyph_instance_t inst = make_instance(
-        0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 0.0f, 1.0f, 1.0f,
-        0.8f, 0.2f, 0.5f, 0.7f
-    );
-    float verts[4 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[6];
-    glyph_batch_generate(&inst, 1, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
-
-    int co = glyph_batch_color_offset();
-    for (int v = 0; v < 4; v++) {
-        int off = v * GLYPH_BATCH_STRIDE + co;
-        TEST_ASSERT_TRUE(NEAR(0.8f, verts[off + 0]));
-        TEST_ASSERT_TRUE(NEAR(0.2f, verts[off + 1]));
-        TEST_ASSERT_TRUE(NEAR(0.5f, verts[off + 2]));
-        TEST_ASSERT_TRUE(NEAR(0.7f, verts[off + 3]));
+    for (int i = 0; i < 4; i++) {
+        glyph_batch_read_vertex(&batch, i, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+        TEST_ASSERT_FLOAT_WITHIN(TOL, 0.8f, r);
+        TEST_ASSERT_FLOAT_WITHIN(TOL, 0.2f, g);
+        TEST_ASSERT_FLOAT_WITHIN(TOL, 0.5f, b);
+        TEST_ASSERT_FLOAT_WITHIN(TOL, 0.7f, a);
     }
 }
 
-/* 13. Indices for single glyph: two triangles */
-void test_single_indices(void)
+/* 16. Index pattern: {b+0, b+1, b+2, b+2, b+3, b+0} */
+void test_create_index_pattern(void)
 {
-    glyph_instance_t inst = make_instance(
-        0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-        0.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f
-    );
-    float verts[4 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[6];
-    glyph_batch_generate(&inst, 1, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
 
-    /* Triangle 1: 0,1,2 */
-    TEST_ASSERT_EQUAL_UINT(0, idx[0]);
-    TEST_ASSERT_EQUAL_UINT(1, idx[1]);
-    TEST_ASSERT_EQUAL_UINT(2, idx[2]);
-    /* Triangle 2: 0,2,3 */
-    TEST_ASSERT_EQUAL_UINT(0, idx[3]);
-    TEST_ASSERT_EQUAL_UINT(2, idx[4]);
-    TEST_ASSERT_EQUAL_UINT(3, idx[5]);
+    TEST_ASSERT_EQUAL_UINT(0, batch.indices[0]);
+    TEST_ASSERT_EQUAL_UINT(1, batch.indices[1]);
+    TEST_ASSERT_EQUAL_UINT(2, batch.indices[2]);
+    TEST_ASSERT_EQUAL_UINT(2, batch.indices[3]);
+    TEST_ASSERT_EQUAL_UINT(3, batch.indices[4]);
+    TEST_ASSERT_EQUAL_UINT(0, batch.indices[5]);
 }
 
-/* 14. Multi-glyph batch — second glyph indices offset by 4 */
-void test_multi_glyph_indices(void)
+/* 17. Multi-glyph — second glyph indices offset by 4 */
+void test_create_multi_indices(void)
 {
+    glyph_atlas_t atlas = {4, 4, 0, 15};
     glyph_instance_t insts[2];
-    insts[0] = make_instance(0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-                              0.0f, 0.0f, 1.0f, 1.0f,
-                              1.0f, 0.0f, 0.0f, 1.0f);
-    insts[1] = make_instance(5.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-                              0.0f, 0.0f, 1.0f, 1.0f,
-                              0.0f, 1.0f, 0.0f, 1.0f);
-    float verts[8 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[12];
-    glyph_batch_generate(insts, 2, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
+    insts[0] = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+    insts[1] = make_inst(1, 5.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(insts, 2, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
 
-    /* Second glyph indices offset by 4 */
-    TEST_ASSERT_EQUAL_UINT(4, idx[6]);
-    TEST_ASSERT_EQUAL_UINT(5, idx[7]);
-    TEST_ASSERT_EQUAL_UINT(6, idx[8]);
-    TEST_ASSERT_EQUAL_UINT(4, idx[9]);
-    TEST_ASSERT_EQUAL_UINT(6, idx[10]);
-    TEST_ASSERT_EQUAL_UINT(7, idx[11]);
+    TEST_ASSERT_EQUAL_INT(8, batch.vertex_count);
+    TEST_ASSERT_EQUAL_INT(12, batch.index_count);
+
+    /* Second glyph: base=4 -> {4,5,6, 6,7,4} */
+    TEST_ASSERT_EQUAL_UINT(4, batch.indices[6]);
+    TEST_ASSERT_EQUAL_UINT(5, batch.indices[7]);
+    TEST_ASSERT_EQUAL_UINT(6, batch.indices[8]);
+    TEST_ASSERT_EQUAL_UINT(6, batch.indices[9]);
+    TEST_ASSERT_EQUAL_UINT(7, batch.indices[10]);
+    TEST_ASSERT_EQUAL_UINT(4, batch.indices[11]);
 }
 
-/* 15. Multi-glyph — different colors preserved */
-void test_multi_glyph_colors(void)
+/* 18. Multi-glyph — different colors preserved */
+void test_create_multi_colors(void)
 {
+    glyph_atlas_t atlas = {4, 4, 0, 15};
     glyph_instance_t insts[2];
-    insts[0] = make_instance(0.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-                              0.0f, 0.0f, 1.0f, 1.0f,
-                              1.0f, 0.0f, 0.0f, 1.0f);
-    insts[1] = make_instance(5.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-                              0.0f, 0.0f, 1.0f, 1.0f,
-                              0.0f, 0.0f, 1.0f, 0.5f);
-    float verts[8 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[12];
-    glyph_batch_generate(insts, 2, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
+    insts[0] = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f);
+    insts[1] = make_inst(1, 5.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.5f);
+    glyph_batch_t batch = glyph_batch_create(insts, 2, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
+    float x, y, z, u, v, r, g, b, a;
 
-    int co = glyph_batch_color_offset();
     /* Glyph 0, vertex 0: red */
-    TEST_ASSERT_TRUE(NEAR(1.0f, verts[0 * GLYPH_BATCH_STRIDE + co + 0]));
-    TEST_ASSERT_TRUE(NEAR(0.0f, verts[0 * GLYPH_BATCH_STRIDE + co + 1]));
+    glyph_batch_read_vertex(&batch, 0, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, r);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, g);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, b);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, a);
+
     /* Glyph 1, vertex 0 (index 4): blue, alpha 0.5 */
-    TEST_ASSERT_TRUE(NEAR(0.0f, verts[4 * GLYPH_BATCH_STRIDE + co + 0]));
-    TEST_ASSERT_TRUE(NEAR(0.0f, verts[4 * GLYPH_BATCH_STRIDE + co + 1]));
-    TEST_ASSERT_TRUE(NEAR(1.0f, verts[4 * GLYPH_BATCH_STRIDE + co + 2]));
-    TEST_ASSERT_TRUE(NEAR(0.5f, verts[4 * GLYPH_BATCH_STRIDE + co + 3]));
-}
-
-/* 16. All indices valid for multi-glyph batch */
-void test_all_indices_valid(void)
-{
-    glyph_instance_t insts[3];
-    for (int i = 0; i < 3; i++)
-        insts[i] = make_instance((float)i * 2.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-                                  0.0f, 0.0f, 1.0f, 1.0f,
-                                  1.0f, 1.0f, 1.0f, 1.0f);
-    glyph_batch_info_t info = glyph_batch_size(3);
-    float verts[12 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[18];
-    glyph_batch_generate(insts, 3, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
-
-    for (int i = 0; i < info.index_count; i++)
-        TEST_ASSERT_TRUE(idx[i] < (unsigned int)info.vertex_count);
-}
-
-/* 17. Index count always divisible by 3 */
-void test_indices_divisible_by_3(void)
-{
-    for (int n = 1; n <= 10; n++) {
-        glyph_batch_info_t info = glyph_batch_size(n);
-        TEST_ASSERT_EQUAL_INT(0, info.index_count % 3);
-    }
-}
-
-/* 18. Non-uniform width/height */
-void test_non_uniform_size(void)
-{
-    glyph_instance_t inst = make_instance(
-        0.0f, 0.0f, 0.0f,
-        4.0f, 2.0f,      /* wide glyph */
-        0.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f
-    );
-    float verts[4 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[6];
-    glyph_batch_generate(&inst, 1, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
-
-    /* hw=2, hh=1 */
-    /* v0: (-2, -1, 0) */
-    TEST_ASSERT_TRUE(NEAR(-2.0f, verts[0 * GLYPH_BATCH_STRIDE + 0]));
-    TEST_ASSERT_TRUE(NEAR(-1.0f, verts[0 * GLYPH_BATCH_STRIDE + 1]));
-    /* v2: (2, 1, 0) */
-    TEST_ASSERT_TRUE(NEAR( 2.0f, verts[2 * GLYPH_BATCH_STRIDE + 0]));
-    TEST_ASSERT_TRUE(NEAR( 1.0f, verts[2 * GLYPH_BATCH_STRIDE + 1]));
+    glyph_batch_read_vertex(&batch, 4, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, r);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, g);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, b);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.5f, a);
 }
 
 /* 19. Angled camera vectors */
-void test_angled_camera(void)
+void test_create_angled_camera(void)
 {
-    glyph_instance_t inst = make_instance(
-        0.0f, 0.0f, 0.0f,
-        2.0f, 2.0f,
-        0.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f
-    );
-    float verts[4 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[6];
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
     /* Camera looking down -Y: right=(1,0,0), up=(0,0,-1) */
-    glyph_batch_generate(&inst, 1, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, -1.0f, verts, idx);
+    vec3_t right = {1.0f, 0.0f, 0.0f};
+    vec3_t up    = {0.0f, 0.0f, -1.0f};
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              right, up, 2.0f, 2.0f);
+    float x, y, z, u, v, r, g, b, a;
 
     /* v0: (0,0,0) - (1,0,0)*1 - (0,0,-1)*1 = (-1, 0, 1) */
-    TEST_ASSERT_TRUE(NEAR(-1.0f, verts[0 * GLYPH_BATCH_STRIDE + 0]));
-    TEST_ASSERT_TRUE(NEAR( 0.0f, verts[0 * GLYPH_BATCH_STRIDE + 1]));
-    TEST_ASSERT_TRUE(NEAR( 1.0f, verts[0 * GLYPH_BATCH_STRIDE + 2]));
+    glyph_batch_read_vertex(&batch, 0, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -1.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL,  0.0f, y);
+    TEST_ASSERT_FLOAT_WITHIN(TOL,  1.0f, z);
 }
 
-/* 20. Zero count produces no output (doesn't crash) */
-void test_zero_count(void)
+/* 20. Non-uniform base_width/base_height */
+void test_create_non_uniform_size(void)
 {
-    float verts[GLYPH_BATCH_STRIDE];
-    unsigned int idx[6];
-    /* Should not crash; just test it runs */
-    glyph_batch_generate(NULL, 0, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
-    glyph_batch_info_t info = glyph_batch_size(0);
-    TEST_ASSERT_EQUAL_INT(0, info.vertex_count);
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 4.0f, 2.0f);
+    float x, y, z, u, v, r, g, b, a;
+
+    /* hw=2, hh=1 -> v0=(-2,-1,0), v2=(2,1,0) */
+    glyph_batch_read_vertex(&batch, 0, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -2.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -1.0f, y);
+
+    glyph_batch_read_vertex(&batch, 2, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 2.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, y);
 }
 
-/* 21. Alpha channel preserved */
-void test_alpha_channel(void)
+/* 21. Scale=0 produces degenerate quad (all 4 verts at center) */
+void test_create_zero_scale(void)
 {
-    glyph_instance_t inst = make_instance(
-        0.0f, 0.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 0.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.3f
-    );
-    float verts[4 * GLYPH_BATCH_STRIDE];
-    unsigned int idx[6];
-    glyph_batch_generate(&inst, 1, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, verts, idx);
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 3.0f, 4.0f, 5.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 2.0f, 2.0f);
+    float x, y, z, u, v, r, g, b, a;
 
-    int co = glyph_batch_color_offset();
-    for (int v = 0; v < 4; v++)
-        TEST_ASSERT_TRUE(NEAR(0.3f, verts[v * GLYPH_BATCH_STRIDE + co + 3]));
+    for (int i = 0; i < 4; i++) {
+        glyph_batch_read_vertex(&batch, i, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+        TEST_ASSERT_FLOAT_WITHIN(TOL, 3.0f, x);
+        TEST_ASSERT_FLOAT_WITHIN(TOL, 4.0f, y);
+        TEST_ASSERT_FLOAT_WITHIN(TOL, 5.0f, z);
+    }
 }
 
-/* 22. Purity — same input produces same output */
+/* 22. Out-of-range glyph_id gets fallback UV (0,0,0,0) in batch */
+void test_create_out_of_range_uv(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(99, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
+    float x, y, z, u, v, r, g, b, a;
+
+    /* All UVs should be 0 */
+    for (int i = 0; i < 4; i++) {
+        glyph_batch_read_vertex(&batch, i, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+        TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, u);
+        TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f, v);
+    }
+}
+
+/* 23. All indices valid for multi-glyph batch */
+void test_create_all_indices_valid(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t insts[5];
+    for (int i = 0; i < 5; i++)
+        insts[i] = make_inst(i, (float)i * 2.0f, 0.0f, 0.0f,
+                              1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(insts, 5, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
+
+    for (int i = 0; i < batch.index_count; i++)
+        TEST_ASSERT_TRUE(batch.indices[i] < (unsigned int)batch.vertex_count);
+}
+
+/* ===== glyph_batch_create_y_locked tests ===== */
+
+/* 24. Y-locked billboard — up is always (0,1,0) */
+void test_ylocked_up_is_y(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 5.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    /* Camera at origin looking +Z */
+    vec3_t cam_pos = {0.0f, 0.0f, 0.0f};
+    glyph_batch_t batch = glyph_batch_create_y_locked(&inst, 1, atlas,
+                                                       cam_pos, 2.0f, 2.0f);
+    float x, y, z, u, v, r, g, b, a;
+
+    /* Glyph at (0,0,5), camera at (0,0,0).
+     * XZ direction: glyph-cam = (0,0,5)-(0,0,0) = (0,0,5), normalize XZ = (0,0,1)
+     * right = cross(forward_xz, Y) -> cross((0,0,1),(0,1,0)) = (-1,0,0)...
+     * Actually: right = normalize(cross((0,1,0), (0,0,1))) = normalize((1,0,0)) = (1,0,0)
+     * Wait, let me think about this more carefully.
+     * forward = normalize(glyph_pos - cam_pos) projected to XZ = (0,0,1)
+     * right = normalize(cross(Y_up, forward)) = cross((0,1,0),(0,0,1)) = (1,0,0)
+     * up = (0,1,0)
+     * half_w = 1, half_h = 1
+     * v0: (0,0,5) - (1,0,0)*1 - (0,1,0)*1 = (-1,-1,5)
+     */
+    glyph_batch_read_vertex(&batch, 0, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -1.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -1.0f, y);
+    TEST_ASSERT_FLOAT_WITHIN(TOL,  5.0f, z);
+
+    /* v2: top-right = (0,0,5) + (1,0,0)*1 + (0,1,0)*1 = (1,1,5) */
+    glyph_batch_read_vertex(&batch, 2, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, y);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 5.0f, z);
+}
+
+/* 25. Y-locked — camera off to the side */
+void test_ylocked_camera_side(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    /* Camera at (5,0,0) -> glyph faces -X direction */
+    vec3_t cam_pos = {5.0f, 0.0f, 0.0f};
+    glyph_batch_t batch = glyph_batch_create_y_locked(&inst, 1, atlas,
+                                                       cam_pos, 2.0f, 2.0f);
+    float x, y, z, u, v, r, g, b, a;
+
+    /* forward (glyph to cam in XZ) = normalize((0,0,0)-(5,0,0)) = (-1,0,0)
+     * right = normalize(cross((0,1,0), (-1,0,0))) = normalize((0,0,1)) = (0,0,1)
+     * up = (0,1,0)
+     * half_w=1, half_h=1
+     * v0: (0,0,0) - (0,0,1)*1 - (0,1,0)*1 = (0,-1,-1) */
+    glyph_batch_read_vertex(&batch, 0, &x, &y, &z, &u, &v, &r, &g, &b, &a);
+    TEST_ASSERT_FLOAT_WITHIN(TOL,  0.0f, x);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -1.0f, y);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, -1.0f, z);
+}
+
+/* 26. Y-locked — counts match standard create */
+void test_ylocked_counts(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t insts[3];
+    for (int i = 0; i < 3; i++)
+        insts[i] = make_inst(i, (float)i * 2.0f, 0.0f, 0.0f,
+                              1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    vec3_t cam_pos = {0.0f, 0.0f, -5.0f};
+    glyph_batch_t batch = glyph_batch_create_y_locked(insts, 3, atlas,
+                                                       cam_pos, 1.0f, 1.0f);
+    TEST_ASSERT_EQUAL_INT(12, batch.vertex_count);
+    TEST_ASSERT_EQUAL_INT(18, batch.index_count);
+    TEST_ASSERT_EQUAL_INT(3, batch.glyph_count);
+}
+
+/* 27. Y-locked — empty batch */
+void test_ylocked_empty(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    vec3_t cam_pos = {0.0f, 0.0f, 0.0f};
+    glyph_batch_t batch = glyph_batch_create_y_locked(NULL, 0, atlas,
+                                                       cam_pos, 1.0f, 1.0f);
+    TEST_ASSERT_EQUAL_INT(0, batch.vertex_count);
+    TEST_ASSERT_EQUAL_INT(0, batch.index_count);
+    TEST_ASSERT_EQUAL_INT(0, batch.glyph_count);
+}
+
+/* ===== Size query tests ===== */
+
+/* 28. vertex_floats = vertex_count * GLYPH_VERTEX_STRIDE */
+void test_vertex_floats(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t insts[3];
+    for (int i = 0; i < 3; i++)
+        insts[i] = make_inst(i, (float)i, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(insts, 3, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
+    TEST_ASSERT_EQUAL_INT(12 * GLYPH_VERTEX_STRIDE, glyph_batch_vertex_floats(&batch));
+}
+
+/* 29. vertex_bytes = vertex_floats * sizeof(float) */
+void test_vertex_bytes(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
+    TEST_ASSERT_EQUAL_INT(4 * GLYPH_VERTEX_STRIDE * (int)sizeof(float),
+                          glyph_batch_vertex_bytes(&batch));
+}
+
+/* 30. index_bytes = index_count * sizeof(unsigned int) */
+void test_index_bytes(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    glyph_batch_t batch = glyph_batch_create(&inst, 1, atlas,
+                                              CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
+    TEST_ASSERT_EQUAL_INT(6 * (int)sizeof(unsigned int),
+                          glyph_batch_index_bytes(&batch));
+}
+
+/* ===== Purity test ===== */
+
+/* 31. Same input produces same output */
 void test_purity(void)
 {
-    glyph_instance_t inst = make_instance(
-        3.0f, 1.0f, -1.0f,
-        2.0f, 1.5f,
-        0.1f, 0.2f, 0.9f, 0.8f,
-        0.5f, 0.6f, 0.7f, 0.8f
-    );
-    float va[4 * GLYPH_BATCH_STRIDE], vb[4 * GLYPH_BATCH_STRIDE];
-    unsigned int ia[6], ib[6];
-    glyph_batch_generate(&inst, 1, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, va, ia);
-    glyph_batch_generate(&inst, 1, CR_X, CR_Y, CR_Z, CU_X, CU_Y, CU_Z, vb, ib);
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(5, 3.0f, 1.0f, -1.0f, 1.5f,
+                                       0.5f, 0.6f, 0.7f, 0.8f);
+    glyph_batch_t a = glyph_batch_create(&inst, 1, atlas,
+                                          CAM_RIGHT, CAM_UP, 2.0f, 1.5f);
+    glyph_batch_t b = glyph_batch_create(&inst, 1, atlas,
+                                          CAM_RIGHT, CAM_UP, 2.0f, 1.5f);
 
-    for (int i = 0; i < 4 * GLYPH_BATCH_STRIDE; i++)
-        TEST_ASSERT_TRUE(va[i] == vb[i]);
-    for (int i = 0; i < 6; i++)
-        TEST_ASSERT_TRUE(ia[i] == ib[i]);
+    TEST_ASSERT_EQUAL_INT(a.vertex_count, b.vertex_count);
+    TEST_ASSERT_EQUAL_INT(a.index_count, b.index_count);
+    TEST_ASSERT_EQUAL_INT(a.glyph_count, b.glyph_count);
+
+    int nf = glyph_batch_vertex_floats(&a);
+    for (int i = 0; i < nf; i++)
+        TEST_ASSERT_EQUAL_FLOAT(a.vertices[i], b.vertices[i]);
+
+    for (int i = 0; i < a.index_count; i++)
+        TEST_ASSERT_EQUAL_UINT(a.indices[i], b.indices[i]);
+}
+
+/* 32. UV for glyph at exact boundary of atlas row */
+void test_uv_row_boundary(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    float u0, v0, u1, v1;
+    /* glyph 4 -> idx 4, col=0, row=1 */
+    glyph_batch_uv(atlas, 4, &u0, &v0, &u1, &v1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.0f,  u0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, v0);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.25f, u1);
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 0.5f,  v1);
+}
+
+/* 33. Y-locked — glyph directly above camera (XZ diff is zero → fallback) */
+void test_ylocked_directly_above(void)
+{
+    glyph_atlas_t atlas = {4, 4, 0, 15};
+    glyph_instance_t inst = make_inst(0, 0.0f, 10.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
+    vec3_t cam_pos = {0.0f, 0.0f, 0.0f};
+    glyph_batch_t batch = glyph_batch_create_y_locked(&inst, 1, atlas,
+                                                       cam_pos, 2.0f, 2.0f);
+    /* When XZ diff is zero, the right vector degenerates.
+     * Should produce a valid batch (not crash), degenerate quad is OK. */
+    TEST_ASSERT_EQUAL_INT(4, batch.vertex_count);
+    TEST_ASSERT_EQUAL_INT(6, batch.index_count);
 }
 
 int main(void)
 {
     UNITY_BEGIN();
-    RUN_TEST(test_stride);
-    RUN_TEST(test_position_offset);
-    RUN_TEST(test_uv_offset);
-    RUN_TEST(test_color_offset);
-    RUN_TEST(test_size_one);
-    RUN_TEST(test_size_five);
-    RUN_TEST(test_size_zero);
-    RUN_TEST(test_size_clamped);
-    RUN_TEST(test_single_glyph_positions);
-    RUN_TEST(test_glyph_offset_position);
-    RUN_TEST(test_uv_mapping);
-    RUN_TEST(test_color_all_vertices);
-    RUN_TEST(test_single_indices);
-    RUN_TEST(test_multi_glyph_indices);
-    RUN_TEST(test_multi_glyph_colors);
-    RUN_TEST(test_all_indices_valid);
-    RUN_TEST(test_indices_divisible_by_3);
-    RUN_TEST(test_non_uniform_size);
-    RUN_TEST(test_angled_camera);
-    RUN_TEST(test_zero_count);
-    RUN_TEST(test_alpha_channel);
+
+    /* UV computation */
+    RUN_TEST(test_uv_first_glyph);
+    RUN_TEST(test_uv_last_glyph);
+    RUN_TEST(test_uv_middle_glyph);
+    RUN_TEST(test_uv_offset_first_id);
+    RUN_TEST(test_uv_non_square_atlas);
+    RUN_TEST(test_uv_below_range);
+    RUN_TEST(test_uv_above_range);
+
+    /* glyph_batch_create */
+    RUN_TEST(test_create_single_counts);
+    RUN_TEST(test_create_empty);
+    RUN_TEST(test_create_clamped);
+    RUN_TEST(test_create_single_positions);
+    RUN_TEST(test_create_offset_position);
+    RUN_TEST(test_create_scale);
+    RUN_TEST(test_create_uv_mapping);
+    RUN_TEST(test_create_color);
+    RUN_TEST(test_create_index_pattern);
+    RUN_TEST(test_create_multi_indices);
+    RUN_TEST(test_create_multi_colors);
+    RUN_TEST(test_create_angled_camera);
+    RUN_TEST(test_create_non_uniform_size);
+    RUN_TEST(test_create_zero_scale);
+    RUN_TEST(test_create_out_of_range_uv);
+    RUN_TEST(test_create_all_indices_valid);
+
+    /* glyph_batch_create_y_locked */
+    RUN_TEST(test_ylocked_up_is_y);
+    RUN_TEST(test_ylocked_camera_side);
+    RUN_TEST(test_ylocked_counts);
+    RUN_TEST(test_ylocked_empty);
+    RUN_TEST(test_ylocked_directly_above);
+
+    /* Size queries */
+    RUN_TEST(test_vertex_floats);
+    RUN_TEST(test_vertex_bytes);
+    RUN_TEST(test_index_bytes);
+
+    /* Purity */
     RUN_TEST(test_purity);
+    RUN_TEST(test_uv_row_boundary);
+
     return UNITY_END();
 }
