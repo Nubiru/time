@@ -901,7 +901,8 @@
       "references": [
         { "file": "src/systems/hindu/nakshatra.c", "line": 1, "note": "27 Nakshatras: names, boundaries, rulers, deities, yogataras" },
         { "file": "src/systems/hindu/yuga.h", "line": 1, "note": "4 Yugas: cycle lengths, ratios, Maha-Yuga/Kalpa/Manvantara structure (Ch. 12)" },
-        { "file": "src/systems/hindu/yuga.c", "line": 1, "note": "Yuga position calculation, Kali Yuga epoch 3102 BCE" }
+        { "file": "src/systems/hindu/yuga.c", "line": 1, "note": "Yuga position calculation, Kali Yuga epoch 3102 BCE" },
+        { "file": "src/systems/hindu/panchanga.c", "line": 1, "note": "Panchanga five-limb system: Tithi, Vara, Yoga, Karana computation" }
       ]
     },
     {
