@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 55
+    "total_contributors": 57
   },
   "contributors": [
     {
@@ -998,6 +998,38 @@
       ],
       "references": [
         { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "Kircher Tree topology: 22 path connections between Sefirot" }
+      ]
+    },
+    {
+      "id": "arthur-doodson",
+      "name": "Arthur Thomas Doodson",
+      "born": 1890,
+      "died": 1968,
+      "category": ["oceanographer", "mathematician"],
+      "contributions": [
+        {
+          "work": "The Harmonic Development of the Tide-Generating Potential",
+          "description": "Systematic harmonic analysis of tides. Classified tidal constituents (M2, S2, N2, K1, O1, etc.) with periods and Doodson numbers. Foundation of modern tidal prediction.",
+          "year": 1921
+        }
+      ],
+      "references": [
+        { "file": "src/systems/earth/tidal.c", "line": 1, "note": "5 tidal constituents: M2, S2, N2, K1, O1 periods and harmonic analysis" }
+      ]
+    },
+    {
+      "id": "noaa",
+      "name": "National Oceanic and Atmospheric Administration",
+      "category": ["research-organization"],
+      "contributions": [
+        {
+          "work": "Tidal Constituent Tables",
+          "description": "Public domain tidal constituent amplitudes and periods. CO-OPS tide prediction methodology.",
+          "year": 2000
+        }
+      ],
+      "references": [
+        { "file": "src/systems/earth/tidal.c", "line": 1, "note": "Tidal constituent relative amplitudes (M2=1.0 reference)" }
       ]
     }
   ]
