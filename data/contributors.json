@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 48
+    "total_contributors": 50
   },
   "contributors": [
     {
@@ -157,7 +157,8 @@
       "references": [
         { "file": "src/systems/astronomy/precession.c", "line": 10, "note": "Lahiri ayanamsa at J2000.0" },
         { "file": "src/systems/astronomy/precession.c", "line": 60, "note": "prec_ayanamsa_lahiri() implementation" },
-        { "file": "src/systems/astronomy/precession.h", "line": 17, "note": "prec_ayanamsa_lahiri() declaration" }
+        { "file": "src/systems/astronomy/precession.h", "line": 17, "note": "prec_ayanamsa_lahiri() declaration" },
+        { "file": "src/systems/hindu/nakshatra.c", "line": 1, "note": "Lahiri ayanamsa approximation for Nakshatra computation" }
       ]
     },
     {
@@ -884,6 +885,36 @@
       ],
       "references": [
         { "file": "src/systems/geology/radiometric.c", "line": 12, "note": "Isotope half-life constants for all 8 decay systems" }
+      ]
+    },
+    {
+      "id": "surya-siddhanta",
+      "name": "Surya Siddhanta (traditional, attributed to Mayasura)",
+      "category": ["astronomical-text"],
+      "contributions": [
+        {
+          "work": "Surya Siddhanta",
+          "description": "Foundational Indian astronomical treatise (~400 CE). Source for 27 Nakshatras, junction stars (yogataras), Vimsottari Dasha ruler cycle, and sidereal framework.",
+          "year": 400
+        }
+      ],
+      "references": [
+        { "file": "src/systems/hindu/nakshatra.c", "line": 1, "note": "27 Nakshatras: names, boundaries, rulers, deities, yogataras" }
+      ]
+    },
+    {
+      "id": "hamid-zarrabi-zadeh",
+      "name": "Hamid Zarrabi-Zadeh",
+      "category": ["software-engineer", "researcher"],
+      "contributions": [
+        {
+          "work": "PrayTimes.org Prayer Time Calculation",
+          "description": "Open-source prayer time algorithms and reference implementation. Method parameter tables (MWL, ISNA, Egypt, Makkah, Karachi), Asr shadow ratio formulas, hour angle approach for Fajr/Isha twilight.",
+          "year": 2007
+        }
+      ],
+      "references": [
+        { "file": "src/systems/islamic/prayer_times.c", "line": 1, "note": "Prayer time algorithms: hour angle, Asr shadow, 5 calculation methods" }
       ]
     }
   ]
