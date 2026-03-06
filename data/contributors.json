@@ -176,7 +176,8 @@
       "references": [
         { "file": "src/systems/human_design/human_design.c", "line": 7, "note": "Gate sequence around the ecliptic" },
         { "file": "src/systems/human_design/human_design.h", "line": 21, "note": "Gate name accessor" },
-        { "file": "docs/checklists/books.md", "line": 46, "note": "The Definitive Book of Human Design" }
+        { "file": "docs/checklists/books.md", "line": 46, "note": "The Definitive Book of Human Design" },
+        { "file": "src/systems/human_design/bodygraph.c", "line": 1, "note": "Bodygraph topology: 9 centers, 36 channels, 64 gate assignments" }
       ]
     },
     {
