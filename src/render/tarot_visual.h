@@ -1,30 +1,24 @@
-# Task: Tarot Visual Data
+/* tarot_visual.h — Visual data for the 22 Major Arcana (Thoth deck)
+ *
+ * Pure data module providing per-card color schemes (4 color scales),
+ * symbolic descriptions, geometric motifs, and Tree of Life path
+ * positions for the 22 Major Arcana.
+ *
+ * Color scales follow the Golden Dawn / Crowley 777 system:
+ *   King (Atziluth)   — bright, pure, primary
+ *   Queen (Briah)     — rich, deep
+ *   Prince (Yetzirah) — muted, complex
+ *   Princess (Assiah) — dark, earthen
+ *
+ * All colors derived from color_theory.h mood system.
+ * All proportions derived from golden_layout.h phi constants.
+ * No hardcoded RGB values. No hardcoded pixel values.
+ *
+ * Pure functions: no GL, no malloc, no globals, no side effects.
+ *
+ * Sources: Aleister Crowley (Book of Thoth, 777),
+ *          Lady Frieda Harris (Thoth deck artist). */
 
-**Agent**: ALPHA
-**Roadmap Reference**: Track 44.2 — "Agent: Tarot Visual Data (ALPHA)"
-**Date**: 2026-03-07
-**Status**: CLAIMED
-
-## Goal
-
-Pure visual data module providing per-card color schemes, symbolic descriptions, geometric motifs, and Tree of Life path positions for the 22 Major Arcana. Uses the Golden Dawn/Crowley 777 color scale system (King/Queen/Prince/Princess scales) and card frame proportions based on the golden ratio. Foundational data for Track 44.3 (Tarot Display) and future card rendering.
-
-## READ FIRST
-
-- `src/systems/kabbalah/tree_geometry.h` — tree_path_t, tree_path_for_tarot(), tree_layout_t
-- `src/render/color_theory.h` — ct_system_primary(CT_SYSTEM_KABBALAH), ct_mood_color()
-- `src/ui/golden_layout.h` — gl_card_dimensions(), GL_PHI
-- `src/math/color.h` — color_rgb_t, color_hsl_t
-
-## Files to Create
-
-- `src/render/tarot_visual.h`
-- `src/render/tarot_visual.c`
-- `tests/render/test_tarot_visual.c`
-
-## API
-
-```c
 #ifndef TIME_TAROT_VISUAL_H
 #define TIME_TAROT_VISUAL_H
 
@@ -121,30 +115,3 @@ int tv_tree_position(int number, float *out_x, float *out_y);
 int tv_tree_positions_all(float *out_x, float *out_y, int max_out);
 
 #endif /* TIME_TAROT_VISUAL_H */
-```
-
-## DONE WHEN
-
-- [ ] 22 Major Arcana with Thoth names, 4 color scales, motifs, symbol descriptions
-- [ ] Color scales derived from color_theory.h system palette (not hardcoded RGB)
-- [ ] Card frame proportions use golden ratio via golden_layout.h constants
-- [ ] Tree of Life positions computed from tree_geometry.h path data
-- [ ] `tv_card_color()` returns correct scale color for any card
-- [ ] `tv_card_frame()` produces phi-proportioned frame geometry
-- [ ] `tv_tree_position()` returns midpoint of Tree path for each card
-- [ ] >= 30 tests covering: data integrity, color scales, frame geometry, tree positions, motif names, edge cases
-- [ ] All tests pass with zero warnings
-- [ ] Purity: no malloc, no globals, no side effects
-- [ ] Compiles: `gcc -Wall -Wextra -Werror -std=c11 -pedantic`
-
-## Constraints
-
-- C11, `-Wall -Wextra -Werror -std=c11 -pedantic`
-- `#define PI 3.14159265358979323846` (no M_PI)
-- No malloc, no globals, no side effects
-- USE THE STYLE SYSTEM: Colors from ct_mood_color() or ct_system_primary(CT_SYSTEM_KABBALAH), frame sizes from GL_PHI constants
-- Depends on: color.h (types only), tree_geometry.h (path positions), golden_layout.h (phi constants)
-- All card data as static const
-- Thoth deck names from Crowley "Book of Thoth"
-- Golden Dawn color scale attributions from Crowley 777
-- Attribution: Aleister Crowley (Book of Thoth, 777), Lady Frieda Harris (Thoth deck art)

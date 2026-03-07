@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 95
+    "total_contributors": 96
   },
   "contributors": [
     {
@@ -985,7 +985,25 @@
         }
       ],
       "references": [
-        { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "Correspondence tables for 22 paths" }
+        { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "Correspondence tables for 22 paths" },
+        { "file": "src/render/tarot_visual.c", "line": 1, "note": "Book of Thoth: 22 Major Arcana names, color scales, attributions" }
+      ]
+    },
+    {
+      "id": "frieda-harris",
+      "name": "Lady Frieda Harris",
+      "born": 1877,
+      "died": 1962,
+      "category": ["artist", "occultist"],
+      "contributions": [
+        {
+          "work": "Thoth Tarot Deck",
+          "description": "Painted the 78 cards of the Thoth Tarot under Crowley's direction. Her geometric and symbolic art style directly informs the visual motifs and color choices in the tarot visual data module.",
+          "year": 1943
+        }
+      ],
+      "references": [
+        { "file": "src/render/tarot_visual.c", "line": 19, "note": "Thoth deck visual symbolism and geometric motifs" }
       ]
     },
     {

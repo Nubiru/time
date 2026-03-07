@@ -2,38 +2,38 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-07
-**Task**: Decan Star Data
-**Roadmap Reference**: Track 43.2 — "Agent: Decan Star Data (ALPHA)"
+**Task**: Tarot Visual Data
+**Roadmap Reference**: Track 44.2 — "Agent: Tarot Visual Data (ALPHA)"
 
 ## Files Created
-- `src/render/decan_stars.h` — Header: 3 types (decan_t, decan_hour_t, decan_element_t), 9 functions
-- `src/render/decan_stars.c` — 36 decan records with Egyptian names, principal stars, ascendant computation
-- `tests/render/test_decan_stars.c` — 42 tests
+- `src/render/tarot_visual.h` — Header: 5 types (tv_scale_t, tv_motif_t, tv_major_t, tv_card_frame_t), 10 functions
+- `src/render/tarot_visual.c` — 22 Major Arcana with Thoth names, 4 color scales, motifs, tree positions
+- `tests/render/test_tarot_visual.c` — 49 tests
 
 ## API Summary
-- `decan_count()` → int — always 36
-- `decan_get(int index)` → decan_t — full decan data by index (0-35)
-- `decan_for_ecliptic_longitude(double)` → int — map ecliptic longitude to decan index
-- `decan_for_sign(int sign, int *out, int max)` → int — 3 decan indices per zodiac sign
-- `decan_element_name(decan_element_t)` → const char* — Fire/Earth/Air/Water
-- `decan_rising_now(double lst_deg, double lat_deg)` → int — which decan is on eastern horizon
-- `decan_night_hours(double lst_deg, double lat_deg, decan_hour_t *out, int max)` → int — 12-hour star clock
-- `decan_for_night_hour(double lst_deg, double lat_deg, int hour)` → int — ruler of specific night hour
-- `decan_star_longitude(int index)` → double — midpoint ecliptic longitude
+- `tv_major_count()` → int — always 22
+- `tv_major_get(int number)` → tv_major_t — full card data (0-21)
+- `tv_card_color(int number, tv_scale_t scale)` → color_rgb_t — color in specific scale
+- `tv_card_primary(int number)` → color_rgb_t — King scale color
+- `tv_motif_name(tv_motif_t)` → const char* — geometric motif name
+- `tv_scale_name(tv_scale_t)` → const char* — King/Queen/Prince/Princess
+- `tv_card_frame(float width)` → tv_card_frame_t — golden ratio card geometry
+- `tv_tree_position(int number, float *x, float *y)` → int — Tree of Life path midpoint
+- `tv_tree_positions_all(float *x, float *y, int max)` → int — all 22 positions
 
 ## Test Results
 ```
-42 Tests 0 Failures 0 Ignored
+49 Tests 0 Failures 0 Ignored
 OK
 ```
 
 ## Compile Command
 ```
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/render/test_decan_stars.c src/render/decan_stars.c tests/unity/unity.c -o build/test_decan_stars -lm
+gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/render/test_tarot_visual.c src/render/tarot_visual.c src/render/color_theory.c src/math/color.c src/systems/kabbalah/tree_geometry.c src/systems/kabbalah/sefirot.c tests/unity/unity.c -o build/test_tarot_visual -lm
 ```
 
 ## Checker Result
-PASS — compilation clean, purity clean, 42 tests pass
+PASS — compilation clean, purity clean, 49 tests pass
 
 ## Maintainer Result
 PASS — regression gate 2627 tests / 91 suites / 0 failures
@@ -42,15 +42,12 @@ PASS — regression gate 2627 tests / 91 suites / 0 failures
 See makefile-additions.md
 
 ## Attribution
-- Otto Neugebauer & Richard A. Parker — Egyptian Astronomical Texts (decan names). Added to contributors.json.
-- Joanne Conman (2003) — modern star identifications. Added to contributors.json.
-- Jose Lull & Juan Antonio Belmonte (2009) — decan-star correlation survey. Added to contributors.json.
-- Jean Meeus — ascendant formula (Chapter 14). Reference added to contributors.json.
+- Aleister Crowley — Book of Thoth, 777 (card names, color scales, attributions). Reference added to contributors.json.
+- Lady Frieda Harris — Thoth Tarot deck artist (geometric motifs, visual symbolism). Added to contributors.json (total: 96).
 
 ## Knowledge Gaps
-- Egyptian decan transliterations vary across sources; deeper review of EAT volumes I-III would refine exact names
-- Several decan-star identifications are uncertain (noted in description fields for Aries, Gemini, Libra decans)
-- Book suggestion: Neugebauer & Parker "Egyptian Astronomical Texts" vols I-III — would enable refined decan names and star clock data
+- Crowley 777 color scales: The 4-scale color system is derived from ct_mood_color() with phi-based saturation/lightness scaling. The actual 777 tables specify exact colors per card per scale (e.g., "bright pale yellow" for Fool King scale). A full extraction from 777 would give more precise color data.
+- Book suggestion: Crowley "777 and Other Qabalistic Writings" — detailed extraction of all 4 color scale tables would enable exact color matching per card.
 
 ## Next Candidate
-Track 44.2 — Tarot Visual Data (ALPHA domain)
+No remaining pure ALPHA-domain tasks identified in current roadmap. Slot ALPHA idle until new tracks are added.
