@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 99
+    "total_contributors": 105
   },
   "contributors": [
     {
@@ -356,7 +356,8 @@
         { "file": "src/systems/hebrew/hebrew.h", "line": 4, "note": "Hebrew calendar algorithm (Dershowitz & Reingold)" },
         { "file": "src/systems/hebrew/hebrew.c", "line": 3, "note": "Hebrew calendar implementation (Calendrical Calculations)" },
         { "file": "src/systems/islamic/hijri.h", "line": 4, "note": "Hijri calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" }
+        { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" },
+        { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" }
       ]
     },
     {
@@ -377,7 +378,25 @@
         { "file": "src/systems/hebrew/hebrew.h", "line": 4, "note": "Hebrew calendar algorithm (Dershowitz & Reingold)" },
         { "file": "src/systems/hebrew/hebrew.c", "line": 3, "note": "Hebrew calendar implementation (Calendrical Calculations)" },
         { "file": "src/systems/islamic/hijri.h", "line": 4, "note": "Hijri calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" }
+        { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" },
+        { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" }
+      ]
+    },
+    {
+      "id": "otto-meinardus",
+      "name": "Otto Friedrich August Meinardus",
+      "born": 1925,
+      "died": 2005,
+      "category": ["historian", "theologian"],
+      "contributions": [
+        {
+          "work": "Two Thousand Years of Coptic Christianity",
+          "description": "Comprehensive history of Coptic Christian traditions, calendar, and liturgical feasts",
+          "year": 1999
+        }
+      ],
+      "references": [
+        { "file": "src/systems/coptic/coptic.c", "line": 9, "note": "Coptic calendar feast data reference" }
       ]
     },
     {
@@ -1604,6 +1623,91 @@
       ],
       "references": [
         { "file": ".context/research/digested/034-tufte-envisioning-information.md", "line": 1, "note": "Imhof's 4 rules quoted via Tufte pp. 82-83" }
+      ]
+    },
+    {
+      "id": "josef-albers",
+      "name": "Josef Albers",
+      "born": 1888,
+      "died": 1976,
+      "category": ["artist", "educator", "color theorist"],
+      "contributions": [
+        {
+          "work": "Interaction of Color",
+          "description": "Systematic color interaction study: simultaneous contrast mechanism, subtraction rule, Weber-Fechner perceptual law application to color, color relativity (8 illusion types), Schopenhauer area ratios, three color polarities (light-dark, warm-cool, wet-dry), rejection of mechanical harmony rules in favor of quantity-based color relationships.",
+          "year": 1963
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Full 26-chapter extraction: Q1-Q5 on contrast, relativity, temperature, quantitative rules, harmony" }
+      ]
+    },
+    {
+      "id": "michel-chevreul",
+      "name": "Michel Eugène Chevreul",
+      "born": 1786,
+      "died": 1889,
+      "category": ["chemist", "color theorist"],
+      "contributions": [
+        {
+          "work": "The Laws of Contrast of Colour",
+          "description": "Pioneering simultaneous contrast research. Graduated grey scale method. Foundation for Impressionist color theory and all subsequent color interaction study.",
+          "year": 1839
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Referenced by Albers Ch XX for graduated scale method" }
+      ]
+    },
+    {
+      "id": "arthur-schopenhauer",
+      "name": "Arthur Schopenhauer",
+      "born": 1788,
+      "died": 1860,
+      "category": ["philosopher", "color theorist"],
+      "contributions": [
+        {
+          "work": "On Vision and Colours",
+          "description": "Color quantity ratios for visual balance from Goethe's 6-part color circle: Y:O:R:V:B:G = 3:4:6:9:8:6. Complementary balance areas: lightest color gets smallest area, darkest gets largest.",
+          "year": 1816
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Schopenhauer area ratios quoted by Albers Ch XVI" }
+      ]
+    },
+    {
+      "id": "wilhelm-von-bezold",
+      "name": "Wilhelm von Bezold",
+      "born": 1837,
+      "died": 1907,
+      "category": ["meteorologist", "color theorist"],
+      "contributions": [
+        {
+          "work": "Bezold Effect",
+          "description": "Discovery that changing or adding a single color can transform an entire color composition. A special case of optical mixture, distinct from simultaneous contrast.",
+          "year": 1874
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Bezold Effect documented by Albers Ch XIII" }
+      ]
+    },
+    {
+      "id": "weber-fechner",
+      "name": "Ernst Heinrich Weber & Gustav Theodor Fechner",
+      "born": 1795,
+      "died": 1887,
+      "category": ["psychophysicist", "philosopher"],
+      "contributions": [
+        {
+          "work": "Weber-Fechner Law",
+          "description": "Perception follows logarithmic function of stimulus: geometric physical progression produces arithmetically equal perceptual steps. Applies to light, color, sound, weight, temperature. Foundation for perceptually uniform scales.",
+          "year": 1860
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Weber-Fechner Law applied to color by Albers Ch XX" }
       ]
     }
   ]
