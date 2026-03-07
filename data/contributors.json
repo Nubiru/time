@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 57
+    "total_contributors": 60
   },
   "contributors": [
     {
@@ -1030,6 +1030,61 @@
       ],
       "references": [
         { "file": "src/systems/earth/tidal.c", "line": 1, "note": "Tidal constituent relative amplitudes (M2=1.0 reference)" }
+      ]
+    },
+    {
+      "id": "anthony-aveni",
+      "name": "Anthony Aveni",
+      "born": 1938,
+      "category": ["anthropologist", "astronomer", "author"],
+      "contributions": [
+        {
+          "work": "Is Harmony at the Heart of Things?",
+          "description": "Essay on commensuration as humanity's universal quest: Pythagorean harmony, Kepler's harmonics, Mayan Venus cycle (8:5 ratio), super number 1,366,560, Tzolkin as body-sky-number unity",
+          "year": 2001
+        },
+        {
+          "work": "Empire of Time / Stairways to the Stars / Between the Lines",
+          "description": "Cross-cultural history of timekeeping and archaeoastronomy",
+          "year": 1989
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/aveni-harmony-heart-of-things.md", "line": 1, "note": "Full digest: commensuration, Venus 8:5, Mayan super number, Kirkwood's gaps" },
+        { "file": "src/render/color_theory.h", "line": 1, "note": "Aveni validates color harmony as cosmic harmony expression" },
+        { "file": "src/systems/tzolkin/tzolkin.h", "line": 4, "note": "Aveni confirms Tzolkin 260 = body + sky + number commensuration" }
+      ]
+    },
+    {
+      "id": "claude-jaupart",
+      "name": "Claude Jaupart",
+      "category": ["geophysicist", "author"],
+      "contributions": [
+        {
+          "work": "Heat Generation and Transport in the Earth (co-author with Mareschal)",
+          "description": "Earth thermal evolution: core/mantle/surface temperature models, heat flow data, geotherm profiles",
+          "year": 2011
+        }
+      ],
+      "references": [
+        { "file": "src/systems/geology/thermo.h", "line": 4, "note": "Thermochronology data source: thermal events, cooling model" },
+        { "file": "src/systems/geology/thermo.c", "line": 4, "note": "Earth cooling model constants and thermal event data" }
+      ]
+    },
+    {
+      "id": "jean-claude-mareschal",
+      "name": "Jean-Claude Mareschal",
+      "category": ["geophysicist", "author"],
+      "contributions": [
+        {
+          "work": "Heat Generation and Transport in the Earth (co-author with Jaupart)",
+          "description": "Earth thermal evolution: core/mantle/surface temperature models, heat flow data, geotherm profiles",
+          "year": 2011
+        }
+      ],
+      "references": [
+        { "file": "src/systems/geology/thermo.h", "line": 4, "note": "Thermochronology data source: thermal events, cooling model" },
+        { "file": "src/systems/geology/thermo.c", "line": 4, "note": "Earth cooling model constants and thermal event data" }
       ]
     }
   ]
