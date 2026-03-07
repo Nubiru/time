@@ -1,183 +1,163 @@
-# Books — Time Project
+# Books I Need — Gabriel's Shopping List
 
-MEGA maintains this file. Agents report Knowledge Gaps in report.md; MEGA translates into entries here.
-
----
-
-## P0: Foundation
-
-- [x] **"The C Programming Language"** — K&R — Phase: 0-2
-- [x] **"Astronomical Algorithms"** — Jean Meeus — Phase: 2-5
-- [x] **"The Book of Shaders"** — Gonzalez Vivo — Phase: 1-7 (online)
-
-## P1: Active Development
-
-- [x] **"Calendrical Calculations"** — Reingold/Dershowitz — Phase: 4-6
-- [x] **"WebGL Programming Guide"** — Matsuda/Lea — Phase: 1-3
-- [x] **"Mathematics for 3D Game Programming"** — Lengyel — Phase: 2-3
-- [x] **"Computer Graphics: Principles and Practice"** — Hughes et al. — Phase: 1-7
-- [x] **"Practical Astronomy with your Calculator or Spreadsheet"** — Duffett-Smith — Phase: 2-5
-
-## Arguelles — Tzolkin / Dreamspell
-
-- [x] **"The Mayan Factor"** — Jose Arguelles (English PDF + Spanish DOC parts 1-8)
-- [x] **"Earth Ascending"** — Jose Arguelles
-- [x] **"Time and the Technosphere"** — Jose Arguelles
-- [x] **"The Arcturus Probe"** — Jose Arguelles (Spanish: "La Sonda de Arcturo")
-- [x] **"Manifesto for the Noosphere"** — Jose Arguelles
-- [x] **"The Art Planet Chronicles"** — Jose Arguelles
-- [x] **"The Transformative Vision"** — Jose Arguelles
-- [x] **"Earth Shaman"** — Jose Arguelles
-- [x] **"13 Moons in Motion"** — Dreamspell Primer
-- [x] **"Stopping Time"** — 13 Moon Primer
-- [x] **"The 260 Postulates of the Dynamics of Time"** — Jose Arguelles
-- [x] **"Encantamiento del Sueno"** (Dreamspell) — Jose Arguelles (Spanish)
-- [x] **"Las Dinamicas del Tiempo"** — Jose Arguelles (Spanish)
-- [x] **"El Descubrimiento de la Ley del Tiempo"** — Jose Arguelles (Spanish)
-- [x] **"Telektonon: El Juego de la Profecia"** — Jose Arguelles (Spanish)
-- [ ] **"Surfers of the Zuvuya"** — Jose Arguelles — NOT ACQUIRED
-
-## Jung — Astrology & Synchronicity
-
-- [x] **"Jung on Astrology"** — Rossi/Le Grice
-- [x] **"Synchronicity: An Acausal Connecting Principle"** — C.G. Jung
-
-## I Ching & Human Design
-
-- [x] **"The I Ching or Book of Changes"** — Wilhelm/Baynes — Phase: 6
-- [x] **"The Complete I Ching"** — Alfred Huang (10th Anniversary) — Phase: 6
-- [x] **"The Numerology of the I Ching"** — Alfred Huang — Phase: 6 (.djvu)
-- [x] **"The Definitive Book of Human Design"** — Bunnell/Ra Uru Hu — Phase: 6
-
-## Calendar & Astrology
-
-- [x] **"The Calendar: The 5000-year Struggle"** — David Ewing Duncan — Phase: 4-6 (.mobi)
-- [x] **"Ascendentes En Astrologia 1 Y 2"** — Phase: 5
-- [x] **"Inteligencia Planetaria"** — Phase: 5-6
-- [x] **"LAS LUNAS - El refugio de la memoria"** — Phase: 6
-- [x] **"Calendario Astrologico con las Fases de la Luna"** — Phase: 5-6
-
-## Programming & C
-
-- [x] **"21st Century C"** — Ben Klemens — Phase: ongoing
-- [x] **"Expert C Programming"** — van der Linden — Phase: ongoing
-
-## Creative Coding & Design
-
-- [x] **"The Nature of Code"** — Daniel Shiffman — Phase: 7-8
-- [x] **"Code as Creative Medium"** — Golan Levin (MIT Press) — Phase: 7-8
-- [x] **"The Algorithmic Beauty of Plants"** — Prusinkiewicz/Lindenmayer — Phase: 7-8
-- [x] **"The Computational Beauty of Nature"** — Gary William Flake — Phase: 7-8
-- [x] **"Generative AI Through Python"** — Phase: reference
-- [x] **"The Elements of Typographic Style"** — Bringhurst — Phase: 7
-- [x] **"Designing Interfaces"** — Tidwell/Brewer/Valencia — Phase: 4-7
-- [x] **"The Design of Everyday Things"** — Don Norman — Phase: 4-7
-
-## Sacred Geometry & Mathematics
-
-- [x] **"Sacred Geometry: Philosophy and Practice"** — Robert Lawlor — Phase: 7
-- [x] **"The Power of Limits"** — Gyorgy Doczi — Phase: 7
-- [x] **"The Golden Ratio: The Divine Beauty of Mathematics"** — Gary Meisner — Phase: 7
-- [x] **"Symmetry And Complexity: The Spirit And Beauty Of Nonlinear Science"** — Phase: 7-8
-
-## Astronomy & Planetary Science
-
-- [x] **"Fundamentals of Astrodynamics"** — Bate/Mueller/White — Phase: 7-8 (orbital mechanics)
-- [x] **"Observing and Cataloguing Nebulae and Star Clusters"** — From Herschel to Dreyer's NGC — Phase: 7-10 (deep sky catalog history, NGC object data)
-
-## Astronomical Research Papers
-
-- [x] **"Galaxy Colors in Various Photometric Band Systems"** — Phase: 7 (star color rendering)
-- [x] **"Cosmic Windows: Sky Surveys"** — Phase: 7 (sky survey data)
-- [x] **"The Digitized First Byurakan Survey - DFBS"** — Phase: 7 (stellar survey)
-- [x] **"SPECTRAL CLASSIFICATION OF 40 RED VARIABLES"** — Phase: 7
-- [x] **"On Establishing an International Service for Cometary Observations"** — Phase: 7-8
-- [x] **"THE INTERNATIONAL INFORMATION BUREAU ON ASTRONOMICAL EPHEMERIDES"** — Phase: 7-8
-- [x] **"A Submm View of the Universe"** — Phase: 7 (galaxy formation)
-- [x] **"IAS volume 216"** — Phase: 7 (IAU symposium reference)
-- [x] **"The Universe Behind the Southern Milky Way"** — Phase: 7 (obscured zone survey)
-- [x] **"The Relation Between Galactic Properties and Cluster Structure"** — Phase: 7
-- [x] **"The 6dF Galaxy Survey: Mass and Motions"** — Phase: 7 (local universe dynamics)
-- [x] **"Chandra and FUSE View of the WHIM"** — Phase: 7 (warm-hot intergalactic medium)
-
-## Cosmology Papers
-
-- [x] **"Maps of the Cosmos: The Cosmic Microwave Background"** — Phase: 7
-- [x] **"Maps of the Millimetre Sky from BOOMERanG"** — Phase: 7
-- [x] **"Imaging the Cosmic Microwave Background"** — Phase: 7
-- [x] **"Simulations of the Intergalactic Medium"** — Phase: 7
-- [x] **"Cosmological Parameters from SDSS Galaxy Redshifts"** — Phase: 7
-- [x] **"Cosmology from the 2dF QSO Redshift Survey"** — Phase: 7
-- [x] **"Emergent Structure: The First Two Centuries of the First Two Eons"** — Phase: 7
-- [x] **"Mapping the Dark Energy Equation of State"** — Phase: 7
-- [x] **"Mapping the Reionization Era Through 21 cm"** — Phase: 7
-- [x] **"Problems with the Current Cosmological Paradigm"** — Phase: 7
+Claude maintains this list. You find them, drop them in `~/Desktop/temp/time/inbox/`. Done.
+Full library catalog: `LIBRARY.md` (204 items acquired).
 
 ---
 
-## Not Yet Acquired
+## ACQUIRED THIS SESSION (2026-03-06) — COLOR & ART HAUL
 
-| Book | Author | Phase | Priority | Reason |
-|------|--------|-------|----------|--------|
-| **"Yale Bright Star Catalogue (BSC5)"** | Hoffleit/Jaschek | 7 | **P0** | ~9000 stars, RA/Dec/mag/B-V. FREE data. Agents need for Track 9.1 |
-| **"The Mathematics of the Chinese Calendar"** | Helmer Aslaksen | 6 | **HIGH** | Precise lunisolar algorithms — blocks Chinese calendar refinement |
-| ~~"Fundamentals of Astrodynamics"~~ | ~~Bate/Mueller/White~~ | -- | -- | ACQUIRED — moved to Astronomy section above |
-| **"Fundamentals of Planetary Science"** | Lissauer/de Pater | 8 | **HIGH** | Gas giant atmospheres, true-color data (Track 8.1) |
-| **"Astrophysical Quantities"** | Allen/Cox | 9 | **HIGH** | Stellar physical data, B-V calibration (Track 9.2) |
-| **"Surfers of the Zuvuya"** | Jose Arguelles | 6 | LOW | Supplementary Arguelles |
-| **"Generative Design"** | Bohnacker et al. | 7-8 | LOW | Visual polish |
-| **"Practical Foundations of Programming Languages"** | Robert Harper | ongoing | LOW | Type system thinking |
+### Color Science (9 books!)
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"Interaction of Color"** | Josef Albers | color_theory.h — **was P1 #6 — ACQUIRED!** |
+| **"Interaction of Color: 50th Anniversary Edition"** | Josef Albers | color_theory.h — updated edition |
+| **"Color Theory: A Critical Introduction"** | (academic) | color_theory.h, system palettes |
+| **"Color Imaging: Fundamentals and Applications"** | (technical) | sRGB/linear, color spaces |
+| **"Colour Perception: Mind and the Physical World"** | (psychology) | color psychology, perception |
+| **"Color Perception: Philosophical, Psychological, Artistic"** | (multi-perspective) | color psychology |
+| **"Industrial Color Testing: Fundamentals and Techniques"** | (technical) | color measurement, standards |
+| **"The Art of Color Categorization"** | (cognitive science) | how humans categorize colors |
+| **"Thinking Color in Space: Positions, Projects, Potentials"** | (architectural/spatial) | color in 3D environments |
 
-## Agent-Reported Gaps
+### UI/UX & Interaction Design (3 books)
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"About Face: The Essentials of Interaction Design"** | Alan Cooper | UI architecture, interaction patterns |
+| **"Designing the User Interface"** | Ben Shneiderman | HCI strategies, 8 golden rules |
+| **"The Resonant Interface: HCI Foundations"** | Stephen Heim | HCI theory, user perception |
 
-Gaps reported by ALPHA/BETA/GAMMA agents during development. MEGA translates into acquisition targets above.
+### Earth Science & Deep Time (3 books)
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"A Short History of Nearly Everything"** | Bill Bryson | 20-25, 29 — **was P0 #4 — ACQUIRED!** |
+| **"The Ends of the World"** | Peter Brannen | 20, 29 — **was P0 #3 — ACQUIRED!** |
+| **"Fundamental Planetary Science"** | Lissauer/de Pater | 8, 9 — **was P2 #9 — ACQUIRED!** (76MB, valid) |
 
-| Date | Agent | Task | Gap | Resolution |
-|------|-------|------|-----|------------|
-| -- | -- | -- | (Agents running first tasks) | -- |
+### Data Visualization (1 book)
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"Envisioning Information"** | Edward Tufte | 29, 30 — **was P0 #5 — ACQUIRED!** |
 
-*Updated by MEGA after reading agent report.md files.*
+### Esoteric & Spiritual Systems
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"The Chakras and the Human Energy Fields"** | (TBD) | NEW SYSTEM — chakras, energy, yoga |
+| **"The Book of Thoth"** | Aleister Crowley | 18, 19 — Tarot/Tree of Life |
+| **"Unveiling Your Sacred Truth: Kalachakra Path"** | (TBD) | 16 — Kalachakra |
+| **"The Outer Wheel of Time: Vajrayana Buddhist Cosmology"** | (Kalachakra Tantra) | 16 — Buddhist cosmological time |
+
+### Art/Math/Visualization
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"Mathematics and Art"** | (visualization in education) | art-math connection |
+| **"M. C. Escher's Legacy"** | (centennial celebration) | tessellation, impossible geometry |
+| **"Mathematics, Astronomy and Culture"** | (interdisciplinary) | astronomy education |
+| **"Concepts of Particle Physics Vol. II"** | (physics) | cosmic time, quantum |
+| **"Symmetries in Science VIII"** | (physics/math) | symmetry patterns |
+
+### Earth Science — NEW
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"The Story of Earth: First 4.5 Billion Years"** | Robert Hazen | 20-25, 29 — **was P0 #2 — ACQUIRED!** |
+| **"The Two-Mile Time Machine"** | Richard Alley | 22, 29 — ice core deep time |
+
+### Calendar Math — NEW
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"The Mathematics of the Chinese Calendar"** | Helmer Aslaksen | 11, 14-16 — **was P1 #8 — ACQUIRED!** |
+
+### Social/Systems (low relevance)
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"Designing Complex Systems"** | (systems engineering) | Potentially useful for architecture |
+| **"The social bond"** | (sociology) | Low relevance |
+| **"Measures of Social Evolution"** | (macroeconomics) | Low relevance |
+| **"The Evolution of Society"** | (information processing) | Low relevance |
+
+### Previously Acquired (earlier sessions)
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"The Visual Display of Quantitative Information"** | Edward Tufte | 29, 30 — **P0 #1** |
+| **"Beautiful Evidence"** | Edward Tufte | 29, 30 |
+| **"Storytelling with Data"** | Cole Nussbaumer Knaflic | 29 |
+| **"Ice Ages: Solving the Mystery"** | Imbrie & Imbrie | 22-25, 29 |
+| **"Timefulness"** | Marcia Bjornerud | 13, 20, 29 |
+| **"Magick in Theory and Practice"** | Aleister Crowley | 18 |
+| **"Sanctification of the New Moon"** | Maimonides/Gandz | 14 |
+| **"Is Harmony at the Heart of Things?"** | Anthony Aveni | 19, 26, 27, 29 |
+| **"Maya Cosmos"** | Freidel, Schele, Parker | 31, 35 |
+| **"Heliophysics Vol. 1"** | (Plasma Physics) | 8, 9 |
+| + many more (see new/ directory — 204 files total)
+
+### Fiction (not project-relevant)
+- **"Cowl"** — sci-fi
+- **"Emerald Magic: Irish Fantasy Tales"** — fantasy anthology
+- **"Interdimensional Travel"** — speculative
+
+### Not project-relevant
+- **"Fine Needle Aspiration of Palpable Masses"** — medical
+- 6 pure math papers (matrix algebras, trigonometry on SU(3), quaternionic determinants, etc.)
 
 ---
 
-**Acquired**: 83 (22 books + 16 Arguelles + 2 Jung + 4 I Ching/HD + 5 calendar/astrology + 2 C programming + 8 creative/design + 4 geometry/math + 8 astro papers + 10 cosmology papers)
-**Not acquired**: 8
-**Book files**: `~/Desktop/temp/time/` (root, `new/`, `newly-converted/`)
-**Agent access**: `.context/library/manifest.json`
-**Full catalog**: `docs/checklists/reference-library.md`
-**Attribution**: `data/contributors.json` (every author honored)
+## P0 — ALL ACQUIRED!
 
-## Book Folder Structure
+| # | Book | Author | Status |
+|---|------|--------|--------|
+| 1 | ~~"The Visual Display of Quantitative Information"~~ | ~~Edward Tufte~~ | **ACQUIRED** |
+| 2 | ~~"The Story of Earth"~~ | ~~Robert Hazen~~ | **ACQUIRED** (this session!) |
+| 3 | ~~"The Ends of the World"~~ | ~~Peter Brannen~~ | **ACQUIRED** |
+| 4 | ~~"A Short History of Nearly Everything"~~ | ~~Bill Bryson~~ | **ACQUIRED** |
+| 5 | ~~"Envisioning Information"~~ | ~~Edward Tufte~~ | **ACQUIRED** |
+
+**P0 status: 5 of 5 acquired. COMPLETE.**
+
+---
+
+## P1 — NEARLY COMPLETE
+
+| # | Book | Author | Status |
+|---|------|--------|--------|
+| 6 | ~~"Interaction of Color"~~ | ~~Josef Albers~~ | **ACQUIRED** (both editions) |
+| 7 | **"The Art of Color"** | Johannes Itten | STILL NEEDED — Color psychology, 7 contrast types. (We have 10 other color books — may be sufficient) |
+| 8 | ~~"The Mathematics of the Chinese Calendar"~~ | ~~Helmer Aslaksen~~ | **ACQUIRED** (this session! The hard-to-find one!) |
+
+**P1 status: 2 of 3 acquired. Only Itten remains (and may not be critical given 10 color books).**
+
+---
+
+## P2 — WHEN YOU FIND THEM
+
+| # | Book | Author | Why |
+|---|------|--------|-----|
+| 9 | ~~"Fundamentals of Planetary Science"~~ | ~~Lissauer/de Pater~~ | **ACQUIRED!** (76MB, valid download) |
+| 10 | **"Surfers of the Zuvuya"** | Jose Arguelles | Dreamspell deep lore. Hard to find — Gabriel searching. |
+| 11 | **"The Wheel of Time: Kalachakra"** | Geshe Sopa | Full Kalachakra system. We have Kalachakra Path book now. |
+
+---
+
+## FREE — Agents Will Fetch These
+
+- NASA Paleoclimate Timeline — `climate.nasa.gov`
+- NOAA Storm Events Database — `ncdc.noaa.gov/stormevents`
+- Milankovitch Cycle data — orbital parameters
+- PrayTimes.org algorithm docs — `praytimes.org/calculation`
+- The Calendars of Southeast Asia — Gislen & Eade (2019) — ResearchGate
+
+---
+
+## How This Works
 
 ```
-~/Desktop/temp/time/
-  inbox/              Gabriel drops new books here. UNCATALOGUED.
-  [root files]        Cataloged originals (36 files)
-  new/                Cataloged acquisitions
-  newly-converted/    Cataloged format conversions (doc/epub -> pdf)
-  extracted/          Agents have pulled data from these
+You find book -> drop in ~/Desktop/temp/time/inbox/ -> Claude catalogs it
+                                                     -> converts epub/azw3
+                                                     -> moves to new/
+                                                     -> updates this list
+                                                     -> agents discover + use it
 ```
 
-**Rule**: Files in `inbox/` have NOT been seen by MEGA. When MEGA processes inbox:
-1. `ls inbox/` — discover new files
-2. Convert non-PDF formats to PDF (calibre for ebooks, libreoffice for docs):
-   - `.epub`, `.mobi`, `.azw3`, `.djvu` → `ebook-convert input.epub output.pdf`
-   - `.doc`, `.docx` → `libreoffice --headless --convert-to pdf input.doc`
-   - Keep original + PDF copy. Move PDF to `new/`, original stays in `newly-converted/`
-3. Add each to this file (books.md) under appropriate section
-4. Add to `.context/library/manifest.json`
-5. Move file from `inbox/` to `new/`
-6. `inbox/` empty = everything processed
-
-**Gabriel's workflow**: Download book -> drop in `inbox/` -> done. MEGA handles the rest.
-
-**MEGA scans inbox**: At start of every conversation, or when Gabriel says "check inbox".
-
-## How This File Grows
-
-```
-Gabriel drops book in inbox/ -> MEGA scans inbox -> catalogs in books.md + manifest.json
--> moves to new/ -> Agents discover via manifest.json -> extract data -> write digests
--> build modules -> report Knowledge Gaps -> MEGA adds to "Not Yet Acquired"
--> Gabriel acquires -> drops in inbox/ -> LOOP
-```
+**Current library**: 204 books, papers, data sources
+**Shopping list**: 2 books remaining (Itten "Art of Color", Arguelles "Surfers of the Zuvuya")
+**Conversion**: All epub/azw3 converted to PDF via calibre
+**New knowledge domains**: COLOR (10 books!), UI/UX (3), Chakras (1), Kalachakra (2), Chinese Calendar math (1)

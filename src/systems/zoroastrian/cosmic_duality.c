@@ -38,8 +38,7 @@ static const char *GEO_PARALLELS[] = {
     "Hadean-Archean: Earth forms, oceans condense, first microbial life",
     "Archean-Proterozoic: photosynthesis, oxygen rises, first eukaryotes",
     "Proterozoic: Great Oxidation, Snowball Earth, multicellular life emerges",
-    "Phanerozoic: Cambrian explosion, dinosaurs, mammals, humans "
-        "— transformation"
+    "Phanerozoic: Cambrian explosion, dinosaurs, mammals, humans — transformation"
 };
 
 static const cd_amesha_spenta_t AMESHA_SPENTAS[] = {

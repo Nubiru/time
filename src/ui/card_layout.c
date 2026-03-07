@@ -22,12 +22,6 @@ card_layout_t card_layout_compute(int visible_mask, float aspect_ratio)
     card_layout_t layout;
     float card_w = (aspect_ratio > 1.5f) ? CARD_W_WIDE : CARD_W_NARROW;
 
-    /* Count visible cards */
-    int vis_count = 0;
-    for (int i = 0; i < CARD_TYPE_COUNT; i++) {
-        if (visible_mask & (1 << i)) vis_count++;
-    }
-
     /* Stack visible cards vertically along the right edge */
     int vis_index = 0;
     for (int i = 0; i < CARD_TYPE_COUNT; i++) {

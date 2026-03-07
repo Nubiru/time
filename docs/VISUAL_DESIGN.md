@@ -13,6 +13,78 @@ Time is one thing viewed through seven lenses. The artwork is not seven separate
 
 ---
 
+## The Golden Number (phi = 1.618...)
+
+**Every visual proportion in Time derives from phi.** No magic numbers. No arbitrary choices. The golden ratio governs:
+
+- **Typography**: Font size scale where each level = previous * phi^-1
+- **Spacing**: Padding/margin scale where each step = previous * phi
+- **Layout**: Screen divided at golden section points. Cards are golden rectangles.
+- **Animation**: Timing scale from micro (90ms) to epic (2618ms) via phi powers
+- **Opacity**: Layer cascade: 1.0, 0.618, 0.382, 0.236, 0.146...
+- **Rings**: Inner/outer radius ratio = phi. Concentric rings grow by phi.
+- **Camera**: Zoom levels spaced by phi. Crossfade widths = phi^-1.
+- **Colors**: Hues spaced by the golden angle (137.508 degrees)
+
+**Why**: phi appears in sunflower spirals, galaxy arms, DNA helix proportions, the Parthenon, the Great Pyramid. Time proves that one number governs nature, art, astronomy, and sacred geometry. The UI IS the proof.
+
+**Implementation**: `src/ui/golden_layout.h` — single source of truth for all visual proportions.
+
+---
+
+## Color System — Psychologically Meaningful, Mathematically Derived
+
+**No random color choices.** Every color has psychological intent and mathematical derivation.
+
+### Format Standard
+All colors: **normalized float [0.0-1.0] RGBA**. This is WebGL's native format.
+- sRGB for human-authored values (stored in palettes)
+- Linear space for all math in shaders
+- `ct_to_linear()` / `ct_to_srgb()` for conversion
+
+### Color Psychology
+Each hue range communicates neurologically:
+- **Red (0-15)**: Energy, urgency, activation (Mars, Fire signs, Tzolkin Red family)
+- **Orange (30)**: Warmth, optimism (Sun, Leo, Jupiter)
+- **Yellow-Green (75)**: Clarity, intellect, growth (Mercury, Air signs)
+- **Green (120)**: Harmony, balance, nature (Venus, Earth signs, Wood element)
+- **Blue-Green (170)**: Tranquility, depth, water (Water signs, Buddhist calm)
+- **Blue (210)**: Trust, reliability, infinity (Sky, Hebrew tekhelet, Islamic lapis)
+- **Indigo (250)**: Wisdom, intuition, cosmos (I Ching depth, Kabbalah)
+- **Violet (280)**: Spirituality, transformation (Human Design intuition)
+- **Neutral grays**: Objectivity, time itself (Gregorian system)
+
+### Golden Angle Harmony
+Instead of arbitrary hue steps, color palettes use the golden angle (137.508 deg) for spacing. Nature uses this for optimal packing (sunflower seeds). We use it for maximally distinct yet harmonious color sets.
+
+### System-Specific Palettes
+Each knowledge system gets a psychologically appropriate palette:
+- **Astronomy**: cool blue + warm gold (sky + sun)
+- **Astrology**: element-coded (fire=red, earth=brown, air=yellow, water=blue)
+- **Tzolkin**: 4 directional colors per Arguelles
+- **I Ching**: yin/yang duality (deep indigo + ivory)
+- **Chinese**: Wu Xing elements (wood=green, fire=red, earth=gold, metal=silver, water=black)
+- **Human Design**: body-energy (amber, crimson, teal, violet)
+- **Kabbalah**: 4 Worlds (Atziluth=gold, Briah=silver, Yetzirah=indigo, Assiah=olive)
+- **Hindu**: sacred (saffron, vermillion, turmeric)
+- **Buddhist**: dharma (ochre, gold, deep blue)
+- **Hebrew**: Torah (royal blue, gold, parchment)
+- **Islamic**: geometric (emerald, gold, lapis lazuli)
+- **Geology**: Earth (sienna, amber, slate, jade)
+
+### Depth & Atmosphere
+- Space is NOT pure #000000 — it's deep blue-black (HSL 230, 0.20, 0.03) for richness
+- Depth fog blends from warm foreground to cold space-black
+- Star glow is warm white (~5500K blackbody)
+
+### Accessibility
+- WCAG AA contrast ratio (>= 4.5:1) enforced for all text
+- `ct_ensure_contrast()` auto-adjusts text colors against backgrounds
+
+**Implementation**: `src/render/color_theory.h` — psychologically meaningful color system.
+
+---
+
 ## View Architecture
 
 ### The Three Depths
@@ -104,11 +176,12 @@ The zodiac lives ON the ecliptic plane as a translucent ring around the Sun. 12 
 | C | Chinese Cal Focus | Zoom out, Chinese card | Stem+Branch+Animal display |
 | D | Human Design Focus | Zoom out, bodygraph | Gates and channels from planet positions |
 
-### Transitions
+### Transitions (phi-timed)
 
-- Mode switch: camera interpolates position over 0.8 seconds (smoothstep)
-- Overlay panels fade in over 0.3 seconds
-- 3D scene dims (multiplied by 0.3) when a focus panel is active
+- Mode switch: camera interpolates over 0.618s (`gl_timing.slow`) — smoothstep
+- Overlay panels fade in over 0.236s (`gl_timing.normal`) — snappy but smooth
+- 3D scene dims to phi^-2 opacity (0.382) when a focus panel is active
+- Card stagger: each successive card delays by fibonacci-diminishing intervals
 - Press same key again or Esc to return to overview
 
 ### Scale Levels & Knowledge System Homes
@@ -144,21 +217,21 @@ The zodiac lives ON the ecliptic plane as a translucent ring around the Sun. 12 
 
 ## Visual Language
 
-### Color Palette (preliminary)
+### Color Palette
 
-| Element | Color | Hex |
-|---------|-------|-----|
-| Background | Near-black | #080808 |
-| Sun | Warm yellow | #FFD933 |
-| Stars | White/blue-white | #E8E8FF |
-| Orbit trails | Planet color at 40% | — |
-| Zodiac ring | Translucent white | #FFFFFF20 |
-| Fire signs (Ari,Leo,Sag) | Red | #CC3333 |
-| Earth signs (Tau,Vir,Cap) | Green | #33AA55 |
-| Air signs (Gem,Lib,Aqu) | Yellow | #CCAA33 |
-| Water signs (Can,Sco,Pis) | Blue | #3355CC |
-| Kin card background | Matches seal color | — |
-| HUD text | Dim white | #AAAAAA |
+Governed by `color_theory.h`. All values in normalized float [0.0-1.0].
+
+| Element | Source | Psychological Intent |
+|---------|--------|---------------------|
+| Background | `ct_space_black()` | Deep blue-black — alive, not dead |
+| Sun | `ct_star_glow()` | Warm gold — 5500K blackbody warmth |
+| Stars | `star_colors.h` (spectral) | True stellar colors from B-V index |
+| Orbit trails | `color_palette.h` at phi^-1 opacity | Subtle presence, not visual noise |
+| Zodiac ring | Element-coded via `ct_system_primary(ASTROLOGY)` | Fire/Earth/Air/Water meaning |
+| Kin card | `ct_system_primary(TZOLKIN)` | 4 directional families |
+| HUD text | `ct_role_color(TEXT_SECONDARY)` | Readable but not dominant |
+| Danger/error | `ct_role_color(DANGER)` | Red — neurological urgency |
+| Cards surface | `ct_role_color(SURFACE)` | Subtle elevation from space |
 
 ### Typography (planned)
 

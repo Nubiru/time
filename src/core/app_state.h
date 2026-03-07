@@ -51,18 +51,6 @@ typedef struct {
     GLint loc_light_dir;
     GLint loc_emissive;
 
-    /* Trail shader (gl_VertexID based, no vertex buffers) */
-    GLuint trail_program;
-    GLint trail_loc_view;
-    GLint trail_loc_proj;
-    GLint trail_loc_color;
-    GLint trail_loc_a;        /* semi-major axis */
-    GLint trail_loc_e;        /* eccentricity */
-    GLint trail_loc_i;        /* inclination (rad) */
-    GLint trail_loc_omega_n;  /* longitude of ascending node (rad) */
-    GLint trail_loc_omega;    /* argument of perihelion (rad) */
-    GLuint trail_vao;         /* empty VAO for gl_VertexID drawing */
-
     GLint loc_opacity;        /* alpha for planet/marker fading */
 
     /* Zodiac ring shader (vertex-colored ring on ecliptic plane) */
@@ -94,9 +82,36 @@ typedef struct {
     GLuint glyph_vbo;
     GLuint glyph_ebo;
 
+    /* Star field (point sprites + constellation lines) */
+    GLuint star_program;
+    GLint star_loc_mvp;
+    GLint star_loc_scale;
+    GLuint star_vao;
+    GLuint star_vbo;
+    int star_count;
+
+    GLuint cline_program;
+    GLint cline_loc_mvp;
+    GLuint cline_vao;
+    GLuint cline_vbo;
+    int cline_vertex_count;
+
+    /* Planet pack (point sprites with atmosphere glow) */
+    GLuint pp_program;
+    GLint pp_loc_mvp;
+    GLint pp_loc_scale;
+    GLuint pp_vao;
+    GLuint pp_vbo;
+
+    /* Planet pack trails (per-vertex alpha fade lines) */
+    GLuint pp_trail_program;
+    GLint pp_trail_loc_mvp;
+    GLuint pp_trail_vao;
+    GLuint pp_trail_vbo;
+
     /* Meshes */
     mesh_t sun_mesh;
-    mesh_t planet_mesh;
+    mesh_t planet_mesh;  /* still used for zodiac ring markers */
 
     /* Timing */
     double prev_time_ms;

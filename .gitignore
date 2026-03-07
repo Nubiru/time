@@ -1,4 +1,6 @@
 build/
+build-native/
+build-wasm/
 *.o
 *.wasm
 *.js.mem

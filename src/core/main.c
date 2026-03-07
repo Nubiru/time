@@ -26,6 +26,9 @@
 #include "../render/aspect_lines.h"
 #include "../render/cusp_lines.h"
 #include "../render/billboard.h"
+#include "../render/star_field.h"
+#include "../render/planet_pack.h"
+#include "../systems/astronomy/planet_data.h"
 #include "../ui/zodiac_glyphs.h"
 #include "../math/sidereal.h"
 #include "../math/ecliptic.h"
@@ -76,59 +79,7 @@ static const char *frag_source =
     "    frag_color = vec4(lit, u_opacity);\n"
     "}\n";
 
-/* --- Orbit trail shaders (gl_VertexID based, no vertex buffers) --- */
-
-static const char *trail_vert_source =
-    "#version 300 es\n"
-    "uniform mat4 u_view;\n"
-    "uniform mat4 u_proj;\n"
-    "uniform float u_a;\n"        /* semi-major axis in AU (raw, NOT sqrt-scaled) */
-    "uniform float u_e;\n"        /* eccentricity */
-    "uniform float u_i;\n"        /* inclination (radians) */
-    "uniform float u_omega_n;\n"  /* longitude of ascending node (radians) */
-    "uniform float u_omega;\n"    /* argument of perihelion (radians) */
-    "\n"
-    "const float TAU = 6.283185307;\n"
-    "const float SCALE = 3.0;\n"  /* must match ORBIT_SCALE in C */
-    "const int N = 360;\n"
-    "\n"
-    "void main() {\n"
-    "    float t = float(gl_VertexID) / float(N) * TAU;\n"
-    /* Polar equation gives distance in AU, then sqrt-scale to match planet positions */
-    "    float r_au = u_a * (1.0 - u_e * u_e) / (1.0 + u_e * cos(t));\n"
-    "    float r = sqrt(r_au) * SCALE;\n"
-    /* Position in orbital plane */
-    "    float x_orb = r * cos(t);\n"
-    "    float y_orb = r * sin(t);\n"
-    /* Rotate by argument of perihelion */
-    "    float cw = cos(u_omega);\n"
-    "    float sw = sin(u_omega);\n"
-    "    float x1 = cw * x_orb - sw * y_orb;\n"
-    "    float y1 = sw * x_orb + cw * y_orb;\n"
-    /* Rotate by inclination */
-    "    float ci = cos(u_i);\n"
-    "    float si = sin(u_i);\n"
-    "    float x2 = x1;\n"
-    "    float y2 = ci * y1;\n"
-    "    float z2 = si * y1;\n"
-    /* Rotate by longitude of ascending node */
-    "    float cn = cos(u_omega_n);\n"
-    "    float sn = sin(u_omega_n);\n"
-    "    float x3 = cn * x2 - sn * y2;\n"
-    "    float z3 = sn * x2 + cn * y2;\n"
-    "    float y3 = z2;\n"
-    /* Map to scene coordinates (x,z = ecliptic plane, y = up) */
-    "    gl_Position = u_proj * u_view * vec4(x3, y3, z3, 1.0);\n"
-    "}\n";
-
-static const char *trail_frag_source =
-    "#version 300 es\n"
-    "precision mediump float;\n"
-    "uniform vec3 u_color;\n"
-    "out vec4 frag_color;\n"
-    "void main() {\n"
-    "    frag_color = vec4(u_color * 0.4, 0.6);\n"
-    "}\n";
+/* (Orbit trail shaders now provided by planet_pack module) */
 
 /* --- Zodiac ring shaders (vertex-colored, no lighting) --- */
 
@@ -220,40 +171,45 @@ static const char *glyph_frag_source =
 #define RING_MID_RADIUS   ((RING_INNER_RADIUS + RING_OUTER_RADIUS) / 2.0f)
 #define RING_SEGMENTS_PER_SIGN 8
 
-#define TRAIL_SEGMENTS 361  /* 360 + 1 to close the loop */
-
-/* --- Planet rendering data (static, immutable) --- */
-
-typedef struct {
-    const planet_orbit_t *orbit;
-    float color[3];
-    float radius;    /* visual radius in scene units */
-} planet_render_t;
-
-static const planet_render_t PLANETS[8] = {
-    { &ORBIT_MERCURY,  {0.7f, 0.7f, 0.7f},  0.05f },  /* gray */
-    { &ORBIT_VENUS,    {0.9f, 0.8f, 0.5f},  0.09f },  /* pale yellow */
-    { &ORBIT_EARTH,    {0.2f, 0.4f, 0.9f},  0.10f },  /* blue */
-    { &ORBIT_MARS,     {0.8f, 0.3f, 0.15f}, 0.07f },  /* red-orange */
-    { &ORBIT_JUPITER,  {0.8f, 0.7f, 0.5f},  0.22f },  /* tan */
-    { &ORBIT_SATURN,   {0.9f, 0.75f, 0.4f}, 0.19f },  /* gold */
-    { &ORBIT_URANUS,   {0.5f, 0.8f, 0.9f},  0.14f },  /* ice blue */
-    { &ORBIT_NEPTUNE,  {0.2f, 0.3f, 0.8f},  0.13f },  /* deep blue */
-};
-
 /* sqrt scale: compresses outer planets while keeping inner planets visible.
  * Mercury ~1.9, Earth ~3.0, Jupiter ~6.8, Neptune ~16.4 scene units. */
 static const float ORBIT_SCALE = 3.0f;
 
-/* Convert heliocentric ecliptic position to scene-space Cartesian.
- * Uses sqrt(distance) for visual compression. */
-static void ecliptic_to_scene(const heliocentric_pos_t *pos, float *x, float *y, float *z) {
-    double lon = pos->longitude * DEG_TO_RAD;
-    double lat = pos->latitude * DEG_TO_RAD;
-    double r = sqrt(pos->distance) * ORBIT_SCALE;
-    *x = (float)(r * cos(lat) * cos(lon));
-    *y = (float)(r * sin(lat));
-    *z = (float)(r * cos(lat) * sin(lon));
+/* Planet pack uses linear AU scaling. We post-process to sqrt for visual compression. */
+static void sqrt_scale_planet_vertices(float *verts, int count) {
+    for (int i = 0; i < count; i++) {
+        int base = i * PP_PLANET_VERTEX_FLOATS;
+        float x = verts[base + 0];
+        float y = verts[base + 1];
+        float z = verts[base + 2];
+        /* Convert from linear to sqrt distance scaling */
+        float r_linear = sqrtf(x * x + y * y + z * z);
+        if (r_linear > 0.001f) {
+            float r_sqrt = sqrtf(r_linear) * ORBIT_SCALE;
+            float scale = r_sqrt / r_linear;
+            verts[base + 0] = x * scale;
+            verts[base + 1] = y * scale;
+            verts[base + 2] = z * scale;
+        }
+    }
+}
+
+/* Same sqrt scaling for trail vertices (7 floats per vertex: pos3 + color4) */
+static void sqrt_scale_trail_vertices(float *verts, int count) {
+    for (int i = 0; i < count; i++) {
+        int base = i * PP_TRAIL_VERTEX_FLOATS;
+        float x = verts[base + 0];
+        float y = verts[base + 1];
+        float z = verts[base + 2];
+        float r_linear = sqrtf(x * x + y * y + z * z);
+        if (r_linear > 0.001f) {
+            float r_sqrt = sqrtf(r_linear) * ORBIT_SCALE;
+            float scale = r_sqrt / r_linear;
+            verts[base + 0] = x * scale;
+            verts[base + 1] = y * scale;
+            verts[base + 2] = z * scale;
+        }
+    }
 }
 
 /* --- Input callbacks (only places besides main_loop that mutate g_state) --- */
@@ -359,49 +315,10 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
     return EM_FALSE;
 }
 
-/* --- Render helper --- */
-
-static void render_planet(const planet_render_t *p, double jd) {
-    orbital_elements_t elem = orbit_elements_at(p->orbit, jd);
-    heliocentric_pos_t pos = orbit_heliocentric(&elem);
-
-    float px, py, pz;
-    ecliptic_to_scene(&pos, &px, &py, &pz);
-
-    mat4_t translate = mat4_translate(px, py, pz);
-    mat4_t scale = mat4_scale(p->radius, p->radius, p->radius);
-    mat4_t model = mat4_multiply(translate, scale);
-
-    glUniformMatrix4fv(g_state.loc_model, 1, GL_FALSE, model.m);
-    glUniform3f(g_state.loc_color, p->color[0], p->color[1], p->color[2]);
-
-    /* Light from Sun (origin) toward this planet */
-    vec3_t to_sun = vec3_normalize((vec3_t){-px, -py, -pz});
-    glUniform3f(g_state.loc_light_dir, to_sun.x, to_sun.y, to_sun.z);
-
-    mesh_draw(&g_state.planet_mesh);
-}
-
-/* Render the orbital ellipse for a planet using gl_VertexID shader. */
-static void render_trail(const planet_render_t *p, double jd) {
-    orbital_elements_t elem = orbit_elements_at(p->orbit, jd);
-
-    /* Pass raw AU — shader does sqrt(r_au)*SCALE internally */
-    float a_au = (float)elem.a;
-    float e = (float)elem.e;
-    float i_rad = (float)(elem.i * DEG_TO_RAD);
-    float omega_n_rad = (float)(elem.omega_n * DEG_TO_RAD);
-    float omega_rad = (float)((elem.omega_p - elem.omega_n) * DEG_TO_RAD);
-
-    glUniform1f(g_state.trail_loc_a, a_au);
-    glUniform1f(g_state.trail_loc_e, e);
-    glUniform1f(g_state.trail_loc_i, i_rad);
-    glUniform1f(g_state.trail_loc_omega_n, omega_n_rad);
-    glUniform1f(g_state.trail_loc_omega, omega_rad);
-    glUniform3f(g_state.trail_loc_color, p->color[0], p->color[1], p->color[2]);
-
-    glBindVertexArray(g_state.trail_vao);
-    glDrawArrays(GL_LINE_LOOP, 0, TRAIL_SEGMENTS);
+/* Planet colors for zodiac ring markers (from planet_pack data) */
+static void planet_pack_color(int planet_idx, float *r, float *g, float *b) {
+    planet_color_t c = planet_data_color(planet_idx);
+    *r = c.r; *g = c.g; *b = c.b;
 }
 
 /* --- HUD: push time data to DOM overlay --- */
@@ -585,6 +502,38 @@ void main_loop(void) {
     glUniformMatrix4fv(g_state.loc_view, 1, GL_FALSE, view.m);
     glUniformMatrix4fv(g_state.loc_proj, 1, GL_FALSE, proj.m);
 
+    /* --- Star field (background, drawn first, behind everything) --- */
+    if (layer_is_visible(g_state.layer_state, LAYER_STARS)) {
+        float star_opacity = g_state.layer_state.opacity[LAYER_STARS];
+        mat4_t star_vp = mat4_multiply(proj, view);
+
+        /* Stars: point sprites with additive blending */
+        glUseProgram(g_state.star_program);
+        glUniformMatrix4fv(g_state.star_loc_mvp, 1, GL_FALSE, star_vp.m);
+        glUniform1f(g_state.star_loc_scale, star_opacity);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE); /* additive blending for stars */
+        glDepthMask(GL_FALSE); /* don't write to depth — stars are infinitely far */
+
+        glBindVertexArray(g_state.star_vao);
+        glDrawArrays(GL_POINTS, 0, g_state.star_count);
+        glBindVertexArray(0);
+
+        /* Constellation lines */
+        glUseProgram(g_state.cline_program);
+        glUniformMatrix4fv(g_state.cline_loc_mvp, 1, GL_FALSE, star_vp.m);
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); /* normal blend for lines */
+
+        glBindVertexArray(g_state.cline_vao);
+        glDrawArrays(GL_LINES, 0, g_state.cline_vertex_count);
+        glBindVertexArray(0);
+
+        glDepthMask(GL_TRUE);
+        glDisable(GL_BLEND);
+    }
+
     /* --- Sun + Planets (only when LAYER_PLANETS visible) --- */
     if (layer_is_visible(g_state.layer_state, LAYER_PLANETS)) {
         glUniform1f(g_state.loc_opacity, 1.0f);
@@ -596,27 +545,61 @@ void main_loop(void) {
         glUniform3f(g_state.loc_light_dir, 0.0f, 0.0f, 1.0f);
         mesh_draw(&g_state.sun_mesh);
 
-        /* Switch to diffuse lighting for planets */
-        glUniform1f(g_state.loc_emissive, 0.0f);
-        for (int i = 0; i < 8; i++) {
-            render_planet(&PLANETS[i], g_state.simulation_jd);
+        /* Planets: packed point sprites with atmosphere glow */
+        {
+            pp_planet_data_t pdata = pp_pack_planets(g_state.simulation_jd,
+                                                      1.0f, 150.0f);
+            sqrt_scale_planet_vertices(pdata.vertices, pdata.planet_count);
+
+            mat4_t pp_vp = mat4_multiply(proj, view);
+            glUseProgram(g_state.pp_program);
+            glUniformMatrix4fv(g_state.pp_loc_mvp, 1, GL_FALSE, pp_vp.m);
+            glUniform1f(g_state.pp_loc_scale, 800.0f);
+
+            glEnable(GL_BLEND);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+            glBindVertexArray(g_state.pp_vao);
+            glBindBuffer(GL_ARRAY_BUFFER, g_state.pp_vbo);
+            glBufferSubData(GL_ARRAY_BUFFER, 0,
+                            (GLsizeiptr)pp_planet_vertex_bytes(&pdata),
+                            pdata.vertices);
+            glDrawArrays(GL_POINTS, 0, pdata.planet_count);
+
+            glBindVertexArray(0);
+            glDisable(GL_BLEND);
         }
     }
 
     /* --- Orbit trails (only when LAYER_ORBITS visible) --- */
     if (g_state.show_trails &&
         layer_is_visible(g_state.layer_state, LAYER_ORBITS)) {
-        glUseProgram(g_state.trail_program);
-        glUniformMatrix4fv(g_state.trail_loc_view, 1, GL_FALSE, view.m);
-        glUniformMatrix4fv(g_state.trail_loc_proj, 1, GL_FALSE, proj.m);
+        /* Pack trail data with sqrt distance scaling */
+        pp_trail_data_t tdata = pp_pack_trails(g_state.simulation_jd,
+                                                1.0f, 180);
+        sqrt_scale_trail_vertices(tdata.vertices, tdata.total_vertex_count);
+
+        mat4_t trail_vp = mat4_multiply(proj, view);
+        glUseProgram(g_state.pp_trail_program);
+        glUniformMatrix4fv(g_state.pp_trail_loc_mvp, 1, GL_FALSE, trail_vp.m);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (int i = 0; i < 8; i++) {
-            render_trail(&PLANETS[i], g_state.simulation_jd);
+        glBindVertexArray(g_state.pp_trail_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, g_state.pp_trail_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)pp_trail_vertex_bytes(&tdata),
+                        tdata.vertices);
+
+        /* Draw each planet's trail as a separate line strip */
+        for (int i = 0; i < PP_PLANET_COUNT; i++) {
+            glDrawArrays(GL_LINE_STRIP,
+                         tdata.trail_offsets[i],
+                         tdata.trail_counts[i]);
         }
 
+        glBindVertexArray(0);
         glDisable(GL_BLEND);
     }
 
@@ -686,12 +669,13 @@ void main_loop(void) {
             glUniformMatrix4fv(g_state.loc_model, 1, GL_FALSE, model.m);
 
             /* Earth index = Sun in geocentric view — use Sun color */
-            if (p == PLANET_EARTH)
+            if (p == PLANET_EARTH) {
                 glUniform3f(g_state.loc_color, 1.0f, 0.85f, 0.2f);
-            else
-                glUniform3f(g_state.loc_color,
-                            PLANETS[p].color[0], PLANETS[p].color[1],
-                            PLANETS[p].color[2]);
+            } else {
+                float pr, pg, pb;
+                planet_pack_color(p, &pr, &pg, &pb);
+                glUniform3f(g_state.loc_color, pr, pg, pb);
+            }
             glUniform3f(g_state.loc_light_dir, 0.0f, 1.0f, 0.0f);
 
             mesh_draw(&g_state.planet_mesh);
@@ -909,27 +893,70 @@ int main(void) {
     g_state.loc_emissive = glGetUniformLocation(g_state.program, "u_emissive");
     g_state.loc_opacity = glGetUniformLocation(g_state.program, "u_opacity");
 
-    /* Create meshes: Sun is higher detail, planets share one mesh */
+    /* Create meshes: Sun sphere + small sphere for zodiac ring markers */
     g_state.sun_mesh = mesh_create_sphere(16, 32);
     g_state.planet_mesh = mesh_create_sphere(12, 24);
 
-    /* Create trail shader (gl_VertexID based, no vertex data) */
-    g_state.trail_program = shader_create_program(trail_vert_source, trail_frag_source);
-    if (g_state.trail_program == 0) {
-        printf("Failed to create trail shader\n");
+    /* --- Planet pack shader setup (point sprites with atmosphere glow) --- */
+    g_state.pp_program = shader_create_program(
+        pp_planet_vert_source(), pp_planet_frag_source());
+    if (g_state.pp_program == 0) {
+        printf("Failed to create planet pack shader\n");
         return 1;
     }
-    g_state.trail_loc_view = glGetUniformLocation(g_state.trail_program, "u_view");
-    g_state.trail_loc_proj = glGetUniformLocation(g_state.trail_program, "u_proj");
-    g_state.trail_loc_color = glGetUniformLocation(g_state.trail_program, "u_color");
-    g_state.trail_loc_a = glGetUniformLocation(g_state.trail_program, "u_a");
-    g_state.trail_loc_e = glGetUniformLocation(g_state.trail_program, "u_e");
-    g_state.trail_loc_i = glGetUniformLocation(g_state.trail_program, "u_i");
-    g_state.trail_loc_omega_n = glGetUniformLocation(g_state.trail_program, "u_omega_n");
-    g_state.trail_loc_omega = glGetUniformLocation(g_state.trail_program, "u_omega");
+    g_state.pp_loc_mvp = glGetUniformLocation(g_state.pp_program, "u_mvp");
+    g_state.pp_loc_scale = glGetUniformLocation(g_state.pp_program, "u_scale_factor");
 
-    /* Empty VAO required for gl_VertexID drawing in WebGL2 */
-    glGenVertexArrays(1, &g_state.trail_vao);
+    /* Pre-allocate planet VBO: 8 planets × 8 floats */
+    glGenVertexArrays(1, &g_state.pp_vao);
+    glBindVertexArray(g_state.pp_vao);
+
+    glGenBuffers(1, &g_state.pp_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, g_state.pp_vbo);
+    glBufferData(GL_ARRAY_BUFFER,
+                 (GLsizeiptr)(PP_PLANET_COUNT * PP_PLANET_VERTEX_FLOATS * (int)sizeof(float)),
+                 NULL, GL_DYNAMIC_DRAW);
+
+    /* Interleaved: pos(3) + color(3) + radius(1) + atmo(1) = 8 floats = 32 bytes */
+    glEnableVertexAttribArray(0); /* a_position */
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 32, (void*)0);
+    glEnableVertexAttribArray(1); /* a_color */
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 32, (void*)12);
+    glEnableVertexAttribArray(2); /* a_radius */
+    glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 32, (void*)24);
+    glEnableVertexAttribArray(3); /* a_atmo */
+    glVertexAttribPointer(3, 1, GL_FLOAT, GL_FALSE, 32, (void*)28);
+
+    glBindVertexArray(0);
+
+    /* --- Planet pack trail shader setup (alpha-fading line strips) --- */
+    g_state.pp_trail_program = shader_create_program(
+        pp_trail_vert_source(), pp_trail_frag_source());
+    if (g_state.pp_trail_program == 0) {
+        printf("Failed to create planet trail shader\n");
+        return 1;
+    }
+    g_state.pp_trail_loc_mvp = glGetUniformLocation(g_state.pp_trail_program, "u_mvp");
+
+    /* Pre-allocate trail VBO: 8 planets × 180 samples × 7 floats */
+    glGenVertexArrays(1, &g_state.pp_trail_vao);
+    glBindVertexArray(g_state.pp_trail_vao);
+
+    glGenBuffers(1, &g_state.pp_trail_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, g_state.pp_trail_vbo);
+    glBufferData(GL_ARRAY_BUFFER,
+                 (GLsizeiptr)(PP_PLANET_COUNT * 180 * PP_TRAIL_VERTEX_FLOATS * (int)sizeof(float)),
+                 NULL, GL_DYNAMIC_DRAW);
+
+    /* Interleaved: pos(3) + color(4) = 7 floats = 28 bytes */
+    glEnableVertexAttribArray(0); /* a_position */
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 28, (void*)0);
+    glEnableVertexAttribArray(1); /* a_color */
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 28, (void*)12);
+
+    glBindVertexArray(0);
+
+    printf("Planet pack: 8 planets + trails, shaders compiled\n");
 
     /* --- Zodiac ring setup --- */
     g_state.ring_program = shader_create_program(ring_vert_source, ring_frag_source);
@@ -1095,6 +1122,81 @@ int main(void) {
     }
 
     glBindVertexArray(0);
+
+    /* --- Star field setup --- */
+    {
+        /* Compile star shaders from star_field module */
+        g_state.star_program = shader_create_program(
+            star_field_vert_source(), star_field_frag_source());
+        if (g_state.star_program == 0) {
+            printf("Failed to create star shader\n");
+            return 1;
+        }
+        g_state.star_loc_mvp = glGetUniformLocation(g_state.star_program, "u_mvp");
+        g_state.star_loc_scale = glGetUniformLocation(g_state.star_program, "u_scale_factor");
+
+        /* Pack star vertex data on stack */
+        float star_verts[600 * STAR_VERTEX_FLOATS]; /* ~595 stars max */
+        g_state.star_count = star_field_pack(star_verts, 600, 8.0f, 100.0f);
+
+        /* Upload to GPU */
+        glGenVertexArrays(1, &g_state.star_vao);
+        glBindVertexArray(g_state.star_vao);
+
+        glGenBuffers(1, &g_state.star_vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, g_state.star_vbo);
+        glBufferData(GL_ARRAY_BUFFER,
+                     (GLsizeiptr)(g_state.star_count * STAR_VERTEX_STRIDE),
+                     star_verts, GL_STATIC_DRAW);
+
+        /* Interleaved: pos(3) + color(3) + size(1) = 7 floats = 28 bytes */
+        glEnableVertexAttribArray(0); /* a_position */
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, STAR_VERTEX_STRIDE, (void*)0);
+        glEnableVertexAttribArray(1); /* a_color */
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, STAR_VERTEX_STRIDE, (void*)12);
+        glEnableVertexAttribArray(2); /* a_size */
+        glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, STAR_VERTEX_STRIDE, (void*)24);
+
+        glBindVertexArray(0);
+
+        printf("Stars: %d packed, shaders compiled\n", g_state.star_count);
+    }
+
+    /* --- Constellation line setup --- */
+    {
+        g_state.cline_program = shader_create_program(
+            constellation_line_vert_source(), constellation_line_frag_source());
+        if (g_state.cline_program == 0) {
+            printf("Failed to create constellation shader\n");
+            return 1;
+        }
+        g_state.cline_loc_mvp = glGetUniformLocation(g_state.cline_program, "u_mvp");
+
+        /* Pack constellation line vertices on stack */
+        float cline_verts[500 * 2 * CLINE_VERTEX_FLOATS]; /* ~300 lines max */
+        int line_count = constellation_lines_pack(cline_verts, 500, 0.25f, 0.4f, 100.0f);
+        g_state.cline_vertex_count = line_count * 2;
+
+        /* Upload to GPU */
+        glGenVertexArrays(1, &g_state.cline_vao);
+        glBindVertexArray(g_state.cline_vao);
+
+        glGenBuffers(1, &g_state.cline_vbo);
+        glBindBuffer(GL_ARRAY_BUFFER, g_state.cline_vbo);
+        glBufferData(GL_ARRAY_BUFFER,
+                     (GLsizeiptr)(g_state.cline_vertex_count * CLINE_VERTEX_STRIDE),
+                     cline_verts, GL_STATIC_DRAW);
+
+        /* Interleaved: pos(3) + color(4) = 7 floats = 28 bytes */
+        glEnableVertexAttribArray(0); /* a_position */
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, CLINE_VERTEX_STRIDE, (void*)0);
+        glEnableVertexAttribArray(1); /* a_color */
+        glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, CLINE_VERTEX_STRIDE, (void*)12);
+
+        glBindVertexArray(0);
+
+        printf("Constellations: %d lines packed, shaders compiled\n", line_count);
+    }
 
     /* Initialize timing */
     g_state.prev_time_ms = emscripten_get_now();

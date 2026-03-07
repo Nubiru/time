@@ -348,25 +348,8 @@ static const char *const CULTURES[] = {
 static const int CULTURE_COUNT =
     (int)(sizeof(CULTURES) / sizeof(CULTURES[0]));
 
-/* Distinct persons, deduplicated from the data table */
-static const char *const PERSONS[] = {
-    "Al-Khwarizmi",
-    "Aristarchus",
-    "Aryabhata",
-    "Brahmagupta",
-    "Copernicus",
-    "Eratosthenes",
-    "Hillel II",
-    "Hipparchus",
-    "Maya astronomers",
-    "Ptolemy",
-    "Su Song",
-    "Tycho Brahe",
-    "Ulugh Beg"
-};
-
-static const int PERSON_COUNT =
-    (int)(sizeof(PERSONS) / sizeof(PERSONS[0]));
+/* Distinct person count (deduplicated from the data table) */
+static const int PERSON_COUNT = 13;
 
 /* ===== Public API ===== */
 

@@ -5,7 +5,7 @@
 }
 
 body {
-    background: #080808;
+    background: #060709; /* space-black: not dead black, blue-tinted alive */
     overflow: hidden;
 }
 
@@ -15,15 +15,21 @@ canvas {
     display: block;
 }
 
+/* phi-derived design tokens:
+ * phi = 1.618, phi^-1 = 0.618, phi^-2 = 0.382, phi^-3 = 0.236
+ * spacing base = 8px: 3, 5, 8, 13, 21, 34, 55 (fibonacci)
+ * font base = 13px: 8, 13, 21 (fibonacci approximation)
+ * opacity: 1.0, 0.618, 0.382, 0.236 */
+
 #time-hud {
     position: fixed;
-    top: 16px;
-    left: 16px;
-    color: rgba(255, 255, 255, 0.75);
+    top: 13px;     /* fibonacci: 13 */
+    left: 13px;    /* fibonacci: 13 */
+    color: rgba(230, 230, 235, 0.618); /* phi^-1 opacity */
     font-family: 'Courier New', monospace;
-    font-size: 13px;
-    line-height: 1.7;
+    font-size: 13px; /* fibonacci base */
+    line-height: 1.618; /* phi */
     pointer-events: none;
     z-index: 10;
-    text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 0 3px rgba(6, 7, 9, 0.8); /* space-black tint */
 }
