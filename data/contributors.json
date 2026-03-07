@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-07",
-    "total_contributors": 120
+    "total_contributors": 122
   },
   "contributors": [
     {
@@ -414,6 +414,40 @@
       ],
       "references": [
         { "file": "src/systems/persian/persian.c", "line": 5, "note": "Verification of 2820-year cycle accuracy for Persian calendar" }
+      ]
+    },
+    {
+      "id": "bahaullah",
+      "name": "Baha'u'llah (Mirza Husayn-Ali Nuri)",
+      "born": 1817,
+      "died": 1892,
+      "category": ["religious-founder", "calendar-originator"],
+      "contributions": [
+        {
+          "work": "Kitab-i-Aqdas (The Most Holy Book)",
+          "description": "Established the Badi' calendar: 19 months of 19 days, Ayyam-i-Ha intercalary period, Vahid (19-year) and Kull-i-Shay' (361-year) super-cycles",
+          "year": 1873
+        }
+      ],
+      "references": [
+        { "file": "src/systems/bahai/bahai.c", "line": 3, "note": "Badi' calendar structure and holy days" }
+      ]
+    },
+    {
+      "id": "the-bab",
+      "name": "The Bab (Siyyid Ali-Muhammad)",
+      "born": 1819,
+      "died": 1850,
+      "category": ["religious-founder"],
+      "contributions": [
+        {
+          "work": "Bayan (The Exposition)",
+          "description": "Co-originated the Badi' calendar concept; Declaration and Martyrdom are holy days in the Baha'i calendar",
+          "year": 1844
+        }
+      ],
+      "references": [
+        { "file": "src/systems/bahai/bahai.c", "line": 3, "note": "Calendar epoch (1844 CE) and holy day dates" }
       ]
     },
     {

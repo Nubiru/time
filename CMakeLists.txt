@@ -154,6 +154,8 @@ set(SYSTEMS_SOURCES
     src/systems/tarot/tarot.c
     # Persian
     src/systems/persian/persian.c
+    # Bahai
+    src/systems/bahai/bahai.c
     # Geology
     src/systems/geology/geo_time.c
     src/systems/geology/climate_history.c
@@ -387,6 +389,9 @@ else()
     # Systems — Persian
     add_library(time_persian         OBJECT src/systems/persian/persian.c)
 
+    # Systems — Bahai
+    add_library(time_bahai           OBJECT src/systems/bahai/bahai.c)
+
     # Systems — Geology
     add_library(time_geo_time        OBJECT src/systems/geology/geo_time.c)
     add_library(time_climate_history OBJECT src/systems/geology/climate_history.c)
@@ -607,6 +612,9 @@ else()
 
     # Persian tests
     time_add_test(NAME test_persian         TEST tests/systems/persian/test_persian.c DEPS persian)
+
+    # Baha'i tests
+    time_add_test(NAME test_bahai           TEST tests/systems/bahai/test_bahai.c     DEPS bahai)
 
     # Geology tests
     time_add_test(NAME test_geo_time        TEST tests/systems/test_geo_time.c              DEPS geo_time)
