@@ -93,6 +93,7 @@ set(RENDER_SOURCES
     src/render/earth_globe.c
     src/render/earth_atmosphere.c
     src/render/earth_pack.c
+    src/render/tree_pack.c
     src/render/catalog_ingest.c
     src/render/text_render.c
     src/render/hexagram_geometry.c
@@ -335,6 +336,7 @@ else()
     add_library(time_earth_atmosphere OBJECT src/render/earth_atmosphere.c)
     add_library(time_earth_globe     OBJECT src/render/earth_globe.c)
     add_library(time_earth_pack      OBJECT src/render/earth_pack.c)
+    add_library(time_tree_pack       OBJECT src/render/tree_pack.c)
     add_library(time_hexagram_geometry OBJECT src/render/hexagram_geometry.c)
     add_library(time_milkyway_pack   OBJECT src/render/milkyway_pack.c)
     add_library(time_moon_pack       OBJECT src/render/moon_pack.c)
@@ -542,6 +544,7 @@ else()
     time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack galaxy_geometry)
     time_add_test(NAME test_bodygraph_pack TEST tests/render/test_bodygraph_pack.c DEPS bodygraph_pack bodygraph)
     time_add_test(NAME test_earth_pack    TEST tests/render/test_earth_pack.c    DEPS earth_pack earth_globe earth_atmosphere)
+    time_add_test(NAME test_tree_pack    TEST tests/render/test_tree_pack.c    DEPS tree_pack tree_geometry sefirot)
     time_add_test(NAME test_glyph_batch     TEST tests/render/test_glyph_batch.c     DEPS glyph_batch vec3)
     time_add_test(NAME test_color_theory    TEST tests/render/test_color_theory.c    DEPS color_theory color)
     time_add_test(NAME test_star_catalog_ext TEST tests/render/test_star_catalog_ext.c DEPS star_catalog_ext)
