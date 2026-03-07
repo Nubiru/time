@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 89
+    "total_contributors": 91
   },
   "contributors": [
     {
@@ -13,7 +13,7 @@
       "contributions": [
         {
           "work": "Astronomical Algorithms",
-          "description": "Julian Day conversion, Kepler's equation, GMST, nutation, obliquity, ecliptic coordinates, planetary positions, lunar nodes, solar events",
+          "description": "Julian Day conversion, Kepler's equation, GMST, nutation, obliquity, ecliptic coordinates, planetary positions, lunar nodes, solar events, Computus (Easter), Laskar obliquity polynomial, rigorous precession, moon phase algorithm",
           "year": 1991
         }
       ],
@@ -27,7 +27,8 @@
         { "file": "src/math/ecliptic.c", "line": 34, "note": "Eq. 22.2: mean obliquity of ecliptic" },
         { "file": "src/systems/astronomy/solar_events.c", "line": 19, "note": "Simplified Meeus/NOAA solar position" },
         { "file": "src/systems/astronomy/moon_nodes.c", "line": 18, "note": "Chapter 47: mean longitude of ascending node" },
-        { "file": "src/ui/time_hud.c", "line": 13, "note": "Sidereal rate reference" }
+        { "file": "src/ui/time_hud.c", "line": 13, "note": "Sidereal rate reference" },
+        { "file": "src/systems/unified/calendar_epoch.c", "line": 22, "note": "Chapter 8: Computus (Anonymous Gregorian Easter algorithm)" }
       ]
     },
     {
@@ -1436,6 +1437,39 @@
       ],
       "references": [
         { "file": "src/systems/unified/frequency.c", "line": 1, "note": "Planetary frequency mapping via octave transposition (Cosmic Octave method)" }
+      ]
+    },
+    {
+      "id": "jacques-laskar",
+      "name": "Jacques Laskar",
+      "born": 1955,
+      "category": ["astronomer", "mathematician"],
+      "contributions": [
+        {
+          "work": "Secular terms of classical planetary theories",
+          "description": "High-precision 10th-degree polynomial for mean obliquity of the ecliptic, valid over 10000 years from J2000.0. Published in Astronomy and Astrophysics Vol. 157, p. 68.",
+          "year": 1986
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/029-meeus-computus-obliquity-precession-moon-phases.md", "line": 1, "note": "Laskar obliquity polynomial (formula 22.3 in Meeus)" }
+      ]
+    },
+    {
+      "id": "spencer-jones",
+      "name": "Harold Spencer Jones",
+      "born": 1890,
+      "died": 1960,
+      "category": ["astronomer", "astronomer-royal"],
+      "contributions": [
+        {
+          "work": "General Astronomy",
+          "description": "Computus algorithm for Easter date calculation (Gregorian calendar), devised in 1876, published pp. 73-74. Valid from 1583 onward with no exceptions, unlike Gauss's method.",
+          "year": 1922
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/029-meeus-computus-obliquity-precession-moon-phases.md", "line": 1, "note": "Spencer Jones Computus algorithm (Meeus Ch. 8)" }
       ]
     }
   ]
