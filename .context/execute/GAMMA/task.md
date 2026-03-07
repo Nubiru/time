@@ -1,29 +1,30 @@
-# Task: Knowledge Extraction — Tufte "Envisioning Information"
+# Task: Knowledge Extraction — Albers "Interaction of Color"
 
 **Agent**: GAMMA
-**Roadmap Reference**: P1 Book Extraction — feeds Track 29.4 (dramatization display), Track 30 (presentation quality), Track 4 (card design), Track 37.3 (color_theory)
+**Roadmap Reference**: P1 Book Extraction — feeds Track 37 (style system), Track 37.4 (color_theory.h/.c), all renderers
 **Date**: 2026-03-07
 **Status**: COMPLETE
 
 ## Goal
 
-Extract data visualization principles from Tufte's "Envisioning Information": techniques for showing multidimensional data on 2D surfaces, small multiples rules, layering and separation methods, color rules for information display, and the 1+1=3 interference effect. These directly inform how Time renders its 16+ layered knowledge systems without visual clutter.
+Extract color interaction principles from Josef Albers' "Interaction of Color" (50th Anniversary Edition): simultaneous contrast rules, color relativity illusions, temperature interactions, quantitative relationships, and color harmony principles. These directly feed our `color_theory.h/.c` module and `theme.c` (Cosmos/Dawn themes).
 
 ## Extraction Questions (from EXTRACTION_QUESTIONS.md)
 
-Q1: "Escaping Flatland": what specific techniques does Tufte prescribe for showing multidimensional data on a 2D surface? Which apply to our layered time system display?
-Q2: Small multiples: rules for when to use them, sizing, alignment, shared scales. Could we use small multiples for comparing calendar systems side-by-side?
-Q3: Layering and separation: how to stack multiple information layers without visual clutter? Specific techniques (color coding, transparency, spatial separation).
-Q4: Color rules for information display: how many colors are too many? When does color help vs hurt? Quantitative guidelines.
-Q5: The "1+1=3" effect: visual interference patterns where two elements create an unintended third. How to avoid in our multi-layer rendering.
+Q1: Laws of simultaneous contrast: when adjacent colors change each other's appearance, what are the rules? Can we quantify these as functions: f(color_a, color_b) -> perceived_color_a?
+Q2: Color relativity: same color appears different in different contexts. What are the major illusion types? Which affect our multi-layer display where system colors sit on different backgrounds?
+Q3: Color temperature interactions: warm vs cool perception shifts. Rules for when warm appears cool and vice versa. Relevant to our Cosmos (dark/cool) vs Dawn (warm/light) themes.
+Q4: Quantitative rules: are there any numerical relationships Albers identifies that we can encode? Ratios, percentages, thresholds?
+Q5: Color harmony: which color combinations does Albers consider harmonious vs discordant? How does this relate to our golden angle palette generation?
 
 ## Source
 
-`~/Desktop/temp/time/new/Envisioning Information.pdf`
+`~/Desktop/temp/time/new/Interaction of Color_ 50th Anniversary Edition.pdf`
+(Fallback: `~/Desktop/temp/time/new/Interaction of Color.pdf`)
 
 ## DONE WHEN
 
-- [ ] Q1-Q5 answered with specific, implementable principles
-- [ ] Digest written to `.context/research/digested/034-tufte-envisioning-information.md`
-- [ ] MINING_QUEUE.md updated
-- [ ] contributors.json verified/updated
+- [x] Q1-Q5 answered with specific, implementable data
+- [x] Digest written to `.context/research/digested/035-albers-interaction-of-color.md`
+- [x] MINING_QUEUE.md updated
+- [x] contributors.json verified/updated (5 new: Albers, Chevreul, Schopenhauer, Bezold, Weber-Fechner)

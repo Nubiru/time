@@ -2,47 +2,50 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-07
-**Task**: Knowledge Extraction — Tufte "Envisioning Information"
-**Roadmap Reference**: P1 Book Extraction — feeds Track 29.4 (dramatization display), Track 30 (presentation quality), Track 4 (card design), Track 37.3 (color_theory)
+**Task**: Knowledge Extraction — Albers "Interaction of Color"
+**Roadmap Reference**: P1 Book Extraction — feeds Track 37 (style system), Track 37.4 (color_theory.h/.c), all renderers
 
 ## Files Created
-- `.context/research/digested/034-tufte-envisioning-information.md` — Comprehensive digest: Q1-Q5 answered with implementable principles, Imhof's 4 color rules, 1+1=3 effect remedies, small multiples design rules, micro/macro readings, data-ink ratio, 20-30 color limit, nature's palette strategy, space-time grid narratives
+- `.context/research/digested/035-albers-interaction-of-color.md` — Comprehensive digest: Q1-Q5 answered with simultaneous contrast rules, 8 illusion types, Weber-Fechner Law, Schopenhauer area ratios, 3 color polarities, harmony rejection, Bezold effect, implementation notes validating phi/fibonacci design system
 
 ## Files Modified
-- `.context/research/MINING_QUEUE.md` — Updated Tufte status to EXTRACTED, incremented digest count to 26
-- `data/contributors.json` — Added Edward Tufte (id: edward-tufte) and Eduard Imhof (id: eduard-imhof), total now 99
+- `.context/research/MINING_QUEUE.md` — Updated Albers status to EXTRACTED, incremented digest count to 27
+- `data/contributors.json` — Added Josef Albers, Michel Chevreul, Arthur Schopenhauer, Wilhelm von Bezold, Weber-Fechner (ids: josef-albers, michel-chevreul, arthur-schopenhauer, wilhelm-von-bezold, weber-fechner), total now 105
 - `.context/execute/GAMMA/task.md` — Marked COMPLETE
+- `.context/execute/GAMMA/escalation.md` — Created for Brannen wrong-book blocker
 
 ## Extraction Summary
 
 ### Data Extracted
-1. **Escaping Flatland (Q1)** — 6 techniques: micro/macro readings ("to clarify, add detail"), small multiples, layering/separation, data density (40-60 entries/cm²), multi-functioning elements (16 variables per page), dimensional compression
-2. **Small Multiples (Q2)** — 6 rules: constancy of design, enforce comparisons within eyespan, 2D matrix indexing for extra dimensions, mute repeated elements, "compared to what?" implicit comparison, economy of perception
-3. **Layering and Separation (Q3)** — 7 techniques: color separation of layers, visual weight hierarchy, the ungrid, subtraction of weight, 1+1=3 minimization, information layering by value (light-to-dark), Imhof's 4 cartographic rules
-4. **Color Rules (Q4)** — 10 principles: 20-30 color limit, 4 uses of color (label/measure/represent/enliven), Imhof's 4 rules (bright sparingly on muted, avoid adjacent light-bright, large=muted small=bright, interweave carpet-fashion), nature's palette (blues/yellows/grays), yellow's dual status, "above all do no harm", redundant encoding, avoid red/green, rainbow scales disorderly, simultaneous contrast
-5. **1+1=3 Effect (Q5)** — Definition + 4 properties (proportional to contrast/weight/proximity, cumulative) + 5 remedies (lighten structural elements, mute background, subtract weight, let data replace structure, squint test)
-6. **Space-Time Narratives (Ch6)** — Space-time grid universality, cyclic data overlay (torus-graphic), strip maps, dance notation as comprehensive example of all techniques combined
-7. **Key Quotations** — 7 design aphorisms for ongoing reference
-8. **Implementation Notes** — Direct code implications for render_layers.h, color_theory.h, golden_layout.h, theme.h, future small-multiples mode
+1. **Simultaneous Contrast (Q1)** — Mechanism: retinal fatigue → complement projection. Subtraction rule: ground subtracts own hue AND light from carried colors. Two-way action, proportional to area ratio and hue distance.
+2. **Color Relativity (Q2)** — 8 illusion types: 1→2, 2→1, transparency, fluting, vibrating boundaries, vanishing boundaries, film color, volume color. All traceable to simultaneous contrast.
+3. **Color Temperature (Q3)** — Three INDEPENDENT polarities with distinct color-circle distributions: light-dark (Y↔V), warm-cool (Y-O-R↔B-G), wet-dry (Y-G↔O-R-V). These do NOT align: yellow is warm+wet+light, red is warm+dry+medium-dark.
+4. **Quantitative Rules (Q4)** — Weber-Fechner Law: perception = log(stimulus), geometric physical → arithmetic perceptual. Schopenhauer area ratios: Y:O:R:V:B:G = 3:4:6:9:8:6. 60% error rate on lighter/darker judgments. ~30 color names limit.
+5. **Color Harmony (Q5)** — Albers REJECTS mechanical harmony: "any color works with any other, presupposing quantities are appropriate." Quantity is a quality. Dissonance = as desirable as consonance.
 
-### Extraction Questions Answered
-- Q1: Escaping Flatland techniques — 6 specific techniques with Time application notes
-- Q2: Small multiples rules — 6 principles with calendar comparison application
-- Q3: Layering/separation — 7 techniques including 1+1=3 effect and Imhof's rules
-- Q4: Color rules — 10 quantitative guidelines with existing module validation
-- Q5: 1+1=3 effect — full definition, properties, remedies, and code implications
+### Existing Code Validated
+- **Phi opacity cascade** (theme.h): geometric → perceptually equal steps. Weber-Fechner confirms.
+- **Fibonacci scales** (golden_layout.h): ratio ≈ 1.618 = roughly geometric. Confirmed perceptually uniform.
+- **20-30 color limit** (Tufte + Albers ~30 names): our ~14 system colors within range.
+- **Space-black** (#060709): avoids vibrating boundary effect of pure B/W.
+- **Additive blending** for star/trail shaders: correct for emitted light on screen.
+- **Golden angle palette**: maximal hue spacing validated by Albers (though quantity matters more than hue).
 
-### What Was NOT Extracted
-- Specific historical example details (cholera map, castle plans) — illustrative only
-- Tufte's critiques of bad designs (Challenger O-ring) — design philosophy, not code
-- Full bibliography
+### New Insights
+- **Wet-dry polarity**: independent of warm-cool. Solar gold + Celestial teal are BOTH "wet" — explaining their cohesion.
+- **Schopenhauer area ratios**: bright colors need LESS screen area than dark ones for balance.
+- **Boundary hardness = depth**: sharper boundaries → more depth separation.
+- **Bezold Effect**: changing one system's accent shifts entire composition perception.
 
 ## Attribution
-Edward Tufte added to contributors.json (id: edward-tufte). Eduard Imhof added (id: eduard-imhof) as Tufte's primary color authority.
+Josef Albers added to contributors.json (id: josef-albers). Also added: Michel Chevreul (id: michel-chevreul), Arthur Schopenhauer (id: arthur-schopenhauer), Wilhelm von Bezold (id: wilhelm-von-bezold), Weber-Fechner (id: weber-fechner).
+
+## Escalation
+Brannen "The Ends of the World" — PDF is wrong book (Danowski/Viveiros de Castro philosophy, not Brannen geology). See `escalation.md`. Gabriel needs to acquire correct Brannen PDF.
 
 ## Knowledge Gaps
-- Josef Albers "Interaction of Color" — in MINING_QUEUE at P1. Would provide simultaneous contrast theory referenced by Tufte. Enables Track 37.4.
-- Jacques Bertin "Semiology of Graphics" — NOT ACQUIRED. Tufte references for encoding theory. Lower priority.
+- Itten "The Art of Color" — NOT ACQUIRED. Would provide 7 contrast types complementing Albers. Lower priority now that Albers is extracted.
+- Brannen (geology) — correct PDF needed for Track 20.4/29.3 extinction data.
 
 ## Next Candidate
-This was GAMMA's 3rd extraction task this session (1st: 777 digest 032, 2nd: Book of Thoth digest 033, 3rd: Tufte digest 034). Session should evaluate: continue extraction (Albers "Interaction of Color" at P1 would complete the color theory pipeline) or pick a code task from the roadmap. 3 tasks completed = recommended session exit per protocol.
+This is GAMMA's 5th extraction task across sessions (032 Crowley 777, 033 Book of Thoth, 034 Tufte, blocked Brannen, 035 Albers). Remaining P1: Bryson "A Short History of Nearly Everything" (deep time storytelling, feeds Track 29.3/20). Session has completed 2 tasks this session (Brannen escalation + Albers extraction). Can continue to Bryson or exit per 3-task protocol.
