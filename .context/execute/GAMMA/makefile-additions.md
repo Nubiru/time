@@ -19,6 +19,7 @@ src/systems/unified/number_scanner.c
 src/systems/earth/seasons.c
 src/systems/unified/frequency.c
 src/systems/unified/precession_detect.c
+src/systems/unified/calendar_politics.c
 
 ## New test targets:
 test-four-worlds: $(BUILD_DIR)
@@ -97,8 +98,12 @@ test-precession-detect: $(BUILD_DIR)
 	$(CC) $(CFLAGS) tests/systems/unified/test_precession_detect.c src/systems/unified/precession_detect.c $(UNITY) -o $(BUILD_DIR)/test_precession_detect $(LDFLAGS)
 	./$(BUILD_DIR)/test_precession_detect
 
+test-calendar-politics: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_calendar_politics.c src/systems/unified/calendar_politics.c $(UNITY) -o $(BUILD_DIR)/test_calendar_politics $(LDFLAGS)
+	./$(BUILD_DIR)/test_calendar_politics
+
 ## Add to test: dependency list:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons test-frequency test-precession-detect
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons test-frequency test-precession-detect test-calendar-politics
 
 ## Add to .PHONY:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons test-frequency test-precession-detect
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons test-frequency test-precession-detect test-calendar-politics

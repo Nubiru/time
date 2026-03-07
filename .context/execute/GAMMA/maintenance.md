@@ -1,4 +1,4 @@
-# Maintainer Health Report: Precession Encoder Detector
+# Maintainer Health Report: Calendar Politics
 
 **Result**: PASS
 **Date**: 2026-03-07
@@ -7,9 +7,9 @@
 
 1. **Regression Gate**: PASS — 2615 tests, 0 failures
 2. **Purity P1-P5**: PASS — No GL, no malloc, no I/O, no mutable statics, no app_state
-3. **Naming/Style**: PASS — pd_ prefix, UPPER_CASE constants, pd_cycle_t/pd_match_t/pd_report_t typedefs, TIME_PRECESSION_DETECT_H guard
-4. **Dead Code**: PASS — All 10 public functions called in tests
+3. **Naming/Style**: PASS — cp_ prefix, UPPER_CASE constants, cp_decision_t/cp_category_t typedefs, TIME_CALENDAR_POLITICS_H guard
+4. **Dead Code**: PASS — All 8 public functions called in tests
 5. **TODO Audit**: PASS — Zero TODOs/FIXMEs
-6. **Duplication**: PASS — Complementary to number_scanner (different purpose)
-7. **Metrics**: 58 tests, 9 cultural cycles tested against precession
+6. **Duplication**: PASS — Distinct from calendar_reform (systems vs decisions)
+7. **Metrics**: 98 tests, 10 historical decisions, 4 categories
 8. **Attribution**: PASS — No new attributions needed

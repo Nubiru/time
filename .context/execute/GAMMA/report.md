@@ -2,34 +2,32 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-07
-**Task**: Precession Encoder Detector
-**Roadmap Reference**: Track 26.4 — "Agent: Precession Encoder Detector (Agent A)"
+**Task**: Calendar Politics
+**Roadmap Reference**: Track 29.5 — "Patriarchal Decision (Agent B)"
 
 ## Files Created
-- `src/systems/unified/precession_detect.h` — Header with pd_cycle_t, pd_match_t, pd_report_t, 10 public functions
-- `src/systems/unified/precession_detect.c` — 9-culture cycle table, error computation, best-multiplier search, ranked report generation
-- `tests/systems/unified/test_precession_detect.c` — 58 tests
+- `src/systems/unified/calendar_politics.h` — Header with cp_decision_t, cp_category_t, 8 public functions
+- `src/systems/unified/calendar_politics.c` — 10 historical decisions in static const table, keyword search, range queries
+- `tests/systems/unified/test_calendar_politics.c` — 98 tests
 
 ## API Summary
-- `pd_cycle_count()` → int (9 registered cycles)
-- `pd_cycle_get(int index)` → pd_cycle_t
-- `pd_test(double period, int multiplier, name, culture)` → pd_match_t
-- `pd_best_multiplier(double period)` → int (searches 1-1000)
-- `pd_error(double product)` → double (% deviation from 25,772 years)
-- `pd_report()` → pd_report_t (all cycles tested, ranked by accuracy)
-- `pd_report_rank(report, rank)` → pd_match_t
-- `pd_cultures_within(report, threshold)` → int
-- `pd_degrees_per_year()` → double (~0.01397)
-- `pd_years_per_degree()` → double (~71.589)
+- `cp_decision_count()` → int (10 decisions)
+- `cp_decision_get(int index)` → cp_decision_t
+- `cp_category_name(cp_category_t)` → const char *
+- `cp_decisions_by_category(cp_category_t)` → int
+- `cp_find_by_keyword(const char *)` → int (index or -1)
+- `cp_decisions_in_range(int start, int end, int *out, int max)` → int
+- `cp_natural_losses_count()` → int
+- `cp_arguelles_quote()` → const char *
 
 ## Test Results
-58 Tests, 0 Failures, 0 Ignored — OK
+98 Tests, 0 Failures, 0 Ignored — OK
 
 ## Compile Command
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/unified/test_precession_detect.c src/systems/unified/precession_detect.c tests/unity/unity.c -o build/test_precession_detect -lm
+gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/unified/test_calendar_politics.c src/systems/unified/calendar_politics.c tests/unity/unity.c -o build/test_calendar_politics -lm
 
 ## Checker Result
-PASS — All 9 checks passed. 58 tests, clean purity, no duplication with number_scanner.
+PASS — All 9 checks passed. 98 tests, purity clean, no duplication with calendar_reform (different purpose).
 
 ## Maintainer Result
 PASS — 2615 total tests, 0 failures, no TODOs, purity clean.
@@ -38,10 +36,10 @@ PASS — 2615 total tests, 0 failures, no TODOs, purity clean.
 See makefile-additions.md
 
 ## Attribution
-No new attributions needed. Precession is general astronomy. Cultural cycle data from publicly available sources (each culture's calendar system already attributed in contributors.json).
+No new attributions needed. Historical calendar facts from standard sources. Pope Gregory XIII already in contributors.json.
 
 ## Knowledge Gaps
 No gaps.
 
 ## Next Candidate
-Track 29.5: Calendar Politics — or Track 33.2: Cultural Stories
+Track 29.6: Calendar Epoch (Jesus & the Calendar) — or Track 33.2: Cultural Stories
