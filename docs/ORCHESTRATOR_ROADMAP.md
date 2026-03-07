@@ -590,15 +590,15 @@ Beyond cards — immersive visual representations.
 - [x] No GL calls — produces float arrays ready for glBufferData
 - [x] Depends on: iching module (hexagram_lines data)
 
-### 11.4 Agent: Bodygraph Render Pack (Agent A)
-- [ ] Pure module: `src/render/bodygraph_pack.h/.c`
-- [ ] Pack bodygraph 9 centers as colored quads/circles (defined vs undefined coloring)
-- [ ] Pack 36 channels as line segments with activation coloring
-- [ ] Pack 64 gate positions as small markers on channels
-- [ ] `bodygraph_pack(const int *defined_centers, const int *active_gates, float *out)` → vertex count
-- [ ] Bodygraph shader source (GLSL ES 3.00) — colored shapes with glow for defined centers
-- [ ] No GL calls — produces float arrays ready for glBufferData
-- [ ] Depends on: bodygraph (11.2)
+### 11.4 Agent: Bodygraph Render Pack (Agent A) — DELIVERED (ALPHA: bodygraph_pack, 47 tests)
+- [x] Pure module: `src/render/bodygraph_pack.h/.c`
+- [x] Pack bodygraph 9 centers as colored quads/circles (defined vs undefined coloring)
+- [x] Pack 36 channels as line segments with activation coloring
+- [x] Pack 64 gate positions as small markers on channels
+- [x] `bgp_pack_centers()`, `bgp_pack_channels()`, `bgp_pack_gates()` → vertex counts
+- [x] Bodygraph shader source (GLSL ES 3.00) — colored shapes with glow for defined centers
+- [x] No GL calls — produces float arrays ready for glBufferData
+- [x] Depends on: bodygraph (11.2)
 
 ### 11.2 Agent: Human Design Bodygraph Data (Agent A) — DELIVERED (ALPHA: bodygraph, 44 tests)
 - [x] Pure module: bodygraph geometry (9 centers, 36 channels, 64 gates) — **44 tests**
@@ -2728,13 +2728,13 @@ The INTROVERT sublayer of Earth View. This is the private, inward-facing dimensi
 - [x] Nowruz + Yalda Night + Chaharshanbe Suri festival detection
 - [x] `persian_from_jd()`, `persian_to_jd()`, `persian_month_name()`, `persian_is_nowruz()`
 
-### 50.2 Agent: Baha'i Calendar (GAMMA)
-- [ ] Pure module: `src/systems/bahai/bahai.h/.c`
-- [ ] Badí' calendar: 19 months × 19 days + Ayyám-i-Há intercalary period
-- [ ] Naw-Rúz (spring equinox) epoch, twin calendar reform (2015 sunset-based)
-- [ ] Kull-i-Shay' (361-year) and Váhid (19-year) cycles
-- [ ] Holy day detection (Ridván, Naw-Rúz, etc.)
-- [ ] `bahai_from_jd()`, `bahai_to_jd()`, `bahai_month_name()`, `bahai_holy_day()`
+### 50.2 Agent: Baha'i Calendar (GAMMA) — DELIVERED (GAMMA: bahai, 111 tests)
+- [x] Pure module: `src/systems/bahai/bahai.h/.c`
+- [x] Badí' calendar: 19 months × 19 days + Ayyám-i-Há intercalary period
+- [x] Naw-Rúz (spring equinox) epoch, twin calendar reform (2015 sunset-based)
+- [x] Kull-i-Shay' (361-year) and Váhid (19-year) cycles
+- [x] Holy day detection (Ridván, Naw-Rúz, etc.)
+- [x] `bahai_from_jd()`, `bahai_to_jd()`, `bahai_month_name()`, `bahai_holy_day()`
 
 ---
 
