@@ -1,138 +1,123 @@
-# Task: DNA-Hexagram Structural Map
+# Task: Historical Achievement Data
 
 **Agent**: GAMMA
-**Roadmap Reference**: Track 27.4 — "Agent: DNA-Hexagram Structural Map (Agent B)"
+**Roadmap Reference**: Track 29.1 — "Agent: Historical Achievement Data (Agent B)"
 **Date**: 2026-03-06
 **Status**: CLAIMED
 
 ## Goal
 
-Pure data+computation module mapping 64 DNA codons to 64 I Ching hexagrams via the Schönberger binary correspondence. Both systems exhaustively enumerate 2^6 = 64 states: a codon is 3 bases × 2 bits = 6 bits; a hexagram is 6 lines × 1 bit = 6 bits. Provides the complete genetic code table (64 codons → 20 amino acids + stop), the binary mapping to hexagram lines, and King Wen number lookup. This is combinatorics, not mysticism.
+Pure data module cataloging ancient astronomers' computational achievements with their precision compared to modern values. Dramatizes the genius: Aryabhata (499 CE) computed Earth's circumference to 0.2% error with NO telescope. Hillel II (359 CE) determined the molad to 0.4 seconds/month accuracy. Maya astronomers tracked Venus cycles to 2-hour precision. Each entry carries: person, year, culture, what was computed, their value, the modern value, the error, and what tools they had available.
 
 ## READ FIRST
 
-- `src/systems/iching/iching.h` — hexagram_t, king_wen, lines[6], iching_lines_to_king_wen
-- `src/systems/unified/structural_map.h` — SYS_DNA_CODONS, concordance system
+- `src/systems/unified/structural_map.h` — cross-system concordance patterns
+- `data/contributors.json` — existing contributor entries for these astronomers
 
 ## Files to Create
 
-- `src/systems/unified/codon_hexagram.h`
-- `src/systems/unified/codon_hexagram.c`
-- `tests/systems/unified/test_codon_hexagram.c`
+- `src/systems/unified/achievement.h`
+- `src/systems/unified/achievement.c`
+- `tests/systems/unified/test_achievement.c`
 
 ## API
 
 ```c
-#ifndef TIME_CODON_HEXAGRAM_H
-#define TIME_CODON_HEXAGRAM_H
+#ifndef TIME_ACHIEVEMENT_H
+#define TIME_ACHIEVEMENT_H
 
-/* RNA bases (also represents DNA with U→T) */
+/* Achievement categories */
 typedef enum {
-    RNA_U = 0,  /* Uracil (RNA) / Thymine (DNA) — binary 00 */
-    RNA_C = 1,  /* Cytosine — binary 01 */
-    RNA_A = 2,  /* Adenine — binary 10 */
-    RNA_G = 3,  /* Guanine — binary 11 */
-    RNA_BASE_COUNT = 4
-} rna_base_t;
+    ACH_CAT_ORBITAL = 0,     /* Orbital period, year length */
+    ACH_CAT_GEOMETRIC,       /* Earth size, distances */
+    ACH_CAT_LUNAR,           /* Lunar cycle, eclipse prediction */
+    ACH_CAT_PLANETARY,       /* Planet positions, cycles */
+    ACH_CAT_CALENDAR,        /* Calendar accuracy, intercalation */
+    ACH_CAT_MATHEMATICAL,    /* Mathematical methods, equations */
+    ACH_CAT_COUNT
+} achievement_category_t;
 
-/* Complete codon-hexagram mapping entry */
+/* A single historical achievement */
 typedef struct {
-    int codon_index;           /* 0-63 (base1*16 + base2*4 + base3) */
-    rna_base_t base1;          /* First base of triplet */
-    rna_base_t base2;          /* Second base */
-    rna_base_t base3;          /* Third base */
-    const char *codon_str;     /* "UUU", "UUC", etc. */
-    const char *amino_acid;    /* "Phenylalanine", "Stop", etc. */
-    const char *amino_abbrev;  /* "Phe", "Stop", etc. */
-    char amino_letter;         /* 'F', '*', etc. (single-letter code) */
-    int is_stop;               /* 1 if stop codon (UAA, UAG, UGA) */
-    int is_start;              /* 1 if start codon (AUG) */
-    int binary_value;          /* 6-bit binary from base mapping */
-    int hexagram_king_wen;     /* King Wen number (1-64) */
-    int hexagram_lines[6];     /* 0=yin, 1=yang, [0]=bottom */
-} codon_hexagram_t;
+    int id;                        /* Unique index */
+    const char *person;            /* "Aryabhata", "Hillel II", etc. */
+    int year;                      /* Negative for BCE (e.g., -240 for 240 BCE) */
+    const char *culture;           /* "Indian", "Jewish", "Maya", etc. */
+    const char *description;       /* What was computed/discovered */
+    double value_computed;         /* Their measured/computed value */
+    double modern_value;           /* Modern accepted value */
+    const char *unit;              /* "km", "days", "degrees", etc. */
+    double absolute_error;         /* |computed - modern| */
+    double relative_error_pct;     /* |(computed - modern) / modern| * 100 */
+    const char *tools_available;   /* "naked eye", "gnomon", "armillary sphere", etc. */
+    const char *tools_NOT_available; /* "telescope", "clock", etc. */
+    achievement_category_t category;
+    const char *significance;      /* Why this matters */
+} achievement_t;
 
-/* Get mapping entry by codon index (0-63). Returns entry with codon_index=-1 if invalid. */
-codon_hexagram_t codon_hexagram_get(int codon_index);
+/* Total number of achievements. */
+int achievement_count(void);
 
-/* Get codon index from three RNA bases. Returns -1 if invalid. */
-int codon_from_bases(rna_base_t b1, rna_base_t b2, rna_base_t b3);
+/* Get achievement by index. Returns entry with id=-1 if invalid. */
+achievement_t achievement_get(int index);
 
-/* Map codon index (0-63) to King Wen hexagram number (1-64). Returns -1 if invalid. */
-int codon_to_hexagram(int codon_index);
+/* Get achievements by culture. Fills out_indices (max out_max entries).
+ * Returns count found. */
+int achievement_by_culture(const char *culture, int *out_indices, int out_max);
 
-/* Map King Wen hexagram (1-64) to amino acid name. Returns "?" if invalid. */
-const char *hexagram_to_amino_acid(int hexagram_number);
+/* Get achievements by person. Fills out_indices. Returns count found. */
+int achievement_by_person(const char *person, int *out_indices, int out_max);
 
-/* Get amino acid name from codon index. Returns "?" if invalid. */
-const char *codon_amino_acid(int codon_index);
+/* Get achievements by category. Fills out_indices. Returns count found. */
+int achievement_by_category(achievement_category_t cat, int *out_indices, int out_max);
 
-/* Get amino acid single-letter code from codon index. Returns '?' if invalid. */
-char codon_amino_letter(int codon_index);
+/* Error ratio: modern_value / absolute_error (how many times more precise than the error).
+ * Higher = more impressive. Returns 0.0 if invalid or zero error. */
+double achievement_error_ratio(int index);
 
-/* Convert codon index to 6-bit binary value via Schonberger mapping. Returns -1 if invalid. */
-int codon_to_binary(int codon_index);
+/* Accuracy percentage: 100.0 - relative_error_pct. Returns 0.0 if invalid. */
+double achievement_accuracy_pct(int index);
 
-/* Convert 6-bit binary to codon index. Returns -1 if invalid (>63). */
-int binary_to_codon(int binary_value);
+/* Category name string. Returns "?" for invalid. */
+const char *achievement_category_name(achievement_category_t cat);
 
-/* Total codons (always 64). */
-int codon_count(void);
+/* How many distinct cultures are represented? */
+int achievement_culture_count(void);
 
-/* Number of distinct amino acids encoded (20, not counting stop). */
-int amino_acid_distinct_count(void);
+/* Get distinct culture name by index. Returns "?" for invalid. */
+const char *achievement_culture_get(int index);
 
-/* Degeneracy: how many codons encode the same amino acid? Returns 0 if not found. */
-int amino_acid_degeneracy(const char *amino_acid);
+/* How many distinct persons are represented? */
+int achievement_person_count(void);
 
-/* RNA base name string. Returns "?" for invalid. */
-const char *rna_base_name(rna_base_t base);
-
-/* RNA base letter. Returns '?' for invalid. */
-char rna_base_letter(rna_base_t base);
-
-/* How many stop codons? (always 3) */
-int codon_stop_count(void);
-
-/* How many start codons? (always 1: AUG) */
-int codon_start_count(void);
-
-#endif /* TIME_CODON_HEXAGRAM_H */
+#endif /* TIME_ACHIEVEMENT_H */
 ```
 
-## Physical Data
+## Achievement Data (minimum entries)
 
-### Standard Genetic Code (RNA codons → amino acids)
-
-64 codons organized by first base:
-- U-starting (16): UUU/UUC→Phe, UUA/UUG→Leu, UCx→Ser, UAU/UAC→Tyr, UAA/UAG→Stop, UGU/UGC→Cys, UGA→Stop, UGG→Trp
-- C-starting (16): CUx→Leu, CCx→Pro, CAU/CAC→His, CAA/CAG→Gln, CGx→Arg
-- A-starting (16): AUU/AUC/AUA→Ile, AUG→Met(Start), ACx→Thr, AAU/AAC→Asn, AAA/AAG→Lys, AGU/AGC→Ser, AGA/AGG→Arg
-- G-starting (16): GUx→Val, GCx→Ala, GAU/GAC→Asp, GAA/GAG→Glu, GGx→Gly
-
-### Schönberger Binary Mapping
-
-Each RNA base → 2 bits (following the yin/yang pairing):
-- U → 00 (old yin)
-- C → 01 (young yang)
-- A → 10 (young yin)
-- G → 11 (old yang)
-
-Codon triplet → 6 bits → hexagram lines (bottom to top).
-6-bit binary → King Wen number via lookup table (King Wen sequence is non-trivial ordering).
-
-### King Wen Binary Lookup
-
-The 64 binary values (000000 to 111111) map to King Wen numbers. This requires a 64-entry lookup table since the King Wen ordering is traditional, not computational.
+1. **Aryabhata (499 CE, Indian)**: Earth circumference 39,968 km (actual 40,075 km) — 0.27% error. Tools: gnomon, mathematical models. No telescope.
+2. **Aryabhata (499 CE, Indian)**: Sidereal year 365.25858 days (actual 365.25636) — 0.00061% error (3.2 min). No clock.
+3. **Aryabhata (499 CE, Indian)**: Equation of center (Kepler's equation equivalent) — 1200 years before Kepler.
+4. **Eratosthenes (240 BCE, Greek)**: Earth circumference 39,375 km (actual 40,075) — 1.7% error. Tools: gnomon + geometry.
+5. **Hipparchus (130 BCE, Greek)**: Tropical year 365.2467 days (actual 365.2422) — 6.5 min error. Tools: armillary sphere.
+6. **Hipparchus (130 BCE, Greek)**: Precession rate ~46"/year (actual 50.3"/year) — 8.5% error. First to discover precession.
+7. **Hillel II (359 CE, Jewish)**: Molad (lunar month) 29.530594 days (actual 29.530589) — 0.4 sec/month error.
+8. **Al-Khwarizmi (820 CE, Arab)**: Planetary position tables used for 400+ years. Sine tables to 4 decimal places.
+9. **Maya astronomers (~800 CE, Maya)**: Venus synodic cycle 583.92 days (actual 583.93) — 2 hour error per cycle.
+10. **Maya astronomers (~800 CE, Maya)**: Eclipse prediction over 405 lunations (32.8 years) — accurate to hours.
+11. **Ptolemy (150 CE, Greco-Egyptian)**: Obliquity of ecliptic 23.855° (actual for his era ~23.71°) — 0.15° error.
+12. **Ulugh Beg (1437 CE, Timurid)**: Sidereal year 365.25636 days (actual 365.25636) — essentially exact. Tools: massive sextant.
+13. **Copernicus (1543 CE, Polish)**: Sidereal year 365.25671 days — 0.3 sec error per day.
+14. **Brahmagupta (628 CE, Indian)**: Lunar month 29.530582 days (actual 29.530589) — 0.6 sec error.
+15. **Su Song (1088 CE, Chinese)**: Tropical year 365.2436 days — ~2 min error. Water-powered clock tower.
 
 ## DONE WHEN
 
-- [ ] All 64 codons with correct amino acid assignments
-- [ ] 3 stop codons (UAA, UAG, UGA) and 1 start codon (AUG) identified
-- [ ] Schönberger binary mapping (base → 2 bits)
-- [ ] Binary-to-King-Wen hexagram lookup (64 entries)
-- [ ] Degeneracy calculation for amino acids
-- [ ] Bidirectional: codon→hexagram and hexagram→amino_acid
+- [ ] >= 15 achievement entries with verified data
+- [ ] Error ratios computed correctly
+- [ ] Filter by culture, person, category
+- [ ] Accuracy percentage calculation
+- [ ] Distinct culture and person counts
 - [ ] >= 30 tests
 - [ ] All tests pass with zero warnings
 - [ ] Purity: no malloc, no globals, no side effects
@@ -142,5 +127,6 @@ The 64 binary values (000000 to 111111) map to King Wen numbers. This requires a
 
 - C11, `-Wall -Wextra -Werror -std=c11 -pedantic`
 - No malloc, no globals, no side effects
-- Standalone module (no compile-time dependencies on iching.c)
-- Data source: Standard genetic code (public domain biology), Schönberger mapping (1973)
+- Standalone module (no compile-time dependencies)
+- out_indices arrays provided by caller (stack allocated)
+- Data sources: standard astronomical history (public domain)

@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 69
+    "total_contributors": 81
   },
   "contributors": [
     {
@@ -1181,6 +1181,150 @@
       ],
       "references": [
         { "file": "src/systems/unified/codon_hexagram.c", "line": 1, "note": "Schonberger binary mapping: RNA bases to yin/yang lines (U=00, C=01, A=10, G=11)" }
+      ]
+    },
+    {
+      "id": "eratosthenes",
+      "name": "Eratosthenes of Cyrene",
+      "born": -276,
+      "died": -194,
+      "category": ["mathematician", "astronomer", "geographer"],
+      "contributions": [
+        { "work": "Measurement of Earth's circumference", "description": "Used shadow angles at Alexandria and Syene to compute Earth's circumference: 39,375 km (actual 40,075 km) — 1.7% error with a gnomon and geometry.", "year": -240 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Earth circumference measurement (240 BCE)" }
+      ]
+    },
+    {
+      "id": "hipparchus",
+      "name": "Hipparchus of Nicaea",
+      "born": -190,
+      "died": -120,
+      "category": ["astronomer", "mathematician"],
+      "contributions": [
+        { "work": "Star catalog and precession discovery", "description": "Compiled first systematic star catalog (~850 stars). Discovered precession of equinoxes (~46 arcsec/year). Measured tropical year to 6.5-minute accuracy.", "year": -130 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Tropical year measurement and precession discovery" }
+      ]
+    },
+    {
+      "id": "aryabhata",
+      "name": "Aryabhata",
+      "born": 476,
+      "died": 550,
+      "category": ["mathematician", "astronomer"],
+      "contributions": [
+        { "work": "Aryabhatiya", "description": "Earth circumference 39,968 km (0.27% error). Sidereal year 365.25858 days (3.2-min error). Equation of center 1200 years before Kepler. Sine tables. Earth rotates on axis.", "year": 499 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Earth circumference, sidereal year, lunar month measurements" }
+      ]
+    },
+    {
+      "id": "brahmagupta",
+      "name": "Brahmagupta",
+      "born": 598,
+      "died": 668,
+      "category": ["mathematician", "astronomer"],
+      "contributions": [
+        { "work": "Brahmasphutasiddhanta", "description": "Lunar month 29.530582 days (0.6-second error). Rules for zero and negative numbers. Interpolation formula.", "year": 628 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Lunar month measurement (628 CE)" }
+      ]
+    },
+    {
+      "id": "hillel-ii",
+      "name": "Hillel II",
+      "born": 300,
+      "died": 365,
+      "category": ["rabbi", "astronomer"],
+      "contributions": [
+        { "work": "Fixed Hebrew Calendar", "description": "Established the fixed Hebrew calendar (359 CE). Molad (lunar month) 29.530594 days — 0.4-second monthly error. Still used today.", "year": 359 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Molad accuracy (359 CE)" },
+        { "file": "src/systems/hebrew/hebrew.c", "line": 1, "note": "Hebrew calendar algorithm basis" }
+      ]
+    },
+    {
+      "id": "al-khwarizmi",
+      "name": "Muhammad ibn Musa al-Khwarizmi",
+      "born": 780,
+      "died": 850,
+      "category": ["mathematician", "astronomer"],
+      "contributions": [
+        { "work": "Zij al-Sindhind", "description": "Astronomical tables used for 400+ years. Sine tables to 4 decimal places. Algorithms so foundational the word 'algorithm' derives from his name.", "year": 820 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Sine table accuracy (820 CE)" }
+      ]
+    },
+    {
+      "id": "aristarchus",
+      "name": "Aristarchus of Samos",
+      "born": -310,
+      "died": -230,
+      "category": ["astronomer", "mathematician"],
+      "contributions": [
+        { "work": "On the Sizes and Distances of the Sun and Moon", "description": "First geometric method for measuring Earth-Sun distance. Estimated 19x lunar distance (actual ~389x). Method was correct; measurement limited by naked-eye precision.", "year": -270 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Earth-Sun distance ratio attempt (270 BCE)" }
+      ]
+    },
+    {
+      "id": "ulugh-beg",
+      "name": "Ulugh Beg",
+      "born": 1394,
+      "died": 1449,
+      "category": ["astronomer", "ruler"],
+      "contributions": [
+        { "work": "Zij-i Sultani", "description": "Sidereal year 365.25636 days — essentially exact match to modern value. Star catalog of 1018 stars. Built 40-meter sextant at Samarkand.", "year": 1437 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Sidereal year measurement — essentially exact (1437 CE)" }
+      ]
+    },
+    {
+      "id": "su-song",
+      "name": "Su Song",
+      "born": 1020,
+      "died": 1101,
+      "category": ["astronomer", "engineer"],
+      "contributions": [
+        { "work": "Cosmic Engine (water-powered astronomical clock tower)", "description": "Tropical year 365.2436 days (2-min error). Built world's first astronomical clock tower with escapement mechanism.", "year": 1088 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Tropical year measurement via clock tower (1088 CE)" }
+      ]
+    },
+    {
+      "id": "copernicus",
+      "name": "Nicolaus Copernicus",
+      "born": 1473,
+      "died": 1543,
+      "category": ["astronomer", "mathematician"],
+      "contributions": [
+        { "work": "De revolutionibus orbium coelestium", "description": "Heliocentric model. Sidereal year 365.25671 days. Reframed the entire solar system.", "year": 1543 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Sidereal year and heliocentric model (1543)" }
+      ]
+    },
+    {
+      "id": "tycho-brahe",
+      "name": "Tycho Brahe",
+      "born": 1546,
+      "died": 1601,
+      "category": ["astronomer"],
+      "contributions": [
+        { "work": "Stellar and planetary observations", "description": "Star positions accurate to 1 arcminute — most accurate naked-eye observations ever recorded. Enabled Kepler's laws.", "year": 1590 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Naked-eye positional accuracy (1 arcminute)" }
       ]
     }
   ]

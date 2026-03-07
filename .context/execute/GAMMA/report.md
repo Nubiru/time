@@ -2,56 +2,51 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-06
-**Task**: DNA-Hexagram Structural Map
-**Roadmap Reference**: Track 27.4 — "Agent: DNA-Hexagram Structural Map (Agent B)"
+**Task**: Historical Achievement Data
+**Roadmap Reference**: Track 29.1 — "Agent: Historical Achievement Data (Agent B)"
 
 ## Files Created
-- `src/systems/unified/codon_hexagram.h` — Header with rna_base_t, codon_hexagram_t, 15 public functions
-- `src/systems/unified/codon_hexagram.c` — Pure data + computation: 64 codons, Schonberger binary mapping, King Wen lookup
-- `tests/systems/unified/test_codon_hexagram.c` — 67 tests
+- `src/systems/unified/achievement.h` — Header with achievement_t, achievement_category_t, 11 public functions
+- `src/systems/unified/achievement.c` — Pure data: 17 achievements, 10 cultures, 13 persons, pre-computed errors
+- `tests/systems/unified/test_achievement.c` — 62 tests
 
 ## API Summary
 ```c
-codon_hexagram_t codon_hexagram_get(int codon_index);
-int codon_from_bases(rna_base_t b1, rna_base_t b2, rna_base_t b3);
-int codon_to_hexagram(int codon_index);
-const char *hexagram_to_amino_acid(int hexagram_number);
-const char *codon_amino_acid(int codon_index);
-char codon_amino_letter(int codon_index);
-int codon_to_binary(int codon_index);
-int binary_to_codon(int binary_value);
-int codon_count(void);
-int amino_acid_distinct_count(void);
-int amino_acid_degeneracy(const char *amino_acid);
-const char *rna_base_name(rna_base_t base);
-char rna_base_letter(rna_base_t base);
-int codon_stop_count(void);
-int codon_start_count(void);
+int achievement_count(void);
+achievement_t achievement_get(int index);
+int achievement_by_culture(const char *culture, int *out_indices, int out_max);
+int achievement_by_person(const char *person, int *out_indices, int out_max);
+int achievement_by_category(achievement_category_t cat, int *out_indices, int out_max);
+double achievement_error_ratio(int index);
+double achievement_accuracy_pct(int index);
+const char *achievement_category_name(achievement_category_t cat);
+int achievement_culture_count(void);
+const char *achievement_culture_get(int index);
+int achievement_person_count(void);
 ```
 
 ## Test Results
-67 Tests, 0 Failures, 0 Ignored.
+62 Tests, 0 Failures, 0 Ignored.
 
 ## Compile Command
 ```
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/unified/test_codon_hexagram.c src/systems/unified/codon_hexagram.c tests/unity/unity.c -o build/test_codon_hexagram -lm
+gcc -Wall -Wextra -Werror -std=c11 -pedantic -Isrc tests/systems/unified/test_achievement.c src/systems/unified/achievement.c tests/unity/unity.c -o build/test_achievement -lm
 ```
 
 ## Checker Result
-PASS — Compilation clean, 67 tests, purity clean (P1-P5), naming correct, no duplication, no regressions.
+PASS — Compilation clean, 62 tests, purity clean (P1-P5), naming correct, no duplication, no regressions.
 
 ## Maintainer Result
-WARN — Code quality excellent. Schonberger added to contributors.json (was missing). No other issues.
+WARN (resolved) — 12 historical astronomers added to contributors.json (Eratosthenes, Hipparchus, Aryabhata, Brahmagupta, Hillel II, al-Khwarizmi, Aristarchus, Ulugh Beg, Su Song, Copernicus, Tycho Brahe + Maya astronomers noted in module).
 
 ## Makefile Additions
 See makefile-additions.md
 
 ## Attribution
-Martin Schonberger (1973), "The I Ching and the Genetic Code" — added to data/contributors.json.
-Standard genetic code (public domain biology, NCBI).
+17 historical achievements from 13 persons across 10 cultures, spanning 1700 years (270 BCE to 1590 CE). All public domain astronomical history. 12 new contributors added to data/contributors.json.
 
 ## Knowledge Gaps
 No gaps.
 
 ## Next Candidate
-Track 29.1 — Historical Achievement Data (ancient astronomers' precision vs modern values)
+Track 29.2 — Calendar Reform History (360-day year, 13-moon, Gregorian reform, disorder of time)
