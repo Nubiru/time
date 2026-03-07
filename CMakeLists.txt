@@ -79,6 +79,18 @@ set(RENDER_SOURCES
     src/render/decan_stars.c
     src/render/megalithic.c
     src/render/tarot_visual.c
+    src/render/star_field.c
+    src/render/planet_pack.c
+    src/render/zodiac_pack.c
+    src/render/card_pack.c
+    src/render/moon_pack.c
+    src/render/diffraction.c
+    src/render/deep_sky_pack.c
+    src/render/earth_globe.c
+    src/render/earth_atmosphere.c
+    src/render/catalog_ingest.c
+    src/render/text_render.c
+    src/render/hexagram_geometry.c
 )
 
 # --- Systems ---
@@ -108,6 +120,8 @@ set(SYSTEMS_SOURCES
     src/systems/tzolkin/tzolkin.c
     src/systems/tzolkin/haab.c
     src/systems/tzolkin/cr_cycle.c
+    src/systems/tzolkin/dreamspell.c
+    src/systems/tzolkin/tzolkin_board.c
     # I Ching
     src/systems/iching/iching.c
     # Chinese
@@ -119,6 +133,7 @@ set(SYSTEMS_SOURCES
     src/systems/human_design/bodygraph.c
     # Hebrew
     src/systems/hebrew/hebrew.c
+    src/systems/hebrew/sabbatical.c
     # Islamic
     src/systems/islamic/hijri.c
     src/systems/islamic/prayer_times.c
@@ -140,6 +155,8 @@ set(SYSTEMS_SOURCES
     src/systems/geology/climate_history.c
     src/systems/geology/fossil_milestones.c
     src/systems/geology/tectonic.c
+    src/systems/geology/radiometric.c
+    src/systems/geology/thermo.c
     # Earth
     src/systems/earth/biorhythm.c
     src/systems/earth/daylight.c
@@ -164,6 +181,33 @@ set(SYSTEMS_SOURCES
     src/systems/unified/wisdom.c
     src/systems/unified/wisdom_engine.c
     src/systems/unified/fun_facts.c
+    src/systems/unified/achievement.c
+    src/systems/unified/audio_data.c
+    src/systems/unified/calendar_reform.c
+    src/systems/unified/codon_hexagram.c
+    src/systems/unified/cultural_stories.c
+    src/systems/unified/knowledge_graph.c
+    src/systems/unified/number_scanner.c
+    src/systems/unified/phase_space.c
+    src/systems/unified/ratio_analysis.c
+    src/systems/unified/sacred_numbers.c
+    # Celtic
+    src/systems/celtic/wheel_of_year.c
+    # Chakra
+    src/systems/chakra/chakra.c
+    # Coptic
+    src/systems/coptic/coptic.c
+    # Egyptian
+    src/systems/egyptian/egyptian.c
+    # Ethiopian
+    src/systems/ethiopian/ethiopian.c
+    # Myanmar
+    src/systems/myanmar/myanmar.c
+    # Thai
+    src/systems/thai/thai_calendar.c
+    # Zoroastrian
+    src/systems/zoroastrian/cosmic_duality.c
+    src/systems/zoroastrian/zoroastrian.c
 )
 
 # --- UI ---
@@ -185,6 +229,14 @@ set(UI_SOURCES
     src/ui/astro_fmt.c
     src/ui/golden_layout.c
     src/ui/theme.c
+    src/ui/accessibility.c
+    src/ui/chinese_fmt.c
+    src/ui/hd_card.c
+    src/ui/i18n.c
+    src/ui/iching_card.c
+    src/ui/lunar_display.c
+    src/ui/rtl_layout.c
+    src/ui/scroll_layers.c
 )
 
 set(ALL_SOURCES
@@ -259,6 +311,7 @@ else()
     add_library(time_constellation   OBJECT src/render/constellation.c)
     add_library(time_atmo_ring       OBJECT src/render/atmo_ring.c)
     add_library(time_deep_sky        OBJECT src/render/deep_sky.c)
+    add_library(time_deep_sky_pack   OBJECT src/render/deep_sky_pack.c)
     add_library(time_font_atlas      OBJECT src/render/font_atlas.c)
     add_library(time_glyph_batch     OBJECT src/render/glyph_batch.c)
     add_library(time_decan_stars     OBJECT src/render/decan_stars.c)
@@ -403,6 +456,7 @@ else()
     time_add_test(NAME test_atmo_ring       TEST tests/render/test_atmo_ring.c       DEPS atmo_ring)
     time_add_test(NAME test_star_colors     TEST tests/render/test_star_colors.c     DEPS star_colors)
     time_add_test(NAME test_deep_sky        TEST tests/render/test_deep_sky.c        DEPS deep_sky)
+    time_add_test(NAME test_deep_sky_pack  TEST tests/render/test_deep_sky_pack.c  DEPS deep_sky_pack deep_sky)
     time_add_test(NAME test_glyph_batch     TEST tests/render/test_glyph_batch.c     DEPS glyph_batch vec3)
     time_add_test(NAME test_color_theory    TEST tests/render/test_color_theory.c    DEPS color_theory color)
     time_add_test(NAME test_star_catalog_ext TEST tests/render/test_star_catalog_ext.c DEPS star_catalog_ext)
