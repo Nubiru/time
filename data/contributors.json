@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 88
+    "total_contributors": 89
   },
   "contributors": [
     {
@@ -1420,6 +1420,22 @@
       "references": [
         { "file": "src/systems/unified/knowledge_graph.c", "line": 1, "note": "Gregorian system node in knowledge graph" },
         { "file": "src/systems/unified/calendar_reform.c", "line": 1, "note": "Gregorian calendar reform entry" }
+      ]
+    },
+    {
+      "id": "hans-cousto",
+      "name": "Hans Cousto",
+      "born": 1948,
+      "category": ["musician", "mathematician"],
+      "contributions": [
+        {
+          "work": "The Cosmic Octave",
+          "description": "Originated the method of transposing planetary orbital periods to audible frequencies via octave doubling (f × 2^n). Derived Earth year = 136.1 Hz (C#, 'Om' frequency), Earth day = 194.18 Hz (G), synodic month = 210.42 Hz (G#).",
+          "year": 1978
+        }
+      ],
+      "references": [
+        { "file": "src/systems/unified/frequency.c", "line": 1, "note": "Planetary frequency mapping via octave transposition (Cosmic Octave method)" }
       ]
     }
   ]

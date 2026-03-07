@@ -17,6 +17,7 @@ src/systems/unified/calendar_reform.c
 src/systems/unified/knowledge_graph.c
 src/systems/unified/number_scanner.c
 src/systems/earth/seasons.c
+src/systems/unified/frequency.c
 
 ## New test targets:
 test-four-worlds: $(BUILD_DIR)
@@ -87,8 +88,12 @@ test-seasons: $(BUILD_DIR)
 	$(CC) $(CFLAGS) tests/systems/earth/test_seasons.c src/systems/earth/seasons.c $(UNITY) -o $(BUILD_DIR)/test_seasons $(LDFLAGS)
 	./$(BUILD_DIR)/test_seasons
 
+test-frequency: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_frequency.c src/systems/unified/frequency.c $(UNITY) -o $(BUILD_DIR)/test_frequency $(LDFLAGS)
+	./$(BUILD_DIR)/test_frequency
+
 ## Add to test: dependency list:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons test-frequency
 
 ## Add to .PHONY:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons test-frequency
