@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 60
+    "total_contributors": 68
   },
   "contributors": [
     {
@@ -1085,6 +1085,85 @@
       "references": [
         { "file": "src/systems/geology/thermo.h", "line": 4, "note": "Thermochronology data source: thermal events, cooling model" },
         { "file": "src/systems/geology/thermo.c", "line": 4, "note": "Earth cooling model constants and thermal event data" }
+      ]
+    },
+    {
+      "id": "greg-kopp",
+      "name": "Greg Kopp",
+      "category": ["solar-physicist", "researcher"],
+      "contributions": [
+        {
+          "work": "A new, lower value of total solar irradiance (co-author with Lean)",
+          "description": "Revised TSI measurement from SORCE/TIM: 1361 W/m^2 at 1 AU, superseding prior ~1366 W/m^2 consensus",
+          "year": 2011
+        }
+      ],
+      "references": [
+        { "file": "src/systems/earth/solar_radiation.h", "line": 12, "note": "SOLAR_CONSTANT 1361.0 W/m^2 (Kopp & Lean 2011)" }
+      ]
+    },
+    {
+      "id": "judith-lean",
+      "name": "Judith Lean",
+      "category": ["solar-physicist", "researcher"],
+      "contributions": [
+        {
+          "work": "A new, lower value of total solar irradiance (co-author with Kopp)",
+          "description": "Revised TSI measurement from SORCE/TIM: 1361 W/m^2 at 1 AU",
+          "year": 2011
+        }
+      ],
+      "references": [
+        { "file": "src/systems/earth/solar_radiation.h", "line": 12, "note": "SOLAR_CONSTANT 1361.0 W/m^2 (Kopp & Lean 2011)" }
+      ]
+    },
+    {
+      "id": "aden-meinel",
+      "name": "Aden B. Meinel",
+      "born": 1922,
+      "died": 2011,
+      "category": ["physicist", "solar-energy-pioneer"],
+      "contributions": [
+        {
+          "work": "Applied Solar Energy: An Introduction (co-author with Marjorie Meinel)",
+          "description": "Atmospheric transmittance model for surface irradiance: I_surface = I_toa * 0.7^(AM^0.678). Empirical fit for clear-sky solar radiation through Earth's atmosphere.",
+          "year": 1976
+        }
+      ],
+      "references": [
+        { "file": "src/systems/earth/solar_radiation.c", "line": 67, "note": "Meinel atmospheric transmittance model: 0.7^(AM^0.678)" }
+      ]
+    },
+    {
+      "id": "marjorie-meinel",
+      "name": "Marjorie P. Meinel",
+      "born": 1922,
+      "died": 2008,
+      "category": ["physicist", "author"],
+      "contributions": [
+        {
+          "work": "Applied Solar Energy: An Introduction (co-author with Aden Meinel)",
+          "description": "Atmospheric transmittance model for surface irradiance",
+          "year": 1976
+        }
+      ],
+      "references": [
+        { "file": "src/systems/earth/solar_radiation.c", "line": 67, "note": "Meinel atmospheric transmittance model: 0.7^(AM^0.678)" }
+      ]
+    },
+    {
+      "id": "icao",
+      "name": "International Civil Aviation Organization",
+      "category": ["standards-organization"],
+      "contributions": [
+        {
+          "work": "ICAO International Standard Atmosphere (ISA)",
+          "description": "Standard atmospheric lapse rate of -6.5 C per 1000m (troposphere). Used worldwide for altitude-temperature relationship.",
+          "year": 1993
+        }
+      ],
+      "references": [
+        { "file": "src/systems/earth/solar_radiation.c", "line": 177, "note": "Lapse rate -6.5 C/km for elevation temperature correction" }
       ]
     }
   ]
