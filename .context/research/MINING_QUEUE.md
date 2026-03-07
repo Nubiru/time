@@ -50,7 +50,7 @@
 | Tufte — Envisioning Information | `new/` | Data visualization principles, small multiples, layering | 29.4, 30 | **EXTRACTED** — digest 034 (all 6 chapters: escaping flatland techniques, micro/macro readings, layering/separation with 1+1=3 effect, small multiples rules, Imhof's 4 color rules, 20-30 color limit, nature's palette, data-ink ratio, space-time grid narratives) |
 | Hazen — The Story of Earth | `new/` | 4.6 Ga narrative, mineral evolution, co-evolution of life/geology | 20-25, 29.3 | **EXTRACTED** — digest 025 (Ch7 GOE), digest 026 (Ch9+Ch10 Snowball/Green Earth), digest 030 (Ch8 Boring Billion + Ch11 Future Earth: solar timeline, ocean evaporation, Milankovitch, asteroid/volcano frequencies, mineral evolution plateau) |
 | Brannen — The Ends of the World | `new/` | Big Five extinction narratives, climate data | 29.3, 20.4 | **BLOCKED** — PDF is wrong book (Danowski/Viveiros de Castro philosophy, not Brannen geology). Gabriel needs to acquire correct Brannen PDF. |
-| Bryson — A Short History of Nearly Everything | `new/` | Deep time storytelling, Earth history data | 29.3, 20 | NOT STARTED |
+| Bryson — A Short History of Nearly Everything | `new/` | Deep time storytelling, Earth history data | 29.3, 20 | **EXTRACTED** — digest 036 (Q1-Q4: 11 scale comparisons for deep time, geochronology timeline from Ussher to WMAP, 15 fun facts including Big Bang nucleosynthesis/neutrino flux/lead legacy/extinction rates, numerical patterns 0.007/10^-43/625x, cross-context accidental discovery pattern, implementation notes for earth_drama+fun_facts+geochronology tracks) |
 | Albers — Interaction of Color | `new/` | Color interaction theory, simultaneous contrast | 37.4, all renderers | **EXTRACTED** — digest 035 (all 26 chapters: simultaneous contrast + subtraction rule, 8 illusion types, Weber-Fechner perceptual law, Schopenhauer area ratios 3:4:6:9:8:6, three polarities light-dark/warm-cool/wet-dry, harmony rejection, boundary semantics, Bezold effect, validates phi opacity + fibonacci scales) |
 | Itten — The Art of Color (if acquired) | — | Color wheel theory, 7 contrast types | 37, color_theory | NOT ACQUIRED |
 | Calendrical Calculations | `new/` | All calendar algorithms (already used for Hebrew) | 14-16, 17, 29 | **EXTRACTED** — digest 031 (Ch7 Islamic: 30-year leap cycle, epoch, formulas; Ch15 Persian: astronomical + arithmetic 2820-year cycle; Ch19 Chinese: 24 solar terms, leap month, sexagesimal, 2033 problem; Ch16 Bahai: 19×19 structure, arithmetic + astronomical; Ch9 Easter: Orthodox + Gregorian Computus; Ch4 Coptic/Ethiopic: epoch, months, formulas). Remaining: Ch10/Ch20 Hindu (large, needs dedicated session) |
@@ -116,7 +116,7 @@ Content:
 
 ---
 
-## Completed Extractions (27 digests)
+## Completed Extractions (28 digests)
 
 001-005: WebGL pipeline (context, shaders, buffers, GLSL, render loop)
 006-008: Astronomy (Julian Day, Kepler, sidereal time)
@@ -135,6 +135,7 @@ Content:
 033: Crowley Book of Thoth (22 Major Arcana Thoth names, court card decan mappings + I Ching cross-refs, minor arcana Sephirotic table with Thoth names, YHVH/Four Worlds, Three Aeons time-cycles, card design descriptions)
 034: Tufte Envisioning Information (6 chapters: escaping flatland, micro/macro, layering/separation, small multiples, Imhof 4 color rules, 20-30 color limit, 1+1=3 effect, data-ink ratio, space-time narratives)
 035: Albers Interaction of Color (26 chapters: simultaneous contrast + subtraction rule, 8 illusion types, Weber-Fechner law, Schopenhauer area ratios, 3 color polarities, harmony rejection, Bezold effect, validates phi/fibonacci scales)
+036: Bryson Short History of Nearly Everything (11 deep time scale comparisons, geochronology timeline Ussher→WMAP, 15 fun facts, numerical patterns, implementation notes for earth_drama/fun_facts/geochronology)
 aveni-harmony: Commensuration, Venus 8:5, sacred numbers
 
 ---

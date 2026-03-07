@@ -1,30 +1,28 @@
-# Task: Knowledge Extraction — Albers "Interaction of Color"
+# Task: Knowledge Extraction — Bryson "A Short History of Nearly Everything"
 
 **Agent**: GAMMA
-**Roadmap Reference**: P1 Book Extraction — feeds Track 37 (style system), Track 37.4 (color_theory.h/.c), all renderers
+**Roadmap Reference**: P1 Book Extraction — feeds Track 29.3 (earth_drama), Track 20 (geochronology), Track 33 (fun facts)
 **Date**: 2026-03-07
 **Status**: COMPLETE
 
 ## Goal
 
-Extract color interaction principles from Josef Albers' "Interaction of Color" (50th Anniversary Edition): simultaneous contrast rules, color relativity illusions, temperature interactions, quantitative relationships, and color harmony principles. These directly feed our `color_theory.h/.c` module and `theme.c` (Cosmos/Dawn themes).
+Extract deep time scale comparisons, geochronology timeline, time measurement fun facts, and numerical surprises from Bryson's "A Short History of Nearly Everything." These feed our earth_drama, geochronology, and fun_facts modules with storytelling data and vivid metaphors for deep time.
 
 ## Extraction Questions (from EXTRACTION_QUESTIONS.md)
 
-Q1: Laws of simultaneous contrast: when adjacent colors change each other's appearance, what are the rules? Can we quantify these as functions: f(color_a, color_b) -> perceived_color_a?
-Q2: Color relativity: same color appears different in different contexts. What are the major illusion types? Which affect our multi-layer display where system colors sit on different backgrounds?
-Q3: Color temperature interactions: warm vs cool perception shifts. Rules for when warm appears cool and vice versa. Relevant to our Cosmos (dark/cool) vs Dawn (warm/light) themes.
-Q4: Quantitative rules: are there any numerical relationships Albers identifies that we can encode? Ratios, percentages, thresholds?
-Q5: Color harmony: which color combinations does Albers consider harmonious vs discordant? How does this relate to our golden angle palette generation?
+Q1: Scale comparisons for deep time: all "if Earth's history were a day..." or "if you spread your arms..." analogies. Extract every numerical comparison.
+Q2: Key dates and discoveries in understanding Earth's age: who measured what, when, using what technique? Timeline of geochronology as a science.
+Q3: Fun facts about time measurement history: sundials, water clocks, mechanical clocks, atomic clocks. Any surprising numbers?
+Q4: Numerical surprises: any numbers that appear across different contexts? Any unexpected coincidences Bryson notes?
 
 ## Source
 
-`~/Desktop/temp/time/new/Interaction of Color_ 50th Anniversary Edition.pdf`
-(Fallback: `~/Desktop/temp/time/new/Interaction of Color.pdf`)
+`~/Desktop/temp/time/new/A Short History of Nearly Everything.pdf`
 
 ## DONE WHEN
 
-- [x] Q1-Q5 answered with specific, implementable data
-- [x] Digest written to `.context/research/digested/035-albers-interaction-of-color.md`
+- [x] Q1-Q4 answered with specific, implementable data
+- [x] Digest written to `.context/research/digested/036-bryson-short-history.md`
 - [x] MINING_QUEUE.md updated
-- [x] contributors.json verified/updated (5 new: Albers, Chevreul, Schopenhauer, Bezold, Weber-Fechner)
+- [x] contributors.json verified/updated

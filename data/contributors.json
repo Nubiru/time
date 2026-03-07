@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 105
+    "total_contributors": 108
   },
   "contributors": [
     {
@@ -1708,6 +1708,56 @@
       ],
       "references": [
         { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Weber-Fechner Law applied to color by Albers Ch XX" }
+      ]
+    },
+    {
+      "id": "bill-bryson",
+      "name": "Bill Bryson",
+      "born": 1951,
+      "category": ["author", "science communicator"],
+      "contributions": [
+        {
+          "work": "A Short History of Nearly Everything",
+          "description": "Deep time scale comparisons, geochronology timeline, Big Bang nucleosynthesis narrative, extinction data, cosmic distance analogies. Source of vivid metaphors for earth_drama and fun_facts modules.",
+          "year": 2003
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/036-bryson-short-history.md", "line": 1, "note": "Scale comparisons, geochronology, fun facts extraction" }
+      ]
+    },
+    {
+      "id": "clair-patterson",
+      "name": "Clair Cameron Patterson",
+      "born": 1922,
+      "died": 1995,
+      "category": ["geochemist"],
+      "contributions": [
+        {
+          "work": "Age of meteorites and the Earth",
+          "description": "Definitive measurement of Earth's age at 4.55 billion years using lead isotope ratios from Canyon Diablo meteorite. Also discovered atmospheric lead contamination from leaded gasoline.",
+          "year": 1953
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/036-bryson-short-history.md", "line": 1, "note": "Earth age determination, geochronology timeline" }
+      ]
+    },
+    {
+      "id": "david-raup",
+      "name": "David M. Raup",
+      "born": 1933,
+      "died": 2015,
+      "category": ["paleontologist"],
+      "contributions": [
+        {
+          "work": "Background extinction rate calculation",
+          "description": "Calculated background extinction rate of 1 species per 4 years on average throughout biological history. Framework for measuring human impact on biodiversity (120,000x background rate).",
+          "year": 1991
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/036-bryson-short-history.md", "line": 1, "note": "Extinction rate data for fun_facts module" }
       ]
     }
   ]

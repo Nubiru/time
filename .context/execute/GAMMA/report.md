@@ -2,50 +2,57 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-07
-**Task**: Knowledge Extraction — Albers "Interaction of Color"
-**Roadmap Reference**: P1 Book Extraction — feeds Track 37 (style system), Track 37.4 (color_theory.h/.c), all renderers
+**Task**: Knowledge Extraction — Bryson "A Short History of Nearly Everything"
+**Roadmap Reference**: P1 Book Extraction — feeds Track 29.3 (earth_drama), Track 20 (geochronology), Track 33.1 (fun_facts), Track 26 (correlation engine)
 
 ## Files Created
-- `.context/research/digested/035-albers-interaction-of-color.md` — Comprehensive digest: Q1-Q5 answered with simultaneous contrast rules, 8 illusion types, Weber-Fechner Law, Schopenhauer area ratios, 3 color polarities, harmony rejection, Bezold effect, implementation notes validating phi/fibonacci design system
+- `.context/research/digested/036-bryson-short-history.md` — Comprehensive digest: Q1-Q4 answered with 11 deep time scale comparisons, complete geochronology timeline (Ussher to WMAP), 15 fun facts, numerical patterns, implementation notes
 
 ## Files Modified
-- `.context/research/MINING_QUEUE.md` — Updated Albers status to EXTRACTED, incremented digest count to 27
-- `data/contributors.json` — Added Josef Albers, Michel Chevreul, Arthur Schopenhauer, Wilhelm von Bezold, Weber-Fechner (ids: josef-albers, michel-chevreul, arthur-schopenhauer, wilhelm-von-bezold, weber-fechner), total now 105
+- `.context/research/MINING_QUEUE.md` — Updated Bryson status to EXTRACTED, incremented digest count to 28
+- `data/contributors.json` — Added Bill Bryson (id: bill-bryson), Clair Patterson (id: clair-patterson), David Raup (id: david-raup), total now 108
 - `.context/execute/GAMMA/task.md` — Marked COMPLETE
-- `.context/execute/GAMMA/escalation.md` — Created for Brannen wrong-book blocker
 
 ## Extraction Summary
 
-### Data Extracted
-1. **Simultaneous Contrast (Q1)** — Mechanism: retinal fatigue → complement projection. Subtraction rule: ground subtracts own hue AND light from carried colors. Two-way action, proportional to area ratio and hue distance.
-2. **Color Relativity (Q2)** — 8 illusion types: 1→2, 2→1, transparency, fluting, vibrating boundaries, vanishing boundaries, film color, volume color. All traceable to simultaneous contrast.
-3. **Color Temperature (Q3)** — Three INDEPENDENT polarities with distinct color-circle distributions: light-dark (Y↔V), warm-cool (Y-O-R↔B-G), wet-dry (Y-G↔O-R-V). These do NOT align: yellow is warm+wet+light, red is warm+dry+medium-dark.
-4. **Quantitative Rules (Q4)** — Weber-Fechner Law: perception = log(stimulus), geometric physical → arithmetic perceptual. Schopenhauer area ratios: Y:O:R:V:B:G = 3:4:6:9:8:6. 60% error rate on lighter/darker judgments. ~30 color names limit.
-5. **Color Harmony (Q5)** — Albers REJECTS mechanical harmony: "any color works with any other, presupposing quantities are appropriate." Quantity is a quality. Dissonance = as desirable as consonance.
+### Q1: Scale Comparisons (11 found)
+1. Big Bang = sandwich time (3 min = 98% of all matter)
+2. Empire State Building CMB analogy (Guth)
+3. Proton density (500 trillion in a dot of ink > seconds in 500,000 years)
+4. Inflation expansion (10^-30 sec, 10^25x bigger)
+5. Human life = 650,000 hours
+6. 99.99% of all species extinct
+7. Average species = 4 million years
+8. 3.8 billion years of continuous ancestry
+9. Modern humans = 0.0001% of Earth's history
+10. Globe = snapshot of 0.1% of Earth's history
+11. Continental drift = fingernail speed (2 yards/lifetime)
 
-### Existing Code Validated
-- **Phi opacity cascade** (theme.h): geometric → perceptually equal steps. Weber-Fechner confirms.
-- **Fibonacci scales** (golden_layout.h): ratio ≈ 1.618 = roughly geometric. Confirmed perceptually uniform.
-- **20-30 color limit** (Tufte + Albers ~30 names): our ~14 system colors within range.
-- **Space-black** (#060709): avoids vibrating boundary effect of pure B/W.
-- **Additive blending** for star/trail shaders: correct for emitted light on screen.
-- **Golden angle palette**: maximal hue spacing validated by Albers (though quantity matters more than hue).
+### Q2: Geochronology Timeline (10 entries)
+From Ussher's 4004 BC to NASA WMAP's 13.7 billion years. Key narrative: Earth appeared older than universe for decades (Patterson 4.55 Ga vs Hubble 2 Ga).
 
-### New Insights
-- **Wet-dry polarity**: independent of warm-cool. Solar gold + Celestial teal are BOTH "wet" — explaining their cohesion.
-- **Schopenhauer area ratios**: bright colors need LESS screen area than dark ones for balance.
-- **Boundary hardness = depth**: sharper boundaries → more depth separation.
-- **Bezold Effect**: changing one system's accent shifts entire composition perception.
+### Q3: Fun Facts (15 extracted)
+Big Bang nucleosynthesis, neutrino bombardment (10,000 trillion trillion/sec), lead in blood 625x, ocean floor youth (<175 My), CMB = 1% of TV static, Martin Rees's 6 numbers, Thomas Midgley's dual legacy, Fred Hoyle coined "Big Bang" sarcastically, dodo acquaintance (70 years), background extinction (1 per 4 years), megafauna wipeout, Carolina parakeet, Stephens Island wren, Steller's sea cow.
+
+### Q4: Numerical Patterns
+- 0.007: H→He conversion precision (universe existence threshold)
+- 10^-43: earliest probeable moment
+- 200 years: time from first attempts to measure Earth's age to Patterson's answer
+- Age paradox: Earth older than universe for decades
+- 625x: lead in modern blood vs century ago
+- Pattern: discovery through accident (CMB, particle detector, seafloor spreading)
 
 ## Attribution
-Josef Albers added to contributors.json (id: josef-albers). Also added: Michel Chevreul (id: michel-chevreul), Arthur Schopenhauer (id: arthur-schopenhauer), Wilhelm von Bezold (id: wilhelm-von-bezold), Weber-Fechner (id: weber-fechner).
-
-## Escalation
-Brannen "The Ends of the World" — PDF is wrong book (Danowski/Viveiros de Castro philosophy, not Brannen geology). See `escalation.md`. Gabriel needs to acquire correct Brannen PDF.
+Bill Bryson, Clair Patterson, David Raup added to contributors.json (ids: bill-bryson, clair-patterson, david-raup).
 
 ## Knowledge Gaps
-- Itten "The Art of Color" — NOT ACQUIRED. Would provide 7 contrast types complementing Albers. Lower priority now that Albers is extracted.
-- Brannen (geology) — correct PDF needed for Track 20.4/29.3 extinction data.
+- Bryson is a storyteller, not a primary source. The numbers are well-sourced but secondhand.
+- Book doesn't cover clock/timekeeping history in detail (Q3 partially answered — no sundial/water clock/atomic clock data). For timekeeping history, need David Landes "Revolution in Time" or Dava Sobel "Longitude" (neither in library).
+- Bryson's deep time analogies are mostly in the Introduction and Ch30, not in the geology chapters as expected. The geology chapters (Ch5, Ch10) focus more on the *people* who measured Earth's age.
 
 ## Next Candidate
-This is GAMMA's 5th extraction task across sessions (032 Crowley 777, 033 Book of Thoth, 034 Tufte, blocked Brannen, 035 Albers). Remaining P1: Bryson "A Short History of Nearly Everything" (deep time storytelling, feeds Track 29.3/20). Session has completed 2 tasks this session (Brannen escalation + Albers extraction). Can continue to Bryson or exit per 3-task protocol.
+Continue extraction pipeline per priority.md:
+- P0: Meeus remaining chapters (Ch9 Jewish/Moslem, Ch15 rise/set, Ch18 conjunctions, Ch54 eclipses)
+- P1: Kalachakra (Outer Wheel of Time) — just acquired
+- P2: Schonberger I Ching & Genetic Code (64-codon ↔ 64-hexagram)
+- Remaining roadmap code items: 19.1 Cross-Calendar Convergence, 19.3 Structural Pattern Map
