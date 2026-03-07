@@ -1,33 +1,29 @@
-# Task: Knowledge Extraction — Crowley "The Book of Thoth"
+# Task: Knowledge Extraction — Tufte "Envisioning Information"
 
 **Agent**: GAMMA
-**Roadmap Reference**: P1 Book Extraction — feeds Track 18 (Kabbalah/Tarot), Track 19 (structural patterns), Track 44.2 (Tarot Visual Data — ALPHA currently building)
+**Roadmap Reference**: P1 Book Extraction — feeds Track 29.4 (dramatization display), Track 30 (presentation quality), Track 4 (card design), Track 37.3 (color_theory)
 **Date**: 2026-03-07
 **Status**: COMPLETE
 
 ## Goal
 
-Extract the Tarot-specific data from Crowley's "The Book of Thoth": all 22 Major Arcana with Thoth-specific names, Hebrew letter/path attributions, court card decan mappings, minor arcana Sephirotic assignments, YHVH/Four Worlds formula, and any time-cycle associations. This directly unblocks ALPHA's Track 44.2 which needs Thoth card names and symbolic descriptions.
+Extract data visualization principles from Tufte's "Envisioning Information": techniques for showing multidimensional data on 2D surfaces, small multiples rules, layering and separation methods, color rules for information display, and the 1+1=3 interference effect. These directly inform how Time renders its 16+ layered knowledge systems without visual clutter.
 
 ## Extraction Questions (from EXTRACTION_QUESTIONS.md)
 
-Q1: All 22 Major Arcana: card name, number, Hebrew letter, Tree of Life path (from-to Sefirot), zodiac/planet/element attribution. Complete table.
-Q2: Court cards: Knight/Queen/Prince/Princess mapped to zodiac decans. Full decan mapping table.
-Q3: Minor arcana: Ace through 10 mapped to Sefirot. Which suit = which element = which world?
-Q4: Time-cycle associations: specific cards connected to time periods, seasons, astronomical events?
-Q5: The Tetragrammaton formula (YHVH): 4 suits, 4 elements, 4 worlds mapping.
+Q1: "Escaping Flatland": what specific techniques does Tufte prescribe for showing multidimensional data on a 2D surface? Which apply to our layered time system display?
+Q2: Small multiples: rules for when to use them, sizing, alignment, shared scales. Could we use small multiples for comparing calendar systems side-by-side?
+Q3: Layering and separation: how to stack multiple information layers without visual clutter? Specific techniques (color coding, transparency, spatial separation).
+Q4: Color rules for information display: how many colors are too many? When does color help vs hurt? Quantitative guidelines.
+Q5: The "1+1=3" effect: visual interference patterns where two elements create an unintended third. How to avoid in our multi-layer rendering.
 
 ## Source
 
-`~/Desktop/temp/time/new/The Book of Thoth - Aleister Crowley.pdf`
+`~/Desktop/temp/time/new/Envisioning Information.pdf`
 
 ## DONE WHEN
 
-- [x] Complete 22 Major Arcana table with Thoth names
-- [x] Court card decan mapping
-- [x] Minor arcana Sephirotic table
-- [x] YHVH/Four Worlds formula
-- [x] Time-cycle associations documented
-- [x] Digest written to `.context/research/digested/033-crowley-book-of-thoth.md`
-- [x] MINING_QUEUE.md updated
-- [x] contributors.json verified (aleister-crowley already present)
+- [ ] Q1-Q5 answered with specific, implementable principles
+- [ ] Digest written to `.context/research/digested/034-tufte-envisioning-information.md`
+- [ ] MINING_QUEUE.md updated
+- [ ] contributors.json verified/updated

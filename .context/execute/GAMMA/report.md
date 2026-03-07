@@ -2,49 +2,47 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-07
-**Task**: Knowledge Extraction — Crowley "The Book of Thoth"
-**Roadmap Reference**: P2 Book Extraction — feeds Track 18 (Kabbalah/Tarot), Track 19 (structural patterns), Track 44.2 (Tarot Visual Data)
+**Task**: Knowledge Extraction — Tufte "Envisioning Information"
+**Roadmap Reference**: P1 Book Extraction — feeds Track 29.4 (dramatization display), Track 30 (presentation quality), Track 4 (card design), Track 37.3 (color_theory)
 
 ## Files Created
-- `.context/research/digested/033-crowley-book-of-thoth.md` — Comprehensive digest: 22 Major Arcana complete table, 16 court card decan mappings with I Ching cross-refs, 40 minor arcana Sephirotic assignments with Thoth names, YHVH/Four Worlds formula, Three Aeons time-cycles, card design descriptions
+- `.context/research/digested/034-tufte-envisioning-information.md` — Comprehensive digest: Q1-Q5 answered with implementable principles, Imhof's 4 color rules, 1+1=3 effect remedies, small multiples design rules, micro/macro readings, data-ink ratio, 20-30 color limit, nature's palette strategy, space-time grid narratives
 
 ## Files Modified
-- `.context/research/MINING_QUEUE.md` — Updated Book of Thoth status to EXTRACTED, incremented digest count to 25
+- `.context/research/MINING_QUEUE.md` — Updated Tufte status to EXTRACTED, incremented digest count to 26
+- `data/contributors.json` — Added Edward Tufte (id: edward-tufte) and Eduard Imhof (id: eduard-imhof), total now 99
 - `.context/execute/GAMMA/task.md` — Marked COMPLETE
 
 ## Extraction Summary
 
 ### Data Extracted
-1. **22 Major Arcana** — Complete table: card number, Thoth name, traditional name, Hebrew letter + value + type (Mother/Double/Simple), Tree of Life path (from-to Sephirot), zodiac/planet/element attribution
-2. **Tsaddi/He Swap** — Crowley's key innovation fully documented: Star=He'(Aquarius) swaps with Emperor=Tzaddi(Aries). Letters swap but zodiacal signs stay. Creates zodiacal symmetry on Tree.
-3. **VIII/XI Number Swap** — Adjustment(Libra)=VIII, Lust(Leo)=XI (reversed from traditional Justice=XI, Strength=VIII)
-4. **16 Court Cards** — Knight/Queen/Prince/Princess for all 4 suits with decan ranges (21° of one sign to 20° of next). Princesses have no zodiacal decan (rule quadrants around North Pole). Each with I Ching hexagram cross-reference.
-5. **40 Minor Arcana** — All Thoth pip card names (Dominion, Love, Peace, Change... through Oppression, Satiety, Ruin, Wealth). Sephirotic assignments: Ace=Kether through 10=Malkuth.
-6. **YHVH/Four Worlds Formula** — Yod=Fire=Knight=Wands=Atziluth, He=Water=Queen=Cups=Briah, Vav=Air=Prince=Swords=Yetzirah, He-final=Earth=Princess=Disks=Assiah. Parts of Soul mapping.
-7. **Three Aeons Time-Cycles** — Isis (past, matriarchal), Osiris (~0 CE-1904, patriarchal), Horus (1904-~3900, individualist). ~2000-year precessional periods. Next Aeon: "fall of the Great Equinox."
-8. **Card-Specific Time Associations** — Chariot=Cancer=Summer Solstice, Devil=Capricorn=Winter Solstice, Moon=Pisces=end-of-winter, Hierophant=2000-year intervals, Aeon=1904 transition
-9. **Card Design Descriptions** — Primary colors and imagery for all 22 Major Arcana for ALPHA's Track 44.2 (tarot_visual.c)
-10. **Cross-Reference with 777 (digest 032)** — FULL MATCH on all path attributions. Naming differences documented.
+1. **Escaping Flatland (Q1)** — 6 techniques: micro/macro readings ("to clarify, add detail"), small multiples, layering/separation, data density (40-60 entries/cm²), multi-functioning elements (16 variables per page), dimensional compression
+2. **Small Multiples (Q2)** — 6 rules: constancy of design, enforce comparisons within eyespan, 2D matrix indexing for extra dimensions, mute repeated elements, "compared to what?" implicit comparison, economy of perception
+3. **Layering and Separation (Q3)** — 7 techniques: color separation of layers, visual weight hierarchy, the ungrid, subtraction of weight, 1+1=3 minimization, information layering by value (light-to-dark), Imhof's 4 cartographic rules
+4. **Color Rules (Q4)** — 10 principles: 20-30 color limit, 4 uses of color (label/measure/represent/enliven), Imhof's 4 rules (bright sparingly on muted, avoid adjacent light-bright, large=muted small=bright, interweave carpet-fashion), nature's palette (blues/yellows/grays), yellow's dual status, "above all do no harm", redundant encoding, avoid red/green, rainbow scales disorderly, simultaneous contrast
+5. **1+1=3 Effect (Q5)** — Definition + 4 properties (proportional to contrast/weight/proximity, cumulative) + 5 remedies (lighten structural elements, mute background, subtract weight, let data replace structure, squint test)
+6. **Space-Time Narratives (Ch6)** — Space-time grid universality, cyclic data overlay (torus-graphic), strip maps, dance notation as comprehensive example of all techniques combined
+7. **Key Quotations** — 7 design aphorisms for ongoing reference
+8. **Implementation Notes** — Direct code implications for render_layers.h, color_theory.h, golden_layout.h, theme.h, future small-multiples mode
 
 ### Extraction Questions Answered
-- Q1: Complete 22-path table with Thoth names, Hebrew letters, paths, attributions ✓
-- Q2: Full 16-card court card decan mapping + I Ching hexagram cross-refs ✓
-- Q3: Minor arcana Sephirotic table (40 cards) with all Thoth names ✓
-- Q4: Three Aeons framework + 7 card-specific seasonal/precessional associations ✓
-- Q5: YHVH formula with Four Worlds, Parts of Soul, revolving cycle ✓
+- Q1: Escaping Flatland techniques — 6 specific techniques with Time application notes
+- Q2: Small multiples rules — 6 principles with calendar comparison application
+- Q3: Layering/separation — 7 techniques including 1+1=3 effect and Imhof's rules
+- Q4: Color rules — 10 quantitative guidelines with existing module validation
+- Q5: 1+1=3 effect — full definition, properties, remedies, and code implications
 
 ### What Was NOT Extracted
-- Individual minor arcana card descriptions (pp. 191-250+): detailed symbolic commentary per pip card. Low priority — the names and Sephirotic data are captured.
-- Appendix tables (if any at end of book)
-- Lady Frieda Harris's painting notes (not in this edition)
+- Specific historical example details (cholera map, castle plans) — illustrative only
+- Tufte's critiques of bad designs (Challenger O-ring) — design philosophy, not code
+- Full bibliography
 
 ## Attribution
-Crowley already in contributors.json (id: aleister-crowley). Lady Frieda Harris also present (id: frieda-harris).
+Edward Tufte added to contributors.json (id: edward-tufte). Eduard Imhof added (id: eduard-imhof) as Tufte's primary color authority.
 
 ## Knowledge Gaps
-- Decan rulers for each minor arcana card (planet-in-sign for 2-10) — would need 777 Column CXXXVII
-- High-resolution Thoth card images for color extraction — not available in text PDF
-- Itten "The Art of Color" — NOT ACQUIRED. Would provide 7 contrast types for color_theory.h
+- Josef Albers "Interaction of Color" — in MINING_QUEUE at P1. Would provide simultaneous contrast theory referenced by Tufte. Enables Track 37.4.
+- Jacques Bertin "Semiology of Graphics" — NOT ACQUIRED. Tufte references for encoding theory. Lower priority.
 
 ## Next Candidate
-This was GAMMA's 2nd extraction task in this session (1st was 777, committed as digest 032). Session should evaluate whether to continue extraction (Tufte "Envisioning Information" at P1 would enable data visualization tracks) or pick a code task from the roadmap.
+This was GAMMA's 3rd extraction task this session (1st: 777 digest 032, 2nd: Book of Thoth digest 033, 3rd: Tufte digest 034). Session should evaluate: continue extraction (Albers "Interaction of Color" at P1 would complete the color theory pipeline) or pick a code task from the roadmap. 3 tasks completed = recommended session exit per protocol.

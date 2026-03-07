@@ -47,7 +47,7 @@
 
 | Book | Location | Extract What | Feeds Tracks | Status |
 |------|----------|-------------|-------------|--------|
-| Tufte — Envisioning Information | `new/` | Data visualization principles, small multiples, layering | 29.4, 30 | NOT STARTED |
+| Tufte — Envisioning Information | `new/` | Data visualization principles, small multiples, layering | 29.4, 30 | **EXTRACTED** — digest 034 (all 6 chapters: escaping flatland techniques, micro/macro readings, layering/separation with 1+1=3 effect, small multiples rules, Imhof's 4 color rules, 20-30 color limit, nature's palette, data-ink ratio, space-time grid narratives) |
 | Hazen — The Story of Earth | `new/` | 4.6 Ga narrative, mineral evolution, co-evolution of life/geology | 20-25, 29.3 | **EXTRACTED** — digest 025 (Ch7 GOE), digest 026 (Ch9+Ch10 Snowball/Green Earth), digest 030 (Ch8 Boring Billion + Ch11 Future Earth: solar timeline, ocean evaporation, Milankovitch, asteroid/volcano frequencies, mineral evolution plateau) |
 | Brannen — The Ends of the World | `new/` | Big Five extinction narratives, climate data | 29.3, 20.4 | NOT STARTED |
 | Bryson — A Short History of Nearly Everything | `new/` | Deep time storytelling, Earth history data | 29.3, 20 | NOT STARTED |
@@ -116,7 +116,7 @@ Content:
 
 ---
 
-## Completed Extractions (25 digests)
+## Completed Extractions (26 digests)
 
 001-005: WebGL pipeline (context, shaders, buffers, GLSL, render loop)
 006-008: Astronomy (Julian Day, Kepler, sidereal time)
@@ -133,6 +133,7 @@ Content:
 031: Calendrical Calculations (Ch7 Islamic 30-year leap cycle + epoch + formulas, Ch15 Persian astronomical + arithmetic 2820-year cycle, Ch19 Chinese 24 solar terms + leap month + sexagesimal + 2033 problem, Ch16 Bahai 19×19 structure, Ch9 Easter Orthodox + Gregorian Computus, Ch4 Coptic/Ethiopic epochs + formulas)
 032: Crowley 777 Correspondences (Tables I-VI: 4 color scales, 22 Tarot attributions, Lightning Flash, tree cross-reference, astronomical spheres, chakras, mystic numbers)
 033: Crowley Book of Thoth (22 Major Arcana Thoth names, court card decan mappings + I Ching cross-refs, minor arcana Sephirotic table with Thoth names, YHVH/Four Worlds, Three Aeons time-cycles, card design descriptions)
+034: Tufte Envisioning Information (6 chapters: escaping flatland, micro/macro, layering/separation, small multiples, Imhof 4 color rules, 20-30 color limit, 1+1=3 effect, data-ink ratio, space-time narratives)
 aveni-harmony: Commensuration, Venus 8:5, sacred numbers
 
 ---

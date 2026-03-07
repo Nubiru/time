@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 97
+    "total_contributors": 99
   },
   "contributors": [
     {
@@ -1571,6 +1571,39 @@
       ],
       "references": [
         { "file": "src/systems/zoroastrian/zoroastrian.c", "line": 1, "note": "Yazdgerdi calendar structure, epoch, month/day naming conventions" }
+      ]
+    },
+    {
+      "id": "edward-tufte",
+      "name": "Edward R. Tufte",
+      "born": 1942,
+      "category": ["statistician", "information designer", "author"],
+      "contributions": [
+        {
+          "work": "Envisioning Information",
+          "description": "Data visualization principles: escaping flatland (multidimensional data on 2D), micro/macro readings, layering and separation, small multiples, 1+1=3 interference effect, Imhof's 4 color rules, 20-30 color limit, data-ink ratio, nature's palette strategy.",
+          "year": 1990
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/034-tufte-envisioning-information.md", "line": 1, "note": "Complete extraction: 6 chapters, layering/separation/color/small multiples principles" }
+      ]
+    },
+    {
+      "id": "eduard-imhof",
+      "name": "Eduard Imhof",
+      "born": 1895,
+      "died": 1986,
+      "category": ["cartographer", "author"],
+      "contributions": [
+        {
+          "work": "Cartographic Relief Presentation",
+          "description": "4 color rules for information display: bright colors sparingly on muted backgrounds, avoid adjacent light bright colors, large areas muted / small areas bright, interweave colors carpet-fashion for unity.",
+          "year": 1982
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/034-tufte-envisioning-information.md", "line": 1, "note": "Imhof's 4 rules quoted via Tufte pp. 82-83" }
       ]
     }
   ]
