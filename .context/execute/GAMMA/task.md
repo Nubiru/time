@@ -1,125 +1,162 @@
-# Task: Calendar Reform History
+# Task: Knowledge Graph Data
 
 **Agent**: GAMMA
-**Roadmap Reference**: Track 29.2 — "Agent: Calendar Reform History (Agent B)"
+**Roadmap Reference**: Track 28.1 — "Agent: Knowledge Graph Data (Agent B)"
 **Date**: 2026-03-06
 **Status**: CLAIMED
 
 ## Goal
 
-Pure data module cataloging calendar systems and reform proposals throughout history. Documents the 360-day natural year, the 13-moon calendar (Arguelles), the Gregorian reform (1582), the World Calendar movement (1920s), and the concept of seasonal hours. Provides computational functions for seasonal hour length at any latitude/JD. Shows the "disorder of time" — why our current calendar has months of unequal length.
+Pure data module encoding the knowledge transmission network behind the Time codebase. Each contributor has an era, culture, systems they contributed to, who influenced them, and who they influenced. Provides functions to trace transmission chains (how knowledge traveled from ancient India through Baghdad to modern code) and find which contributors connect any two systems. Makes visible: human knowledge is ONE river with many tributaries.
 
 ## READ FIRST
 
-- `src/systems/gregorian/gregorian.h` — existing Gregorian module
-- `src/systems/astronomy/solar_events.h` — sunrise/sunset for seasonal hours
+- `data/contributors.json` — existing contributor database (84 entries)
+- `src/systems/unified/structural_map.h` — system_id_t enum
 
 ## Files to Create
 
-- `src/systems/unified/calendar_reform.h`
-- `src/systems/unified/calendar_reform.c`
-- `tests/systems/unified/test_calendar_reform.c`
+- `src/systems/unified/knowledge_graph.h`
+- `src/systems/unified/knowledge_graph.c`
+- `tests/systems/unified/test_knowledge_graph.c`
 
 ## API
 
 ```c
-#ifndef TIME_CALENDAR_REFORM_H
-#define TIME_CALENDAR_REFORM_H
+#ifndef TIME_KNOWLEDGE_GRAPH_H
+#define TIME_KNOWLEDGE_GRAPH_H
 
-#define PI 3.14159265358979323846
-
-/* Calendar system types */
+/* Era classifications */
 typedef enum {
-    CAL_TYPE_LUNAR = 0,       /* Pure lunar */
-    CAL_TYPE_SOLAR,           /* Pure solar */
-    CAL_TYPE_LUNISOLAR,       /* Lunisolar hybrid */
-    CAL_TYPE_PROPOSED,        /* Reform proposal (never adopted) */
-    CAL_TYPE_ADOPTED,         /* Reform that was implemented */
-    CAL_TYPE_COUNT
-} calendar_type_t;
+    ERA_ANCIENT = 0,     /* Before 500 BCE */
+    ERA_CLASSICAL,       /* 500 BCE - 500 CE */
+    ERA_MEDIEVAL,        /* 500 - 1500 CE */
+    ERA_EARLY_MODERN,    /* 1500 - 1800 CE */
+    ERA_MODERN,          /* 1800 - present */
+    ERA_COUNT
+} knowledge_era_t;
 
-/* A historical calendar system or reform proposal */
+/* Systems in the Time codebase */
+typedef enum {
+    KG_SYS_ASTRONOMY = 0,
+    KG_SYS_ASTROLOGY,
+    KG_SYS_TZOLKIN,
+    KG_SYS_ICHING,
+    KG_SYS_CHINESE,
+    KG_SYS_HUMAN_DESIGN,
+    KG_SYS_GREGORIAN,
+    KG_SYS_HEBREW,
+    KG_SYS_ISLAMIC,
+    KG_SYS_BUDDHIST,
+    KG_SYS_HINDU,
+    KG_SYS_KABBALAH,
+    KG_SYS_GEOLOGY,
+    KG_SYS_UNIFIED,
+    KG_SYS_COUNT
+} kg_system_t;
+
+/* Maximum connections per contributor */
+#define KG_MAX_SYSTEMS 6
+#define KG_MAX_INFLUENCES 4
+#define KG_MAX_PATH 8
+
+/* A contributor node in the knowledge graph */
 typedef struct {
     int id;
-    const char *name;              /* "Gregorian", "13 Moon", "World Calendar", etc. */
-    int year;                      /* Year proposed/adopted (negative=BCE) */
-    const char *originator;        /* Person/body who proposed it */
-    const char *culture;           /* Culture/civilization */
-    calendar_type_t type;
-    int days_per_year;             /* Base days (360, 364, 365, etc.) */
-    int months;                    /* Number of months */
-    int intercalary_days;          /* Extra days (epagomenal, Day Out of Time, etc.) */
-    const char *month_structure;   /* "12x30", "13x28+1", "12 unequal", etc. */
-    const char *description;       /* Full description */
-    const char *problem_solved;    /* What calendar problem this addresses */
-    const char *weakness;          /* Known flaw or criticism */
-} calendar_system_t;
+    const char *name;
+    int year;                        /* Primary active year (negative=BCE) */
+    const char *culture;
+    knowledge_era_t era;
+    kg_system_t systems[KG_MAX_SYSTEMS]; /* Systems contributed to */
+    int system_count;
+    int influenced_by[KG_MAX_INFLUENCES]; /* IDs of predecessors */
+    int influence_count;
+    int influenced[KG_MAX_INFLUENCES];    /* IDs of successors */
+    int successor_count;
+    const char *key_work;            /* Most significant contribution */
+} kg_contributor_t;
 
-/* Get total calendar systems cataloged. */
-int calendar_system_count(void);
+/* A transmission chain (path through the graph) */
+typedef struct {
+    int path[KG_MAX_PATH];           /* Contributor IDs in order */
+    int length;                      /* Number of nodes in path */
+} kg_path_t;
 
-/* Get system by index. Returns entry with id=-1 if invalid. */
-calendar_system_t calendar_system_get(int index);
+/* Total contributors in the graph. */
+int kg_contributor_count(void);
 
-/* Get systems by type. Fills out_indices. Returns count found. */
-int calendar_systems_by_type(calendar_type_t type, int *out_indices, int out_max);
+/* Get contributor by index. Returns entry with id=-1 if invalid. */
+kg_contributor_t kg_contributor_get(int index);
 
-/* Seasonal hour length in minutes.
- * In seasonal/temporal hours, day and night each have 12 hours.
- * Day hours expand in summer, shrink in winter.
- * lat_deg: latitude (-90 to 90).
- * day_of_year: 1-365.
- * is_day_hour: 1 for day hour, 0 for night hour.
- * Returns length in minutes (60.0 at equinox everywhere). */
-double seasonal_hour_length(double lat_deg, int day_of_year, int is_day_hour);
+/* Find contributor by name (exact match). Returns index or -1 if not found. */
+int kg_contributor_find(const char *name);
 
-/* Day length in hours at given latitude and day of year.
- * Uses solar declination approximation.
- * Returns 0-24 (handles polar day/night). */
-double calendar_day_length(double lat_deg, int day_of_year);
+/* Get contributors for a system. Fills out_indices. Returns count. */
+int kg_contributors_for_system(kg_system_t sys, int *out_indices, int out_max);
 
-/* Night length in hours. Complement of day length. */
-double calendar_night_length(double lat_deg, int day_of_year);
+/* Get contributors by era. Fills out_indices. Returns count. */
+int kg_contributors_by_era(knowledge_era_t era, int *out_indices, int out_max);
 
-/* Calendar type name string. */
-const char *calendar_type_name(calendar_type_t type);
+/* Get contributors by culture. Fills out_indices. Returns count. */
+int kg_contributors_by_culture(const char *culture, int *out_indices, int out_max);
 
-/* How many distinct cultures are represented? */
-int calendar_culture_count(void);
+/* Find a transmission path between two systems.
+ * Returns path through contributors connecting system_a to system_b.
+ * Returns path with length=0 if no connection found. */
+kg_path_t kg_knowledge_path(kg_system_t system_a, kg_system_t system_b);
+
+/* Get all systems a contributor enabled. Fills out_systems. Returns count. */
+int kg_contributor_systems(int contributor_id, kg_system_t *out_systems, int out_max);
+
+/* Era name string. */
+const char *kg_era_name(knowledge_era_t era);
+
+/* System name string. */
+const char *kg_system_name(kg_system_t sys);
+
+/* How many distinct cultures? */
+int kg_culture_count(void);
 
 /* Get distinct culture by index. */
-const char *calendar_culture_get(int index);
+const char *kg_culture_get(int index);
 
-/* Get the Gregorian month lengths (static data). Returns days for month 1-12. */
-int gregorian_month_days(int month, int is_leap);
+/* How many transmission chains exist (edges in graph)? */
+int kg_edge_count(void);
 
-/* Year length comparison: return exact year length for a system index (in days, as double). */
-double calendar_year_length(int index);
-
-#endif /* TIME_CALENDAR_REFORM_H */
+#endif /* TIME_KNOWLEDGE_GRAPH_H */
 ```
 
-## Calendar Systems Data (minimum 10 entries)
+## Contributor Data (minimum 20 nodes with influence edges)
 
-1. **Egyptian Civil Calendar** (~3000 BCE): 12x30 + 5 epagomenal = 365 days. No leap year. Drifted 1 day per 4 years. First solar calendar.
-2. **Babylonian Calendar** (~2000 BCE): Lunisolar, 12 months of 29-30 days. Intercalary month added when needed. King's decree.
-3. **Roman Republican Calendar** (~713 BCE): 10 months originally (304 days), later 12 months. Pontifex controlled intercalation — political tool.
-4. **Julian Calendar** (46 BCE, Julius Caesar): 365.25 days (leap year every 4 years). Reformed by Sosigenes of Alexandria. 11.5 min/year drift.
-5. **Gregorian Calendar** (1582, Pope Gregory XIII): 365.2425 days. Skip 3 leap years per 400. 10 days deleted (Oct 4→15, 1582). 26 sec/year drift.
-6. **French Republican Calendar** (1793): 12x30 + 5/6 complementary days. Decimal time: 10 hours/day, 100 min/hour. Abolished 1805.
-7. **13 Moon Calendar** (1992, Jose Arguelles): 13x28 + 1 Day Out of Time = 365. Perfect symmetry. Every month starts on the same day. Dreamspell system.
-8. **World Calendar** (1930, Elisabeth Achelis): 4 quarters of 91 days. Every quarter: 31+30+30. 1 extra "Worldsday" (Dec 31). League of Nations nearly adopted.
-9. **International Fixed Calendar** (1902, Moses Cotsworth): 13x28 + 1 Year Day = 365. 13th month "Sol" between June and July. Used by Kodak internally until 1989.
-10. **Seasonal Hours** (ancient, widespread): 12 hours of daylight + 12 hours of night. Hour length varies by season and latitude. Used in ancient Rome, Japan (until 1873), Jewish law.
+Key contributors from data/contributors.json mapped into the graph:
+
+0. **King Wen** (~1050 BCE, Chinese, ANCIENT): I Ching hexagram ordering. Influenced: Richard Wilhelm.
+1. **Ptolemy** (150 CE, Greek, CLASSICAL): Almagest — astronomy, astrology. Influenced by: Hipparchus. Influenced: al-Khwarizmi, Copernicus.
+2. **Aryabhata** (499 CE, Indian, CLASSICAL): Astronomy, math. Influenced: Brahmagupta.
+3. **Brahmagupta** (628 CE, Indian, MEDIEVAL): Lunar month, math. Influenced by: Aryabhata. Influenced: al-Khwarizmi.
+4. **Hillel II** (359 CE, Jewish, CLASSICAL): Hebrew calendar. Systems: HEBREW, CALENDAR.
+5. **al-Khwarizmi** (820 CE, Arab, MEDIEVAL): Astronomy, math. Influenced by: Ptolemy, Brahmagupta. Influenced: European astronomers.
+6. **Richard Wilhelm** (1923 CE, German, MODERN): I Ching translation. Influenced by: King Wen. Systems: ICHING.
+7. **Jose Arguelles** (1987 CE, American, MODERN): Tzolkin/Dreamspell. Systems: TZOLKIN.
+8. **Jean Meeus** (1991 CE, Belgian, MODERN): Astronomical Algorithms. Influenced by: Ptolemy (indirectly). Systems: ASTRONOMY, GREGORIAN.
+9. **Ra Uru Hu** (1992 CE, Canadian, MODERN): Human Design system. Systems: HUMAN_DESIGN.
+10. **Copernicus** (1543 CE, Polish, EARLY_MODERN): Heliocentric model. Influenced by: Ptolemy. Influenced: Kepler.
+11. **Kepler** (1609 CE, German, EARLY_MODERN): Planetary laws. Influenced by: Copernicus, Tycho Brahe. Systems: ASTRONOMY.
+12. **Hipparchus** (130 BCE, Greek, CLASSICAL): Star catalog, precession. Influenced: Ptolemy. Systems: ASTRONOMY.
+13. **Eratosthenes** (240 BCE, Greek, CLASSICAL): Earth circumference. Systems: ASTRONOMY.
+14. **Ulugh Beg** (1437 CE, Timurid, MEDIEVAL): Star catalog, sidereal year. Systems: ASTRONOMY.
+15. **Surya Siddhanta author** (~400 CE, Indian, CLASSICAL): Hindu astronomy. Influenced: Aryabhata. Systems: HINDU, ASTRONOMY.
+16. **Isaac Luria** (1570 CE, Jewish, EARLY_MODERN): Kabbalistic system. Systems: KABBALAH.
+17. **Moses de Leon** (1290 CE, Spanish, MEDIEVAL): Zohar. Influenced: Isaac Luria. Systems: KABBALAH.
+18. **Siddhartha Gautama** (~500 BCE, Indian, ANCIENT): Buddhism. Systems: BUDDHIST.
+19. **Pope Gregory XIII** (1582 CE, Italian, EARLY_MODERN): Gregorian calendar. Systems: GREGORIAN.
 
 ## DONE WHEN
 
-- [ ] >= 10 calendar systems with descriptions
-- [ ] seasonal_hour_length computation (latitude + day of year)
-- [ ] Day/night length calculation
-- [ ] Filter by type
-- [ ] Culture listing
-- [ ] Year length comparison
+- [ ] >= 20 contributor nodes with influence edges
+- [ ] knowledge_path finds transmission chains between systems
+- [ ] Filter by system, era, culture
+- [ ] Edge count reflects total influence relationships
 - [ ] >= 30 tests
 - [ ] All tests pass with zero warnings
 - [ ] Purity: no malloc, no globals, no side effects
@@ -128,7 +165,8 @@ double calendar_year_length(int index);
 ## Constraints
 
 - C11, `-Wall -Wextra -Werror -std=c11 -pedantic`
-- `#define PI 3.14159265358979323846` (no M_PI)
 - No malloc, no globals, no side effects
 - Standalone module (no compile-time dependencies)
-- `#include <math.h>` for sin(), cos(), acos() — link with -lm
+- out_indices/out_systems arrays provided by caller
+- Path-finding: simple BFS over static data (20 nodes = trivial)
+- All data as static const arrays

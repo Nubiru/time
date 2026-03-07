@@ -2,51 +2,53 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-06
-**Task**: Calendar Reform History
-**Roadmap Reference**: Track 29.2 — "Agent: Calendar Reform History (Agent B)"
+**Task**: Knowledge Graph Data
+**Roadmap Reference**: Track 28.1 — "Agent: Knowledge Graph Data (Agent B)"
 
 ## Files Created
-- `src/systems/unified/calendar_reform.h` — Header with calendar_type_t, calendar_system_t, 11 public functions
-- `src/systems/unified/calendar_reform.c` — Pure data: 10 calendar systems, seasonal hour computation, day/night length
-- `tests/systems/unified/test_calendar_reform.c` — 66 tests
+- `src/systems/unified/knowledge_graph.h` — Header with kg_contributor_t, kg_path_t, 13 public functions
+- `src/systems/unified/knowledge_graph.c` — Pure data: 20 contributor nodes, 11 influence edges, BFS pathfinder
+- `tests/systems/unified/test_knowledge_graph.c` — 55 tests
 
 ## API Summary
 ```c
-int calendar_system_count(void);
-calendar_system_t calendar_system_get(int index);
-int calendar_systems_by_type(calendar_type_t type, int *out_indices, int out_max);
-double seasonal_hour_length(double lat_deg, int day_of_year, int is_day_hour);
-double calendar_day_length(double lat_deg, int day_of_year);
-double calendar_night_length(double lat_deg, int day_of_year);
-const char *calendar_type_name(calendar_type_t type);
-int calendar_culture_count(void);
-const char *calendar_culture_get(int index);
-int gregorian_month_days(int month, int is_leap);
-double calendar_year_length(int index);
+int kg_contributor_count(void);
+kg_contributor_t kg_contributor_get(int index);
+int kg_contributor_find(const char *name);
+int kg_contributors_for_system(kg_system_t sys, int *out_indices, int out_max);
+int kg_contributors_by_era(knowledge_era_t era, int *out_indices, int out_max);
+int kg_contributors_by_culture(const char *culture, int *out_indices, int out_max);
+kg_path_t kg_knowledge_path(kg_system_t system_a, kg_system_t system_b);
+int kg_contributor_systems(int contributor_id, kg_system_t *out_systems, int out_max);
+const char *kg_era_name(knowledge_era_t era);
+const char *kg_system_name(kg_system_t sys);
+int kg_culture_count(void);
+const char *kg_culture_get(int index);
+int kg_edge_count(void);
 ```
 
 ## Test Results
-66 Tests, 0 Failures, 0 Ignored.
+55 Tests, 0 Failures, 0 Ignored.
 
 ## Compile Command
 ```
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/unified/test_calendar_reform.c src/systems/unified/calendar_reform.c tests/unity/unity.c -o build/test_calendar_reform -lm
+gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/unified/test_knowledge_graph.c src/systems/unified/knowledge_graph.c tests/unity/unity.c -o build/test_knowledge_graph -lm
 ```
 
 ## Checker Result
-PASS — Compilation clean, 66 tests, purity clean (P1-P5), naming correct, no duplication, no regressions. Advisory: calendar_day_length overlaps solar_radiation's solar_day_length_doy (same formula, different domain).
+PASS — Compilation clean, 55 tests, purity clean (P1-P5), naming correct, no duplication with structural_map, no regressions.
 
 ## Maintainer Result
-WARN (resolved) — 3 contributors added to data/contributors.json (Sosigenes, Achelis, Cotsworth).
+WARN (resolved) — 4 contributors added to data/contributors.json (Siddhartha Gautama, Moses de Leon, Isaac Luria, Pope Gregory XIII).
 
 ## Makefile Additions
 See makefile-additions.md
 
 ## Attribution
-Sosigenes of Alexandria (Julian Calendar), Elisabeth Achelis (World Calendar), Moses Cotsworth (IFC) — added to data/contributors.json. Jose Arguelles (13 Moon) already present.
+20 historical contributors encoded as knowledge graph nodes. 4 new entries added to data/contributors.json. All others already present from previous modules.
 
 ## Knowledge Gaps
 No gaps.
 
 ## Next Candidate
-Track 28.1 — Knowledge Graph Data (contributor relationships, knowledge transmission chains)
+Track 27.1 — Frequency Data (Pythagorean tuning, planetary frequencies, sacred number harmonics)

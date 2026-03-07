@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 84
+    "total_contributors": 88
   },
   "contributors": [
     {
@@ -1364,6 +1364,59 @@
       ],
       "references": [
         { "file": "src/systems/unified/calendar_reform.c", "line": 1, "note": "International Fixed Calendar proposal" }
+      ]
+    },
+    {
+      "id": "siddhartha-gautama",
+      "name": "Siddhartha Gautama (Buddha)",
+      "born": -563,
+      "died": -483,
+      "category": ["teacher", "philosopher"],
+      "contributions": [
+        { "work": "Foundational teachings of Buddhism", "description": "Four Noble Truths, Eightfold Path. Buddhist calendar and Uposatha observance days derive from his teachings.", "year": -528 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/knowledge_graph.c", "line": 1, "note": "Buddhist system origin node in knowledge graph" }
+      ]
+    },
+    {
+      "id": "moses-de-leon",
+      "name": "Moses de Leon",
+      "born": 1250,
+      "died": 1305,
+      "category": ["rabbi", "mystic"],
+      "contributions": [
+        { "work": "Sefer ha-Zohar (The Book of Splendor)", "description": "Primary text of Kabbalah. Systematized the Sefirot, paths, and Four Worlds framework.", "year": 1290 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/knowledge_graph.c", "line": 1, "note": "Kabbalah origin node — influenced Isaac Luria" }
+      ]
+    },
+    {
+      "id": "isaac-luria",
+      "name": "Isaac Luria",
+      "born": 1534,
+      "died": 1572,
+      "category": ["rabbi", "mystic"],
+      "contributions": [
+        { "work": "Lurianic Kabbalah", "description": "Developed the concepts of tzimtzum (contraction), shevirat ha-kelim (breaking of vessels), and tikkun (repair). Transformed Kabbalistic thought.", "year": 1570 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/knowledge_graph.c", "line": 1, "note": "Kabbalah transmission node — influenced by Moses de Leon" }
+      ]
+    },
+    {
+      "id": "pope-gregory-xiii",
+      "name": "Pope Gregory XIII",
+      "born": 1502,
+      "died": 1585,
+      "category": ["pope", "reformer"],
+      "contributions": [
+        { "work": "Gregorian Calendar Reform", "description": "Promulgated the Gregorian calendar (1582). Deleted 10 days, adjusted leap year rules. Calendar still used worldwide.", "year": 1582 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/knowledge_graph.c", "line": 1, "note": "Gregorian system node in knowledge graph" },
+        { "file": "src/systems/unified/calendar_reform.c", "line": 1, "note": "Gregorian calendar reform entry" }
       ]
     }
   ]
