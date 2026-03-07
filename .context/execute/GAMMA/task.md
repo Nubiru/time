@@ -1,31 +1,32 @@
-# Task: Cross-System Number Scanner
+# Task: Seasonal Cycle Visualizer Data
 
 **Agent**: GAMMA
-**Roadmap Reference**: Track 26.3 — "Agent: Cross-System Number Scanner (Agent B)"
+**Roadmap Reference**: Track 25.2 — "Agent: Seasonal Cycle Visualizer Data (Agent B)"
 **Date**: 2026-03-06
 **Status**: CLAIMED
 
 ## Goal
 
-Pure computation module that scans for appearances of any number across all registered time cycle lengths. Given a target number (e.g., 432), checks if it's a factor/multiple of known cycles, whether it appears at different scales, and computes a "coincidence score." Answers: is this number's ubiquity meaningful or coincidental?
+Pure data+computation module for seasonal cycles at any latitude. Provides season identification, growing season estimation, hemisphere comparison, and seasonal progress tracking. Standalone — uses solar declination approximation internally.
 
 ## Files to Create
 
-- `src/systems/unified/number_scanner.h`
-- `src/systems/unified/number_scanner.c`
-- `tests/systems/unified/test_number_scanner.c`
+- `src/systems/earth/seasons.h`
+- `src/systems/earth/seasons.c`
+- `tests/systems/earth/test_seasons.c`
 
 ## DONE WHEN
 
-- [ ] >= 20 registered cycles, >= 10 sacred numbers
-- [ ] number_scan finds factors, multiples, scale appearances
-- [ ] factor_scan, coincidence_score work correctly
+- [ ] season_at returns correct season + progress for both hemispheres
+- [ ] Growing season (frost-free days) by latitude
+- [ ] Solstice/equinox day-of-year identification
+- [ ] Hemisphere comparison
 - [ ] >= 30 tests, all pass, zero warnings
 - [ ] Purity: no malloc, no globals, no side effects
-- [ ] Compiles: `gcc -Wall -Wextra -Werror -std=c11 -pedantic`
 
 ## Constraints
 
 - C11, `-Wall -Wextra -Werror -std=c11 -pedantic`
+- `#define PI 3.14159265358979323846`
 - No malloc, no globals, no side effects
 - Standalone module
