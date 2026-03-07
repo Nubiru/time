@@ -33,6 +33,8 @@ set(CORE_SOURCES
     src/core/main.c
     src/core/app_state.c
     src/core/date_parse.c
+    src/core/input.c
+    src/core/hud.c
 )
 
 # --- Math ---
@@ -90,6 +92,7 @@ set(RENDER_SOURCES
     src/render/milkyway_pack.c
     src/render/earth_globe.c
     src/render/earth_atmosphere.c
+    src/render/earth_pack.c
     src/render/catalog_ingest.c
     src/render/text_render.c
     src/render/hexagram_geometry.c
@@ -156,6 +159,8 @@ set(SYSTEMS_SOURCES
     src/systems/persian/persian.c
     # Bahai
     src/systems/bahai/bahai.c
+    # Japanese
+    src/systems/japanese/japanese.c
     # Geology
     src/systems/geology/geo_time.c
     src/systems/geology/climate_history.c
@@ -329,6 +334,7 @@ else()
     add_library(time_diffraction     OBJECT src/render/diffraction.c)
     add_library(time_earth_atmosphere OBJECT src/render/earth_atmosphere.c)
     add_library(time_earth_globe     OBJECT src/render/earth_globe.c)
+    add_library(time_earth_pack      OBJECT src/render/earth_pack.c)
     add_library(time_hexagram_geometry OBJECT src/render/hexagram_geometry.c)
     add_library(time_milkyway_pack   OBJECT src/render/milkyway_pack.c)
     add_library(time_moon_pack       OBJECT src/render/moon_pack.c)
@@ -391,6 +397,9 @@ else()
 
     # Systems — Bahai
     add_library(time_bahai           OBJECT src/systems/bahai/bahai.c)
+
+    # Systems — Japanese
+    add_library(time_japanese        OBJECT src/systems/japanese/japanese.c)
 
     # Systems — Geology
     add_library(time_geo_time        OBJECT src/systems/geology/geo_time.c)
@@ -532,6 +541,7 @@ else()
     time_add_test(NAME test_deep_sky_pack  TEST tests/render/test_deep_sky_pack.c  DEPS deep_sky_pack deep_sky)
     time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack galaxy_geometry)
     time_add_test(NAME test_bodygraph_pack TEST tests/render/test_bodygraph_pack.c DEPS bodygraph_pack bodygraph)
+    time_add_test(NAME test_earth_pack    TEST tests/render/test_earth_pack.c    DEPS earth_pack earth_globe earth_atmosphere)
     time_add_test(NAME test_glyph_batch     TEST tests/render/test_glyph_batch.c     DEPS glyph_batch vec3)
     time_add_test(NAME test_color_theory    TEST tests/render/test_color_theory.c    DEPS color_theory color)
     time_add_test(NAME test_star_catalog_ext TEST tests/render/test_star_catalog_ext.c DEPS star_catalog_ext)
@@ -615,6 +625,9 @@ else()
 
     # Baha'i tests
     time_add_test(NAME test_bahai           TEST tests/systems/bahai/test_bahai.c     DEPS bahai)
+
+    # Japanese tests
+    time_add_test(NAME test_japanese        TEST tests/systems/japanese/test_japanese.c DEPS japanese)
 
     # Geology tests
     time_add_test(NAME test_geo_time        TEST tests/systems/test_geo_time.c              DEPS geo_time)
