@@ -18,6 +18,7 @@ src/systems/unified/knowledge_graph.c
 src/systems/unified/number_scanner.c
 src/systems/earth/seasons.c
 src/systems/unified/frequency.c
+src/systems/unified/precession_detect.c
 
 ## New test targets:
 test-four-worlds: $(BUILD_DIR)
@@ -92,8 +93,12 @@ test-frequency: $(BUILD_DIR)
 	$(CC) $(CFLAGS) tests/systems/unified/test_frequency.c src/systems/unified/frequency.c $(UNITY) -o $(BUILD_DIR)/test_frequency $(LDFLAGS)
 	./$(BUILD_DIR)/test_frequency
 
+test-precession-detect: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_precession_detect.c src/systems/unified/precession_detect.c $(UNITY) -o $(BUILD_DIR)/test_precession_detect $(LDFLAGS)
+	./$(BUILD_DIR)/test_precession_detect
+
 ## Add to test: dependency list:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons test-frequency
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons test-frequency test-precession-detect
 
 ## Add to .PHONY:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons test-frequency
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform test-knowledge-graph test-number-scanner test-seasons test-frequency test-precession-detect

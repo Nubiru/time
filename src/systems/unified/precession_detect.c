@@ -1,4 +1,4 @@
-/* precession_detect.c — Precession Encoder Detector implementation
+/* precession_detect.c -- Precession Encoder Detector implementation
  *
  * Tests whether ancient time systems encode the axial precession cycle
  * (~25,772 years) through integer multiples of their fundamental cycles.
@@ -9,199 +9,180 @@
 #include <math.h>
 #include <string.h>
 
-/* Zodiacal age names in precession order from J2000.
- * Precession is retrograde: Pisces -> Aquarius -> Capricorn -> ... */
-static const char *const AGE_NAMES[12] = {
-    "Pisces",      /* 0  — current at J2000 */
-    "Aquarius",    /* 1  — next */
-    "Capricorn",   /* 2 */
-    "Sagittarius", /* 3 */
-    "Scorpio",     /* 4 */
-    "Libra",       /* 5 */
-    "Virgo",       /* 6 */
-    "Leo",         /* 7 */
-    "Cancer",      /* 8 */
-    "Gemini",      /* 9 */
-    "Taurus",      /* 10 */
-    "Aries"        /* 11 */
+/* Static lookup table of known cultural precession encodings */
+static const pd_cycle_t CYCLES[] = {
+    { "Long Count Great Cycle", "Mayan",      5125.36,  5    },
+    { "Precessional Age",       "Hindu",      2160.0,   12   },
+    { "Jubilee-Month cycle",    "Hebrew",     600.0,    43   },
+    { "Sothic cycle",           "Egyptian",   1461.0,   18   },
+    { "Saros cycle",            "Babylonian", 18.03,    1430 },
+    { "Sexagenary cycle",       "Chinese",    60.0,     429  },
+    { "Great Year (Plato)",     "Greek",      25920.0,  1    },
+    { "Kalpa subdivision",      "Buddhist",   4320.0,   6    },
+    { "30-year Hijri cycle",    "Islamic",    30.0,     859  }
 };
 
-/* Pre-registered cultural system definitions.
- * Each entry: { system_name, culture, cycle_length_years, best_multiplier } */
-typedef struct {
-    const char *system_name;
-    const char *culture;
-    double cycle_length;
-    int best_multiplier;
-} precession_seed_t;
+static const int CYCLE_COUNT = (int)(sizeof(CYCLES) / sizeof(CYCLES[0]));
 
-static const precession_seed_t SEEDS[] = {
-    { "Mayan",      "Mesoamerican", 5125.36,  5   },
-    { "Hindu",      "Indian",       2160.0,   12  },
-    { "Hebrew",     "Semitic",      50.0,     516 },
-    { "Egyptian",   "African",      1461.0,   18  },
-    { "Babylonian", "Mesopotamian", 3600.0,   7   },
-    { "Greek",      "Hellenic",     25772.0,  1   },
-    { "Norse",      "Scandinavian", 540.0,    48  },
-    { "Chinese",    "East Asian",   60.0,     430 }
-};
-
-static const int SEED_COUNT = (int)(sizeof(SEEDS) / sizeof(SEEDS[0]));
-
-/* Approximate precession angle at J2000 epoch (degrees).
- * The vernal equinox point is at roughly 5 degrees into Pisces. */
-static const double J2000_PRECESSION_ANGLE = 5.145;
-
-/* ===== Core functions ===== */
-
-precession_match_t precession_test(double cycle_years, int multiplier)
+int pd_cycle_count(void)
 {
-    precession_match_t m;
-    m.cycle_length = cycle_years;
-    m.multiplier = multiplier;
-    m.product = cycle_years * (double)multiplier;
-    m.error_years = fabs(m.product - PRECESSION_PERIOD_YEARS);
-    m.error_percent = (m.error_years / PRECESSION_PERIOD_YEARS) * 100.0;
-    return m;
+    return CYCLE_COUNT;
 }
 
-precession_match_t precession_best_match(double cycle_years, int max_mult)
+pd_cycle_t pd_cycle_get(int index)
 {
-    precession_match_t best = precession_test(cycle_years, 1);
+    if (index < 0 || index >= CYCLE_COUNT) {
+        pd_cycle_t empty;
+        memset(&empty, 0, sizeof(empty));
+        empty.name = NULL;
+        empty.culture = NULL;
+        empty.period_years = 0.0;
+        empty.known_multiplier = 0;
+        return empty;
+    }
+    return CYCLES[index];
+}
 
-    for (int m = 2; m <= max_mult; m++) {
-        precession_match_t candidate = precession_test(cycle_years, m);
-        if (candidate.error_percent < best.error_percent) {
-            best = candidate;
+double pd_error(double product_years)
+{
+    return fabs(product_years - PRECESSION_CYCLE_YEARS) / PRECESSION_CYCLE_YEARS * 100.0;
+}
+
+int pd_best_multiplier(double period_years)
+{
+    if (period_years <= 0.0) {
+        return 1;
+    }
+
+    /* Start from rounded estimate, then check nearby values */
+    double ratio = PRECESSION_CYCLE_YEARS / period_years;
+    int center = (int)round(ratio);
+
+    /* Clamp to search range 1-1000 */
+    if (center < 1) center = 1;
+    if (center > 1000) center = 1000;
+
+    int best = center;
+    double best_err = fabs(period_years * (double)center - PRECESSION_CYCLE_YEARS);
+
+    /* Check neighbors within a small window */
+    int lo = center - 2;
+    int hi = center + 2;
+    if (lo < 1) lo = 1;
+    if (hi > 1000) hi = 1000;
+
+    for (int m = lo; m <= hi; m++) {
+        double err = fabs(period_years * (double)m - PRECESSION_CYCLE_YEARS);
+        if (err < best_err) {
+            best_err = err;
+            best = m;
         }
     }
 
     return best;
 }
 
-int precession_is_match(precession_match_t match, double threshold_percent)
+pd_match_t pd_test(double period_years, int multiplier,
+                   const char *name, const char *culture)
 {
-    return match.error_percent < threshold_percent ? 1 : 0;
-}
+    pd_match_t m;
+    memset(&m, 0, sizeof(m));
 
-double precession_degrees(double cycle_years)
-{
-    return cycle_years * PRECESSION_RATE_DEG_PER_YEAR;
-}
+    m.cycle_name = name;
+    m.culture = culture;
+    m.period_years = period_years;
 
-double precession_cycles_per_precession(double cycle_years)
-{
-    if (cycle_years <= 0.0) {
-        return 0.0;
-    }
-    return PRECESSION_PERIOD_YEARS / cycle_years;
-}
-
-double precession_angle(double years_from_j2000)
-{
-    double raw = J2000_PRECESSION_ANGLE + years_from_j2000 * PRECESSION_RATE_DEG_PER_YEAR;
-    double angle = fmod(raw, 360.0);
-    if (angle < 0.0) {
-        angle += 360.0;
-    }
-    return angle;
-}
-
-int precession_current_age(double years_from_j2000)
-{
-    double angle = precession_angle(years_from_j2000);
-    int age = (int)(angle / 30.0);
-    if (age < 0) age = 0;
-    if (age > 11) age = 11;
-    return age;
-}
-
-const char *precession_age_name(int age_index)
-{
-    if (age_index < 0 || age_index > 11) {
-        return "Unknown";
-    }
-    return AGE_NAMES[age_index];
-}
-
-int precession_system_count(void)
-{
-    return SEED_COUNT;
-}
-
-precession_system_t precession_system_get(int index)
-{
-    precession_system_t sys;
-    memset(&sys, 0, sizeof(sys));
-
-    if (index < 0 || index >= SEED_COUNT) {
-        sys.system_name = NULL;
-        sys.culture = NULL;
-        sys.match_count = 0;
-        sys.best_error_percent = 100.0;
-        return sys;
+    if (multiplier == 0) {
+        multiplier = pd_best_multiplier(period_years);
     }
 
-    const precession_seed_t *seed = &SEEDS[index];
-    sys.system_name = seed->system_name;
-    sys.culture = seed->culture;
+    m.multiplier = multiplier;
+    m.product_years = period_years * (double)multiplier;
+    m.error_percent = pd_error(m.product_years);
+    m.rank = 0;
 
-    /* Compute the pre-registered match */
-    sys.best = precession_test(seed->cycle_length, seed->best_multiplier);
-    sys.best_error_percent = sys.best.error_percent;
-    sys.matches[0] = sys.best;
-    sys.match_count = 1;
-
-    return sys;
+    return m;
 }
 
-precession_report_t precession_full_report(double threshold_percent, int max_mult)
+double pd_degrees_per_year(void)
 {
-    precession_report_t report;
-    memset(&report, 0, sizeof(report));
+    return 360.0 / PRECESSION_CYCLE_YEARS;
+}
 
-    report.system_count = SEED_COUNT;
-    report.best_error_percent = 1e9;
-    report.best_system = NULL;
-    report.total_matches = 0;
+double pd_years_per_degree(void)
+{
+    return PRECESSION_CYCLE_YEARS / 360.0;
+}
 
-    for (int i = 0; i < SEED_COUNT; i++) {
-        const precession_seed_t *seed = &SEEDS[i];
-        precession_system_t *sys = &report.systems[i];
-
-        sys->system_name = seed->system_name;
-        sys->culture = seed->culture;
-        sys->match_count = 0;
-        sys->best_error_percent = 1e9;
-
-        /* Search all multipliers for matches within threshold */
-        for (int m = 1; m <= max_mult; m++) {
-            precession_match_t candidate = precession_test(seed->cycle_length, m);
-
-            if (candidate.error_percent < threshold_percent) {
-                if (sys->match_count < PRECESSION_MAX_MATCHES) {
-                    sys->matches[sys->match_count] = candidate;
-                    sys->match_count++;
-                }
-                report.total_matches++;
-            }
-
-            if (candidate.error_percent < sys->best_error_percent) {
-                sys->best = candidate;
-                sys->best_error_percent = candidate.error_percent;
-            }
+/* Simple insertion sort for matches by error_percent ascending */
+static void sort_matches(pd_match_t *matches, int count)
+{
+    for (int i = 1; i < count; i++) {
+        pd_match_t key = matches[i];
+        int j = i - 1;
+        while (j >= 0 && matches[j].error_percent > key.error_percent) {
+            matches[j + 1] = matches[j];
+            j--;
         }
+        matches[j + 1] = key;
+    }
+}
 
-        if (sys->best_error_percent < report.best_error_percent) {
-            report.best_error_percent = sys->best_error_percent;
-            report.best_system = sys->system_name;
+pd_report_t pd_report(void)
+{
+    pd_report_t r;
+    memset(&r, 0, sizeof(r));
+
+    r.match_count = 0;
+    r.best_error_percent = 1e9;
+    r.best_culture = NULL;
+
+    /* Test each registered cycle with its known multiplier */
+    for (int i = 0; i < CYCLE_COUNT && r.match_count < PRECESSION_MAX_MATCHES; i++) {
+        const pd_cycle_t *c = &CYCLES[i];
+        pd_match_t m = pd_test(c->period_years, c->known_multiplier,
+                               c->name, c->culture);
+        r.matches[r.match_count] = m;
+        r.match_count++;
+    }
+
+    /* Sort by error_percent ascending */
+    sort_matches(r.matches, r.match_count);
+
+    /* Assign ranks (1-based) */
+    for (int i = 0; i < r.match_count; i++) {
+        r.matches[i].rank = i + 1;
+    }
+
+    /* Set best */
+    if (r.match_count > 0) {
+        r.best_error_percent = r.matches[0].error_percent;
+        r.best_culture = r.matches[0].culture;
+    }
+
+    return r;
+}
+
+pd_match_t pd_report_rank(const pd_report_t *report, int rank)
+{
+    if (rank < 1 || rank > report->match_count) {
+        pd_match_t empty;
+        memset(&empty, 0, sizeof(empty));
+        empty.cycle_name = NULL;
+        empty.culture = NULL;
+        empty.rank = 0;
+        return empty;
+    }
+    return report->matches[rank - 1];
+}
+
+int pd_cultures_within(const pd_report_t *report, double max_error_percent)
+{
+    int count = 0;
+    for (int i = 0; i < report->match_count; i++) {
+        if (report->matches[i].error_percent < max_error_percent) {
+            count++;
         }
     }
-
-    return report;
-}
-
-double precession_years_per_degree(void)
-{
-    return PRECESSION_PERIOD_YEARS / 360.0;
+    return count;
 }

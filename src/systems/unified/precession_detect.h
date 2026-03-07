@@ -1,106 +1,78 @@
-/* precession_detect.h — Precession Encoder Detector
+/* precession_detect.h -- Precession Encoder Detector
  *
  * Pure investigative module testing whether ancient time systems encode
- * the axial precession cycle (~25,772 years). For each registered system,
- * tests fundamental cycle lengths x integer multipliers against the
- * precession period. Reports match quality (error percentage) and
- * generates cross-cultural precession encoding analysis.
+ * the axial precession cycle (~25,772 years). Registers known cycles
+ * from multiple cultures, tests each against precession via integer
+ * multiples, and generates a report ranking systems by encoding accuracy.
  *
  * All functions are pure: no globals, no malloc, no side effects. */
 
 #ifndef TIME_PRECESSION_DETECT_H
 #define TIME_PRECESSION_DETECT_H
 
-#define PI 3.14159265358979323846
+#define PRECESSION_CYCLE_YEARS 25772.0
+#define PRECESSION_MAX_CYCLES 32
+#define PRECESSION_MAX_MATCHES 16
 
-/* Current best estimate of precession period (years) */
-#define PRECESSION_PERIOD_YEARS 25772.0
-
-/* Degrees per year of precession (360 / 25772) */
-#define PRECESSION_RATE_DEG_PER_YEAR (360.0 / PRECESSION_PERIOD_YEARS)
-
-/* One "age" = 1/12 of precession (zodiacal age) */
-#define PRECESSION_AGE_YEARS (PRECESSION_PERIOD_YEARS / 12.0)
-
-/* One degree of precession in years */
-#define PRECESSION_YEARS_PER_DEGREE_VAL (PRECESSION_PERIOD_YEARS / 360.0)
-
-/* Maximum registered systems to test */
-#define PRECESSION_MAX_SYSTEMS 24
-#define PRECESSION_MAX_MATCHES 8
-
-/* A cycle-multiplier combination that approximates precession */
+/* A cultural time cycle to test against precession */
 typedef struct {
-    double cycle_length;       /* base cycle in years */
-    int multiplier;            /* integer multiplier */
-    double product;            /* cycle_length * multiplier */
-    double error_years;        /* absolute error from precession */
-    double error_percent;      /* error as percentage of precession */
-} precession_match_t;
+    const char *name;        /* cycle name */
+    const char *culture;     /* originating culture */
+    double period_years;     /* cycle length in years */
+    int known_multiplier;    /* known integer multiple (0 = search) */
+} pd_cycle_t;
 
-/* A cultural system with its precession encoding candidates */
+/* Result of testing one cycle against precession */
 typedef struct {
-    const char *system_name;   /* "Mayan", "Hindu", "Hebrew", etc. */
-    const char *culture;       /* broader culture area */
-    int match_count;           /* number of matches found */
-    precession_match_t matches[PRECESSION_MAX_MATCHES];
-    precession_match_t best;   /* lowest error_percent match */
-    double best_error_percent; /* convenience: best.error_percent */
-} precession_system_t;
+    const char *cycle_name;
+    const char *culture;
+    double period_years;
+    int multiplier;          /* how many cycles to approximate precession */
+    double product_years;    /* period * multiplier */
+    double error_percent;    /* abs(product - precession) / precession * 100 */
+    int rank;                /* 1 = best match, higher = worse */
+} pd_match_t;
 
-/* Full precession analysis report */
+/* Full precession report */
 typedef struct {
-    int system_count;          /* how many systems tested */
-    precession_system_t systems[PRECESSION_MAX_SYSTEMS];
-    int total_matches;         /* matches across all systems */
-    const char *best_system;   /* system with lowest error */
-    double best_error_percent; /* lowest error found */
-} precession_report_t;
+    pd_match_t matches[PRECESSION_MAX_MATCHES];
+    int match_count;
+    double best_error_percent;
+    const char *best_culture;
+} pd_report_t;
 
-/* Test a single cycle x multiplier against precession.
- * cycle_years: base cycle length in years.
- * multiplier: integer multiplier (1 to ~1000).
- * Returns match result. */
-precession_match_t precession_test(double cycle_years, int multiplier);
+/* Get number of registered cycles. */
+int pd_cycle_count(void);
 
-/* Test all multipliers (1..max_mult) for a cycle against precession.
- * Returns best match found. */
-precession_match_t precession_best_match(double cycle_years, int max_mult);
+/* Get cycle by index. */
+pd_cycle_t pd_cycle_get(int index);
 
-/* Is this match within threshold? (error_percent < threshold) */
-int precession_is_match(precession_match_t match, double threshold_percent);
+/* Test a single cycle against precession.
+ * If multiplier > 0, test that specific multiple.
+ * If multiplier == 0, find best integer multiple. */
+pd_match_t pd_test(double period_years, int multiplier,
+                   const char *name, const char *culture);
 
-/* Degrees of precession per cycle_length years. */
-double precession_degrees(double cycle_years);
+/* Find best integer multiplier for a period to match precession.
+ * Searches multipliers 1-1000. */
+int pd_best_multiplier(double period_years);
 
-/* How many complete cycles of cycle_years fit in one precession? */
-double precession_cycles_per_precession(double cycle_years);
+/* Error percentage: abs(product - precession) / precession * 100 */
+double pd_error(double product_years);
 
-/* Current precession angle from J2000 epoch.
- * years_from_j2000: positive = future, negative = past.
- * Returns angle in degrees (0-360). */
-double precession_angle(double years_from_j2000);
+/* Generate full report: test all registered cycles, rank by accuracy. */
+pd_report_t pd_report(void);
 
-/* Current zodiacal age (which 30-degree sector).
- * Returns 0-11. The "Age of Aquarius" question. */
-int precession_current_age(double years_from_j2000);
+/* Get match by rank (1-based). Returns empty match if out of range. */
+pd_match_t pd_report_rank(const pd_report_t *report, int rank);
 
-/* Name of zodiacal age (0="Pisces" at J2000, going backward through zodiac). */
-const char *precession_age_name(int age_index);
+/* Count how many cultures have encodings within a threshold (e.g., 1.0%). */
+int pd_cultures_within(const pd_report_t *report, double max_error_percent);
 
-/* Get pre-registered system count. */
-int precession_system_count(void);
+/* Degrees of precession per year (360 / 25772). */
+double pd_degrees_per_year(void);
 
-/* Get pre-registered system by index. */
-precession_system_t precession_system_get(int index);
-
-/* Generate full report testing all registered systems.
- * threshold_percent: maximum error to count as a match (e.g., 1.0 = 1%).
- * max_mult: maximum multiplier to search.
- * Returns full report. */
-precession_report_t precession_full_report(double threshold_percent, int max_mult);
-
-/* Years per degree of precession (convenience). */
-double precession_years_per_degree(void);
+/* Years per degree of precession (25772 / 360). */
+double pd_years_per_degree(void);
 
 #endif /* TIME_PRECESSION_DETECT_H */

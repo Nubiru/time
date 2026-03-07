@@ -1,125 +1,123 @@
-# Task: Frequency Mapper
+# Task: Precession Encoder Detector
 
 **Agent**: GAMMA
-**Roadmap Reference**: Track 27.1 — "Agent: Frequency Mapper (Agent A)"
-**Date**: 2026-03-06
+**Roadmap Reference**: Track 26.4 — "Agent: Precession Encoder Detector (Agent A)"
+**Date**: 2026-03-07
 **Status**: CLAIMED
 
 ## Goal
 
-Pure module converting any time cycle to a frequency and transposing it to audible range via octave shifts. Computes planetary orbital frequencies, maps frequencies to musical notes (A440 tuning), and detects musical intervals between planet pairs. The "Music of the Spheres" — computable.
+Pure investigative module testing whether ancient time systems encode the precession cycle (~25,772 years). Registers known cycles from multiple cultures, tests each against precession via integer multiples, and generates a report ranking systems by encoding accuracy. The question: did ancient cultures independently discover precession?
 
 ## READ FIRST
 
-- `src/systems/astronomy/orbit.h` — orbital periods
-- `src/systems/earth/biorhythm.h` — biological rhythm frequencies (already delivered)
+- `src/systems/unified/number_scanner.h` — related cycle scanning (already delivered)
+- `src/systems/unified/structural_map.h` — cross-system mappings (already delivered)
 
 ## Files to Create
 
-- `src/systems/unified/frequency.h`
-- `src/systems/unified/frequency.c`
-- `tests/systems/unified/test_frequency.c`
+- `src/systems/unified/precession_detect.h`
+- `src/systems/unified/precession_detect.c`
+- `tests/systems/unified/test_precession_detect.c`
 
 ## API
 
 ```c
-#ifndef TIME_FREQUENCY_H
-#define TIME_FREQUENCY_H
+#ifndef TIME_PRECESSION_DETECT_H
+#define TIME_PRECESSION_DETECT_H
 
-#define FREQ_MAX_PLANETS 10
-#define FREQ_A4_HZ 440.0
-#define FREQ_SEMITONES 12
+#define PRECESSION_CYCLE_YEARS 25772.0
+#define PRECESSION_MAX_CYCLES 32
+#define PRECESSION_MAX_MATCHES 16
 
-/* Musical note */
+/* A cultural time cycle to test against precession */
 typedef struct {
-    char name[4];       /* "C", "C#", "D", ..., "B" */
-    int octave;         /* octave number (4 = middle C octave) */
-    double cents_off;   /* deviation from equal temperament (-50 to +50) */
-    double hz;          /* actual frequency */
-} freq_note_t;
+    const char *name;        /* cycle name */
+    const char *culture;     /* originating culture */
+    double period_years;     /* cycle length in years */
+    int known_multiplier;    /* known integer multiple (0 = search) */
+} pd_cycle_t;
 
-/* Musical interval between two frequencies */
+/* Result of testing one cycle against precession */
 typedef struct {
-    char name[24];      /* "unison", "minor third", "perfect fifth", etc. */
-    double ratio;       /* frequency ratio (e.g., 1.5 for perfect fifth) */
-    int semitones;      /* nearest equal-temperament semitone count */
-    double cents_off;   /* deviation from ET interval */
-} freq_interval_t;
+    const char *cycle_name;
+    const char *culture;
+    double period_years;
+    int multiplier;          /* how many cycles to approximate precession */
+    double product_years;    /* period * multiplier */
+    double error_percent;    /* abs(product - precession) / precession * 100 */
+    int rank;                /* 1 = best match, higher = worse */
+} pd_match_t;
 
-/* Planetary frequency data */
+/* Full precession report */
 typedef struct {
-    const char *name;       /* planet name */
-    double orbital_period_s; /* orbital period in seconds */
-    double base_hz;         /* raw frequency = 1/period */
-    double audible_hz;      /* octave-transposed to audible range */
-    freq_note_t note;       /* nearest musical note */
-    int octaves_shifted;    /* how many octaves up to reach audible */
-} freq_planet_t;
+    pd_match_t matches[PRECESSION_MAX_MATCHES];
+    int match_count;
+    double best_error_percent;
+    const char *best_culture;
+} pd_report_t;
 
-/* Convert a time period (seconds) to frequency (Hz). */
-double freq_from_period(double period_seconds);
+/* Get number of registered cycles. */
+int pd_cycle_count(void);
 
-/* Convert a frequency to audible range by octave doubling/halving. */
-double freq_to_audible(double hz);
+/* Get cycle by index. */
+pd_cycle_t pd_cycle_get(int index);
 
-/* Find the nearest musical note for a frequency (A440 tuning). */
-freq_note_t freq_to_note(double hz);
+/* Test a single cycle against precession.
+ * If multiplier > 0, test that specific multiple.
+ * If multiplier == 0, find best integer multiple. */
+pd_match_t pd_test(double period_years, int multiplier,
+                    const char *name, const char *culture);
 
-/* Get planetary orbital frequency by index (0=Sun/day, 1=Mercury..8=Neptune, 9=Moon). */
-freq_planet_t freq_planet(int planet_index);
+/* Find best integer multiplier for a period to match precession.
+ * Searches multipliers 1-1000. */
+int pd_best_multiplier(double period_years);
 
-/* Get number of planets in the frequency table. */
-int freq_planet_count(void);
+/* Error percentage: abs(product - precession) / precession * 100 */
+double pd_error(double product_years);
 
-/* Compute musical interval between two frequencies. */
-freq_interval_t freq_interval(double hz_a, double hz_b);
+/* Generate full report: test all registered cycles, rank by accuracy. */
+pd_report_t pd_report(void);
 
-/* Compute interval between two planets by index. */
-freq_interval_t freq_planet_interval(int planet_a, int planet_b);
+/* Get match by rank (1-based). Returns empty match if out of range. */
+pd_match_t pd_report_rank(const pd_report_t *report, int rank);
 
-/* Octave-transpose a frequency by n octaves (positive=up, negative=down). */
-double freq_octave_shift(double hz, int octaves);
+/* Count how many cultures have encodings within a threshold (e.g., 1.0%). */
+int pd_cultures_within(const pd_report_t *report, double max_error_percent);
 
-/* Get the number of semitones between two frequencies. */
-double freq_semitone_distance(double hz_a, double hz_b);
+/* Degrees of precession per year (360 / 25772). */
+double pd_degrees_per_year(void);
 
-/* Get frequency of a specific note (e.g., "A", 4 → 440 Hz). */
-double freq_note_hz(const char *note_name, int octave);
+/* Years per degree of precession (25772 / 360 ≈ 71.59). */
+double pd_years_per_degree(void);
 
-#endif /* TIME_FREQUENCY_H */
+#endif /* TIME_PRECESSION_DETECT_H */
 ```
 
-## Planetary Orbital Periods (seconds)
+## Known Precession Encodings (test data)
 
-| Body | Period | Source |
-|------|--------|--------|
-| Earth day | 86,400 s | definition |
-| Moon (synodic) | 2,551,443 s | 29.530589 days |
-| Mercury | 7,600,537 s | 87.969 days |
-| Venus | 19,414,166 s | 224.701 days |
-| Earth (year) | 31,558,150 s | 365.256 days |
-| Mars | 59,354,294 s | 686.980 days |
-| Jupiter | 374,335,690 s | 4,332.59 days |
-| Saturn | 929,596,608 s | 10,759.22 days |
-| Uranus | 2,651,370,019 s | 30,688.5 days |
-| Neptune | 5,200,418,560 s | 60,182.0 days |
-
-## Known Results (for test validation)
-
-- Earth year → ~31.69 nHz → octave-transposed ≈ 136.1 Hz (C#3, the "Om" frequency)
-- Synodic month → ~210.42 Hz (G#3)
-- Earth day → ~194.18 Hz (G3)
+| Culture | Cycle | Period (years) | Multiplier | Product | Error % |
+|---------|-------|---------------|------------|---------|---------|
+| Mayan | Long Count Great Cycle | 5,125.36 | 5 | 25,626.8 | 0.56% |
+| Hindu | Precessional Age (Yuga subdivision) | 2,160 | 12 | 25,920 | 0.57% |
+| Hebrew | Jubilee × months | 50 × 12 = 600 | 43 | 25,800 | 0.11% |
+| Egyptian | Sothic cycle | 1,461 | 18 | 26,298 | 2.04% |
+| Babylonian | Saros (eclipse) | 18.03 | 1,430 | 25,783 | 0.04% |
+| Chinese | 60-year cycle | 60 | 429 | 25,740 | 0.12% |
+| Greek | Great Year (Plato) | 25,920 | 1 | 25,920 | 0.57% |
+| Buddhist | Kalpa subdivision | 4,320 | 6 | 25,920 | 0.57% |
+| Islamic | 30-year Hijri cycle | 30 | 859 | 25,770 | 0.01% |
 
 ## DONE WHEN
 
-- [ ] cycle_to_frequency converts period to Hz
-- [ ] frequency_to_audible transposes any Hz to 20-20000 range
-- [ ] frequency_to_note identifies nearest A440 note with cents deviation
-- [ ] 10 planetary frequencies with orbital data
-- [ ] Musical interval detection (unison through octave)
-- [ ] Planet-pair interval computation
-- [ ] Known frequencies verified (Earth year ≈ 136.1 Hz, day ≈ 194.18 Hz)
-- [ ] >= 35 tests
+- [ ] Registered cycle table with 9+ cultural cycles
+- [ ] pd_test computes multiplier × period and error vs precession
+- [ ] pd_best_multiplier searches for optimal integer multiple
+- [ ] pd_report generates ranked report of all cycles
+- [ ] Known encodings verified (Mayan 0.56%, Hebrew 0.11%, etc.)
+- [ ] pd_cultures_within counts matches under threshold
+- [ ] Precession constants correct (25,772 years, ~71.59 years/degree)
+- [ ] >= 40 tests
 - [ ] All tests pass with zero warnings
 - [ ] Purity: no malloc, no globals, no side effects
 - [ ] Compiles: `gcc -Wall -Wextra -Werror -std=c11 -pedantic`
@@ -128,7 +126,7 @@ double freq_note_hz(const char *note_name, int octave);
 
 - C11, `-Wall -Wextra -Werror -std=c11 -pedantic`
 - No malloc, no globals, no side effects
-- `#include <math.h>` for log2, pow, fabs, round, fmod
-- `#include <string.h>` for strcmp, snprintf
-- Standalone module (no compile-time deps on orbit.h or biorhythm.h)
-- A440 tuning standard (equal temperament, 12-TET)
+- `#include <math.h>` for fabs, round
+- `#include <string.h>` for strcmp
+- Standalone module (no compile-time deps)
+- All cycle data as `static const` arrays
