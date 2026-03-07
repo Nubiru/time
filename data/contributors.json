@@ -1,8 +1,8 @@
 {
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
-    "last_updated": "2026-03-06",
-    "total_contributors": 110
+    "last_updated": "2026-03-07",
+    "total_contributors": 120
   },
   "contributors": [
     {
@@ -358,7 +358,8 @@
         { "file": "src/systems/hebrew/hebrew.c", "line": 3, "note": "Hebrew calendar implementation (Calendrical Calculations)" },
         { "file": "src/systems/islamic/hijri.h", "line": 4, "note": "Hijri calendar algorithm (Dershowitz & Reingold)" },
         { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" },
-        { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" }
+        { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" },
+        { "file": "src/systems/persian/persian.c", "line": 3, "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)" }
       ]
     },
     {
@@ -381,7 +382,38 @@
         { "file": "src/systems/islamic/hijri.h", "line": 4, "note": "Hijri calendar algorithm (Dershowitz & Reingold)" },
         { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" },
         { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/egyptian/egyptian.c", "line": 1, "note": "Egyptian calendar algorithm (Calendrical Calculations ch. 1)" }
+        { "file": "src/systems/egyptian/egyptian.c", "line": 1, "note": "Egyptian calendar algorithm (Calendrical Calculations ch. 1)" },
+        { "file": "src/systems/persian/persian.c", "line": 3, "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)" }
+      ]
+    },
+    {
+      "id": "ahmad-birashk",
+      "name": "Ahmad Birashk",
+      "category": ["mathematician", "astronomer"],
+      "contributions": [
+        {
+          "work": "A Comparative Calendar of the Iranian, Muslim Lunar, and Christian Eras for Three Thousand Years",
+          "description": "2820-year arithmetic cycle for the Persian Solar Hijri calendar leap year computation",
+          "year": 1993
+        }
+      ],
+      "references": [
+        { "file": "src/systems/persian/persian.c", "line": 5, "note": "2820-year grand cycle algorithm for Persian leap years" }
+      ]
+    },
+    {
+      "id": "kazimierz-borkowski",
+      "name": "Kazimierz M. Borkowski",
+      "category": ["astronomer"],
+      "contributions": [
+        {
+          "work": "EAA Supplement: Persian Calendar",
+          "description": "Refined 2820-year arithmetic cycle for Solar Hijri calendar with proof of accuracy",
+          "year": 1996
+        }
+      ],
+      "references": [
+        { "file": "src/systems/persian/persian.c", "line": 5, "note": "Verification of 2820-year cycle accuracy for Persian calendar" }
       ]
     },
     {
@@ -943,7 +975,40 @@
         { "file": "src/systems/hindu/nakshatra.c", "line": 1, "note": "27 Nakshatras: names, boundaries, rulers, deities, yogataras" },
         { "file": "src/systems/hindu/yuga.h", "line": 1, "note": "4 Yugas: cycle lengths, ratios, Maha-Yuga/Kalpa/Manvantara structure (Ch. 12)" },
         { "file": "src/systems/hindu/yuga.c", "line": 1, "note": "Yuga position calculation, Kali Yuga epoch 3102 BCE" },
-        { "file": "src/systems/hindu/panchanga.c", "line": 1, "note": "Panchanga five-limb system: Tithi, Vara, Yoga, Karana computation" }
+        { "file": "src/systems/hindu/panchanga.c", "line": 1, "note": "Panchanga five-limb system: Tithi, Vara, Yoga, Karana computation" },
+        { "file": ".context/research/digested/040-surya-siddhanta.md", "line": 1, "note": "Digest 040: Primary source — sine table, epicycles, 4-process true longitude, retrogradation, day length" }
+      ]
+    },
+    {
+      "id": "ebenezer-burgess",
+      "name": "Ebenezer Burgess",
+      "born": 1805,
+      "died": 1870,
+      "category": ["translator", "orientalist", "missionary"],
+      "contributions": [
+        {
+          "work": "Translation of the Surya Siddhanta",
+          "description": "First English translation of the Surya Siddhanta with extensive commentary, comparative tables (SS vs Ptolemy vs Modern), and mathematical analysis of Hindu epicyclic astronomy.",
+          "year": 1860
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/040-surya-siddhanta.md", "line": 1, "note": "Primary source for digest 040" }
+      ]
+    },
+    {
+      "id": "phanindralal-gangooly",
+      "name": "Phanindralal Gangooly",
+      "category": ["editor", "scholar"],
+      "contributions": [
+        {
+          "work": "Surya Siddhanta (1935 edition)",
+          "description": "Edited and reprinted Burgess's translation with additional notes and corrections for Calcutta University.",
+          "year": 1935
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/040-surya-siddhanta.md", "line": 1, "note": "Editor of Burgess translation reprint" }
       ]
     },
     {
@@ -1278,7 +1343,32 @@
         { "work": "Aryabhatiya", "description": "Earth circumference 39,968 km (0.27% error). Sidereal year 365.25858 days (3.2-min error). Equation of center 1200 years before Kepler. Sine tables. Earth rotates on axis.", "year": 499 }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Earth circumference, sidereal year, lunar month measurements" }
+        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Earth circumference, sidereal year, lunar month measurements" },
+        { "file": ".context/research/digested/041-bhaskara-aryabhatiya.md", "line": 1, "note": "Digest 041: Complete mathematical chapter via Bhaskara I commentary — sine table, pi, pulverizer, constants" }
+      ]
+    },
+    {
+      "id": "bhaskara-i",
+      "name": "Bhaskara I",
+      "born": 600,
+      "died": 680,
+      "category": ["mathematician", "astronomer", "commentator"],
+      "contributions": [
+        { "work": "Āryabhaṭīyabhāṣya", "description": "Oldest surviving Sanskrit prose commentary on mathematics. 24-entry sine table construction, pi debate (3.1416 vs √10), pulverizer (kuttaka) algorithm with 22 astronomical examples, eclipse geometry, arithmetic series formulas, Rule of Three hierarchy. Aryabhata's constants: civil days 1,577,917,500 per yuga.", "year": 629 }
+      ],
+      "references": [
+        { "file": ".context/research/digested/041-bhaskara-aryabhatiya.md", "line": 1, "note": "Digest 041: Full mathematical chapter BAB.2.1-33" }
+      ]
+    },
+    {
+      "id": "agathe-keller",
+      "name": "Agathe Keller",
+      "category": ["historian", "translator", "mathematician"],
+      "contributions": [
+        { "work": "Expounding the Mathematical Seed", "description": "Academic translation of Bhaskara I's commentary on the Aryabhatiya mathematical chapter. Two volumes: translation + supplements.", "year": 2006 }
+      ],
+      "references": [
+        { "file": ".context/research/digested/041-bhaskara-aryabhatiya.md", "line": 1, "note": "Digest 041: Translator of Bhaskara I commentary" }
       ]
     },
     {
@@ -1792,6 +1882,71 @@
       ],
       "references": [
         { "file": "src/systems/zoroastrian/zoroastrian.c", "line": 7, "note": "Yazdgerdi epoch and calendar structure" }
+      ]
+    },
+    {
+      "id": "nicole-capitaine",
+      "name": "Nicole Capitaine",
+      "born": 1948,
+      "category": ["astronomer"],
+      "contributions": [
+        {
+          "work": "IAU 2006 precession model",
+          "description": "Lead author of the IAU 2006 general precession polynomial adopted as the international standard for precession of the equinoxes. Capitaine, Wallace & Chapront (2003).",
+          "year": 2003
+        }
+      ],
+      "references": [
+        { "file": "src/systems/astronomy/precession.c", "line": 5, "note": "IAU 2006 precession coefficients" }
+      ]
+    },
+    {
+      "id": "jean-chapront",
+      "name": "Jean Chapront",
+      "born": 1937,
+      "died": 2020,
+      "category": ["astronomer"],
+      "contributions": [
+        {
+          "work": "Lunar and planetary ephemerides",
+          "description": "Co-author of IAU 2006 precession model. Developed high-precision lunar theory (ELP/MPP02) and contributed to fundamental astronomical constants.",
+          "year": 2003
+        }
+      ],
+      "references": [
+        { "file": "src/systems/astronomy/precession.c", "line": 5, "note": "IAU 2006 precession polynomial co-author" }
+      ]
+    },
+    {
+      "id": "khedrup-norsang-gyatso",
+      "name": "Khedrup Norsang Gyatso",
+      "born": 1423,
+      "died": 1513,
+      "category": ["astronomer", "scholar", "author"],
+      "contributions": [
+        {
+          "work": "Ornament of Stainless Light",
+          "description": "Comprehensive commentary on the Kalachakra Tantra covering Buddhist cosmology, astronomical time cycles, four mandalas, Mount Meru structure, 25 Kalki chronology, word-numeral encoding, and six elements correspondence. The most detailed Tibetan exposition of Kalachakra external cosmology.",
+          "year": 1483
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/042-kalachakra-cosmology.md", "line": 1, "note": "Digest 042: Kalachakra cosmology and astronomy" }
+      ]
+    },
+    {
+      "id": "gavin-kilty",
+      "name": "Gavin Kilty",
+      "category": ["translator"],
+      "contributions": [
+        {
+          "work": "Translation of Ornament of Stainless Light",
+          "description": "English translation of Khedrup Norsang Gyatso's commentary on the Kalachakra Tantra. Library of Tibetan Classics, Volume 14. Includes appendixes on time measurement, linear measurement, word-numerals, and Kalki chronology.",
+          "year": 2004
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/042-kalachakra-cosmology.md", "line": 1, "note": "Translator of primary source for digest 042" }
       ]
     }
   ]

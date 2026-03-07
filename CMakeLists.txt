@@ -151,6 +151,8 @@ set(SYSTEMS_SOURCES
     src/systems/kabbalah/tree_geometry.c
     # Tarot
     src/systems/tarot/tarot.c
+    # Persian
+    src/systems/persian/persian.c
     # Geology
     src/systems/geology/geo_time.c
     src/systems/geology/climate_history.c
@@ -380,6 +382,9 @@ else()
     # Systems — Tarot
     add_library(time_tarot           OBJECT src/systems/tarot/tarot.c)
 
+    # Systems — Persian
+    add_library(time_persian         OBJECT src/systems/persian/persian.c)
+
     # Systems — Geology
     add_library(time_geo_time        OBJECT src/systems/geology/geo_time.c)
     add_library(time_climate_history OBJECT src/systems/geology/climate_history.c)
@@ -596,6 +601,9 @@ else()
 
     # Tarot tests
     time_add_test(NAME test_tarot           TEST tests/systems/tarot/test_tarot.c   DEPS tarot)
+
+    # Persian tests
+    time_add_test(NAME test_persian         TEST tests/systems/persian/test_persian.c DEPS persian)
 
     # Geology tests
     time_add_test(NAME test_geo_time        TEST tests/systems/test_geo_time.c              DEPS geo_time)
