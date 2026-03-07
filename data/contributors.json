@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 108
+    "total_contributors": 109
   },
   "contributors": [
     {
@@ -397,6 +397,21 @@
       ],
       "references": [
         { "file": "src/systems/coptic/coptic.c", "line": 9, "note": "Coptic calendar feast data reference" }
+      ]
+    },
+    {
+      "id": "yan-naing-aye",
+      "name": "Yan Naing Aye",
+      "category": ["programmer", "mathematician"],
+      "contributions": [
+        {
+          "work": "Myanmar Calendar Algorithm",
+          "description": "Open-source algorithm for Myanmar lunisolar calendar computation with Surya Siddhanta constants",
+          "year": 2013
+        }
+      ],
+      "references": [
+        { "file": "src/systems/myanmar/myanmar.c", "line": 6, "note": "Myanmar calendar intercalation algorithm" }
       ]
     },
     {
