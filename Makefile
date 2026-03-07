@@ -52,8 +52,36 @@ SYSTEMS_SRC = src/systems/astronomy/orbit.c src/systems/astronomy/planets.c \
               src/render/font_atlas.c \
               src/render/glyph_batch.c \
               src/render/color_theory.c \
+              src/render/decan_stars.c \
+              src/render/megalithic.c \
+              src/render/tarot_visual.c \
+              src/render/star_catalog_ext.c \
+              src/render/star_field.c \
+              src/systems/earth/biorhythm.c \
+              src/systems/earth/daylight.c \
+              src/systems/earth/seasons.c \
+              src/systems/earth/ski_resorts.c \
+              src/systems/earth/snow_season.c \
+              src/systems/earth/solar_radiation.c \
+              src/systems/earth/storm_data.c \
+              src/systems/earth/surf_spots.c \
+              src/systems/earth/tidal.c \
+              src/systems/earth/wind_patterns.c \
+              src/systems/earth/tide_predict.c \
+              src/systems/tzolkin/cr_cycle.c \
+              src/systems/unified/calendar_epoch.c \
+              src/systems/unified/calendar_politics.c \
+              src/systems/unified/convergence.c \
+              src/systems/unified/earth_drama.c \
+              src/systems/unified/frequency.c \
+              src/systems/unified/precession_detect.c \
+              src/systems/unified/wisdom.c \
+              src/systems/unified/wisdom_engine.c \
+              src/systems/unified/fun_facts.c \
               src/ui/golden_layout.c \
-              src/ui/theme.c
+              src/ui/theme.c \
+              src/systems/zoroastrian/zoroastrian.c \
+              src/systems/zoroastrian/cosmic_duality.c
 WASM_SRC = $(CORE_SRC) $(RENDER_SRC) $(MATH_SRC) $(SYSTEMS_SRC)
 UNITY = tests/unity/unity.c
 BUILD_DIR = build
@@ -73,7 +101,7 @@ wasm: $(BUILD_DIR)
 	cp web/style.css $(BUILD_DIR)/style.css
 
 # Run all tests
-test: test-vec3 test-mat4 test-julian test-kepler test-sidereal test-camera test-camera-scale test-render-layers test-orbit test-ecliptic test-gregorian test-zodiac test-tzolkin test-planets test-planet-data test-time-hud test-aspects test-chinese test-observer test-houses test-easing test-font-atlas test-cross-validation test-dignity test-lunar test-iching test-arc-geometry test-fmt test-human-design test-planetary-hours test-precession test-solar-events test-numerology test-color test-bezier test-sacred-geometry test-animation test-glyph-layout test-wheel-layout test-color-palette test-card-data test-cosmic-time test-ring-geometry test-aspect-lines test-moon-nodes test-zodiac-glyphs test-projection test-cusp-lines test-galaxy-geometry test-billboard test-date-parse test-ring-data test-astro-wheel-layout test-retrograde test-card-layout test-hexagram-visual test-location-presets test-scale-hud test-system-scale-map test-time-format test-star-catalog test-constellation test-haab test-tzolkin-card test-astro-summary test-atmo-ring test-moon-data test-hebrew test-star-colors test-deep-sky test-hijri test-prayer-times test-bodygraph test-geo-time test-buddhist test-kalpa test-sefirot test-four-worlds test-tree-geometry test-nakshatra test-panchanga test-yuga test-structural-map test-cycle-analysis test-climate-history test-fossil-milestones test-tectonic test-glyph-batch test-golden-layout test-color-theory test-theme
+test: test-vec3 test-mat4 test-julian test-kepler test-sidereal test-camera test-camera-scale test-render-layers test-orbit test-ecliptic test-gregorian test-zodiac test-tzolkin test-planets test-planet-data test-time-hud test-aspects test-chinese test-observer test-houses test-easing test-font-atlas test-cross-validation test-dignity test-lunar test-iching test-arc-geometry test-fmt test-human-design test-planetary-hours test-precession test-solar-events test-numerology test-color test-bezier test-sacred-geometry test-animation test-glyph-layout test-wheel-layout test-color-palette test-card-data test-cosmic-time test-ring-geometry test-aspect-lines test-moon-nodes test-zodiac-glyphs test-projection test-cusp-lines test-galaxy-geometry test-billboard test-date-parse test-ring-data test-astro-wheel-layout test-retrograde test-card-layout test-hexagram-visual test-location-presets test-scale-hud test-system-scale-map test-time-format test-star-catalog test-constellation test-haab test-tzolkin-card test-astro-summary test-atmo-ring test-moon-data test-hebrew test-star-colors test-deep-sky test-hijri test-prayer-times test-bodygraph test-geo-time test-buddhist test-kalpa test-sefirot test-four-worlds test-tree-geometry test-nakshatra test-panchanga test-yuga test-structural-map test-cycle-analysis test-climate-history test-fossil-milestones test-tectonic test-glyph-batch test-golden-layout test-color-theory test-theme test-decan-stars test-megalithic test-tarot-visual test-star-catalog-ext test-biorhythm test-daylight test-seasons test-ski-resorts test-snow-season test-solar-radiation test-storm-data test-surf-spots test-tidal test-wind-patterns test-tide-predict test-cr-cycle test-calendar-epoch test-calendar-politics test-convergence test-earth-drama test-frequency test-precession-detect test-wisdom test-wisdom-engine test-fun-facts test-zoroastrian test-cosmic-duality
 
 # Individual test targets
 test-vec3: $(BUILD_DIR)
@@ -440,6 +468,114 @@ test-theme: $(BUILD_DIR)
 	$(CC) $(CFLAGS) tests/ui/test_theme.c src/ui/theme.c src/ui/golden_layout.c src/render/color_theory.c src/math/color.c $(UNITY) -o $(BUILD_DIR)/test_theme $(LDFLAGS)
 	./$(BUILD_DIR)/test_theme
 
+test-decan-stars: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/render/test_decan_stars.c src/render/decan_stars.c $(UNITY) -o $(BUILD_DIR)/test_decan_stars $(LDFLAGS)
+	./$(BUILD_DIR)/test_decan_stars
+
+test-megalithic: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/render/test_megalithic.c src/render/megalithic.c src/systems/astronomy/solar_events.c $(UNITY) -o $(BUILD_DIR)/test_megalithic $(LDFLAGS)
+	./$(BUILD_DIR)/test_megalithic
+
+test-tarot-visual: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/render/test_tarot_visual.c src/render/tarot_visual.c src/render/color_theory.c src/math/color.c src/systems/kabbalah/tree_geometry.c src/systems/kabbalah/sefirot.c $(UNITY) -o $(BUILD_DIR)/test_tarot_visual $(LDFLAGS)
+	./$(BUILD_DIR)/test_tarot_visual
+
+test-star-catalog-ext: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/render/test_star_catalog_ext.c src/render/star_catalog_ext.c $(UNITY) -o $(BUILD_DIR)/test_star_catalog_ext $(LDFLAGS)
+	./$(BUILD_DIR)/test_star_catalog_ext
+
+test-biorhythm: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_biorhythm.c src/systems/earth/biorhythm.c $(UNITY) -o $(BUILD_DIR)/test_biorhythm $(LDFLAGS)
+	./$(BUILD_DIR)/test_biorhythm
+
+test-daylight: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_daylight.c src/systems/earth/daylight.c src/systems/astronomy/solar_events.c $(UNITY) -o $(BUILD_DIR)/test_daylight $(LDFLAGS)
+	./$(BUILD_DIR)/test_daylight
+
+test-seasons: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_seasons.c src/systems/earth/seasons.c $(UNITY) -o $(BUILD_DIR)/test_seasons $(LDFLAGS)
+	./$(BUILD_DIR)/test_seasons
+
+test-ski-resorts: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_ski_resorts.c src/systems/earth/ski_resorts.c $(UNITY) -o $(BUILD_DIR)/test_ski_resorts $(LDFLAGS)
+	./$(BUILD_DIR)/test_ski_resorts
+
+test-snow-season: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_snow_season.c src/systems/earth/snow_season.c $(UNITY) -o $(BUILD_DIR)/test_snow_season $(LDFLAGS)
+	./$(BUILD_DIR)/test_snow_season
+
+test-solar-radiation: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_solar_radiation.c src/systems/earth/solar_radiation.c $(UNITY) -o $(BUILD_DIR)/test_solar_radiation $(LDFLAGS)
+	./$(BUILD_DIR)/test_solar_radiation
+
+test-storm-data: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_storm_data.c src/systems/earth/storm_data.c $(UNITY) -o $(BUILD_DIR)/test_storm_data $(LDFLAGS)
+	./$(BUILD_DIR)/test_storm_data
+
+test-surf-spots: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_surf_spots.c src/systems/earth/surf_spots.c $(UNITY) -o $(BUILD_DIR)/test_surf_spots $(LDFLAGS)
+	./$(BUILD_DIR)/test_surf_spots
+
+test-tidal: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_tidal.c src/systems/earth/tidal.c $(UNITY) -o $(BUILD_DIR)/test_tidal $(LDFLAGS)
+	./$(BUILD_DIR)/test_tidal
+
+test-wind-patterns: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_wind_patterns.c src/systems/earth/wind_patterns.c $(UNITY) -o $(BUILD_DIR)/test_wind_patterns $(LDFLAGS)
+	./$(BUILD_DIR)/test_wind_patterns
+
+test-tide-predict: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/earth/test_tide_predict.c src/systems/earth/tide_predict.c src/systems/earth/tidal.c src/systems/earth/surf_spots.c src/systems/astronomy/lunar.c src/math/julian.c $(UNITY) -o $(BUILD_DIR)/test_tide_predict $(LDFLAGS)
+	./$(BUILD_DIR)/test_tide_predict
+
+test-cr-cycle: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/tzolkin/test_cr_cycle.c src/systems/tzolkin/cr_cycle.c src/systems/tzolkin/haab.c src/systems/tzolkin/tzolkin.c src/math/julian.c $(UNITY) -o $(BUILD_DIR)/test_cr_cycle $(LDFLAGS)
+	./$(BUILD_DIR)/test_cr_cycle
+
+test-calendar-epoch: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_calendar_epoch.c src/systems/unified/calendar_epoch.c $(UNITY) -o $(BUILD_DIR)/test_calendar_epoch $(LDFLAGS)
+	./$(BUILD_DIR)/test_calendar_epoch
+
+test-calendar-politics: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_calendar_politics.c src/systems/unified/calendar_politics.c $(UNITY) -o $(BUILD_DIR)/test_calendar_politics $(LDFLAGS)
+	./$(BUILD_DIR)/test_calendar_politics
+
+test-convergence: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_convergence.c src/systems/unified/convergence.c $(UNITY) -o $(BUILD_DIR)/test_convergence $(LDFLAGS)
+	./$(BUILD_DIR)/test_convergence
+
+test-earth-drama: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_earth_drama.c src/systems/unified/earth_drama.c src/systems/geology/climate_history.c src/systems/geology/fossil_milestones.c src/systems/geology/geo_time.c $(UNITY) -o $(BUILD_DIR)/test_earth_drama $(LDFLAGS)
+	./$(BUILD_DIR)/test_earth_drama
+
+test-frequency: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_frequency.c src/systems/unified/frequency.c $(UNITY) -o $(BUILD_DIR)/test_frequency $(LDFLAGS)
+	./$(BUILD_DIR)/test_frequency
+
+test-precession-detect: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_precession_detect.c src/systems/unified/precession_detect.c $(UNITY) -o $(BUILD_DIR)/test_precession_detect $(LDFLAGS)
+	./$(BUILD_DIR)/test_precession_detect
+
+test-wisdom: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_wisdom.c src/systems/unified/wisdom.c $(UNITY) -o $(BUILD_DIR)/test_wisdom $(LDFLAGS)
+	./$(BUILD_DIR)/test_wisdom
+
+test-wisdom-engine: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_wisdom_engine.c src/systems/unified/wisdom_engine.c src/systems/unified/wisdom.c $(UNITY) -o $(BUILD_DIR)/test_wisdom_engine $(LDFLAGS)
+	./$(BUILD_DIR)/test_wisdom_engine
+
+test-fun-facts: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_fun_facts.c src/systems/unified/fun_facts.c $(UNITY) -o $(BUILD_DIR)/test_fun_facts $(LDFLAGS)
+	./$(BUILD_DIR)/test_fun_facts
+
+test-zoroastrian: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/zoroastrian/test_zoroastrian.c src/systems/zoroastrian/zoroastrian.c $(UNITY) -o $(BUILD_DIR)/test_zoroastrian $(LDFLAGS)
+	./$(BUILD_DIR)/test_zoroastrian
+
+test-cosmic-duality: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/zoroastrian/test_cosmic_duality.c src/systems/zoroastrian/cosmic_duality.c $(UNITY) -o $(BUILD_DIR)/test_cosmic_duality $(LDFLAGS)
+	./$(BUILD_DIR)/test_cosmic_duality
+
 # Build WASM + kill stale server + serve (one command)
 dev: wasm
 	@kill $$(lsof -t -i:8080) 2>/dev/null || true
@@ -457,4 +593,4 @@ clean:
 $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
-.PHONY: native wasm test test-vec3 test-mat4 test-julian test-kepler test-sidereal test-camera test-camera-scale test-render-layers test-orbit test-ecliptic test-gregorian test-zodiac test-tzolkin test-planets test-planet-data test-time-hud test-aspects test-chinese test-observer test-houses test-easing test-font-atlas test-cross-validation test-dignity test-lunar test-iching test-arc-geometry test-fmt test-human-design test-planetary-hours test-precession test-solar-events test-numerology test-color test-bezier test-sacred-geometry test-animation test-glyph-layout test-wheel-layout test-color-palette test-card-data test-cosmic-time test-ring-geometry test-aspect-lines test-moon-nodes test-zodiac-glyphs test-projection test-cusp-lines test-galaxy-geometry test-billboard test-date-parse test-ring-data test-astro-wheel-layout test-retrograde test-card-layout test-hexagram-visual test-location-presets test-scale-hud test-system-scale-map test-time-format test-star-catalog test-constellation test-haab test-tzolkin-card test-astro-summary test-atmo-ring test-moon-data test-hebrew test-star-colors test-deep-sky test-hijri test-prayer-times test-bodygraph test-geo-time test-buddhist test-kalpa test-sefirot test-four-worlds test-tree-geometry test-nakshatra test-panchanga test-yuga test-structural-map test-cycle-analysis test-climate-history test-fossil-milestones test-tectonic test-glyph-batch test-golden-layout test-color-theory test-theme dev serve clean
+.PHONY: native wasm test test-vec3 test-mat4 test-julian test-kepler test-sidereal test-camera test-camera-scale test-render-layers test-orbit test-ecliptic test-gregorian test-zodiac test-tzolkin test-planets test-planet-data test-time-hud test-aspects test-chinese test-observer test-houses test-easing test-font-atlas test-cross-validation test-dignity test-lunar test-iching test-arc-geometry test-fmt test-human-design test-planetary-hours test-precession test-solar-events test-numerology test-color test-bezier test-sacred-geometry test-animation test-glyph-layout test-wheel-layout test-color-palette test-card-data test-cosmic-time test-ring-geometry test-aspect-lines test-moon-nodes test-zodiac-glyphs test-projection test-cusp-lines test-galaxy-geometry test-billboard test-date-parse test-ring-data test-astro-wheel-layout test-retrograde test-card-layout test-hexagram-visual test-location-presets test-scale-hud test-system-scale-map test-time-format test-star-catalog test-constellation test-haab test-tzolkin-card test-astro-summary test-atmo-ring test-moon-data test-hebrew test-star-colors test-deep-sky test-hijri test-prayer-times test-bodygraph test-geo-time test-buddhist test-kalpa test-sefirot test-four-worlds test-tree-geometry test-nakshatra test-panchanga test-yuga test-structural-map test-cycle-analysis test-climate-history test-fossil-milestones test-tectonic test-glyph-batch test-golden-layout test-color-theory test-theme test-decan-stars test-megalithic test-tarot-visual test-star-catalog-ext test-biorhythm test-daylight test-seasons test-ski-resorts test-snow-season test-solar-radiation test-storm-data test-surf-spots test-tidal test-wind-patterns test-tide-predict test-cr-cycle test-calendar-epoch test-calendar-politics test-convergence test-earth-drama test-frequency test-precession-detect test-wisdom test-wisdom-engine test-fun-facts test-zoroastrian test-cosmic-duality dev serve clean

@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 109
+    "total_contributors": 110
   },
   "contributors": [
     {
@@ -1773,6 +1773,23 @@
       ],
       "references": [
         { "file": ".context/research/digested/036-bryson-short-history.md", "line": 1, "note": "Extinction rate data for fun_facts module" }
+      ]
+    },
+    {
+      "id": "sh-taqizadeh",
+      "name": "Sayyid Hasan Taqizadeh",
+      "born": 1878,
+      "died": 1970,
+      "category": ["historian", "scholar"],
+      "contributions": [
+        {
+          "work": "Various Eras and Calendars Used in the Countries of Islam",
+          "description": "Definitive study of Yazdgerdi calendar epoch (JD 1952063.5 = 16 June 632 CE), 365-day no-leap structure, Zoroastrian calendar mechanics.",
+          "year": 1937
+        }
+      ],
+      "references": [
+        { "file": "src/systems/zoroastrian/zoroastrian.c", "line": 7, "note": "Yazdgerdi epoch and calendar structure" }
       ]
     }
   ]
