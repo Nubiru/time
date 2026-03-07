@@ -86,6 +86,7 @@ set(RENDER_SOURCES
     src/render/moon_pack.c
     src/render/diffraction.c
     src/render/deep_sky_pack.c
+    src/render/milkyway_pack.c
     src/render/earth_globe.c
     src/render/earth_atmosphere.c
     src/render/catalog_ingest.c
@@ -317,6 +318,18 @@ else()
     add_library(time_decan_stars     OBJECT src/render/decan_stars.c)
     add_library(time_megalithic      OBJECT src/render/megalithic.c)
     add_library(time_tarot_visual    OBJECT src/render/tarot_visual.c)
+    add_library(time_card_pack       OBJECT src/render/card_pack.c)
+    add_library(time_catalog_ingest  OBJECT src/render/catalog_ingest.c)
+    add_library(time_diffraction     OBJECT src/render/diffraction.c)
+    add_library(time_earth_atmosphere OBJECT src/render/earth_atmosphere.c)
+    add_library(time_earth_globe     OBJECT src/render/earth_globe.c)
+    add_library(time_hexagram_geometry OBJECT src/render/hexagram_geometry.c)
+    add_library(time_milkyway_pack   OBJECT src/render/milkyway_pack.c)
+    add_library(time_moon_pack       OBJECT src/render/moon_pack.c)
+    add_library(time_planet_pack     OBJECT src/render/planet_pack.c)
+    add_library(time_star_field      OBJECT src/render/star_field.c)
+    add_library(time_text_render     OBJECT src/render/text_render.c)
+    add_library(time_zodiac_pack     OBJECT src/render/zodiac_pack.c)
 
     # Systems — Astronomy
     add_library(time_orbit           OBJECT src/systems/astronomy/orbit.c)
@@ -344,12 +357,15 @@ else()
     add_library(time_tzolkin         OBJECT src/systems/tzolkin/tzolkin.c)
     add_library(time_haab            OBJECT src/systems/tzolkin/haab.c)
     add_library(time_cr_cycle        OBJECT src/systems/tzolkin/cr_cycle.c)
+    add_library(time_dreamspell      OBJECT src/systems/tzolkin/dreamspell.c)
+    add_library(time_tzolkin_board   OBJECT src/systems/tzolkin/tzolkin_board.c)
     add_library(time_iching          OBJECT src/systems/iching/iching.c)
     add_library(time_chinese         OBJECT src/systems/chinese/chinese.c)
     add_library(time_numerology      OBJECT src/systems/numerology/numerology.c)
     add_library(time_human_design    OBJECT src/systems/human_design/human_design.c)
     add_library(time_bodygraph       OBJECT src/systems/human_design/bodygraph.c)
     add_library(time_hebrew          OBJECT src/systems/hebrew/hebrew.c)
+    add_library(time_sabbatical      OBJECT src/systems/hebrew/sabbatical.c)
     add_library(time_hijri           OBJECT src/systems/islamic/hijri.c)
     add_library(time_prayer_times    OBJECT src/systems/islamic/prayer_times.c)
     add_library(time_buddhist        OBJECT src/systems/buddhist/buddhist.c)
@@ -369,6 +385,8 @@ else()
     add_library(time_climate_history OBJECT src/systems/geology/climate_history.c)
     add_library(time_fossil_milestones OBJECT src/systems/geology/fossil_milestones.c)
     add_library(time_tectonic        OBJECT src/systems/geology/tectonic.c)
+    add_library(time_radiometric     OBJECT src/systems/geology/radiometric.c)
+    add_library(time_thermo          OBJECT src/systems/geology/thermo.c)
 
     # Systems — Earth
     add_library(time_biorhythm       OBJECT src/systems/earth/biorhythm.c)
@@ -395,6 +413,41 @@ else()
     add_library(time_wisdom          OBJECT src/systems/unified/wisdom.c)
     add_library(time_wisdom_engine   OBJECT src/systems/unified/wisdom_engine.c)
     add_library(time_fun_facts       OBJECT src/systems/unified/fun_facts.c)
+    add_library(time_achievement     OBJECT src/systems/unified/achievement.c)
+    add_library(time_audio_data      OBJECT src/systems/unified/audio_data.c)
+    add_library(time_calendar_reform OBJECT src/systems/unified/calendar_reform.c)
+    add_library(time_codon_hexagram  OBJECT src/systems/unified/codon_hexagram.c)
+    add_library(time_cultural_stories OBJECT src/systems/unified/cultural_stories.c)
+    add_library(time_knowledge_graph OBJECT src/systems/unified/knowledge_graph.c)
+    add_library(time_number_scanner  OBJECT src/systems/unified/number_scanner.c)
+    add_library(time_phase_space     OBJECT src/systems/unified/phase_space.c)
+    add_library(time_ratio_analysis  OBJECT src/systems/unified/ratio_analysis.c)
+    add_library(time_sacred_numbers  OBJECT src/systems/unified/sacred_numbers.c)
+
+    # Systems — Celtic
+    add_library(time_wheel_of_year   OBJECT src/systems/celtic/wheel_of_year.c)
+
+    # Systems — Chakra
+    add_library(time_chakra          OBJECT src/systems/chakra/chakra.c)
+
+    # Systems — Coptic
+    add_library(time_coptic          OBJECT src/systems/coptic/coptic.c)
+
+    # Systems — Egyptian
+    add_library(time_egyptian        OBJECT src/systems/egyptian/egyptian.c)
+
+    # Systems — Ethiopian
+    add_library(time_ethiopian       OBJECT src/systems/ethiopian/ethiopian.c)
+
+    # Systems — Myanmar
+    add_library(time_myanmar         OBJECT src/systems/myanmar/myanmar.c)
+
+    # Systems — Thai
+    add_library(time_thai_calendar   OBJECT src/systems/thai/thai_calendar.c)
+
+    # Systems — Zoroastrian
+    add_library(time_cosmic_duality  OBJECT src/systems/zoroastrian/cosmic_duality.c)
+    add_library(time_zoroastrian     OBJECT src/systems/zoroastrian/zoroastrian.c)
 
     # Core
     add_library(time_date_parse      OBJECT src/core/date_parse.c)
@@ -417,6 +470,14 @@ else()
     add_library(time_astro_fmt       OBJECT src/ui/astro_fmt.c)
     add_library(time_golden_layout   OBJECT src/ui/golden_layout.c)
     add_library(time_theme           OBJECT src/ui/theme.c)
+    add_library(time_accessibility   OBJECT src/ui/accessibility.c)
+    add_library(time_chinese_fmt     OBJECT src/ui/chinese_fmt.c)
+    add_library(time_hd_card         OBJECT src/ui/hd_card.c)
+    add_library(time_i18n            OBJECT src/ui/i18n.c)
+    add_library(time_iching_card     OBJECT src/ui/iching_card.c)
+    add_library(time_lunar_display   OBJECT src/ui/lunar_display.c)
+    add_library(time_rtl_layout      OBJECT src/ui/rtl_layout.c)
+    add_library(time_scroll_layers   OBJECT src/ui/scroll_layers.c)
 
     # ---------------------------------------------------------------
     # Tests — 116 suites, Unity framework, per-test dependencies
@@ -457,6 +518,7 @@ else()
     time_add_test(NAME test_star_colors     TEST tests/render/test_star_colors.c     DEPS star_colors)
     time_add_test(NAME test_deep_sky        TEST tests/render/test_deep_sky.c        DEPS deep_sky)
     time_add_test(NAME test_deep_sky_pack  TEST tests/render/test_deep_sky_pack.c  DEPS deep_sky_pack deep_sky)
+    time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack galaxy_geometry)
     time_add_test(NAME test_glyph_batch     TEST tests/render/test_glyph_batch.c     DEPS glyph_batch vec3)
     time_add_test(NAME test_color_theory    TEST tests/render/test_color_theory.c    DEPS color_theory color)
     time_add_test(NAME test_star_catalog_ext TEST tests/render/test_star_catalog_ext.c DEPS star_catalog_ext)
@@ -464,6 +526,17 @@ else()
     time_add_test(NAME test_megalithic      TEST tests/render/test_megalithic.c      DEPS megalithic solar_events)
     time_add_test(NAME test_tarot_visual    TEST tests/render/test_tarot_visual.c    DEPS tarot_visual color_theory color tree_geometry sefirot)
     time_add_test(NAME test_moon_data       TEST tests/systems/test_moon_data.c      DEPS moon_data kepler)
+    time_add_test(NAME test_card_pack      TEST tests/render/test_card_pack.c       DEPS card_pack card_layout)
+    time_add_test(NAME test_catalog_ingest TEST tests/render/test_catalog_ingest.c  DEPS catalog_ingest)
+    time_add_test(NAME test_diffraction    TEST tests/render/test_diffraction.c     DEPS diffraction)
+    time_add_test(NAME test_earth_atmosphere TEST tests/render/test_earth_atmosphere.c DEPS earth_atmosphere)
+    time_add_test(NAME test_earth_globe    TEST tests/render/test_earth_globe.c     DEPS earth_globe)
+    time_add_test(NAME test_hexagram_geometry TEST tests/render/test_hexagram_geometry.c DEPS hexagram_geometry iching color_theory color)
+    time_add_test(NAME test_moon_pack      TEST tests/render/test_moon_pack.c       DEPS moon_pack moon_data kepler planets orbit)
+    time_add_test(NAME test_planet_pack    TEST tests/render/test_planet_pack.c     DEPS planet_pack planets orbit kepler planet_data atmo_ring)
+    time_add_test(NAME test_star_field     TEST tests/render/test_star_field.c      DEPS star_field star_catalog star_catalog_ext constellation star_colors)
+    time_add_test(NAME test_text_render    TEST tests/render/test_text_render.c     DEPS text_render)
+    time_add_test(NAME test_zodiac_pack    TEST tests/render/test_zodiac_pack.c     DEPS zodiac_pack ring_geometry cusp_lines aspect_lines billboard color_palette color_theory color vec3 mat4)
 
     # Core tests
     time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
@@ -508,6 +581,18 @@ else()
     time_add_test(NAME test_sefirot         TEST tests/systems/kabbalah/test_sefirot.c      DEPS sefirot)
     time_add_test(NAME test_four_worlds     TEST tests/systems/kabbalah/test_four_worlds.c  DEPS four_worlds)
     time_add_test(NAME test_tree_geometry   TEST tests/systems/kabbalah/test_tree_geometry.c DEPS tree_geometry sefirot)
+    time_add_test(NAME test_sabbatical     TEST tests/systems/hebrew/test_sabbatical.c    DEPS sabbatical hebrew)
+    time_add_test(NAME test_dreamspell     TEST tests/systems/tzolkin/test_dreamspell.c   DEPS dreamspell)
+    time_add_test(NAME test_tzolkin_board  TEST tests/systems/tzolkin/test_tzolkin_board.c DEPS tzolkin_board)
+    time_add_test(NAME test_coptic         TEST tests/systems/coptic/test_coptic.c        DEPS coptic)
+    time_add_test(NAME test_egyptian       TEST tests/systems/egyptian/test_egyptian.c    DEPS egyptian)
+    time_add_test(NAME test_ethiopian      TEST tests/systems/ethiopian/test_ethiopian.c  DEPS ethiopian)
+    time_add_test(NAME test_wheel_of_year  TEST tests/systems/celtic/test_wheel_of_year.c DEPS wheel_of_year)
+    time_add_test(NAME test_chakra         TEST tests/systems/chakra/test_chakra.c        DEPS chakra)
+    time_add_test(NAME test_myanmar        TEST tests/systems/myanmar/test_myanmar.c      DEPS myanmar)
+    time_add_test(NAME test_thai_calendar  TEST tests/systems/thai/test_thai_calendar.c   DEPS thai_calendar)
+    time_add_test(NAME test_cosmic_duality TEST tests/systems/zoroastrian/test_cosmic_duality.c DEPS cosmic_duality)
+    time_add_test(NAME test_zoroastrian    TEST tests/systems/zoroastrian/test_zoroastrian.c   DEPS zoroastrian)
 
     # Tarot tests
     time_add_test(NAME test_tarot           TEST tests/systems/tarot/test_tarot.c   DEPS tarot)
@@ -517,6 +602,8 @@ else()
     time_add_test(NAME test_climate_history TEST tests/systems/geology/test_climate_history.c DEPS climate_history)
     time_add_test(NAME test_fossil_milestones TEST tests/systems/geology/test_fossil_milestones.c DEPS fossil_milestones)
     time_add_test(NAME test_tectonic        TEST tests/systems/geology/test_tectonic.c      DEPS tectonic)
+    time_add_test(NAME test_radiometric    TEST tests/systems/geology/test_radiometric.c   DEPS radiometric)
+    time_add_test(NAME test_thermo         TEST tests/systems/geology/test_thermo.c        DEPS thermo)
 
     # Earth tests
     time_add_test(NAME test_biorhythm       TEST tests/systems/earth/test_biorhythm.c       DEPS biorhythm)
@@ -546,6 +633,16 @@ else()
     time_add_test(NAME test_wisdom          TEST tests/systems/unified/test_wisdom.c          DEPS wisdom)
     time_add_test(NAME test_wisdom_engine   TEST tests/systems/unified/test_wisdom_engine.c   DEPS wisdom_engine wisdom)
     time_add_test(NAME test_fun_facts       TEST tests/systems/unified/test_fun_facts.c       DEPS fun_facts)
+    time_add_test(NAME test_achievement    TEST tests/systems/unified/test_achievement.c    DEPS achievement)
+    time_add_test(NAME test_audio_data     TEST tests/systems/unified/test_audio_data.c     DEPS audio_data frequency)
+    time_add_test(NAME test_calendar_reform TEST tests/systems/unified/test_calendar_reform.c DEPS calendar_reform)
+    time_add_test(NAME test_codon_hexagram TEST tests/systems/unified/test_codon_hexagram.c DEPS codon_hexagram)
+    time_add_test(NAME test_cultural_stories TEST tests/systems/unified/test_cultural_stories.c DEPS cultural_stories)
+    time_add_test(NAME test_knowledge_graph TEST tests/systems/unified/test_knowledge_graph.c DEPS knowledge_graph)
+    time_add_test(NAME test_number_scanner TEST tests/systems/unified/test_number_scanner.c DEPS number_scanner)
+    time_add_test(NAME test_phase_space    TEST tests/systems/unified/test_phase_space.c    DEPS phase_space)
+    time_add_test(NAME test_ratio_analysis TEST tests/systems/unified/test_ratio_analysis.c DEPS ratio_analysis)
+    time_add_test(NAME test_sacred_numbers TEST tests/systems/unified/test_sacred_numbers.c DEPS sacred_numbers)
 
     # UI tests
     time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -566,6 +663,15 @@ else()
         DEPS astro_summary astro_fmt zodiac dignity aspects planets orbit kepler)
     time_add_test(NAME test_golden_layout   TEST tests/ui/test_golden_layout.c   DEPS golden_layout)
     time_add_test(NAME test_theme           TEST tests/ui/test_theme.c           DEPS theme golden_layout color_theory color)
+    time_add_test(NAME test_accessibility  TEST tests/ui/test_accessibility.c   DEPS accessibility)
+    time_add_test(NAME test_astro_fmt      TEST tests/ui/test_astro_fmt.c       DEPS astro_fmt)
+    time_add_test(NAME test_chinese_fmt    TEST tests/ui/test_chinese_fmt.c     DEPS chinese_fmt chinese julian)
+    time_add_test(NAME test_hd_card        TEST tests/ui/test_hd_card.c         DEPS hd_card human_design)
+    time_add_test(NAME test_i18n           TEST tests/ui/test_i18n.c            DEPS i18n)
+    time_add_test(NAME test_iching_card    TEST tests/ui/test_iching_card.c     DEPS iching_card hexagram_visual iching)
+    time_add_test(NAME test_lunar_display  TEST tests/ui/test_lunar_display.c   DEPS lunar_display lunar julian zodiac)
+    time_add_test(NAME test_rtl_layout     TEST tests/ui/test_rtl_layout.c      DEPS rtl_layout)
+    time_add_test(NAME test_scroll_layers  TEST tests/ui/test_scroll_layers.c   DEPS scroll_layers)
 
     # Cross-system validation test
     time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validation.c
