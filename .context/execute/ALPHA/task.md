@@ -1,138 +1,148 @@
-# Task: Tarot Visual Data
+# Task: Star Field GPU Data
 
 **Agent**: ALPHA
-**Roadmap Reference**: Track 44.2 — "Agent: Tarot Visual Data (ALPHA)"
+**Roadmap Reference**: Track 7.7 — "Star Point Sprite Shader" (data prep component)
 **Date**: 2026-03-07
-**Status**: CLAIMED
+**Status**: COMPLETE
 
 ## Goal
 
-Pure visual data module providing per-card color schemes, symbolic descriptions, geometric motifs, and Tree of Life path positions for the 22 Major Arcana. Uses the Golden Dawn/Crowley 777 color scale system (King/Queen/Prince/Princess scales) and card frame proportions based on the golden ratio. Foundational data for Track 44.3 (Tarot Display) and future card rendering.
+Pure data module that packs the star_catalog (195 stars) and star_catalog_ext (400 stars) into GPU-ready interleaved vertex arrays. Also packs constellation line data into a separate vertex array. Includes star point-sprite shader source and constellation line shader source as static const strings. This module bridges our pure star data to the rendering pipeline — it produces the exact float arrays that `glBufferData` will consume.
+
+This is the HIGHEST PRIORITY visual task. Stars on screen transforms the scene from "demo" to "art."
 
 ## READ FIRST
 
-- `src/systems/kabbalah/tree_geometry.h` — tree_path_t, tree_path_for_tarot(), tree_layout_t
-- `src/render/color_theory.h` — ct_system_primary(CT_SYSTEM_KABBALAH), ct_mood_color()
-- `src/ui/golden_layout.h` — gl_card_dimensions(), GL_PHI
-- `src/math/color.h` — color_rgb_t, color_hsl_t
+- `src/render/star_catalog.h` — star_entry_t, star_to_ecliptic_xyz(), star_bv_to_rgb(), star_mag_to_size()
+- `src/render/star_catalog_ext.h` — ext_star_t, ext_star_get(), ext_star_count(), tier system
+- `src/render/star_colors.h` — star_color_from_bv() (Ballesteros formula, more accurate)
+- `src/render/constellation.h` — constellation_t, cline_t, constellation_get()
+- `src/render/render_layers.h` — LAYER_STARS, layer opacity gating
 
 ## Files to Create
 
-- `src/render/tarot_visual.h`
-- `src/render/tarot_visual.c`
-- `tests/render/test_tarot_visual.c`
+- `src/render/star_field.h`
+- `src/render/star_field.c`
+- `tests/render/test_star_field.c`
 
 ## API
 
 ```c
-#ifndef TIME_TAROT_VISUAL_H
-#define TIME_TAROT_VISUAL_H
+#ifndef TIME_STAR_FIELD_H
+#define TIME_STAR_FIELD_H
 
-#include "../math/color.h"
+/* Obliquity of ecliptic for coordinate conversion */
+#define STAR_FIELD_OBLIQUITY 23.4393f
 
-#define TV_MAJOR_COUNT 22
-#define TV_COLOR_SCALES 4
+/* Vertex layout: position (vec3) + color (vec3) + size (float) = 7 floats per star */
+#define STAR_VERTEX_FLOATS 7
+#define STAR_VERTEX_STRIDE (STAR_VERTEX_FLOATS * (int)sizeof(float))
 
-/* Color scale types (Golden Dawn / Crowley 777) */
-typedef enum {
-    TV_SCALE_KING = 0,    /* Atziluth (archetypal world) — bright/pure */
-    TV_SCALE_QUEEN,       /* Briah (creative world) — rich/deep */
-    TV_SCALE_PRINCE,      /* Yetzirah (formative world) — muted/complex */
-    TV_SCALE_PRINCESS,    /* Assiah (material world) — dark/earthen */
-    TV_SCALE_COUNT
-} tv_scale_t;
+/* Constellation line vertex: position (vec3) + color (vec4) = 7 floats per endpoint */
+#define CLINE_VERTEX_FLOATS 7
+#define CLINE_VERTEX_STRIDE (CLINE_VERTEX_FLOATS * (int)sizeof(float))
 
-/* Geometric motif type for card symbols */
-typedef enum {
-    TV_MOTIF_CIRCLE = 0,      /* unity, wholeness, spirit */
-    TV_MOTIF_TRIANGLE,        /* trinity, fire, ascent */
-    TV_MOTIF_SQUARE,          /* stability, earth, matter */
-    TV_MOTIF_HEXAGRAM,        /* as above so below */
-    TV_MOTIF_PENTAGRAM,       /* five elements, human form */
-    TV_MOTIF_SPIRAL,          /* evolution, growth, phi */
-    TV_MOTIF_CROSS,           /* four directions, balance */
-    TV_MOTIF_LEMNISCATE,      /* infinity, eternal return */
-    TV_MOTIF_CRESCENT,        /* moon, receptivity, change */
-    TV_MOTIF_LIGHTNING,       /* sudden force, revelation */
-    TV_MOTIF_RAYS,            /* radiation, glory, sun */
-    TV_MOTIF_WAVE,            /* flow, water, emotion */
-    TV_MOTIF_COLUMN,          /* pillar, structure, path */
-    TV_MOTIF_EYE,             /* awareness, watchfulness */
-    TV_MOTIF_ANKH,            /* life, eternity */
-    TV_MOTIF_COUNT
-} tv_motif_t;
-
-/* Visual data for one Major Arcanum */
+/* Star field vertex data — packed and ready for GPU upload */
 typedef struct {
-    int number;                       /* 0-21 (Fool=0, World=21) */
-    const char *name;                 /* "The Fool", "The Magician", etc. */
-    const char *thoth_name;           /* Crowley's title (e.g., "The Magus") */
-    color_rgb_t colors[TV_COLOR_SCALES]; /* King/Queen/Prince/Princess scale colors */
-    tv_motif_t primary_motif;         /* dominant geometric symbol */
-    tv_motif_t secondary_motif;       /* supporting geometric symbol */
-    const char *symbol_desc;          /* brief symbolic description */
-    int tree_path_index;              /* index into tree_geometry paths (0-21) */
-    const char *attribution;          /* zodiac/planet/element attribution */
-} tv_major_t;
+    int vertex_count;        /* number of stars packed */
+    int float_count;         /* vertex_count * STAR_VERTEX_FLOATS */
+    int tier_offsets[4];     /* starting vertex index per brightness tier */
+    int tier_counts[4];      /* vertex count per tier */
+} star_field_info_t;
 
-/* Card frame geometry (golden ratio proportions) */
+/* Constellation line vertex data info */
 typedef struct {
-    float width;          /* card width */
-    float height;         /* card height = width * phi */
-    float border;         /* border thickness */
-    float symbol_radius;  /* central symbol circle radius */
-    float title_y;        /* title text Y position */
-    float number_y;       /* number display Y position */
-} tv_card_frame_t;
+    int line_count;          /* number of line segments packed */
+    int vertex_count;        /* line_count * 2 */
+    int float_count;         /* vertex_count * CLINE_VERTEX_FLOATS */
+    int zodiac_line_count;   /* first N lines are zodiac constellations (brighter) */
+} constellation_line_info_t;
 
-/* Get visual data for a Major Arcanum by number (0-21).
- * Returns struct with number=-1 for invalid. */
-tv_major_t tv_major_get(int number);
+/* Pack all stars into GPU-ready vertex array.
+ * Combines star_catalog (195) + star_catalog_ext (400), deduplicating overlapping stars.
+ * Stars sorted by magnitude (brightest first).
+ * base_point_size: size for magnitude 0 star (suggested: 8.0).
+ * sphere_radius: radius of celestial sphere in scene units (suggested: 100.0).
+ * Writes into caller-provided buffer. Returns star count written.
+ * Buffer must be at least max_stars * STAR_VERTEX_FLOATS floats. */
+int star_field_pack(float *out, int max_stars, float base_point_size,
+                    float sphere_radius);
 
-/* Get Major Arcanum count (always 22). */
-int tv_major_count(void);
+/* Get star field metadata (tier offsets, counts) after packing.
+ * star_count: value returned by star_field_pack(). */
+star_field_info_t star_field_info(int star_count);
 
-/* Get color for a card in a specific scale.
- * Returns black for invalid inputs. */
-color_rgb_t tv_card_color(int number, tv_scale_t scale);
+/* Pack constellation lines into GPU-ready vertex array.
+ * Resolves star indices to 3D positions via star_to_ecliptic_xyz().
+ * Zodiac constellations packed first with higher alpha.
+ * base_alpha: opacity for non-zodiac lines (suggested: 0.25).
+ * zodiac_alpha: opacity for zodiac lines (suggested: 0.4).
+ * sphere_radius: must match star_field_pack radius.
+ * Buffer must be at least max_lines * 2 * CLINE_VERTEX_FLOATS floats.
+ * Returns line count written. */
+int constellation_lines_pack(float *out, int max_lines, float base_alpha,
+                             float zodiac_alpha, float sphere_radius);
 
-/* Get the primary color for a card (King scale). */
-color_rgb_t tv_card_primary(int number);
+/* Get constellation line metadata after packing.
+ * line_count: value returned by constellation_lines_pack(). */
+constellation_line_info_t constellation_lines_info(int line_count);
 
-/* Get geometric motif name as string. */
-const char *tv_motif_name(tv_motif_t motif);
+/* Total star count available (both catalogs combined, deduplicated). */
+int star_field_total_count(void);
 
-/* Get color scale name as string. */
-const char *tv_scale_name(tv_scale_t scale);
+/* Star point-sprite vertex shader source (GLSL ES 3.00).
+ * Uniforms: u_mvp (mat4), u_scale_factor (float).
+ * Attributes: a_position (vec3, loc 0), a_color (vec3, loc 1), a_size (float, loc 2).
+ * Returns pointer to static const null-terminated string. */
+const char *star_field_vert_source(void);
 
-/* Compute card frame geometry for a given width.
- * Uses golden ratio for all proportions. */
-tv_card_frame_t tv_card_frame(float width);
+/* Star point-sprite fragment shader source (GLSL ES 3.00).
+ * Circular dot with soft radial falloff via gl_PointCoord. */
+const char *star_field_frag_source(void);
 
-/* Get the Tree of Life path position for a card.
- * Returns normalized (x, y) coordinates on the Tree.
- * The position is the midpoint of the path connecting two Sefirot.
- * Writes to out_x and out_y. Returns 1 on success, 0 on invalid. */
-int tv_tree_position(int number, float *out_x, float *out_y);
+/* Constellation line vertex shader source (GLSL ES 3.00).
+ * Uniforms: u_mvp (mat4). Attributes: a_position (vec3, loc 0), a_color (vec4, loc 1). */
+const char *constellation_line_vert_source(void);
 
-/* Get all 22 Major Arcana tree positions for rendering.
- * Writes up to max_out (x, y) pairs.
- * Returns count written. */
-int tv_tree_positions_all(float *out_x, float *out_y, int max_out);
+/* Constellation line fragment shader source (GLSL ES 3.00).
+ * Per-vertex RGBA passthrough. */
+const char *constellation_line_frag_source(void);
 
-#endif /* TIME_TAROT_VISUAL_H */
+#endif /* TIME_STAR_FIELD_H */
 ```
+
+## Shader Specifications
+
+### Star Vertex Shader (GLSL ES 3.00)
+- Transform position by MVP matrix
+- Set `gl_PointSize` = `a_size * u_scale_factor / gl_Position.w` (perspective scaling)
+- Clamp gl_PointSize to reasonable range (1.0 to 32.0)
+- Pass color to fragment shader
+
+### Star Fragment Shader (GLSL ES 3.00)
+- Use `gl_PointCoord` to compute distance from point center
+- Circular shape: `alpha = 1.0 - smoothstep(0.5, 1.0, dist * 2.0)`
+- Multiply alpha by vertex color, output RGBA
+- Designed for additive blending (GL_SRC_ALPHA, GL_ONE)
+
+### Constellation Line Vertex Shader
+- Transform position by MVP matrix
+- Pass vec4 color to fragment
+
+### Constellation Line Fragment Shader
+- Output per-vertex RGBA color directly
 
 ## DONE WHEN
 
-- [ ] 22 Major Arcana with Thoth names, 4 color scales, motifs, symbol descriptions
-- [ ] Color scales derived from color_theory.h system palette (not hardcoded RGB)
-- [ ] Card frame proportions use golden ratio via golden_layout.h constants
-- [ ] Tree of Life positions computed from tree_geometry.h path data
-- [ ] `tv_card_color()` returns correct scale color for any card
-- [ ] `tv_card_frame()` produces phi-proportioned frame geometry
-- [ ] `tv_tree_position()` returns midpoint of Tree path for each card
-- [ ] >= 30 tests covering: data integrity, color scales, frame geometry, tree positions, motif names, edge cases
+- [ ] `star_field_pack()` produces correct interleaved vertex data for all available stars
+- [ ] Stars sorted by magnitude, tier offsets match ext catalog tier boundaries
+- [ ] Deduplication removes stars appearing in both catalogs (RA/Dec proximity < 0.01 deg)
+- [ ] `constellation_lines_pack()` resolves star indices to 3D ecliptic positions
+- [ ] Zodiac constellations (first 12) packed first with higher alpha
+- [ ] All 4 shader source strings are syntactically valid GLSL ES 3.00
+- [ ] Shader sources declare correct attribute locations, uniform names, precision
+- [ ] `star_field_total_count()` returns correct deduplicated count
+- [ ] >= 35 tests covering: vertex packing correctness, tier offsets, deduplication, constellation line resolution, shader string presence, metadata, edge cases (invalid index, zero buffer)
 - [ ] All tests pass with zero warnings
 - [ ] Purity: no malloc, no globals, no side effects
 - [ ] Compiles: `gcc -Wall -Wextra -Werror -std=c11 -pedantic`
@@ -140,11 +150,13 @@ int tv_tree_positions_all(float *out_x, float *out_y, int max_out);
 ## Constraints
 
 - C11, `-Wall -Wextra -Werror -std=c11 -pedantic`
-- `#define PI 3.14159265358979323846` (no M_PI)
-- No malloc, no globals, no side effects
-- USE THE STYLE SYSTEM: Colors from ct_mood_color() or ct_system_primary(CT_SYSTEM_KABBALAH), frame sizes from GL_PHI constants
-- Depends on: color.h (types only), tree_geometry.h (path positions), golden_layout.h (phi constants)
-- All card data as static const
-- Thoth deck names from Crowley "Book of Thoth"
-- Golden Dawn color scale attributions from Crowley 777
-- Attribution: Aleister Crowley (Book of Thoth, 777), Lady Frieda Harris (Thoth deck art)
+- No malloc — caller provides output buffers (stack or static)
+- No globals, no side effects
+- Depends on: star_catalog.h, star_catalog_ext.h, star_colors.h, constellation.h
+- Shader strings as `static const char []` in the .c file
+- GLSL ES 3.00 (WebGL2 target) — must include `#version 300 es` and `precision` qualifiers
+- Positions on celestial sphere at configurable radius (default 100 scene units)
+- Use `star_color_from_bv()` from star_colors.h (Ballesteros formula, physically accurate)
+- Interleaved vertex layout for cache coherence
+- Constellation line colors: cool blue-white (0.6, 0.7, 0.9, alpha)
+- This module does NOT call any GL functions — only produces float arrays + shader strings

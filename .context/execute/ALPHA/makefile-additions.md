@@ -1,13 +1,13 @@
 ## Add to WASM_SRC:
-src/render/tarot_visual.c
+src/render/star_field.c
 
 ## New test target:
-test-tarot-visual: $(BUILD_DIR)
-	$(CC) $(CFLAGS) tests/render/test_tarot_visual.c src/render/tarot_visual.c src/render/color_theory.c src/math/color.c src/systems/kabbalah/tree_geometry.c src/systems/kabbalah/sefirot.c $(UNITY) -o $(BUILD_DIR)/test_tarot_visual $(LDFLAGS)
-	./$(BUILD_DIR)/test_tarot_visual
+test-star-field: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/render/test_star_field.c src/render/star_field.c src/render/star_catalog.c src/render/star_catalog_ext.c src/render/star_colors.c src/render/constellation.c $(UNITY) -o $(BUILD_DIR)/test_star_field $(LDFLAGS)
+	./$(BUILD_DIR)/test_star_field
 
 ## Add to test: dependency list:
-test-tarot-visual
+test-star-field
 
 ## Add to .PHONY:
-test-tarot-visual
+test-star-field
