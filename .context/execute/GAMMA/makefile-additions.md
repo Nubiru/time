@@ -11,6 +11,7 @@ src/systems/earth/ski_resorts.c
 src/systems/earth/storm_data.c
 src/systems/earth/snow_season.c
 src/systems/earth/biorhythm.c
+src/systems/unified/codon_hexagram.c
 
 ## New test targets:
 test-four-worlds: $(BUILD_DIR)
@@ -57,8 +58,12 @@ test-biorhythm: $(BUILD_DIR)
 	$(CC) $(CFLAGS) tests/systems/earth/test_biorhythm.c src/systems/earth/biorhythm.c $(UNITY) -o $(BUILD_DIR)/test_biorhythm $(LDFLAGS)
 	./$(BUILD_DIR)/test_biorhythm
 
+test-codon-hexagram: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_codon_hexagram.c src/systems/unified/codon_hexagram.c $(UNITY) -o $(BUILD_DIR)/test_codon_hexagram $(LDFLAGS)
+	./$(BUILD_DIR)/test_codon_hexagram
+
 ## Add to test: dependency list:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram
 
 ## Add to .PHONY:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram

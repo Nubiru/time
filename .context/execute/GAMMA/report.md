@@ -2,52 +2,56 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-06
-**Task**: Biological Clocks
-**Roadmap Reference**: Track 27.2 — "Agent: Biological Clocks (Agent B)"
+**Task**: DNA-Hexagram Structural Map
+**Roadmap Reference**: Track 27.4 — "Agent: DNA-Hexagram Structural Map (Agent B)"
 
 ## Files Created
-- `src/systems/earth/biorhythm.h` — Header with bio_rhythm_t, bio_correlation_t, 8 cycle types, 11 functions
-- `src/systems/earth/biorhythm.c` — Pure data + computation: 8 rhythms, 6 bio-astro correlations, sacred number matching
-- `tests/systems/earth/test_biorhythm.c` — 45 tests
+- `src/systems/unified/codon_hexagram.h` — Header with rna_base_t, codon_hexagram_t, 15 public functions
+- `src/systems/unified/codon_hexagram.c` — Pure data + computation: 64 codons, Schonberger binary mapping, King Wen lookup
+- `tests/systems/unified/test_codon_hexagram.c` — 67 tests
 
 ## API Summary
 ```c
-bio_rhythm_t biorhythm_get(bio_cycle_t type);
-int biorhythm_cycle_count(void);
-double biorhythm_heartbeats(double hours);
-double biorhythm_breaths(double hours);
-double biorhythm_beats_per_day(double bpm);
-double biorhythm_breaths_per_day(double rate_per_min);
-bio_correlation_t biorhythm_correlation_get(int index);
-int biorhythm_correlation_count(void);
-int biorhythm_match_sacred(double bio_value, double astro_value);
-double biorhythm_lifetime_heartbeats(double years);
-double biorhythm_lifetime_breaths(double years);
-const char *biorhythm_cycle_name(bio_cycle_t type);
+codon_hexagram_t codon_hexagram_get(int codon_index);
+int codon_from_bases(rna_base_t b1, rna_base_t b2, rna_base_t b3);
+int codon_to_hexagram(int codon_index);
+const char *hexagram_to_amino_acid(int hexagram_number);
+const char *codon_amino_acid(int codon_index);
+char codon_amino_letter(int codon_index);
+int codon_to_binary(int codon_index);
+int binary_to_codon(int binary_value);
+int codon_count(void);
+int amino_acid_distinct_count(void);
+int amino_acid_degeneracy(const char *amino_acid);
+const char *rna_base_name(rna_base_t base);
+char rna_base_letter(rna_base_t base);
+int codon_stop_count(void);
+int codon_start_count(void);
 ```
 
 ## Test Results
-45 Tests, 0 Failures, 0 Ignored.
+67 Tests, 0 Failures, 0 Ignored.
 
 ## Compile Command
 ```
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/earth/test_biorhythm.c src/systems/earth/biorhythm.c tests/unity/unity.c -o build/test_biorhythm -lm
+gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/unified/test_codon_hexagram.c src/systems/unified/codon_hexagram.c tests/unity/unity.c -o build/test_codon_hexagram -lm
 ```
 
 ## Checker Result
-PASS — Compilation clean, 45 tests, purity clean, no regressions.
+PASS — Compilation clean, 67 tests, purity clean (P1-P5), naming correct, no duplication, no regressions.
 
 ## Maintainer Result
-PASS — All checks pass.
+WARN — Code quality excellent. Schonberger added to contributors.json (was missing). No other issues.
 
 ## Makefile Additions
 See makefile-additions.md
 
 ## Attribution
-Standard physiological data (public domain). Sacred number correlations from comparative studies.
+Martin Schonberger (1973), "The I Ching and the Genetic Code" — added to data/contributors.json.
+Standard genetic code (public domain biology, NCBI).
 
 ## Knowledge Gaps
 No gaps.
 
 ## Next Candidate
-Track 27.4 — DNA-Hexagram Structural Map (codon↔hexagram binary mapping)
+Track 29.1 — Historical Achievement Data (ancient astronomers' precision vs modern values)

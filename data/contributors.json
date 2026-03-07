@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 68
+    "total_contributors": 69
   },
   "contributors": [
     {
@@ -1164,6 +1164,23 @@
       ],
       "references": [
         { "file": "src/systems/earth/solar_radiation.c", "line": 177, "note": "Lapse rate -6.5 C/km for elevation temperature correction" }
+      ]
+    },
+    {
+      "id": "martin-schonberger",
+      "name": "Martin Schönberger",
+      "born": 1911,
+      "died": 1986,
+      "category": ["physician", "researcher"],
+      "contributions": [
+        {
+          "work": "The I Ching and the Genetic Code",
+          "description": "First systematic mapping of 64 DNA codons to 64 I Ching hexagrams via binary correspondence. Both systems enumerate 2^6=64 states: codon=3 bases x 2 bits, hexagram=6 lines x 1 bit.",
+          "year": 1973
+        }
+      ],
+      "references": [
+        { "file": "src/systems/unified/codon_hexagram.c", "line": 1, "note": "Schonberger binary mapping: RNA bases to yin/yang lines (U=00, C=01, A=10, G=11)" }
       ]
     }
   ]
