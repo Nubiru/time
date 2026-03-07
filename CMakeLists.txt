@@ -162,6 +162,8 @@ set(SYSTEMS_SOURCES
     src/systems/bahai/bahai.c
     # Japanese
     src/systems/japanese/japanese.c
+    # Aztec
+    src/systems/aztec/aztec.c
     # Geology
     src/systems/geology/geo_time.c
     src/systems/geology/climate_history.c
@@ -403,6 +405,9 @@ else()
     # Systems — Japanese
     add_library(time_japanese        OBJECT src/systems/japanese/japanese.c)
 
+    # Systems — Aztec
+    add_library(time_aztec           OBJECT src/systems/aztec/aztec.c)
+
     # Systems — Geology
     add_library(time_geo_time        OBJECT src/systems/geology/geo_time.c)
     add_library(time_climate_history OBJECT src/systems/geology/climate_history.c)
@@ -631,6 +636,9 @@ else()
 
     # Japanese tests
     time_add_test(NAME test_japanese        TEST tests/systems/japanese/test_japanese.c DEPS japanese)
+
+    # Aztec tests
+    time_add_test(NAME test_aztec           TEST tests/systems/aztec/test_aztec.c      DEPS aztec)
 
     # Geology tests
     time_add_test(NAME test_geo_time        TEST tests/systems/test_geo_time.c              DEPS geo_time)

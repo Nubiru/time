@@ -359,7 +359,8 @@
         { "file": "src/systems/islamic/hijri.h", "line": 4, "note": "Hijri calendar algorithm (Dershowitz & Reingold)" },
         { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" },
         { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/persian/persian.c", "line": 3, "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)" }
+        { "file": "src/systems/persian/persian.c", "line": 3, "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)" },
+        { "file": "src/systems/aztec/aztec.c", "line": 1, "note": "Aztec calendar correlation (GMT 584283, Calendrical Calculations)" }
       ]
     },
     {
@@ -383,7 +384,8 @@
         { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" },
         { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" },
         { "file": "src/systems/egyptian/egyptian.c", "line": 1, "note": "Egyptian calendar algorithm (Calendrical Calculations ch. 1)" },
-        { "file": "src/systems/persian/persian.c", "line": 3, "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)" }
+        { "file": "src/systems/persian/persian.c", "line": 3, "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)" },
+        { "file": "src/systems/aztec/aztec.c", "line": 1, "note": "Aztec calendar correlation (GMT 584283, Calendrical Calculations)" }
       ]
     },
     {
