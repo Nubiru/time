@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 96
+    "total_contributors": 97
   },
   "contributors": [
     {
@@ -1555,6 +1555,22 @@
       ],
       "references": [
         { "file": "src/render/decan_stars.c", "line": 8, "note": "Decan-star correlation survey" }
+      ]
+    },
+    {
+      "id": "taqizadeh",
+      "name": "Sayyid Hasan Taqizadeh",
+      "born": 1878,
+      "category": ["historian", "iranologist"],
+      "contributions": [
+        {
+          "work": "Old Iranian Calendars",
+          "description": "Definitive scholarship on the Zoroastrian Yazdgerdi calendar: epoch, month/day names, Gatha days, seasonal festivals, and calendar reform history.",
+          "year": 1938
+        }
+      ],
+      "references": [
+        { "file": "src/systems/zoroastrian/zoroastrian.c", "line": 1, "note": "Yazdgerdi calendar structure, epoch, month/day naming conventions" }
       ]
     }
   ]
