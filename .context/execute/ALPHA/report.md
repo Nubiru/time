@@ -2,45 +2,43 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-07
-**Task**: Style Retrofit — Render Pipeline Visual Constants
-**Roadmap Reference**: Track 37.4 — "Style Retrofit — Hardcoded Value Elimination"
+**Task**: Megalithic Alignments
+**Roadmap Reference**: Track 41.2 — "Agent: Megalithic Alignments (ALPHA)"
 
-## Files Modified
-- `src/render/color_palette.c` — Replaced 57 hardcoded RGB triples with color_theory.h derivations
-- `src/render/aspect_lines.c` — Removed duplicate ASPECT_COLORS array, delegates to color_palette.h
-- `src/render/render_layers.c` — Replaced 3 hardcoded opacity values with gl_opacity_at() phi-cascade
-- `tests/render/test_color_palette.c` — Added 12 new style-retrofit tests (total 36)
-- `tests/render/test_aspect_lines.c` — Updated color assertions from exact to behavioral
+## Files Created
+- `src/render/megalithic.h` — Header: 3 types, 11 functions for site catalog + azimuth computation
+- `src/render/megalithic.c` — 5-site megalithic catalog with alignment verification
+- `tests/render/test_megalithic.c` — 45 tests
 
-## API Summary (unchanged)
-- `color_zodiac_sign(int sign)` → color_rgb_t — 12 zodiac colors from ct_mood_color()
-- `color_zodiac_element(int element)` → color_rgb_t — 4 element colors from mood HSL
-- `color_planet(int planet_id)` → color_rgb_t — 8 planet colors from system palettes + moods
-- `color_aspect(int aspect_type)` → color_rgb_t — 5 aspect colors from system palettes + moods
-- `color_tzolkin_family(int family)` → color_rgb_t — 4 Tzolkin from ct_system_primary/secondary/accent
-- `color_chinese_element(int element)` → color_rgb_t — 5 Chinese from ct_system_primary/secondary/accent
+## API Summary
+- `meg_site_count()` → int — number of sites (5)
+- `meg_site_get(int index)` → meg_site_t — site data by index
+- `meg_event_name(meg_event_t)` → const char* — event type name
+- `meg_sunrise_azimuth(lat, dec)` → double — sunrise azimuth from north
+- `meg_sunset_azimuth(lat, dec)` → double — sunset azimuth (360 - sunrise)
+- `meg_lunar_standstill_azimuth(lat, north)` → double — moonrise/set at standstill
+- `meg_solstice_declination(summer)` → double — ±23.4393°
+- `meg_equinox_declination()` → double — 0.0°
+- `meg_check_alignment(index, jd)` → meg_alignment_t — check if aligned
+- `meg_aligned_now(jd, out, max)` → int — count of currently aligned sites
+- `meg_days_to_alignment(index, jd)` → int — days until next alignment
 
-## Derivation Strategy
-- **Tzolkin**: Red/White/Blue = exact system palette match via ct_to_srgb(ct_system_*). Yellow = 4th golden-palette entry.
-- **Chinese**: Wood/Fire/Earth = exact system palette match. Metal = NEUTRAL mood (L=0.85). Water = WISDOM mood (S=0.18, L=0.17).
-- **Zodiac**: Per-sign HSL from ct_mood_color() with element-based mood selection.
-- **Elements**: Direct ct_mood_color() with S/L adjustments.
-- **Planets**: Sun/Mars from ASTRONOMY system palette. Others from mood-based HSL.
-- **Aspects**: Conjunction from ASTRONOMY secondary. Trine from ASTRONOMY primary. Others from mood HSL.
-- **Opacity**: Galaxy/Orbits = gl_opacity_at(1) ~ 0.618. All others = gl_opacity_at(0) = 1.0.
+## Sites
+1. Newgrange (Ireland, 3200 BCE) — winter solstice sunrise, tolerance 5.0°
+2. Stonehenge (England, 3000 BCE) — summer solstice sunrise, tolerance 2.0°
+3. Callanish (Scotland, 2900 BCE) — lunar standstill south, tolerance 3.0°
+4. Carnac (France, 4500 BCE) — summer solstice sunrise, tolerance 2.5°
+5. Mnajdra (Malta, 3600 BCE) — equinox sunrise, tolerance 1.5°
 
 ## Test Results
 ```
-test_color_palette: 36 tests, 0 failures
-test_aspect_lines:  22 tests, 0 failures
-test_render_layers: 19 tests, 0 failures
+45 Tests 0 Failures 0 Ignored
+OK
 ```
 
-## Compile Commands
+## Compile Command
 ```
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/render/test_color_palette.c src/render/color_palette.c src/render/color_theory.c src/math/color.c tests/unity/unity.c -o build/test_color_palette -lm
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/render/test_aspect_lines.c src/render/aspect_lines.c src/render/color_palette.c src/render/color_theory.c src/math/color.c tests/unity/unity.c -o build/test_aspect_lines -lm
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/render/test_render_layers.c src/render/render_layers.c src/render/camera_scale.c src/math/easing.c src/ui/golden_layout.c tests/unity/unity.c -o build/test_render_layers -lm
+gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/render/test_megalithic.c src/render/megalithic.c src/systems/astronomy/solar_events.c tests/unity/unity.c -o build/test_megalithic -lm
 ```
 
 ## Checker Result
@@ -53,10 +51,11 @@ PASS — pending background validation
 See makefile-additions.md
 
 ## Attribution
-No external algorithms — all derivation uses existing color_theory.h and golden_layout.h modules.
+Azimuth formula from Jean Meeus "Astronomical Algorithms" — already in contributors.json.
+Archaeological alignment data from published archaeological surveys (Newgrange, Stonehenge, etc.).
 
 ## Knowledge Gaps
-No gaps — all data available from existing style system modules.
+No gaps — standard astronomical formulas + well-documented archaeological data.
 
 ## Next Candidate
-No remaining ALPHA-domain work in orchestrator roadmap. Slot idle.
+Track 43.2 — Decan Star Data (ALPHA domain)
