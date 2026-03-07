@@ -1,4 +1,5 @@
 #include "aspect_lines.h"
+#include "color_palette.h"
 
 #include <math.h>
 
@@ -9,15 +10,6 @@ static const double ASPECT_ANGLES[5] = {
     120.0,  /* 2 = trine */
     90.0,   /* 3 = square */
     60.0    /* 4 = sextile */
-};
-
-/* Aspect colors: gold, red, blue, orange, green */
-static const float ASPECT_COLORS[5][3] = {
-    {1.0f, 0.84f, 0.0f},   /* conjunction = gold */
-    {1.0f, 0.0f,  0.0f},   /* opposition = red */
-    {0.0f, 0.5f,  1.0f},   /* trine = blue */
-    {1.0f, 0.5f,  0.0f},   /* square = orange */
-    {0.0f, 0.8f,  0.2f}    /* sextile = green */
 };
 
 static double angular_sep(double lon_a, double lon_b)
@@ -47,9 +39,10 @@ void aspect_line_color(int type, float *r, float *g, float *b)
         *b = 1.0f;
         return;
     }
-    *r = ASPECT_COLORS[type][0];
-    *g = ASPECT_COLORS[type][1];
-    *b = ASPECT_COLORS[type][2];
+    color_rgb_t c = color_aspect(type);
+    *r = c.r;
+    *g = c.g;
+    *b = c.b;
 }
 
 float aspect_line_opacity(double orb_degrees, double max_orb)

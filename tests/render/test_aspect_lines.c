@@ -9,56 +9,58 @@
 void setUp(void) {}
 void tearDown(void) {}
 
-/* --- aspect_line_color tests --- */
+/* --- aspect_line_color tests ---
+ * After style retrofit, aspect_line_color() delegates to color_aspect()
+ * from color_palette.h, which derives colors from color_theory.h.
+ * Tests use behavioral assertions (hue family) instead of exact values. */
 
-/* 1. Conjunction = gold */
+/* 1. Conjunction = gold (R high, G high, B low) */
 void test_color_conjunction(void)
 {
     float r, g, b;
     aspect_line_color(0, &r, &g, &b);
-    TEST_ASSERT_TRUE(NEAR(1.0f, r));
-    TEST_ASSERT_TRUE(NEAR(0.84f, g));
-    TEST_ASSERT_TRUE(NEAR(0.0f, b));
+    TEST_ASSERT_TRUE(r > 0.85f);
+    TEST_ASSERT_TRUE(g > 0.70f);
+    TEST_ASSERT_TRUE(b < 0.40f);
 }
 
-/* 2. Opposition = red */
+/* 2. Opposition = red (R high, G low, B low) */
 void test_color_opposition(void)
 {
     float r, g, b;
     aspect_line_color(1, &r, &g, &b);
-    TEST_ASSERT_TRUE(NEAR(1.0f, r));
-    TEST_ASSERT_TRUE(NEAR(0.0f, g));
-    TEST_ASSERT_TRUE(NEAR(0.0f, b));
+    TEST_ASSERT_TRUE(r > 0.80f);
+    TEST_ASSERT_TRUE(r > g);
+    TEST_ASSERT_TRUE(r > b);
 }
 
-/* 3. Trine = blue */
+/* 3. Trine = blue (B high, R low) */
 void test_color_trine(void)
 {
     float r, g, b;
     aspect_line_color(2, &r, &g, &b);
-    TEST_ASSERT_TRUE(NEAR(0.0f, r));
-    TEST_ASSERT_TRUE(NEAR(0.5f, g));
-    TEST_ASSERT_TRUE(NEAR(1.0f, b));
+    TEST_ASSERT_TRUE(b > r);
+    TEST_ASSERT_TRUE(b > 0.70f);
 }
 
-/* 4. Square = orange */
+/* 4. Square = orange (R high, G moderate, B low) */
 void test_color_square(void)
 {
     float r, g, b;
     aspect_line_color(3, &r, &g, &b);
-    TEST_ASSERT_TRUE(NEAR(1.0f, r));
-    TEST_ASSERT_TRUE(NEAR(0.5f, g));
-    TEST_ASSERT_TRUE(NEAR(0.0f, b));
+    TEST_ASSERT_TRUE(r > 0.80f);
+    TEST_ASSERT_TRUE(g > 0.40f);
+    TEST_ASSERT_TRUE(r > b);
 }
 
-/* 5. Sextile = green */
+/* 5. Sextile = green (G high, G > R, G > B) */
 void test_color_sextile(void)
 {
     float r, g, b;
     aspect_line_color(4, &r, &g, &b);
-    TEST_ASSERT_TRUE(NEAR(0.0f, r));
-    TEST_ASSERT_TRUE(NEAR(0.8f, g));
-    TEST_ASSERT_TRUE(NEAR(0.2f, b));
+    TEST_ASSERT_TRUE(g > r);
+    TEST_ASSERT_TRUE(g > b);
+    TEST_ASSERT_TRUE(g > 0.60f);
 }
 
 /* --- aspect_line_opacity tests --- */

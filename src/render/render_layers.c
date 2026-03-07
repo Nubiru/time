@@ -1,7 +1,10 @@
 #include "render_layers.h"
+#include "../ui/golden_layout.h"
 
 /* Default layer configurations.
  * scale_min/max are scale_id_t values (0=Personal..6=Universe).
+ * base_opacity is set to 1.0f as placeholder; actual values are
+ * patched in layer_default_config() using gl_opacity_at().
  *
  * Layer visibility by scale:
  *   Stars:       Local(4) - Universe(6)    — deep sky background
@@ -15,20 +18,40 @@
  */
 static const layer_config_t DEFAULTS[LAYER_COUNT] = {
     { LAYER_STARS,       "Stars",       SCALE_LOCAL,    SCALE_UNIVERSE, 1.0f, 1 },
-    { LAYER_GALAXY,      "Galaxy",      SCALE_GALAXY,   SCALE_UNIVERSE, 0.8f, 1 },
-    { LAYER_ORBITS,      "Orbits",      SCALE_INNER,    SCALE_SOLAR,    0.6f, 1 },
+    { LAYER_GALAXY,      "Galaxy",      SCALE_GALAXY,   SCALE_UNIVERSE, 1.0f, 1 },
+    { LAYER_ORBITS,      "Orbits",      SCALE_INNER,    SCALE_SOLAR,    1.0f, 1 },
     { LAYER_PLANETS,     "Planets",     SCALE_EARTH,    SCALE_LOCAL,    1.0f, 1 },
-    { LAYER_ZODIAC_RING, "Zodiac Ring", SCALE_INNER,    SCALE_SOLAR,    0.9f, 1 },
+    { LAYER_ZODIAC_RING, "Zodiac Ring", SCALE_INNER,    SCALE_SOLAR,    1.0f, 1 },
     { LAYER_LABELS,      "Labels",      SCALE_INNER,    SCALE_SOLAR,    1.0f, 1 },
     { LAYER_CARDS,       "Cards",       SCALE_PERSONAL, SCALE_EARTH,    1.0f, 1 },
     { LAYER_HUD,         "HUD",         SCALE_PERSONAL, SCALE_UNIVERSE, 1.0f, 1 },
 };
 
+/* Opacity level per layer: 0 = full (1.0), 1 = phi^-1 (~0.618).
+ * Background/secondary layers use level 1 for phi-cascade depth. */
+static const int OPACITY_LEVELS[LAYER_COUNT] = {
+    0, /* LAYER_STARS       — foreground: full */
+    1, /* LAYER_GALAXY      — background: phi^-1 */
+    1, /* LAYER_ORBITS      — supporting: phi^-1 */
+    0, /* LAYER_PLANETS     — foreground: full */
+    0, /* LAYER_ZODIAC_RING — foreground: full */
+    0, /* LAYER_LABELS      — foreground: full */
+    0, /* LAYER_CARDS       — foreground: full */
+    0, /* LAYER_HUD         — foreground: full */
+};
+
 layer_config_t layer_default_config(layer_id_t id) {
+    layer_config_t cfg;
     if (id >= 0 && id < LAYER_COUNT) {
-        return DEFAULTS[id];
+        cfg = DEFAULTS[id];
+    } else {
+        cfg = DEFAULTS[LAYER_HUD];
     }
-    return DEFAULTS[LAYER_HUD];
+    /* Patch base_opacity from golden opacity cascade */
+    int level = (cfg.id >= 0 && cfg.id < LAYER_COUNT)
+                ? OPACITY_LEVELS[cfg.id] : 0;
+    cfg.base_opacity = gl_opacity_at(level);
+    return cfg;
 }
 
 float layer_opacity(layer_config_t config, float log_zoom) {

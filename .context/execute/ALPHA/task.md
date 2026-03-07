@@ -1,121 +1,99 @@
-# Task: Extended Star Catalog
+# Task: Style Retrofit — Render Pipeline Visual Constants
 
 **Agent**: ALPHA
-**Roadmap Reference**: Track 9.1 — "Agent: Extended Star Catalog (Agent A)"
-**Date**: 2026-03-06
-**Status**: COMPLETE
+**Roadmap Reference**: Track 37.4 — "Style Retrofit — Hardcoded Value Elimination"
+**Date**: 2026-03-07
+**Status**: CLAIMED
 
 ## Goal
 
-Expanded star catalog with tier-based LOD (Level of Detail) access. Extends the project from 195 stars to 500+ stars covering Tiers 0-2 completely. The module is designed for future expansion to 9110 stars (BSC5 full coverage). Each star has RA, Dec, V magnitude, B-V color index, and optional name. Provides tier-based access for progressive rendering at different zoom levels.
+Wire the render pipeline modules into the existing style system (color_theory.h, golden_layout.h). Replace hardcoded RGB color values, opacity constants, and spacing magic numbers with calls to the style system APIs. This eliminates 70+ hardcoded visual constants from 4 files and makes the render pipeline theme-aware.
 
 ## READ FIRST
 
-- `src/render/star_catalog.h` — existing 195-star catalog (star_entry_t, coordinate conversion)
-- `src/render/catalog_ingest.h` — tier thresholds (CATALOG_TIER_0_MAG etc.)
+- `src/render/color_theory.h` — ct_system_primary/secondary/accent(), ct_mood_color(), golden_palette()
+- `src/render/color_theory.c` — Implementation with 13 system palettes
+- `src/ui/golden_layout.h` — gl_opacity_cascade(), gl_spacing_scale(), gl_timing()
+- `src/render/color_palette.h/.c` — The main target: 57 hardcoded RGB colors
+- `src/render/aspect_lines.h/.c` — 5 hardcoded aspect colors
+- `src/render/render_layers.h/.c` — 8 hardcoded opacity values
 
-## Files to Create
+## Files to Modify
 
-- `src/render/star_catalog_ext.h`
-- `src/render/star_catalog_ext.c`
-- `tests/render/test_star_catalog_ext.c`
+1. `src/render/color_palette.c` — Replace 57 hardcoded RGB arrays with color_theory.h calls
+2. `src/render/aspect_lines.c` — Replace 5 hardcoded aspect colors
+3. `src/render/render_layers.c` — Replace 8 hardcoded opacity values with golden_layout
+4. `tests/render/test_color_palette.c` — Update existing tests if API behavior changes
+5. `tests/render/test_aspect_lines.c` — Update tests for new color source
+6. `tests/render/test_render_layers.c` — Update tests for new opacity source
 
-## API
+## Design Approach
 
-```c
-#ifndef TIME_STAR_CATALOG_EXT_H
-#define TIME_STAR_CATALOG_EXT_H
+### color_palette.c (57 values)
 
-#define EXT_TIER_COUNT 4
-#define EXT_TIER_0_MAG 1.5f   /* ~21 brightest */
-#define EXT_TIER_1_MAG 3.0f   /* ~170 stars */
-#define EXT_TIER_2_MAG 4.5f   /* ~500+ stars */
-#define EXT_TIER_3_MAG 6.5f   /* ~9000 future */
+The color_palette module provides per-sign/per-planet/per-aspect colors. The color_theory module provides per-system palettes (primary/secondary/accent). The retrofit connects them:
 
-/* Extended star entry */
-typedef struct {
-    float ra_hours;   /* Right Ascension 0-24h */
-    float dec_deg;    /* Declination -90 to +90 */
-    float v_mag;      /* Visual magnitude */
-    float bv;         /* B-V color index */
-} ext_star_t;
+**Zodiac (12 colors)**: Use `ct_system_primary(CT_SYSTEM_ASTROLOGY)` as base hue.
+Generate 12 sign colors by rotating the base through phi-spaced hue offsets
+using `ct_golden_palette()` with element grouping (fire/earth/air/water).
+Each element group shares a hue range.
 
-/* Total number of stars in the extended catalog. */
-int ext_star_count(void);
+**Elements (4 colors)**: Use the 4 mood colors that map to element meanings:
 
-/* Get star by index (sorted by magnitude, brightest first). */
-ext_star_t ext_star_get(int index);
+- Fire -> CT_MOOD_ENERGY (red-orange)
+- Earth -> CT_MOOD_HARMONY (green/brown)
+- Air -> CT_MOOD_CLARITY (yellow-green)
+- Water -> CT_MOOD_CALM (blue-green)
 
-/* Get star name by index. Returns NULL if unnamed. */
-const char *ext_star_name(int index);
+**Planets (8 colors)**: Use `ct_system_secondary(CT_SYSTEM_ASTRONOMY)` as base.
+Traditional planet colors have deep cultural roots — keep recognizable but
+derive through the color_theory pipeline.
 
-/* Get number of stars in a specific tier (0-3). */
-int ext_star_tier_count(int tier);
+**Aspects (5 colors)**: Use `ct_system_accent(CT_SYSTEM_ASTROLOGY)` with
+golden-angle rotation. Conjunction=gold, Opposition=red, Trine=blue,
+Square=orange, Sextile=green.
 
-/* Get starting index for a tier in the sorted array. */
-int ext_star_tier_start(int tier);
+**Tzolkin (4 colors)**: Use `ct_system_primary(CT_SYSTEM_TZOLKIN)`. The 4 directional
+colors (Red, White, Blue, Yellow) are canonical — match the existing color_theory values.
 
-/* Get tier index (0-3) for a given magnitude. */
-int ext_star_tier_for_mag(float v_mag);
+**Chinese (5 colors)**: Use `ct_system_primary(CT_SYSTEM_CHINESE)`. The 5 element
+colors (Wood=green, Fire=red, Earth=yellow, Metal=white, Water=black) are canonical.
 
-/* Count of named stars in the catalog. */
-int ext_star_named_count(void);
+**IMPORTANT**: The returned RGB values must remain visually CLOSE to the current hardcoded
+values. This is a wiring change, not a redesign. If color_theory's system palette gives
+a significantly different color, adjust the derivation to match visual intent.
 
-/* Find star index by name (case-insensitive). Returns -1 if not found. */
-int ext_star_find(const char *name);
+### aspect_lines.c (5 values)
 
-/* Get stars within a rectangular RA/Dec region.
- * Writes matching indices to out[], returns count.
- * ra_min/ra_max in hours (handles wrap at 0/24).
- * dec_min/dec_max in degrees. */
-int ext_star_in_region(float ra_min, float ra_max,
-                       float dec_min, float dec_max,
-                       int *out, int max_out);
+Replace the local ASPECT_COLORS array with calls to `color_aspect()` from
+the retrofitted color_palette.c. This eliminates the duplicate.
 
-#endif /* TIME_STAR_CATALOG_EXT_H */
-```
+### render_layers.c (8 values)
 
-## Data Requirements
-
-The catalog should include AT MINIMUM:
-
-### Tier 0 (V < 1.5) — ALL ~21 brightest stars:
-Sirius (-1.46), Canopus (-0.74), Alpha Centauri (-0.27), Arcturus (-0.05), Vega (0.03), Capella (0.08), Rigel (0.13), Procyon (0.34), Achernar (0.46), Betelgeuse (0.50), Hadar (0.61), Altair (0.77), Acrux (0.76), Aldebaran (0.85), Antares (0.96), Spica (1.04), Pollux (1.14), Fomalhaut (1.16), Deneb (1.25), Mimosa (1.25), Regulus (1.35)
-
-### Tier 1 (V 1.5-3.0) — Major named stars including:
-Adhara, Castor, Gacrux, Shaula, Bellatrix, Elnath, Miaplacidus, Alnilam, Alnitak, Alnair, Alioth, Dubhe, Mirfak, Wezen, Sargas, Kaus Australis, Avior, Alkaid, Menkalinan, Atria, Alhena, Peacock, Alsephina, Mirzam, Alphard, Polaris, Hamal, Algieba, Diphda, Mizar, Nunki, Menkent, Mirach, Alpheratz, Rasalhague, Kochab, Saiph, Denebola, Algol, Tiaki, Muhlifain, Naos, Aspidiske, Suhail, Alphecca, Mintaka, Sadr, Eltanin, Schedar, Caph, Ruchbah, and more.
-
-### Tier 2 (V 3.0-4.5) — Fill out major constellation patterns:
-Stars needed to complete constellation stick figures for all 40 constellations already in the constellation module.
-
-### Target: >= 300 stars, ideally 400-500
-
-### Data accuracy:
-- RA: to 0.01 hour precision (~0.15 degree)
-- Dec: to 0.1 degree precision
-- V mag: to 0.01 magnitude
-- B-V: to 0.01 index
+Replace hardcoded base_opacity values (0.6f, 0.8f, etc.) with calls to
+`gl_opacity_cascade()` from golden_layout.h. The opacity cascade provides
+phi-derived opacity levels that create visual depth hierarchy.
 
 ## DONE WHEN
 
-- [ ] >= 300 stars with correct RA, Dec, magnitude, B-V
-- [ ] All 21 Tier 0 stars present with names
-- [ ] >= 80 Tier 1 stars with names
-- [ ] Tier-based access functions working
-- [ ] Stars sorted by magnitude (brightest first)
-- [ ] Name lookup (case-insensitive)
-- [ ] Regional query (RA/Dec box)
-- [ ] >= 30 tests
+- [ ] color_palette.c has ZERO hardcoded RGB float triples — all derived from color_theory.h
+- [ ] aspect_lines.c uses color_palette.h instead of local hardcoded array
+- [ ] render_layers.c uses gl_opacity_cascade() instead of hardcoded opacity values
+- [ ] All existing tests still pass (may need value tolerance updates)
+- [ ] New tests added: verify palette-to-theory mapping (>= 10 new tests)
+- [ ] Visual values are CLOSE to original (same hue family, similar saturation)
 - [ ] All tests pass with zero warnings
-- [ ] Purity: no malloc, no globals, no side effects
 - [ ] Compiles: `gcc -Wall -Wextra -Werror -std=c11 -pedantic`
 
 ## Constraints
 
 - C11, `-Wall -Wextra -Werror -std=c11 -pedantic`
 - No malloc, no globals, no side effects
-- `#include <string.h>` for strcmp/strcasecmp
-- `#include <stddef.h>` for NULL
-- Stars stored as `static const` arrays (compiled into binary)
-- Standalone module (does NOT depend on star_catalog.h)
-- Data sorted by magnitude at compile time
+- color_palette.c now DEPENDS ON color_theory.h (new compile dependency — update Makefile)
+- render_layers.c now DEPENDS ON golden_layout.h (new compile dependency)
+- Do NOT change the color_palette.h PUBLIC API — same function signatures
+- Do NOT change the render_layers.h PUBLIC API
+- Values must be visually similar to current — tolerance: delta < 0.15 per RGB channel
+- If color_theory returns significantly different values, prefer visual continuity and
+  adjust the derivation (different mood, different system) rather than changing the
+  existing visual look
