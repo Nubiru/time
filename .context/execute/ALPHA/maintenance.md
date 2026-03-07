@@ -1,7 +1,7 @@
-# Maintainer Report — Star Field GPU Data
+# Maintainer Report — Zodiac Render Pack
 
 **Date**: 2026-03-07
-**Task**: Track 7.7a — Star Field GPU Data
+**Task**: Track 3.9 — Zodiac Render Pack
 **Verdict**: PASS
 
 ## Gate Results
@@ -9,19 +9,21 @@
 | Gate | Result |
 |------|--------|
 | G1 Compilation | PASS (zero warnings) |
-| G2 Tests | PASS (53 tests, 0 failures) |
+| G2 Tests | PASS (45 tests, 0 failures) |
 | G3 Purity P1-P5 | PASS |
 | G4 Naming/Style | PASS |
 | G5 Dead code | PASS (all declared functions called in tests) |
 | G6 TODOs | PASS |
-| G7 Duplication | PASS (star_field packs existing catalog data — complementary to star_catalog/ext/colors) |
-| G8 Attribution | PASS (no new external algorithms — all from existing deps) |
+| G7 Duplication | PASS (unifies 6 existing geometry modules into GPU-ready batches — complementary) |
+| G8 Attribution | PASS (no new external algorithms) |
 | G9 Regression | PASS (3999 tests / 116 suites / 0 failures) |
 
 ## Observations
-- Deduplication merges star_catalog (195) + star_catalog_ext (400) by RA/Dec proximity
-- Tier offsets match ext catalog magnitude thresholds (1.5, 3.0, 4.5, 6.5)
-- Zodiac constellations identified by IAU abbreviation, packed first with higher alpha
-- 4 GLSL ES 3.00 shader source strings: star vert/frag (point sprites with gl_PointCoord falloff), line vert/frag
-- Uses function-scoped static arrays as scratch space (no malloc)
-- Depends on: star_catalog.c, star_catalog_ext.c, star_colors.c, constellation.c
+- Follows star_field.h template: caller-provided buffers, metadata structs, shader strings
+- 3 pack functions covering ring segments, line data (ticks+cusps+aspects), and glyph quads
+- Colors from color_palette.h — no hardcoded RGB values
+- Ring vertices on ecliptic plane (y=0) with correct inner/outer radii
+- Section offsets in line data allow separate draw calls for ticks vs cusps vs aspects
+- Angular cusps (ASC/IC/DSC/MC) get higher alpha for visual emphasis
+- 6 GLSL ES 3.00 shader source strings with proper precision qualifiers
+- Depends on: ring_geometry, arc_geometry, cusp_lines, aspect_lines, glyph_batch, billboard, color_palette, color_theory, color, vec3, mat4

@@ -1,13 +1,13 @@
 ## Add to WASM_SRC:
-src/render/star_field.c
+src/render/zodiac_pack.c
 
 ## New test target:
-test-star-field: $(BUILD_DIR)
-	$(CC) $(CFLAGS) tests/render/test_star_field.c src/render/star_field.c src/render/star_catalog.c src/render/star_catalog_ext.c src/render/star_colors.c src/render/constellation.c $(UNITY) -o $(BUILD_DIR)/test_star_field $(LDFLAGS)
-	./$(BUILD_DIR)/test_star_field
+test-zodiac-pack: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/render/test_zodiac_pack.c src/render/zodiac_pack.c src/render/ring_geometry.c src/math/arc_geometry.c src/render/cusp_lines.c src/render/aspect_lines.c src/render/glyph_batch.c src/render/billboard.c src/render/color_palette.c src/render/color_theory.c src/math/color.c src/math/vec3.c src/math/mat4.c $(UNITY) -o $(BUILD_DIR)/test_zodiac_pack $(LDFLAGS)
+	./$(BUILD_DIR)/test_zodiac_pack
 
 ## Add to test: dependency list:
-test-star-field
+test-zodiac-pack
 
 ## Add to .PHONY:
-test-star-field
+test-zodiac-pack

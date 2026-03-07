@@ -1,34 +1,21 @@
-# Task: Zodiac Render Pack
+/*
+ * zodiac_pack.h — Zodiac Render Pack: GPU-ready batched vertex arrays
+ *
+ * Packs ALL zodiac wheel elements into interleaved vertex arrays ready
+ * for glBufferData. Unifies ring_geometry, arc_geometry, cusp_lines,
+ * aspect_lines, glyph_batch, and billboard into a single draw-ready
+ * data set. Follows the star_field.h template pattern.
+ *
+ * Three draw calls:
+ *   1. Ring (12 colored zodiac segments)
+ *   2. Lines (degree ticks + house cusps + aspect lines)
+ *   3. Glyphs (sign + planet textured quads)
+ *
+ * Includes GLSL ES 3.00 shader source strings for each draw call.
+ *
+ * Pure module: no GL calls, no malloc, no globals, no side effects.
+ */
 
-**Agent**: ALPHA
-**Roadmap Reference**: Track 3.9 — "Agent: Zodiac Render Pack (Agent A)"
-**Date**: 2026-03-07
-**Status**: COMPLETE
-
-## Goal
-
-Pure vertex packing module that unifies ALL zodiac wheel elements into batched GPU-ready vertex arrays. Follows the star_field.h template: caller provides output buffers, module packs interleaved vertices, provides metadata structs and GLSL ES 3.00 shader source strings. This bridges 6 existing geometry modules into a single draw-ready data set.
-
-## READ FIRST
-
-- `src/render/star_field.h` — template pattern (interleaved packing, metadata, shaders)
-- `src/render/ring_geometry.h` — ring mesh positions/UVs/indices
-- `src/math/arc_geometry.h` — zodiac_ring(), cusp_line(), tick_marks(), chord_line()
-- `src/render/cusp_lines.h` — cusp_lines_generate(), angular cusp detection
-- `src/render/aspect_lines.h` — aspect_lines_generate(), orb-based alpha
-- `src/render/glyph_batch.h` — glyph_batch_create(), interleaved quad vertices
-- `src/render/billboard.h` — billboard_create(), camera-facing quads
-- `src/systems/astrology/zodiac.h` — zodiac_sign(), zodiac_sign_name()
-
-## Files to Create
-
-- `src/render/zodiac_pack.h`
-- `src/render/zodiac_pack.c`
-- `tests/render/test_zodiac_pack.c`
-
-## API
-
-```c
 #ifndef TIME_ZODIAC_PACK_H
 #define TIME_ZODIAC_PACK_H
 
@@ -58,7 +45,7 @@ typedef struct {
     int sign_counts[12];   /* vertex count per sign */
 } zp_ring_data_t;
 
-/* Line data packed for GPU (cusps + ticks + aspects) */
+/* Line data packed for GPU (ticks + cusps + aspects) */
 typedef struct {
     float vertices[((ZP_MAX_TICK_LINES + ZP_MAX_CUSP_LINES + ZP_MAX_ASPECT_LINES) * 2) * ZP_LINE_VERTEX_FLOATS];
     int tick_count;        /* degree tick line segments */
@@ -77,7 +64,7 @@ typedef struct {
     int vertex_count;
     int index_count;
     int sign_glyph_count;   /* always 12 */
-    int planet_glyph_count; /* 0-8 */
+    int planet_glyph_count; /* 0-12 */
 } zp_glyph_data_t;
 
 /* Pack the 12 zodiac ring segments with per-sign colors.
@@ -135,26 +122,3 @@ const char *zp_glyph_vert_source(void);
 const char *zp_glyph_frag_source(void);
 
 #endif /* TIME_ZODIAC_PACK_H */
-```
-
-## DONE WHEN
-
-- [ ] All functions declared in .h and implemented in .c
-- [ ] zp_pack_ring generates 12 colored ring segments with per-sign vertex offsets
-- [ ] zp_pack_lines generates ticks + cusps + aspects with section offsets
-- [ ] zp_pack_glyphs generates sign + planet glyph quads
-- [ ] 6 shader source strings (ring vert/frag, line vert/frag, glyph vert/frag)
-- [ ] All shaders are valid GLSL ES 3.00 with proper precision/version
-- [ ] >= 35 tests covering: ring packing, sign offsets, line sections, glyph quads, byte sizes, shaders, null inputs, edge cases
-- [ ] All tests pass with zero warnings
-- [ ] Purity: no malloc, no globals, no side effects
-- [ ] Compiles: `gcc -Wall -Wextra -Werror -std=c11 -pedantic`
-
-## Constraints
-
-- C11, `-Wall -Wextra -Werror -std=c11 -pedantic`
-- `#define PI 3.14159265358979323846` (no M_PI)
-- No malloc, no globals, no side effects
-- Follows star_field.h template pattern
-- Uses existing dependency modules for geometry computation
-- No GL calls — pure data packing only
