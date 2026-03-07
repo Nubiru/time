@@ -60,7 +60,7 @@
 | Book | Location | Extract What | Feeds Tracks | Status |
 |------|----------|-------------|-------------|--------|
 | Crowley — 777 | `new/` | Correspondence tables: numbers → colors → planets → paths | 18, 19, 44.2 | **EXTRACTED** — digest 032 (Tables I-VI: complete 4 color scales King/Queen/Emperor/Empress for 34 rows, 22 Major Arcana attributions with Golden Dawn titles, Lightning Flash sequence, path-Sephirah connections, cross-ref with tree_geometry.h = FULL MATCH, Tarot naming discrepancies noted, Tsaddi/He swap documented, Sephirotic colors, precious stones, astronomical spheres, chakras, lunar mansions, mystic numbers) |
-| Crowley — The Book of Thoth | `new/` | Tarot ↔ Tree of Life ↔ Hebrew letters ↔ time cycles | 18, 19 | NOT STARTED — **JUST ACQUIRED!** |
+| Crowley — The Book of Thoth | `new/` | Tarot ↔ Tree of Life ↔ Hebrew letters ↔ time cycles | 18, 19, 44.2 | **EXTRACTED** — digest 033 (22 Major Arcana complete with Thoth names, Hebrew letters, paths, attributions; Tsaddi/He swap documented; 16 court cards with decan mappings + I Ching hexagram cross-refs; 40 minor arcana Thoth names + Sephirotic assignments; YHVH/Four Worlds formula; Three Aeons precessional time-cycles; card design descriptions for Track 44.2) |
 | Outer Wheel of Time (Kalachakra) | `new/` | Buddhist cosmological time cycles, Vajrayana cosmology | 16 | NOT STARTED — **JUST ACQUIRED!** |
 | Bhaskara I — Commentary on Aryabhatiya | `new/` | Ancient Indian astronomical algorithms, equation of center | 29.1 | NOT STARTED |
 | Surya Siddhanta | `new/` | Indian planetary model, epicycles, constants | 29.1, astronomy | NOT STARTED |
@@ -116,7 +116,7 @@ Content:
 
 ---
 
-## Completed Extractions (24 digests)
+## Completed Extractions (25 digests)
 
 001-005: WebGL pipeline (context, shaders, buffers, GLSL, render loop)
 006-008: Astronomy (Julian Day, Kepler, sidereal time)
@@ -132,6 +132,7 @@ Content:
 030: Boring Billion + Future Earth (Hazen Ch8+Ch11 — 1.85-0.85 Ga stasis, Canfield Ocean, mineral evolution plateau, solar timeline to red giant, ocean evaporation +1-2 Gy, Milankovitch cycles, asteroid/volcano frequencies, supercontinent projections)
 031: Calendrical Calculations (Ch7 Islamic 30-year leap cycle + epoch + formulas, Ch15 Persian astronomical + arithmetic 2820-year cycle, Ch19 Chinese 24 solar terms + leap month + sexagesimal + 2033 problem, Ch16 Bahai 19×19 structure, Ch9 Easter Orthodox + Gregorian Computus, Ch4 Coptic/Ethiopic epochs + formulas)
 032: Crowley 777 Correspondences (Tables I-VI: 4 color scales, 22 Tarot attributions, Lightning Flash, tree cross-reference, astronomical spheres, chakras, mystic numbers)
+033: Crowley Book of Thoth (22 Major Arcana Thoth names, court card decan mappings + I Ching cross-refs, minor arcana Sephirotic table with Thoth names, YHVH/Four Worlds, Three Aeons time-cycles, card design descriptions)
 aveni-harmony: Commensuration, Venus 8:5, sacred numbers
 
 ---
