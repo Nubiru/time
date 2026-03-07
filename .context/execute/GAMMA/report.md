@@ -2,53 +2,50 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-06
-**Task**: Knowledge Graph Data
-**Roadmap Reference**: Track 28.1 — "Agent: Knowledge Graph Data (Agent B)"
+**Task**: Cross-System Number Scanner
+**Roadmap Reference**: Track 26.3 — "Agent: Cross-System Number Scanner (Agent B)"
 
 ## Files Created
-- `src/systems/unified/knowledge_graph.h` — Header with kg_contributor_t, kg_path_t, 13 public functions
-- `src/systems/unified/knowledge_graph.c` — Pure data: 20 contributor nodes, 11 influence edges, BFS pathfinder
-- `tests/systems/unified/test_knowledge_graph.c` — 55 tests
+- `src/systems/unified/number_scanner.h` — Header with ns_match_t, ns_scan_result_t, ns_cycle_t, ns_sacred_t, 10 public functions
+- `src/systems/unified/number_scanner.c` — Pure computation: 21 cycles, 11 sacred numbers, factor/multiple/scale scanning
+- `tests/systems/unified/test_number_scanner.c` — 54 tests
 
 ## API Summary
 ```c
-int kg_contributor_count(void);
-kg_contributor_t kg_contributor_get(int index);
-int kg_contributor_find(const char *name);
-int kg_contributors_for_system(kg_system_t sys, int *out_indices, int out_max);
-int kg_contributors_by_era(knowledge_era_t era, int *out_indices, int out_max);
-int kg_contributors_by_culture(const char *culture, int *out_indices, int out_max);
-kg_path_t kg_knowledge_path(kg_system_t system_a, kg_system_t system_b);
-int kg_contributor_systems(int contributor_id, kg_system_t *out_systems, int out_max);
-const char *kg_era_name(knowledge_era_t era);
-const char *kg_system_name(kg_system_t sys);
-int kg_culture_count(void);
-const char *kg_culture_get(int index);
-int kg_edge_count(void);
+ns_scan_result_t number_scan(int target);
+int factor_scan(long cycle_length, int *out_factors, int out_max);
+int coincidence_score(int number);
+int ns_cycle_count(void);
+ns_cycle_t ns_cycle_get(int index);
+int ns_sacred_count(void);
+ns_sacred_t ns_sacred_get(int index);
+int ns_is_factor_of_cycle(int number);
+int ns_is_sacred_multiple(int number);
+int ns_scale_check(int number);
 ```
 
 ## Test Results
-55 Tests, 0 Failures, 0 Ignored.
+54 Tests, 0 Failures, 0 Ignored.
 
 ## Compile Command
 ```
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/unified/test_knowledge_graph.c src/systems/unified/knowledge_graph.c tests/unity/unity.c -o build/test_knowledge_graph -lm
+gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/unified/test_number_scanner.c src/systems/unified/number_scanner.c tests/unity/unity.c -o build/test_number_scanner -lm
 ```
 
 ## Checker Result
-PASS — Compilation clean, 55 tests, purity clean (P1-P5), naming correct, no duplication with structural_map, no regressions.
+FAIL on first pass (mutable static ring buffers). Fixed: embedded `char description[128]` in ns_match_t. Re-check: PASS.
 
 ## Maintainer Result
-WARN (resolved) — 4 contributors added to data/contributors.json (Siddhartha Gautama, Moses de Leon, Isaac Luria, Pope Gregory XIII).
+WARN — Makefile integration pending (expected, handled by makefile-additions.md).
 
 ## Makefile Additions
 See makefile-additions.md
 
 ## Attribution
-20 historical contributors encoded as knowledge graph nodes. 4 new entries added to data/contributors.json. All others already present from previous modules.
+No new attributions needed. All cycle/sacred number data is public domain.
 
 ## Knowledge Gaps
 No gaps.
 
 ## Next Candidate
-Track 27.1 — Frequency Data (Pythagorean tuning, planetary frequencies, sacred number harmonics)
+Track 19.1 — Cross-Calendar Convergence Detector (depends on all calendar modules)
