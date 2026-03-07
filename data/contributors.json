@@ -123,7 +123,8 @@
       ],
       "references": [
         { "file": "src/systems/astrology/aspects.h", "line": 4, "note": "Ptolemaic aspect types" },
-        { "file": "src/systems/astrology/aspects.c", "line": 4, "note": "Exact angles for Ptolemaic aspects" }
+        { "file": "src/systems/astrology/aspects.c", "line": 4, "note": "Exact angles for Ptolemaic aspects" },
+        { "file": "src/systems/egyptian/egyptian.c", "line": 1, "note": "Nabonassar epoch from Almagest" }
       ]
     },
     {
@@ -379,7 +380,8 @@
         { "file": "src/systems/hebrew/hebrew.c", "line": 3, "note": "Hebrew calendar implementation (Calendrical Calculations)" },
         { "file": "src/systems/islamic/hijri.h", "line": 4, "note": "Hijri calendar algorithm (Dershowitz & Reingold)" },
         { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" },
-        { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" }
+        { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" },
+        { "file": "src/systems/egyptian/egyptian.c", "line": 1, "note": "Egyptian calendar algorithm (Calendrical Calculations ch. 1)" }
       ]
     },
     {
