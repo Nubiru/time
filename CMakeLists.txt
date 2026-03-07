@@ -82,6 +82,7 @@ set(RENDER_SOURCES
     src/render/star_field.c
     src/render/planet_pack.c
     src/render/zodiac_pack.c
+    src/render/bodygraph_pack.c
     src/render/card_pack.c
     src/render/moon_pack.c
     src/render/diffraction.c
@@ -320,6 +321,7 @@ else()
     add_library(time_decan_stars     OBJECT src/render/decan_stars.c)
     add_library(time_megalithic      OBJECT src/render/megalithic.c)
     add_library(time_tarot_visual    OBJECT src/render/tarot_visual.c)
+    add_library(time_bodygraph_pack  OBJECT src/render/bodygraph_pack.c)
     add_library(time_card_pack       OBJECT src/render/card_pack.c)
     add_library(time_catalog_ingest  OBJECT src/render/catalog_ingest.c)
     add_library(time_diffraction     OBJECT src/render/diffraction.c)
@@ -524,6 +526,7 @@ else()
     time_add_test(NAME test_deep_sky        TEST tests/render/test_deep_sky.c        DEPS deep_sky)
     time_add_test(NAME test_deep_sky_pack  TEST tests/render/test_deep_sky_pack.c  DEPS deep_sky_pack deep_sky)
     time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack galaxy_geometry)
+    time_add_test(NAME test_bodygraph_pack TEST tests/render/test_bodygraph_pack.c DEPS bodygraph_pack bodygraph)
     time_add_test(NAME test_glyph_batch     TEST tests/render/test_glyph_batch.c     DEPS glyph_batch vec3)
     time_add_test(NAME test_color_theory    TEST tests/render/test_color_theory.c    DEPS color_theory color)
     time_add_test(NAME test_star_catalog_ext TEST tests/render/test_star_catalog_ext.c DEPS star_catalog_ext)
