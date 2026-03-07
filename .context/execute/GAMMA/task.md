@@ -1,28 +1,27 @@
-# Task: Snow Season Model
+# Task: Biological Clocks
 
 **Agent**: GAMMA
-**Roadmap Reference**: Track 23.1 — "Agent: Snow Season Model (Agent B)"
+**Roadmap Reference**: Track 27.2 — "Agent: Biological Clocks (Agent B)"
 **Date**: 2026-03-06
 **Status**: CLAIMED
 
 ## Goal
 
-Pure computation module modeling snow probability from latitude, elevation, and month. Provides ski season window estimation, powder likelihood scoring, and avalanche risk factor assessment. Complements ski_resorts (data) with physics-based snow modeling.
+Pure module mapping biological rhythms (heartbeat, breath, circadian, menstrual) to astronomical cycles. Reveals structural unity: 72 bpm heartbeat, 15 breaths/min → precession number 25,920. The human body as astronomical clock.
 
 ## Files to Create
 
-- `src/systems/earth/snow_season.h`
-- `src/systems/earth/snow_season.c`
-- `tests/systems/earth/test_snow_season.c`
+- `src/systems/earth/biorhythm.h`
+- `src/systems/earth/biorhythm.c`
+- `tests/systems/earth/test_biorhythm.c`
 
 ## DONE WHEN
 
-- [ ] snow_probability returns 0-1 based on lat/elevation/month
-- [ ] ski_season_window returns start/end months
-- [ ] Powder likelihood scoring
-- [ ] Avalanche risk factors
-- [ ] Southern hemisphere handled (winter = Jun-Aug)
-- [ ] >= 30 tests
+- [ ] Heartbeat, breath, circadian, menstrual cycle data
+- [ ] biorhythm_heartbeats / biorhythm_breaths calculators
+- [ ] Astronomical cycle correlation detection
+- [ ] Sacred number connections (72, 432, 25920)
+- [ ] >= 28 tests
 - [ ] All tests pass with zero warnings
 - [ ] Purity: no malloc, no globals, no side effects
 - [ ] Compiles: `gcc -Wall -Wextra -Werror -std=c11 -pedantic`
