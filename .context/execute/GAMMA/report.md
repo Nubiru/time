@@ -2,52 +2,47 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-06
-**Task**: Storm Season Data
-**Roadmap Reference**: Track 22.3 — "Agent: Storm Season Data (Agent B)"
+**Task**: Snow Season Model
+**Roadmap Reference**: Track 23.1 — "Agent: Snow Season Model (Agent B)"
 
 ## Files Created
-- `src/systems/earth/storm_data.h` — Header with cyclone_basin_t, monsoon_region_t, swell_zone_t, storm_risk_t and 12 functions
-- `src/systems/earth/storm_data.c` — Pure data module: 7 cyclone basins, 5 monsoon regions, 8 swell zones, risk/direction queries
-- `tests/systems/earth/test_storm_data.c` — 68 tests across basin, monsoon, swell, combined risk, and data integrity categories
+- `src/systems/earth/snow_season.h` — Header with season_window_t, avalanche_risk_t, and 7 function declarations
+- `src/systems/earth/snow_season.c` — Pure computation: temperature model, snow probability, ski season, powder, avalanche risk
+- `tests/systems/earth/test_snow_season.c` — 36 tests covering all 7 functions
 
 ## API Summary
 ```c
-cyclone_basin_t storm_basin_get(int index);
-int storm_basin_count(void);
-const char *storm_basin_name(storm_basin_t basin);
-bool storm_basin_active(storm_basin_t basin, int month);
-double storm_basin_risk(storm_basin_t basin, int month);
-monsoon_region_t storm_monsoon_get(int index);
-int storm_monsoon_count(void);
-bool storm_monsoon_active(int monsoon_index, int month);
-storm_risk_t storm_risk_at(double lat, double lon, int month);
-swell_zone_t storm_swell_zone_get(int index);
-int storm_swell_zone_count(void);
-double storm_swell_direction(double lat, double lon, int month);
+double snow_probability(double lat, double elevation_m, int month);
+double snow_temperature(double lat, double elevation_m, int month);
+season_window_t snow_ski_season(double lat, double elevation_m);
+double snow_powder_likelihood(double lat, double elevation_m, int month);
+avalanche_risk_t snow_avalanche_risk(double lat, double elevation_m, int month);
+double snow_line_elevation(double lat, int month);
+bool snow_is_winter(double lat, int month);
 ```
 
 ## Test Results
-68 Tests, 0 Failures, 0 Ignored.
+36 Tests, 0 Failures, 0 Ignored.
 
 ## Compile Command
 ```
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/earth/test_storm_data.c src/systems/earth/storm_data.c tests/unity/unity.c -o build/test_storm_data -lm
+gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/earth/test_snow_season.c src/systems/earth/snow_season.c tests/unity/unity.c -o build/test_snow_season -lm
 ```
 
 ## Checker Result
-PASS — Compilation clean, 68 tests, purity P1-P5 clean, naming correct, no regressions (2615 total assertions passing).
+PASS — Compilation clean, 36 tests, purity clean, no regressions.
 
 ## Maintainer Result
-PASS — Regression gate PASS. Purity clean. No dead code. No TODOs. No duplication.
+PASS — All checks pass.
 
 ## Makefile Additions
 See makefile-additions.md
 
 ## Attribution
-NOAA/NHC hurricane data (public domain). Wikipedia monsoon and swell data. No individual author attribution required.
+Standard atmospheric lapse rate model (public domain). No individual author attribution required.
 
 ## Knowledge Gaps
-No gaps — all data available from public sources.
+No gaps.
 
 ## Next Candidate
-Track 23.1 — Snow Season Model (latitude + elevation + month snow probability)
+Track 25.1 — Sunrise/Sunset Worldwide (daylight calculations)
