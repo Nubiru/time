@@ -13,6 +13,7 @@ src/systems/earth/snow_season.c
 src/systems/earth/biorhythm.c
 src/systems/unified/codon_hexagram.c
 src/systems/unified/achievement.c
+src/systems/unified/calendar_reform.c
 
 ## New test targets:
 test-four-worlds: $(BUILD_DIR)
@@ -67,8 +68,12 @@ test-achievement: $(BUILD_DIR)
 	$(CC) $(CFLAGS) -Isrc tests/systems/unified/test_achievement.c src/systems/unified/achievement.c $(UNITY) -o $(BUILD_DIR)/test_achievement $(LDFLAGS)
 	./$(BUILD_DIR)/test_achievement
 
+test-calendar-reform: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/systems/unified/test_calendar_reform.c src/systems/unified/calendar_reform.c $(UNITY) -o $(BUILD_DIR)/test_calendar_reform $(LDFLAGS)
+	./$(BUILD_DIR)/test_calendar_reform
+
 ## Add to test: dependency list:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform
 
 ## Add to .PHONY:
-test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement
+test-four-worlds test-buddhist test-yuga test-structural-map test-climate-history test-fossil-milestones test-surf-spots test-ski-resorts test-storm-data test-snow-season test-biorhythm test-codon-hexagram test-achievement test-calendar-reform

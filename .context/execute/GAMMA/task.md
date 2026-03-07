@@ -1,123 +1,125 @@
-# Task: Historical Achievement Data
+# Task: Calendar Reform History
 
 **Agent**: GAMMA
-**Roadmap Reference**: Track 29.1 — "Agent: Historical Achievement Data (Agent B)"
+**Roadmap Reference**: Track 29.2 — "Agent: Calendar Reform History (Agent B)"
 **Date**: 2026-03-06
 **Status**: CLAIMED
 
 ## Goal
 
-Pure data module cataloging ancient astronomers' computational achievements with their precision compared to modern values. Dramatizes the genius: Aryabhata (499 CE) computed Earth's circumference to 0.2% error with NO telescope. Hillel II (359 CE) determined the molad to 0.4 seconds/month accuracy. Maya astronomers tracked Venus cycles to 2-hour precision. Each entry carries: person, year, culture, what was computed, their value, the modern value, the error, and what tools they had available.
+Pure data module cataloging calendar systems and reform proposals throughout history. Documents the 360-day natural year, the 13-moon calendar (Arguelles), the Gregorian reform (1582), the World Calendar movement (1920s), and the concept of seasonal hours. Provides computational functions for seasonal hour length at any latitude/JD. Shows the "disorder of time" — why our current calendar has months of unequal length.
 
 ## READ FIRST
 
-- `src/systems/unified/structural_map.h` — cross-system concordance patterns
-- `data/contributors.json` — existing contributor entries for these astronomers
+- `src/systems/gregorian/gregorian.h` — existing Gregorian module
+- `src/systems/astronomy/solar_events.h` — sunrise/sunset for seasonal hours
 
 ## Files to Create
 
-- `src/systems/unified/achievement.h`
-- `src/systems/unified/achievement.c`
-- `tests/systems/unified/test_achievement.c`
+- `src/systems/unified/calendar_reform.h`
+- `src/systems/unified/calendar_reform.c`
+- `tests/systems/unified/test_calendar_reform.c`
 
 ## API
 
 ```c
-#ifndef TIME_ACHIEVEMENT_H
-#define TIME_ACHIEVEMENT_H
+#ifndef TIME_CALENDAR_REFORM_H
+#define TIME_CALENDAR_REFORM_H
 
-/* Achievement categories */
+#define PI 3.14159265358979323846
+
+/* Calendar system types */
 typedef enum {
-    ACH_CAT_ORBITAL = 0,     /* Orbital period, year length */
-    ACH_CAT_GEOMETRIC,       /* Earth size, distances */
-    ACH_CAT_LUNAR,           /* Lunar cycle, eclipse prediction */
-    ACH_CAT_PLANETARY,       /* Planet positions, cycles */
-    ACH_CAT_CALENDAR,        /* Calendar accuracy, intercalation */
-    ACH_CAT_MATHEMATICAL,    /* Mathematical methods, equations */
-    ACH_CAT_COUNT
-} achievement_category_t;
+    CAL_TYPE_LUNAR = 0,       /* Pure lunar */
+    CAL_TYPE_SOLAR,           /* Pure solar */
+    CAL_TYPE_LUNISOLAR,       /* Lunisolar hybrid */
+    CAL_TYPE_PROPOSED,        /* Reform proposal (never adopted) */
+    CAL_TYPE_ADOPTED,         /* Reform that was implemented */
+    CAL_TYPE_COUNT
+} calendar_type_t;
 
-/* A single historical achievement */
+/* A historical calendar system or reform proposal */
 typedef struct {
-    int id;                        /* Unique index */
-    const char *person;            /* "Aryabhata", "Hillel II", etc. */
-    int year;                      /* Negative for BCE (e.g., -240 for 240 BCE) */
-    const char *culture;           /* "Indian", "Jewish", "Maya", etc. */
-    const char *description;       /* What was computed/discovered */
-    double value_computed;         /* Their measured/computed value */
-    double modern_value;           /* Modern accepted value */
-    const char *unit;              /* "km", "days", "degrees", etc. */
-    double absolute_error;         /* |computed - modern| */
-    double relative_error_pct;     /* |(computed - modern) / modern| * 100 */
-    const char *tools_available;   /* "naked eye", "gnomon", "armillary sphere", etc. */
-    const char *tools_NOT_available; /* "telescope", "clock", etc. */
-    achievement_category_t category;
-    const char *significance;      /* Why this matters */
-} achievement_t;
+    int id;
+    const char *name;              /* "Gregorian", "13 Moon", "World Calendar", etc. */
+    int year;                      /* Year proposed/adopted (negative=BCE) */
+    const char *originator;        /* Person/body who proposed it */
+    const char *culture;           /* Culture/civilization */
+    calendar_type_t type;
+    int days_per_year;             /* Base days (360, 364, 365, etc.) */
+    int months;                    /* Number of months */
+    int intercalary_days;          /* Extra days (epagomenal, Day Out of Time, etc.) */
+    const char *month_structure;   /* "12x30", "13x28+1", "12 unequal", etc. */
+    const char *description;       /* Full description */
+    const char *problem_solved;    /* What calendar problem this addresses */
+    const char *weakness;          /* Known flaw or criticism */
+} calendar_system_t;
 
-/* Total number of achievements. */
-int achievement_count(void);
+/* Get total calendar systems cataloged. */
+int calendar_system_count(void);
 
-/* Get achievement by index. Returns entry with id=-1 if invalid. */
-achievement_t achievement_get(int index);
+/* Get system by index. Returns entry with id=-1 if invalid. */
+calendar_system_t calendar_system_get(int index);
 
-/* Get achievements by culture. Fills out_indices (max out_max entries).
- * Returns count found. */
-int achievement_by_culture(const char *culture, int *out_indices, int out_max);
+/* Get systems by type. Fills out_indices. Returns count found. */
+int calendar_systems_by_type(calendar_type_t type, int *out_indices, int out_max);
 
-/* Get achievements by person. Fills out_indices. Returns count found. */
-int achievement_by_person(const char *person, int *out_indices, int out_max);
+/* Seasonal hour length in minutes.
+ * In seasonal/temporal hours, day and night each have 12 hours.
+ * Day hours expand in summer, shrink in winter.
+ * lat_deg: latitude (-90 to 90).
+ * day_of_year: 1-365.
+ * is_day_hour: 1 for day hour, 0 for night hour.
+ * Returns length in minutes (60.0 at equinox everywhere). */
+double seasonal_hour_length(double lat_deg, int day_of_year, int is_day_hour);
 
-/* Get achievements by category. Fills out_indices. Returns count found. */
-int achievement_by_category(achievement_category_t cat, int *out_indices, int out_max);
+/* Day length in hours at given latitude and day of year.
+ * Uses solar declination approximation.
+ * Returns 0-24 (handles polar day/night). */
+double calendar_day_length(double lat_deg, int day_of_year);
 
-/* Error ratio: modern_value / absolute_error (how many times more precise than the error).
- * Higher = more impressive. Returns 0.0 if invalid or zero error. */
-double achievement_error_ratio(int index);
+/* Night length in hours. Complement of day length. */
+double calendar_night_length(double lat_deg, int day_of_year);
 
-/* Accuracy percentage: 100.0 - relative_error_pct. Returns 0.0 if invalid. */
-double achievement_accuracy_pct(int index);
-
-/* Category name string. Returns "?" for invalid. */
-const char *achievement_category_name(achievement_category_t cat);
+/* Calendar type name string. */
+const char *calendar_type_name(calendar_type_t type);
 
 /* How many distinct cultures are represented? */
-int achievement_culture_count(void);
+int calendar_culture_count(void);
 
-/* Get distinct culture name by index. Returns "?" for invalid. */
-const char *achievement_culture_get(int index);
+/* Get distinct culture by index. */
+const char *calendar_culture_get(int index);
 
-/* How many distinct persons are represented? */
-int achievement_person_count(void);
+/* Get the Gregorian month lengths (static data). Returns days for month 1-12. */
+int gregorian_month_days(int month, int is_leap);
 
-#endif /* TIME_ACHIEVEMENT_H */
+/* Year length comparison: return exact year length for a system index (in days, as double). */
+double calendar_year_length(int index);
+
+#endif /* TIME_CALENDAR_REFORM_H */
 ```
 
-## Achievement Data (minimum entries)
+## Calendar Systems Data (minimum 10 entries)
 
-1. **Aryabhata (499 CE, Indian)**: Earth circumference 39,968 km (actual 40,075 km) — 0.27% error. Tools: gnomon, mathematical models. No telescope.
-2. **Aryabhata (499 CE, Indian)**: Sidereal year 365.25858 days (actual 365.25636) — 0.00061% error (3.2 min). No clock.
-3. **Aryabhata (499 CE, Indian)**: Equation of center (Kepler's equation equivalent) — 1200 years before Kepler.
-4. **Eratosthenes (240 BCE, Greek)**: Earth circumference 39,375 km (actual 40,075) — 1.7% error. Tools: gnomon + geometry.
-5. **Hipparchus (130 BCE, Greek)**: Tropical year 365.2467 days (actual 365.2422) — 6.5 min error. Tools: armillary sphere.
-6. **Hipparchus (130 BCE, Greek)**: Precession rate ~46"/year (actual 50.3"/year) — 8.5% error. First to discover precession.
-7. **Hillel II (359 CE, Jewish)**: Molad (lunar month) 29.530594 days (actual 29.530589) — 0.4 sec/month error.
-8. **Al-Khwarizmi (820 CE, Arab)**: Planetary position tables used for 400+ years. Sine tables to 4 decimal places.
-9. **Maya astronomers (~800 CE, Maya)**: Venus synodic cycle 583.92 days (actual 583.93) — 2 hour error per cycle.
-10. **Maya astronomers (~800 CE, Maya)**: Eclipse prediction over 405 lunations (32.8 years) — accurate to hours.
-11. **Ptolemy (150 CE, Greco-Egyptian)**: Obliquity of ecliptic 23.855° (actual for his era ~23.71°) — 0.15° error.
-12. **Ulugh Beg (1437 CE, Timurid)**: Sidereal year 365.25636 days (actual 365.25636) — essentially exact. Tools: massive sextant.
-13. **Copernicus (1543 CE, Polish)**: Sidereal year 365.25671 days — 0.3 sec error per day.
-14. **Brahmagupta (628 CE, Indian)**: Lunar month 29.530582 days (actual 29.530589) — 0.6 sec error.
-15. **Su Song (1088 CE, Chinese)**: Tropical year 365.2436 days — ~2 min error. Water-powered clock tower.
+1. **Egyptian Civil Calendar** (~3000 BCE): 12x30 + 5 epagomenal = 365 days. No leap year. Drifted 1 day per 4 years. First solar calendar.
+2. **Babylonian Calendar** (~2000 BCE): Lunisolar, 12 months of 29-30 days. Intercalary month added when needed. King's decree.
+3. **Roman Republican Calendar** (~713 BCE): 10 months originally (304 days), later 12 months. Pontifex controlled intercalation — political tool.
+4. **Julian Calendar** (46 BCE, Julius Caesar): 365.25 days (leap year every 4 years). Reformed by Sosigenes of Alexandria. 11.5 min/year drift.
+5. **Gregorian Calendar** (1582, Pope Gregory XIII): 365.2425 days. Skip 3 leap years per 400. 10 days deleted (Oct 4→15, 1582). 26 sec/year drift.
+6. **French Republican Calendar** (1793): 12x30 + 5/6 complementary days. Decimal time: 10 hours/day, 100 min/hour. Abolished 1805.
+7. **13 Moon Calendar** (1992, Jose Arguelles): 13x28 + 1 Day Out of Time = 365. Perfect symmetry. Every month starts on the same day. Dreamspell system.
+8. **World Calendar** (1930, Elisabeth Achelis): 4 quarters of 91 days. Every quarter: 31+30+30. 1 extra "Worldsday" (Dec 31). League of Nations nearly adopted.
+9. **International Fixed Calendar** (1902, Moses Cotsworth): 13x28 + 1 Year Day = 365. 13th month "Sol" between June and July. Used by Kodak internally until 1989.
+10. **Seasonal Hours** (ancient, widespread): 12 hours of daylight + 12 hours of night. Hour length varies by season and latitude. Used in ancient Rome, Japan (until 1873), Jewish law.
 
 ## DONE WHEN
 
-- [ ] >= 15 achievement entries with verified data
-- [ ] Error ratios computed correctly
-- [ ] Filter by culture, person, category
-- [ ] Accuracy percentage calculation
-- [ ] Distinct culture and person counts
+- [ ] >= 10 calendar systems with descriptions
+- [ ] seasonal_hour_length computation (latitude + day of year)
+- [ ] Day/night length calculation
+- [ ] Filter by type
+- [ ] Culture listing
+- [ ] Year length comparison
 - [ ] >= 30 tests
 - [ ] All tests pass with zero warnings
 - [ ] Purity: no malloc, no globals, no side effects
@@ -126,7 +128,7 @@ int achievement_person_count(void);
 ## Constraints
 
 - C11, `-Wall -Wextra -Werror -std=c11 -pedantic`
+- `#define PI 3.14159265358979323846` (no M_PI)
 - No malloc, no globals, no side effects
 - Standalone module (no compile-time dependencies)
-- out_indices arrays provided by caller (stack allocated)
-- Data sources: standard astronomical history (public domain)
+- `#include <math.h>` for sin(), cos(), acos() — link with -lm

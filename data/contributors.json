@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 81
+    "total_contributors": 84
   },
   "contributors": [
     {
@@ -1325,6 +1325,45 @@
       ],
       "references": [
         { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Naked-eye positional accuracy (1 arcminute)" }
+      ]
+    },
+    {
+      "id": "sosigenes",
+      "name": "Sosigenes of Alexandria",
+      "born": -90,
+      "died": -40,
+      "category": ["astronomer"],
+      "contributions": [
+        { "work": "Julian Calendar design", "description": "Advised Julius Caesar on calendar reform (46 BCE). Designed 365.25-day solar year with leap year every 4 years.", "year": -46 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/calendar_reform.c", "line": 1, "note": "Julian Calendar originator" }
+      ]
+    },
+    {
+      "id": "elisabeth-achelis",
+      "name": "Elisabeth Achelis",
+      "born": 1880,
+      "died": 1973,
+      "category": ["reformer"],
+      "contributions": [
+        { "work": "The World Calendar", "description": "Proposed the World Calendar (1930): 4 identical quarters of 91 days + Worldsday. Nearly adopted by League of Nations 1937.", "year": 1930 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/calendar_reform.c", "line": 1, "note": "World Calendar proposal" }
+      ]
+    },
+    {
+      "id": "moses-cotsworth",
+      "name": "Moses Bruine Cotsworth",
+      "born": 1859,
+      "died": 1943,
+      "category": ["statistician", "reformer"],
+      "contributions": [
+        { "work": "International Fixed Calendar", "description": "Proposed 13 months of 28 days + Year Day (1902). 13th month 'Sol' between June and July. Used by Kodak internally 1928-1989.", "year": 1902 }
+      ],
+      "references": [
+        { "file": "src/systems/unified/calendar_reform.c", "line": 1, "note": "International Fixed Calendar proposal" }
       ]
     }
   ]

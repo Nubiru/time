@@ -2,51 +2,51 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-06
-**Task**: Historical Achievement Data
-**Roadmap Reference**: Track 29.1 — "Agent: Historical Achievement Data (Agent B)"
+**Task**: Calendar Reform History
+**Roadmap Reference**: Track 29.2 — "Agent: Calendar Reform History (Agent B)"
 
 ## Files Created
-- `src/systems/unified/achievement.h` — Header with achievement_t, achievement_category_t, 11 public functions
-- `src/systems/unified/achievement.c` — Pure data: 17 achievements, 10 cultures, 13 persons, pre-computed errors
-- `tests/systems/unified/test_achievement.c` — 62 tests
+- `src/systems/unified/calendar_reform.h` — Header with calendar_type_t, calendar_system_t, 11 public functions
+- `src/systems/unified/calendar_reform.c` — Pure data: 10 calendar systems, seasonal hour computation, day/night length
+- `tests/systems/unified/test_calendar_reform.c` — 66 tests
 
 ## API Summary
 ```c
-int achievement_count(void);
-achievement_t achievement_get(int index);
-int achievement_by_culture(const char *culture, int *out_indices, int out_max);
-int achievement_by_person(const char *person, int *out_indices, int out_max);
-int achievement_by_category(achievement_category_t cat, int *out_indices, int out_max);
-double achievement_error_ratio(int index);
-double achievement_accuracy_pct(int index);
-const char *achievement_category_name(achievement_category_t cat);
-int achievement_culture_count(void);
-const char *achievement_culture_get(int index);
-int achievement_person_count(void);
+int calendar_system_count(void);
+calendar_system_t calendar_system_get(int index);
+int calendar_systems_by_type(calendar_type_t type, int *out_indices, int out_max);
+double seasonal_hour_length(double lat_deg, int day_of_year, int is_day_hour);
+double calendar_day_length(double lat_deg, int day_of_year);
+double calendar_night_length(double lat_deg, int day_of_year);
+const char *calendar_type_name(calendar_type_t type);
+int calendar_culture_count(void);
+const char *calendar_culture_get(int index);
+int gregorian_month_days(int month, int is_leap);
+double calendar_year_length(int index);
 ```
 
 ## Test Results
-62 Tests, 0 Failures, 0 Ignored.
+66 Tests, 0 Failures, 0 Ignored.
 
 ## Compile Command
 ```
-gcc -Wall -Wextra -Werror -std=c11 -pedantic -Isrc tests/systems/unified/test_achievement.c src/systems/unified/achievement.c tests/unity/unity.c -o build/test_achievement -lm
+gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/systems/unified/test_calendar_reform.c src/systems/unified/calendar_reform.c tests/unity/unity.c -o build/test_calendar_reform -lm
 ```
 
 ## Checker Result
-PASS — Compilation clean, 62 tests, purity clean (P1-P5), naming correct, no duplication, no regressions.
+PASS — Compilation clean, 66 tests, purity clean (P1-P5), naming correct, no duplication, no regressions. Advisory: calendar_day_length overlaps solar_radiation's solar_day_length_doy (same formula, different domain).
 
 ## Maintainer Result
-WARN (resolved) — 12 historical astronomers added to contributors.json (Eratosthenes, Hipparchus, Aryabhata, Brahmagupta, Hillel II, al-Khwarizmi, Aristarchus, Ulugh Beg, Su Song, Copernicus, Tycho Brahe + Maya astronomers noted in module).
+WARN (resolved) — 3 contributors added to data/contributors.json (Sosigenes, Achelis, Cotsworth).
 
 ## Makefile Additions
 See makefile-additions.md
 
 ## Attribution
-17 historical achievements from 13 persons across 10 cultures, spanning 1700 years (270 BCE to 1590 CE). All public domain astronomical history. 12 new contributors added to data/contributors.json.
+Sosigenes of Alexandria (Julian Calendar), Elisabeth Achelis (World Calendar), Moses Cotsworth (IFC) — added to data/contributors.json. Jose Arguelles (13 Moon) already present.
 
 ## Knowledge Gaps
 No gaps.
 
 ## Next Candidate
-Track 29.2 — Calendar Reform History (360-day year, 13-moon, Gregorian reform, disorder of time)
+Track 28.1 — Knowledge Graph Data (contributor relationships, knowledge transmission chains)
