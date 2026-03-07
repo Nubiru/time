@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-07",
-    "total_contributors": 122
+    "total_contributors": 123
   },
   "contributors": [
     {
@@ -360,7 +360,8 @@
         { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" },
         { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" },
         { "file": "src/systems/persian/persian.c", "line": 3, "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)" },
-        { "file": "src/systems/aztec/aztec.c", "line": 1, "note": "Aztec calendar correlation (GMT 584283, Calendrical Calculations)" }
+        { "file": "src/systems/aztec/aztec.c", "line": 1, "note": "Aztec calendar correlation (GMT 584283, Calendrical Calculations)" },
+        { "file": "src/systems/french_republican/french_republican.c", "line": 8, "note": "French Republican calendar algorithm (Calendrical Calculations)" }
       ]
     },
     {
@@ -385,7 +386,8 @@
         { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" },
         { "file": "src/systems/egyptian/egyptian.c", "line": 1, "note": "Egyptian calendar algorithm (Calendrical Calculations ch. 1)" },
         { "file": "src/systems/persian/persian.c", "line": 3, "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)" },
-        { "file": "src/systems/aztec/aztec.c", "line": 1, "note": "Aztec calendar correlation (GMT 584283, Calendrical Calculations)" }
+        { "file": "src/systems/aztec/aztec.c", "line": 1, "note": "Aztec calendar correlation (GMT 584283, Calendrical Calculations)" },
+        { "file": "src/systems/french_republican/french_republican.c", "line": 8, "note": "French Republican calendar algorithm (Calendrical Calculations)" }
       ]
     },
     {
@@ -1983,6 +1985,24 @@
       ],
       "references": [
         { "file": ".context/research/digested/042-kalachakra-cosmology.md", "line": 1, "note": "Translator of primary source for digest 042" }
+      ]
+    },
+    {
+      "id": "gilbert-romme",
+      "name": "Gilbert Romme",
+      "born": 1750,
+      "died": 1795,
+      "category": ["politician", "calendar-designer"],
+      "contributions": [
+        {
+          "work": "French Republican Calendar",
+          "description": "Designer of the French Republican calendar and proposer of the Romme leap year rule (Gregorian rule applied to year+1)",
+          "year": 1793
+        }
+      ],
+      "references": [
+        { "file": "src/systems/french_republican/french_republican.h", "line": 13, "note": "Calendar designer, leap year proposal" },
+        { "file": "src/systems/french_republican/french_republican.c", "line": 8, "note": "Romme leap year rule implementation" }
       ]
     }
   ]
