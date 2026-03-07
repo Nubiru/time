@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-06",
-    "total_contributors": 91
+    "total_contributors": 95
   },
   "contributors": [
     {
@@ -28,7 +28,8 @@
         { "file": "src/systems/astronomy/solar_events.c", "line": 19, "note": "Simplified Meeus/NOAA solar position" },
         { "file": "src/systems/astronomy/moon_nodes.c", "line": 18, "note": "Chapter 47: mean longitude of ascending node" },
         { "file": "src/ui/time_hud.c", "line": 13, "note": "Sidereal rate reference" },
-        { "file": "src/systems/unified/calendar_epoch.c", "line": 22, "note": "Chapter 8: Computus (Anonymous Gregorian Easter algorithm)" }
+        { "file": "src/systems/unified/calendar_epoch.c", "line": 22, "note": "Chapter 8: Computus (Anonymous Gregorian Easter algorithm)" },
+        { "file": "src/render/decan_stars.c", "line": 243, "note": "Chapter 14: Ascendant formula for decan rising computation" }
       ]
     },
     {
@@ -1470,6 +1471,72 @@
       ],
       "references": [
         { "file": ".context/research/digested/029-meeus-computus-obliquity-precession-moon-phases.md", "line": 1, "note": "Spencer Jones Computus algorithm (Meeus Ch. 8)" }
+      ]
+    },
+    {
+      "id": "otto-neugebauer",
+      "name": "Otto Neugebauer",
+      "born": 1899,
+      "died": 1990,
+      "category": ["historian-of-science", "mathematician", "egyptologist"],
+      "contributions": [
+        {
+          "work": "Egyptian Astronomical Texts (EAT)",
+          "description": "Comprehensive study of Egyptian decan star groups, diagonal star clocks, and astronomical ceiling texts. Established the standard transliteration system for the 36 decan names.",
+          "year": 1960
+        }
+      ],
+      "references": [
+        { "file": "src/render/decan_stars.c", "line": 6, "note": "Egyptian decan names (EAT transliteration)" }
+      ]
+    },
+    {
+      "id": "richard-parker",
+      "name": "Richard A. Parker",
+      "born": 1905,
+      "died": 1993,
+      "category": ["egyptologist", "historian-of-science"],
+      "contributions": [
+        {
+          "work": "Egyptian Astronomical Texts (EAT)",
+          "description": "Co-author with Neugebauer. Identified decan star groups in coffin lids, temple ceilings, and papyri. Established chronological framework for Egyptian astronomical observation.",
+          "year": 1960
+        }
+      ],
+      "references": [
+        { "file": "src/render/decan_stars.c", "line": 6, "note": "Egyptian decan names (EAT co-author)" }
+      ]
+    },
+    {
+      "id": "joanne-conman",
+      "name": "Joanne Conman",
+      "born": 0,
+      "category": ["egyptologist", "astronomer"],
+      "contributions": [
+        {
+          "work": "It's About Time: Ancient Egyptian Cosmology",
+          "description": "Modern star identifications for Egyptian decans, correlating ancient star group descriptions with contemporary astronomical catalogs.",
+          "year": 2003
+        }
+      ],
+      "references": [
+        { "file": "src/render/decan_stars.c", "line": 8, "note": "Modern star identifications for decans" }
+      ]
+    },
+    {
+      "id": "jose-lull-juan-belmonte",
+      "name": "Jose Lull & Juan Antonio Belmonte",
+      "born": 0,
+      "category": ["archaeoastronomer", "astrophysicist"],
+      "contributions": [
+        {
+          "work": "In Search of Cosmic Order: Selected Essays on Egyptian Archaeoastronomy",
+          "description": "Decan-star correlation survey establishing consensus identifications for Egyptian decan groups with modern stars and constellations.",
+          "year": 2009
+        }
+      ],
+      "references": [
+        { "file": "src/render/decan_stars.c", "line": 8, "note": "Decan-star correlation survey" }
       ]
     }
   ]

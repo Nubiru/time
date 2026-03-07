@@ -1,13 +1,13 @@
 ## Add to WASM_SRC:
-src/render/megalithic.c
+src/render/decan_stars.c
 
 ## New test target:
-test-megalithic: $(BUILD_DIR)
-	$(CC) $(CFLAGS) tests/render/test_megalithic.c src/render/megalithic.c src/systems/astronomy/solar_events.c $(UNITY) -o $(BUILD_DIR)/test_megalithic $(LDFLAGS)
-	./$(BUILD_DIR)/test_megalithic
+test-decan-stars: $(BUILD_DIR)
+	$(CC) $(CFLAGS) tests/render/test_decan_stars.c src/render/decan_stars.c $(UNITY) -o $(BUILD_DIR)/test_decan_stars $(LDFLAGS)
+	./$(BUILD_DIR)/test_decan_stars
 
 ## Add to test: dependency list:
-test-megalithic
+test-decan-stars
 
 ## Add to .PHONY:
-test-megalithic
+test-decan-stars

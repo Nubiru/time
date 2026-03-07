@@ -1,24 +1,26 @@
-# Maintainer Report — Megalithic Alignments
+# Maintainer Report — Decan Star Data
 
 **Date**: 2026-03-07
-**Task**: Track 41.2 — Megalithic Alignments
-**Verdict**: PASS (pending background)
+**Task**: Track 43.2 — Decan Star Data
+**Verdict**: PASS
 
 ## Gate Results
 
 | Gate | Result |
 |------|--------|
 | G1 Compilation | PASS (zero warnings) |
-| G2 Tests | PASS (45 tests, 0 failures) |
+| G2 Tests | PASS (42 tests, 0 failures) |
 | G3 Purity P1-P5 | PASS |
 | G4 Naming/Style | PASS |
-| G5 Dead code | PASS |
-| G6 TODOs | PASS |
-| G7 Duplication | PASS (no existing megalithic module) |
-| G8 Attribution | PASS (Meeus in contributors.json) |
+| G5 Dead code | PASS (all declared functions called in tests) |
+| G6 TODOs | PASS (no naked TODOs) |
+| G7 Duplication | PASS (no existing decan module) |
+| G8 Attribution | PASS (Neugebauer, Parker, Conman, Lull & Belmonte added to contributors.json) |
+| G9 Regression | PASS (2627 tests / 91 suites / 0 failures) |
 
 ## Observations
-- Module depends on solar_events.c for se_solar_declination()
-- All data in static const arrays
-- Flat-horizon assumption for azimuth (documented limitation)
-- Newgrange tolerance widened to 5.0° due to terrain elevation effects
+- Standalone module with no external dependencies (pure data + math)
+- 36 decan records all in static const array
+- Ascendant formula uses Meeus Ch. 14 approximation (adequate for display purposes)
+- PI defined in header (consistent with project pattern, no conflict)
+- Some decan-star identifications noted as uncertain in description fields

@@ -2,60 +2,55 @@
 
 **Status**: COMPLETE
 **Date**: 2026-03-07
-**Task**: Megalithic Alignments
-**Roadmap Reference**: Track 41.2 — "Agent: Megalithic Alignments (ALPHA)"
+**Task**: Decan Star Data
+**Roadmap Reference**: Track 43.2 — "Agent: Decan Star Data (ALPHA)"
 
 ## Files Created
-- `src/render/megalithic.h` — Header: 3 types, 11 functions for site catalog + azimuth computation
-- `src/render/megalithic.c` — 5-site megalithic catalog with alignment verification
-- `tests/render/test_megalithic.c` — 45 tests
+- `src/render/decan_stars.h` — Header: 3 types (decan_t, decan_hour_t, decan_element_t), 9 functions
+- `src/render/decan_stars.c` — 36 decan records with Egyptian names, principal stars, ascendant computation
+- `tests/render/test_decan_stars.c` — 42 tests
 
 ## API Summary
-- `meg_site_count()` → int — number of sites (5)
-- `meg_site_get(int index)` → meg_site_t — site data by index
-- `meg_event_name(meg_event_t)` → const char* — event type name
-- `meg_sunrise_azimuth(lat, dec)` → double — sunrise azimuth from north
-- `meg_sunset_azimuth(lat, dec)` → double — sunset azimuth (360 - sunrise)
-- `meg_lunar_standstill_azimuth(lat, north)` → double — moonrise/set at standstill
-- `meg_solstice_declination(summer)` → double — ±23.4393°
-- `meg_equinox_declination()` → double — 0.0°
-- `meg_check_alignment(index, jd)` → meg_alignment_t — check if aligned
-- `meg_aligned_now(jd, out, max)` → int — count of currently aligned sites
-- `meg_days_to_alignment(index, jd)` → int — days until next alignment
-
-## Sites
-1. Newgrange (Ireland, 3200 BCE) — winter solstice sunrise, tolerance 5.0°
-2. Stonehenge (England, 3000 BCE) — summer solstice sunrise, tolerance 2.0°
-3. Callanish (Scotland, 2900 BCE) — lunar standstill south, tolerance 3.0°
-4. Carnac (France, 4500 BCE) — summer solstice sunrise, tolerance 2.5°
-5. Mnajdra (Malta, 3600 BCE) — equinox sunrise, tolerance 1.5°
+- `decan_count()` → int — always 36
+- `decan_get(int index)` → decan_t — full decan data by index (0-35)
+- `decan_for_ecliptic_longitude(double)` → int — map ecliptic longitude to decan index
+- `decan_for_sign(int sign, int *out, int max)` → int — 3 decan indices per zodiac sign
+- `decan_element_name(decan_element_t)` → const char* — Fire/Earth/Air/Water
+- `decan_rising_now(double lst_deg, double lat_deg)` → int — which decan is on eastern horizon
+- `decan_night_hours(double lst_deg, double lat_deg, decan_hour_t *out, int max)` → int — 12-hour star clock
+- `decan_for_night_hour(double lst_deg, double lat_deg, int hour)` → int — ruler of specific night hour
+- `decan_star_longitude(int index)` → double — midpoint ecliptic longitude
 
 ## Test Results
 ```
-45 Tests 0 Failures 0 Ignored
+42 Tests 0 Failures 0 Ignored
 OK
 ```
 
 ## Compile Command
 ```
-gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/render/test_megalithic.c src/render/megalithic.c src/systems/astronomy/solar_events.c tests/unity/unity.c -o build/test_megalithic -lm
+gcc -Wall -Wextra -Werror -std=c11 -pedantic tests/render/test_decan_stars.c src/render/decan_stars.c tests/unity/unity.c -o build/test_decan_stars -lm
 ```
 
 ## Checker Result
-PASS — pending background validation
+PASS — compilation clean, purity clean, 42 tests pass
 
 ## Maintainer Result
-PASS — pending background validation
+PASS — regression gate 2627 tests / 91 suites / 0 failures
 
 ## Makefile Additions
 See makefile-additions.md
 
 ## Attribution
-Azimuth formula from Jean Meeus "Astronomical Algorithms" — already in contributors.json.
-Archaeological alignment data from published archaeological surveys (Newgrange, Stonehenge, etc.).
+- Otto Neugebauer & Richard A. Parker — Egyptian Astronomical Texts (decan names). Added to contributors.json.
+- Joanne Conman (2003) — modern star identifications. Added to contributors.json.
+- Jose Lull & Juan Antonio Belmonte (2009) — decan-star correlation survey. Added to contributors.json.
+- Jean Meeus — ascendant formula (Chapter 14). Reference added to contributors.json.
 
 ## Knowledge Gaps
-No gaps — standard astronomical formulas + well-documented archaeological data.
+- Egyptian decan transliterations vary across sources; deeper review of EAT volumes I-III would refine exact names
+- Several decan-star identifications are uncertain (noted in description fields for Aries, Gemini, Libra decans)
+- Book suggestion: Neugebauer & Parker "Egyptian Astronomical Texts" vols I-III — would enable refined decan names and star clock data
 
 ## Next Candidate
-Track 43.2 — Decan Star Data (ALPHA domain)
+Track 44.2 — Tarot Visual Data (ALPHA domain)

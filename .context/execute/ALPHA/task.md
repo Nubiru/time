@@ -1,116 +1,113 @@
-# Task: Megalithic Alignments
+# Task: Decan Star Data
 
 **Agent**: ALPHA
-**Roadmap Reference**: Track 41.2 — "Agent: Megalithic Alignments (ALPHA)"
+**Roadmap Reference**: Track 43.2 — "Agent: Decan Star Data (ALPHA)"
 **Date**: 2026-03-07
 **Status**: CLAIMED
 
 ## Goal
 
-Pure geometry module providing megalithic site alignment data and sunrise/sunset/moonrise azimuth computation. Stores archaeological alignment data for major megalithic sites (Stonehenge, Newgrange, Callanish, Carnac, Mnajdra) and computes whether their alignments match current or upcoming celestial events. Enables "Newgrange aligns in 3 days" alerts.
+Pure data module providing the 36 Egyptian decans as star groups with ecliptic longitude ranges, principal star identifications, and rising-time computation. Enables "which decan rules the current hour of the night" (ancient Egyptian star clock) and cross-references to zodiac signs (3 decans per sign). Foundational data for Track 43.3 (Egyptian Display) and Track 44 (Tarot decan cards).
 
 ## READ FIRST
 
-- `src/systems/astronomy/solar_events.h` — se_solar_declination(), se_sunrise_hour_angle()
-- `src/math/vec3.h` — basic vector math
-- `src/render/color_theory.h` — ct_system_primary() for GEOLOGY colors (stone/earth)
+- `src/render/star_catalog.h` — star_entry_t, star naming pattern
+- `src/math/sidereal.h` — lst_degrees(), gmst_degrees() for sidereal time
+- `src/systems/astrology/zodiac.h` — zodiac_sign(), zodiac_decan() for cross-reference
 
 ## Files to Create
 
-- `src/render/megalithic.h`
-- `src/render/megalithic.c`
-- `tests/render/test_megalithic.c`
+- `src/render/decan_stars.h`
+- `src/render/decan_stars.c`
+- `tests/render/test_decan_stars.c`
 
 ## API
 
 ```c
-#ifndef TIME_MEGALITHIC_H
-#define TIME_MEGALITHIC_H
+#ifndef TIME_DECAN_STARS_H
+#define TIME_DECAN_STARS_H
 
-#define PI 3.14159265358979323846
+#define DECAN_COUNT 36
+#define DECAN_DEGREES 10.0  /* each decan spans 10 degrees of ecliptic */
 
-#define MEG_MAX_SITES 8
-
-/* Celestial event that a site aligns with */
+/* Element associated with each decan (via zodiac triplicity) */
 typedef enum {
-    MEG_EVENT_SUMMER_SOLSTICE_SUNRISE = 0,
-    MEG_EVENT_SUMMER_SOLSTICE_SUNSET,
-    MEG_EVENT_WINTER_SOLSTICE_SUNRISE,
-    MEG_EVENT_WINTER_SOLSTICE_SUNSET,
-    MEG_EVENT_EQUINOX_SUNRISE,
-    MEG_EVENT_EQUINOX_SUNSET,
-    MEG_EVENT_LUNAR_STANDSTILL_NORTH,
-    MEG_EVENT_LUNAR_STANDSTILL_SOUTH,
-    MEG_EVENT_COUNT
-} meg_event_t;
+    DECAN_ELEM_FIRE = 0,
+    DECAN_ELEM_EARTH,
+    DECAN_ELEM_AIR,
+    DECAN_ELEM_WATER,
+    DECAN_ELEM_COUNT
+} decan_element_t;
 
-/* Megalithic site data */
+/* Decan data */
 typedef struct {
-    const char *name;       /* site name */
-    const char *location;   /* country/region */
-    double lat;             /* latitude in degrees */
-    double lon;             /* longitude in degrees */
-    double alignment_az;    /* alignment azimuth in degrees from north */
-    meg_event_t event;      /* target celestial event */
-    int epoch_bce;          /* approximate construction date BCE */
-    double tolerance_deg;   /* angular tolerance for "aligned" check */
-} meg_site_t;
+    int index;                  /* 0-35 */
+    const char *egyptian_name;  /* traditional Egyptian name */
+    const char *principal_star; /* modern star identification (brightest in group) */
+    double ecl_lon_start;       /* ecliptic longitude start (degrees, 0=vernal equinox) */
+    double ecl_lon_end;         /* ecliptic longitude end (degrees) */
+    int zodiac_sign;            /* 0=Aries..11=Pisces */
+    int decan_in_sign;          /* 1, 2, or 3 within the sign */
+    decan_element_t element;    /* element from zodiac triplicity */
+    const char *description;    /* brief description of star group */
+} decan_t;
 
-/* Alignment check result */
+/* Night hour data for the decan star clock */
 typedef struct {
-    int aligned;            /* 1 if event azimuth matches site alignment */
-    double event_az;        /* computed azimuth of the event (degrees) */
-    double site_az;         /* site alignment azimuth (degrees) */
-    double delta_deg;       /* angular difference */
-} meg_alignment_t;
+    int decan_index;            /* which decan is rising */
+    double hour_angle;          /* hour angle of the decan's principal star */
+    int is_visible;             /* 1 if above horizon */
+} decan_hour_t;
 
-/* Get number of sites. */
-int meg_site_count(void);
+/* Get total number of decans (always 36). */
+int decan_count(void);
 
-/* Get site by index. */
-meg_site_t meg_site_get(int index);
+/* Get decan by index (0-35). Returns sentinel with index=-1 if invalid. */
+decan_t decan_get(int index);
 
-/* Get event name as string. */
-const char *meg_event_name(meg_event_t event);
+/* Get decan for a given ecliptic longitude (0-360 degrees).
+ * Returns decan index (0-35). */
+int decan_for_ecliptic_longitude(double ecl_lon_deg);
 
-/* Compute sunrise azimuth for a given latitude and solar declination.
- * Returns degrees from north (0=N, 90=E, 180=S, 270=W). */
-double meg_sunrise_azimuth(double lat_deg, double declination_deg);
+/* Get the 3 decans for a zodiac sign (0=Aries..11=Pisces).
+ * Writes up to 3 indices to out[]. Returns count written (3, or 0 if invalid). */
+int decan_for_sign(int sign, int *out, int max_out);
 
-/* Compute sunset azimuth (= 360 - sunrise azimuth). */
-double meg_sunset_azimuth(double lat_deg, double declination_deg);
+/* Decan element name as string. */
+const char *decan_element_name(decan_element_t elem);
 
-/* Compute moonrise azimuth at maximum lunar standstill.
- * Moon declination extremes: +/- 28.585 degrees (major standstill). */
-double meg_lunar_standstill_azimuth(double lat_deg, int north);
+/* Compute which decan is currently rising at observer location.
+ * lst_deg: local sidereal time in degrees (0-360).
+ * lat_deg: observer latitude in degrees.
+ * Returns decan index (0-35). */
+int decan_rising_now(double lst_deg, double lat_deg);
 
-/* Solar declination at solstice/equinox. */
-double meg_solstice_declination(int summer);
-double meg_equinox_declination(void);
+/* Get the decan star clock: which decan rules each of the 12 night hours.
+ * lst_deg: local sidereal time in degrees at sunset.
+ * lat_deg: observer latitude.
+ * Writes up to max_out decan_hour_t entries to out[].
+ * Returns count written (up to 12). */
+int decan_night_hours(double lst_deg, double lat_deg, decan_hour_t *out, int max_out);
 
-/* Check if a site is aligned at a given Julian Day.
- * Uses solar declination from solar_events.h. */
-meg_alignment_t meg_check_alignment(int site_index, double jd);
+/* Get the "ruler" decan for a given night hour (0-11) at a given LST.
+ * Returns decan index, or -1 if invalid. */
+int decan_for_night_hour(double lst_deg, double lat_deg, int hour);
 
-/* Check all sites, return count of currently aligned sites.
- * Writes aligned site indices to out[], returns count. */
-int meg_aligned_now(double jd, int *out, int max_out);
+/* Principal star ecliptic longitude for a decan (midpoint of range). */
+double decan_star_longitude(int index);
 
-/* Days until next alignment for a site (searches forward from jd).
- * Returns -1 if event doesn't occur within 400 days. */
-int meg_days_to_alignment(int site_index, double jd);
-
-#endif /* TIME_MEGALITHIC_H */
+#endif /* TIME_DECAN_STARS_H */
 ```
 
 ## DONE WHEN
 
-- [ ] 5+ megalithic sites with full alignment data
-- [ ] Sunrise/sunset azimuth computation correct (verified against known values)
-- [ ] Lunar standstill azimuth correct
-- [ ] Alignment checking works for all event types
-- [ ] meg_days_to_alignment finds next solstice/equinox
-- [ ] >= 25 tests covering: azimuth math, site data, alignment checks, edge cases
+- [ ] 36 decans with Egyptian names, principal stars, ecliptic longitude ranges
+- [ ] `decan_for_ecliptic_longitude()` maps any longitude to correct decan
+- [ ] `decan_for_sign()` returns 3 decans per zodiac sign
+- [ ] `decan_rising_now()` computes rising decan from LST + latitude
+- [ ] `decan_night_hours()` fills 12-hour star clock array
+- [ ] `decan_for_night_hour()` returns ruler for specific night hour
+- [ ] >= 30 tests covering: data integrity, longitude mapping, sign mapping, rising computation, night hours, edge cases
 - [ ] All tests pass with zero warnings
 - [ ] Purity: no malloc, no globals, no side effects
 - [ ] Compiles: `gcc -Wall -Wextra -Werror -std=c11 -pedantic`
@@ -120,8 +117,8 @@ int meg_days_to_alignment(int site_index, double jd);
 - C11, `-Wall -Wextra -Werror -std=c11 -pedantic`
 - `#define PI 3.14159265358979323846` (no M_PI)
 - No malloc, no globals, no side effects
-- Depends on solar_events.h for se_solar_declination()
-- All site data as static const
-- Azimuth formula: sunrise_az = arccos(sin(dec)/cos(lat)) for flat horizon
-- Obliquity of ecliptic: 23.4393 degrees (J2000 standard)
-- Major lunar standstill: moon declination ±28.585° (obliquity + lunar inclination 5.145°)
+- Standalone module (no external dependencies — sidereal/zodiac referenced for design but not linked)
+- All decan data as static const arrays
+- Egyptian decan names from Neugebauer & Parker "Egyptian Astronomical Texts" tradition
+- Principal stars mapped to modern identifications where scholarly consensus exists
+- Ecliptic longitude ranges: decan 0 = 0-10 deg (Aries 1st decan), decan 35 = 350-360 deg (Pisces 3rd decan)
