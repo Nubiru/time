@@ -63,7 +63,9 @@
         { "file": "src/ui/tzolkin_card.c", "line": 42, "note": "Wavespell initiating seals" },
         { "file": "src/ui/tzolkin_card.c", "line": 52, "note": "Oracle relationships (Dreamspell)" },
         { "file": "src/systems/tzolkin/haab.c", "line": 9, "note": "GMT correlation 584283 for Haab" },
-        { "file": "docs/DECISIONS.md", "line": 44, "note": "ADR-002: Arguelles-only decision" }
+        { "file": "docs/DECISIONS.md", "line": 44, "note": "ADR-002: Arguelles-only decision" },
+        { "file": "src/systems/tzolkin/tzolkin_board.c", "line": 17, "note": "Loom of the Maya GAP pattern (Dreamspell)" },
+        { "file": "src/systems/tzolkin/tzolkin_board.h", "line": 1, "note": "260-kin board data structure (Dreamspell)" }
       ]
     },
     {
