@@ -94,6 +94,7 @@ set(RENDER_SOURCES
     src/render/earth_atmosphere.c
     src/render/earth_pack.c
     src/render/tree_pack.c
+    src/render/eclipse_geometry.c
     src/render/catalog_ingest.c
     src/render/text_render.c
     src/render/hexagram_geometry.c
@@ -164,6 +165,8 @@ set(SYSTEMS_SOURCES
     src/systems/japanese/japanese.c
     # Aztec
     src/systems/aztec/aztec.c
+    # French Republican
+    src/systems/french_republican/french_republican.c
     # Geology
     src/systems/geology/geo_time.c
     src/systems/geology/climate_history.c
@@ -338,6 +341,7 @@ else()
     add_library(time_earth_atmosphere OBJECT src/render/earth_atmosphere.c)
     add_library(time_earth_globe     OBJECT src/render/earth_globe.c)
     add_library(time_earth_pack      OBJECT src/render/earth_pack.c)
+    add_library(time_eclipse_geometry OBJECT src/render/eclipse_geometry.c)
     add_library(time_tree_pack       OBJECT src/render/tree_pack.c)
     add_library(time_hexagram_geometry OBJECT src/render/hexagram_geometry.c)
     add_library(time_milkyway_pack   OBJECT src/render/milkyway_pack.c)
@@ -407,6 +411,9 @@ else()
 
     # Systems — Aztec
     add_library(time_aztec           OBJECT src/systems/aztec/aztec.c)
+
+    # Systems — French Republican
+    add_library(time_french_republican OBJECT src/systems/french_republican/french_republican.c)
 
     # Systems — Geology
     add_library(time_geo_time        OBJECT src/systems/geology/geo_time.c)
@@ -550,6 +557,7 @@ else()
     time_add_test(NAME test_bodygraph_pack TEST tests/render/test_bodygraph_pack.c DEPS bodygraph_pack bodygraph)
     time_add_test(NAME test_earth_pack    TEST tests/render/test_earth_pack.c    DEPS earth_pack earth_globe earth_atmosphere)
     time_add_test(NAME test_tree_pack    TEST tests/render/test_tree_pack.c    DEPS tree_pack tree_geometry sefirot)
+    time_add_test(NAME test_eclipse_geometry TEST tests/render/test_eclipse_geometry.c DEPS eclipse_geometry lunar solar_events)
     time_add_test(NAME test_glyph_batch     TEST tests/render/test_glyph_batch.c     DEPS glyph_batch vec3)
     time_add_test(NAME test_color_theory    TEST tests/render/test_color_theory.c    DEPS color_theory color)
     time_add_test(NAME test_star_catalog_ext TEST tests/render/test_star_catalog_ext.c DEPS star_catalog_ext)
@@ -639,6 +647,9 @@ else()
 
     # Aztec tests
     time_add_test(NAME test_aztec           TEST tests/systems/aztec/test_aztec.c      DEPS aztec)
+
+    # French Republican tests
+    time_add_test(NAME test_french_republican TEST tests/systems/french_republican/test_french_republican.c DEPS french_republican)
 
     # Geology tests
     time_add_test(NAME test_geo_time        TEST tests/systems/test_geo_time.c              DEPS geo_time)
