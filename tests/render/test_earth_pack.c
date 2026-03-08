@@ -2,7 +2,7 @@
  * test_earth_pack.c -- Tests for Earth render pack: globe, coastlines,
  * terminator, atmosphere shell packing into GPU-ready vertex arrays.
  *
- * RED phase: 42 tests covering all public API functions.
+ * 48 tests covering all public API functions + edge cases.
  */
 
 #include "../unity/unity.h"
@@ -564,6 +564,105 @@ void test_shaders_version_300_es(void)
 }
 
 /* ======================================================================
+ * Edge cases
+ * ====================================================================== */
+
+/* 43. Pack globe with radius=0 produces zero-position vertices */
+void test_pack_globe_radius_zero(void)
+{
+    erp_config_t cfg = erp_default_config();
+    cfg.globe_radius = 0.0f;
+    float verts[EARTH_GLOBE_MAX_VERTICES * ERP_GLOBE_VERTEX_FLOATS];
+    unsigned int indices[EARTH_GLOBE_MAX_INDICES];
+
+    int n = erp_pack_globe(&cfg, verts, indices);
+    TEST_ASSERT_TRUE(n > 0);
+
+    /* All positions should be at origin */
+    for (int i = 0; i < n && i < 10; i++) {
+        int base = i * ERP_GLOBE_VERTEX_FLOATS;
+        FCLOSE(0.0f, verts[base + 0]);
+        FCLOSE(0.0f, verts[base + 1]);
+        FCLOSE(0.0f, verts[base + 2]);
+    }
+}
+
+/* 44. Pack globe with very large radius produces scaled positions */
+void test_pack_globe_large_radius(void)
+{
+    erp_config_t cfg = erp_default_config();
+    cfg.globe_radius = 1000.0f;
+    float verts[EARTH_GLOBE_MAX_VERTICES * ERP_GLOBE_VERTEX_FLOATS];
+    unsigned int indices[EARTH_GLOBE_MAX_INDICES];
+
+    erp_pack_globe(&cfg, verts, indices);
+
+    /* North pole: (0, 1000, 0) */
+    FCLOSE(0.0f, verts[0]);
+    FCLOSE(1000.0f, verts[1]);
+    FCLOSE(0.0f, verts[2]);
+}
+
+/* 45. Pack coastlines with radius=0 produces zero-distance vertices */
+void test_pack_coastlines_radius_zero(void)
+{
+    erp_config_t cfg = erp_default_config();
+    cfg.globe_radius = 0.0f;
+    float out[EARTH_COASTLINE_POINT_COUNT * 2 * ERP_LINE_VERTEX_FLOATS];
+
+    int n = erp_pack_coastlines(&cfg, out);
+    TEST_ASSERT_TRUE(n > 0);
+
+    for (int i = 0; i < n && i < 10; i++) {
+        int base = i * ERP_LINE_VERTEX_FLOATS;
+        float x = out[base + 0];
+        float y = out[base + 1];
+        float z = out[base + 2];
+        float dist = sqrtf(x * x + y * y + z * z);
+        FCLOSE(0.0f, dist);
+    }
+}
+
+/* 46. All vertex shaders contain gl_Position */
+void test_all_vert_shaders_have_gl_position(void)
+{
+    TEST_ASSERT_NOT_NULL(strstr(erp_globe_vert_source(), "gl_Position"));
+    TEST_ASSERT_NOT_NULL(strstr(erp_atmo_vert_source(), "gl_Position"));
+    TEST_ASSERT_NOT_NULL(strstr(erp_line_vert_source(), "gl_Position"));
+}
+
+/* 47. All shaders contain a main function */
+void test_all_shaders_have_main(void)
+{
+    TEST_ASSERT_NOT_NULL(strstr(erp_globe_vert_source(), "void main()"));
+    TEST_ASSERT_NOT_NULL(strstr(erp_globe_frag_source(), "void main()"));
+    TEST_ASSERT_NOT_NULL(strstr(erp_atmo_vert_source(), "void main()"));
+    TEST_ASSERT_NOT_NULL(strstr(erp_atmo_frag_source(), "void main()"));
+    TEST_ASSERT_NOT_NULL(strstr(erp_line_vert_source(), "void main()"));
+    TEST_ASSERT_NOT_NULL(strstr(erp_line_frag_source(), "void main()"));
+}
+
+/* 48. Pack terminator with radius=0 produces zero-distance vertices */
+void test_pack_terminator_radius_zero(void)
+{
+    erp_config_t cfg = erp_default_config();
+    cfg.globe_radius = 0.0f;
+    float out[ERP_TERMINATOR_POINTS * ERP_LINE_VERTEX_FLOATS];
+
+    int n = erp_pack_terminator(0.0, 0.0, &cfg, out);
+    TEST_ASSERT_EQUAL_INT(ERP_TERMINATOR_POINTS, n);
+
+    for (int i = 0; i < n; i++) {
+        int base = i * ERP_LINE_VERTEX_FLOATS;
+        float x = out[base + 0];
+        float y = out[base + 1];
+        float z = out[base + 2];
+        float dist = sqrtf(x * x + y * y + z * z);
+        FCLOSE(0.0f, dist);
+    }
+}
+
+/* ======================================================================
  * Runner
  * ====================================================================== */
 
@@ -626,6 +725,14 @@ int main(void)
     RUN_TEST(test_line_vert_source_exists);
     RUN_TEST(test_line_frag_source_exists);
     RUN_TEST(test_shaders_version_300_es);
+
+    /* Edge cases */
+    RUN_TEST(test_pack_globe_radius_zero);
+    RUN_TEST(test_pack_globe_large_radius);
+    RUN_TEST(test_pack_coastlines_radius_zero);
+    RUN_TEST(test_all_vert_shaders_have_gl_position);
+    RUN_TEST(test_all_shaders_have_main);
+    RUN_TEST(test_pack_terminator_radius_zero);
 
     return UNITY_END();
 }
