@@ -98,6 +98,10 @@ set(RENDER_SOURCES
     src/render/catalog_ingest.c
     src/render/text_render.c
     src/render/hexagram_geometry.c
+    src/render/mesh_shader.c
+    src/render/passes/star_pass.c
+    src/render/passes/planet_pass.c
+    src/render/passes/zodiac_pass.c
 )
 
 # --- Systems ---
@@ -350,6 +354,7 @@ else()
     add_library(time_star_field      OBJECT src/render/star_field.c)
     add_library(time_text_render     OBJECT src/render/text_render.c)
     add_library(time_zodiac_pack     OBJECT src/render/zodiac_pack.c)
+    add_library(time_mesh_shader    OBJECT src/render/mesh_shader.c)
 
     # Systems — Astronomy
     add_library(time_orbit           OBJECT src/systems/astronomy/orbit.c)
