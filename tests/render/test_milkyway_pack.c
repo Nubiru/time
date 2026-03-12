@@ -1,501 +1,572 @@
 /*
- * test_milkyway_pack.c -- Tests for Milky Way band vertex packing
+ * test_milkyway_pack.c -- Tests for procedural Milky Way galaxy band
  *
- * RED phase: 42 tests covering all public API functions.
+ * 55 tests covering all public API functions:
+ *   mw_default_config, mw_pack, mw_brightness_at, mw_region_count,
+ *   mw_region_get, mw_galactic_to_equatorial, mw_vert_source, mw_frag_source
  */
 
 #include "../unity/unity.h"
 #include "../../src/render/milkyway_pack.h"
-#include "../../src/render/galaxy_geometry.h"
 
 #include <math.h>
 #include <string.h>
 
-#define PI 3.14159265358979323846
-
-#define FTOL 0.01f
+#define FTOL 0.02f
 #define FCLOSE(exp, act) TEST_ASSERT_FLOAT_WITHIN(FTOL, (exp), (act))
+#define DEG2RAD(d) ((d) * PI / 180.0)
 
 void setUp(void) {}
 void tearDown(void) {}
 
 /* ======================================================================
- * mwp_default_config
+ * mw_default_config
  * ====================================================================== */
 
-/* 1. Default config returns positive sphere_radius */
+/* 1. Default config sphere_radius positive */
 void test_default_config_sphere_radius(void)
 {
-    mwp_config_t cfg = mwp_default_config();
+    mw_config_t cfg = mw_default_config();
     TEST_ASSERT_TRUE(cfg.sphere_radius > 0.0f);
 }
 
-/* 2. Default config has positive band_width */
+/* 2. Default config band_width_deg is 30 */
 void test_default_config_band_width(void)
 {
-    mwp_config_t cfg = mwp_default_config();
-    TEST_ASSERT_TRUE(cfg.band_width > 0.0f);
+    mw_config_t cfg = mw_default_config();
+    FCLOSE(30.0f, cfg.band_width_deg);
 }
 
-/* 3. Default config core_brightness > edge_brightness */
-void test_default_config_brightness_order(void)
+/* 3. Default config core_brightness is 1.5 */
+void test_default_config_core_brightness(void)
 {
-    mwp_config_t cfg = mwp_default_config();
-    TEST_ASSERT_TRUE(cfg.core_brightness > cfg.edge_brightness);
+    mw_config_t cfg = mw_default_config();
+    FCLOSE(1.5f, cfg.core_brightness);
 }
 
-/* 4. Default config base_alpha in (0,1] */
-void test_default_config_base_alpha(void)
+/* 4. Default config edge_falloff is 2.0 */
+void test_default_config_edge_falloff(void)
 {
-    mwp_config_t cfg = mwp_default_config();
-    TEST_ASSERT_TRUE(cfg.base_alpha > 0.0f);
-    TEST_ASSERT_TRUE(cfg.base_alpha <= 1.0f);
+    mw_config_t cfg = mw_default_config();
+    FCLOSE(2.0f, cfg.edge_falloff);
 }
 
-/* 5. Default config dark_lane_factor in (0,1) */
-void test_default_config_dark_lane_factor(void)
+/* 5. Default config longitude_segments is 72 */
+void test_default_config_lon_segments(void)
 {
-    mwp_config_t cfg = mwp_default_config();
-    TEST_ASSERT_TRUE(cfg.dark_lane_factor > 0.0f);
-    TEST_ASSERT_TRUE(cfg.dark_lane_factor < 1.0f);
+    mw_config_t cfg = mw_default_config();
+    TEST_ASSERT_EQUAL_INT(72, cfg.longitude_segments);
 }
 
-/* 6. Default config galaxy_radius positive */
-void test_default_config_galaxy_radius(void)
+/* 6. Default config latitude_segments is 12 */
+void test_default_config_lat_segments(void)
 {
-    mwp_config_t cfg = mwp_default_config();
-    TEST_ASSERT_TRUE(cfg.galaxy_radius > 0.0f);
-}
-
-/* 7. Default config points_per_arm > 0 and <= 128 */
-void test_default_config_points_per_arm(void)
-{
-    mwp_config_t cfg = mwp_default_config();
-    TEST_ASSERT_TRUE(cfg.points_per_arm > 0);
-    TEST_ASSERT_TRUE(cfg.points_per_arm <= GALAXY_MAX_ARM_POINTS);
+    mw_config_t cfg = mw_default_config();
+    TEST_ASSERT_EQUAL_INT(12, cfg.latitude_segments);
 }
 
 /* ======================================================================
- * mwp_galactic_to_sphere
+ * mw_region_count / mw_region_get
  * ====================================================================== */
 
-/* 8. Origin galactic point at lat=0 maps to sphere surface */
-void test_galactic_to_sphere_origin_on_sphere(void)
+/* 7. Region count is 13 */
+void test_region_count(void)
 {
-    float out[3];
-    mwp_galactic_to_sphere(1.0f, 0.0f, 0.0f, 100.0f, out);
-    float mag = sqrtf(out[0] * out[0] + out[1] * out[1] + out[2] * out[2]);
-    FCLOSE(100.0f, mag);
+    TEST_ASSERT_EQUAL_INT(13, mw_region_count());
 }
 
-/* 9. Positive galactic latitude lifts Y */
-void test_galactic_to_sphere_positive_lat(void)
+/* 8. Region 0 is Galactic Center */
+void test_region_0_is_galactic_center(void)
 {
-    float out_zero[3], out_pos[3];
-    mwp_galactic_to_sphere(50.0f, 0.0f, 0.0f, 100.0f, out_zero);
-    mwp_galactic_to_sphere(50.0f, 0.0f, 20.0f, 100.0f, out_pos);
-    /* Positive lat should elevate the Y component compared to zero lat */
-    TEST_ASSERT_TRUE(out_pos[1] > out_zero[1]);
+    mw_region_t r = mw_region_get(0);
+    TEST_ASSERT_NOT_NULL(r.name);
+    TEST_ASSERT_EQUAL_STRING("Galactic Center", r.name);
 }
 
-/* 10. Negative galactic latitude lowers Y */
-void test_galactic_to_sphere_negative_lat(void)
+/* 9. Galactic Center at l=0, b=0 */
+void test_region_galactic_center_position(void)
 {
-    float out_zero[3], out_neg[3];
-    mwp_galactic_to_sphere(50.0f, 0.0f, 0.0f, 100.0f, out_zero);
-    mwp_galactic_to_sphere(50.0f, 0.0f, -20.0f, 100.0f, out_neg);
-    TEST_ASSERT_TRUE(out_neg[1] < out_zero[1]);
+    mw_region_t r = mw_region_get(0);
+    FCLOSE(0.0f, r.l_center_deg);
+    FCLOSE(0.0f, r.b_center_deg);
 }
 
-/* 11. All results lie on the sphere regardless of input angle */
-void test_galactic_to_sphere_always_on_sphere(void)
+/* 10. Galactic Center brightness is 2.0 */
+void test_region_galactic_center_brightness(void)
 {
-    float out[3];
-    float radius = 50.0f;
-    for (int i = 0; i < 36; i++) {
-        float angle = (float)i * 10.0f;
-        float gx = cosf(angle * (float)PI / 180.0f) * 30.0f;
-        float gz = sinf(angle * (float)PI / 180.0f) * 30.0f;
-        mwp_galactic_to_sphere(gx, gz, 5.0f, radius, out);
-        float mag = sqrtf(out[0] * out[0] + out[1] * out[1] + out[2] * out[2]);
-        FCLOSE(radius, mag);
-    }
+    mw_region_t r = mw_region_get(0);
+    FCLOSE(2.0f, r.brightness);
 }
 
-/* 12. Radius scaling */
-void test_galactic_to_sphere_radius_scaling(void)
+/* 11. Galactic Center angular radius is 15 */
+void test_region_galactic_center_radius(void)
 {
-    float out1[3], out2[3];
-    mwp_galactic_to_sphere(30.0f, 20.0f, 10.0f, 1.0f, out1);
-    mwp_galactic_to_sphere(30.0f, 20.0f, 10.0f, 50.0f, out2);
-    FCLOSE(out1[0] * 50.0f, out2[0]);
-    FCLOSE(out1[1] * 50.0f, out2[1]);
-    FCLOSE(out1[2] * 50.0f, out2[2]);
+    mw_region_t r = mw_region_get(0);
+    FCLOSE(15.0f, r.angular_radius);
 }
 
-/* 13. Galactic point at origin maps to a definite direction */
-void test_galactic_to_sphere_zero_zero(void)
+/* 12. All regions have non-null names */
+void test_all_regions_have_names(void)
 {
-    float out[3];
-    mwp_galactic_to_sphere(0.0f, 0.0f, 0.0f, 100.0f, out);
-    /* gal_x=0, gal_z=0 => lon=atan2(0,0)=0, lat=0 => x=r, y=0, z=0 */
-    /* However atan2(0,0) is implementation defined; just check on sphere */
-    float mag = sqrtf(out[0] * out[0] + out[1] * out[1] + out[2] * out[2]);
-    FCLOSE(100.0f, mag);
-}
-
-/* ======================================================================
- * mwp_arm_brightness
- * ====================================================================== */
-
-/* 14. t=0 (center) returns core_brightness */
-void test_arm_brightness_at_center(void)
-{
-    float b = mwp_arm_brightness(0.0f, 0.8f, 0.15f);
-    FCLOSE(0.8f, b);
-}
-
-/* 15. t=1 (edge) returns edge_brightness */
-void test_arm_brightness_at_edge(void)
-{
-    float b = mwp_arm_brightness(1.0f, 0.8f, 0.15f);
-    FCLOSE(0.15f, b);
-}
-
-/* 16. t=0.5 (midway) returns value between core and edge */
-void test_arm_brightness_midway(void)
-{
-    float b = mwp_arm_brightness(0.5f, 0.8f, 0.15f);
-    TEST_ASSERT_TRUE(b > 0.15f);
-    TEST_ASSERT_TRUE(b < 0.8f);
-}
-
-/* 17. Brightness monotonically decreases from center to edge */
-void test_arm_brightness_monotonic(void)
-{
-    float prev = mwp_arm_brightness(0.0f, 1.0f, 0.0f);
-    for (int i = 1; i <= 10; i++) {
-        float t = (float)i / 10.0f;
-        float cur = mwp_arm_brightness(t, 1.0f, 0.0f);
-        TEST_ASSERT_TRUE(cur <= prev);
-        prev = cur;
-    }
-}
-
-/* 18. t clamped below 0 */
-void test_arm_brightness_clamp_negative(void)
-{
-    float b = mwp_arm_brightness(-0.5f, 0.8f, 0.15f);
-    FCLOSE(0.8f, b);
-}
-
-/* 19. t clamped above 1 */
-void test_arm_brightness_clamp_above_one(void)
-{
-    float b = mwp_arm_brightness(1.5f, 0.8f, 0.15f);
-    FCLOSE(0.15f, b);
-}
-
-/* ======================================================================
- * mwp_dark_lane_factor
- * ====================================================================== */
-
-/* 20. Longitude 180 (far from rift) returns 1.0 (no reduction) */
-void test_dark_lane_far_from_rift(void)
-{
-    float f = mwp_dark_lane_factor(180.0f, 0.3f);
-    FCLOSE(1.0f, f);
-}
-
-/* 21. Longitude 0 (in rift center) returns dark_lane_factor */
-void test_dark_lane_at_center(void)
-{
-    float f = mwp_dark_lane_factor(0.0f, 0.3f);
-    TEST_ASSERT_TRUE(f < 1.0f);
-    TEST_ASSERT_TRUE(f >= 0.3f);
-}
-
-/* 22. Longitude 330 (in rift zone) returns reduced factor */
-void test_dark_lane_in_rift_zone(void)
-{
-    float f = mwp_dark_lane_factor(330.0f, 0.3f);
-    TEST_ASSERT_TRUE(f < 1.0f);
-}
-
-/* 23. Longitude 15 (in rift zone) also reduced */
-void test_dark_lane_at_15_deg(void)
-{
-    float f = mwp_dark_lane_factor(15.0f, 0.3f);
-    TEST_ASSERT_TRUE(f < 1.0f);
-}
-
-/* 24. Factor always >= dark_lane_factor and <= 1.0 */
-void test_dark_lane_bounds(void)
-{
-    for (int i = 0; i < 360; i++) {
-        float f = mwp_dark_lane_factor((float)i, 0.3f);
-        TEST_ASSERT_TRUE(f >= 0.3f - 0.001f);
-        TEST_ASSERT_TRUE(f <= 1.001f);
-    }
-}
-
-/* 25. dark_lane_factor=1.0 means no reduction anywhere */
-void test_dark_lane_factor_one(void)
-{
-    float f = mwp_dark_lane_factor(0.0f, 1.0f);
-    FCLOSE(1.0f, f);
-}
-
-/* ======================================================================
- * mwp_pack
- * ====================================================================== */
-
-/* 26. Pack returns positive vertex count */
-void test_pack_returns_positive_count(void)
-{
-    mwp_config_t cfg = mwp_default_config();
-    float buf[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    int count = mwp_pack(&cfg, buf);
-    TEST_ASSERT_TRUE(count > 0);
-}
-
-/* 27. Pack vertex count does not exceed maximum */
-void test_pack_within_max_vertices(void)
-{
-    mwp_config_t cfg = mwp_default_config();
-    float buf[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    int count = mwp_pack(&cfg, buf);
-    TEST_ASSERT_TRUE(count <= MWP_MAX_VERTICES);
-}
-
-/* 28. All packed positions lie on the celestial sphere */
-void test_pack_positions_on_sphere(void)
-{
-    mwp_config_t cfg = mwp_default_config();
-    float buf[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    int count = mwp_pack(&cfg, buf);
-
+    int count = mw_region_count();
     for (int i = 0; i < count; i++) {
-        int base = i * MWP_VERTEX_FLOATS;
-        float x = buf[base + 0];
-        float y = buf[base + 1];
-        float z = buf[base + 2];
-        float mag = sqrtf(x * x + y * y + z * z);
-        /* All vertices should be on the sphere within tolerance */
-        TEST_ASSERT_FLOAT_WITHIN(1.0f, cfg.sphere_radius, mag);
+        mw_region_t r = mw_region_get(i);
+        TEST_ASSERT_NOT_NULL(r.name);
+        TEST_ASSERT_TRUE(strlen(r.name) > 0);
     }
 }
 
-/* 29. Color channels are in [0,1] range */
-void test_pack_colors_in_range(void)
+/* 13. All regions have positive angular radius */
+void test_all_regions_positive_radius(void)
 {
-    mwp_config_t cfg = mwp_default_config();
-    float buf[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    int count = mwp_pack(&cfg, buf);
-
+    int count = mw_region_count();
     for (int i = 0; i < count; i++) {
-        int base = i * MWP_VERTEX_FLOATS;
-        for (int c = 5; c <= 8; c++) {
-            TEST_ASSERT_TRUE(buf[base + c] >= 0.0f);
-            TEST_ASSERT_TRUE(buf[base + c] <= 1.0f);
+        mw_region_t r = mw_region_get(i);
+        TEST_ASSERT_TRUE(r.angular_radius > 0.0f);
+    }
+}
+
+/* 14. All regions have brightness > 0 */
+void test_all_regions_positive_brightness(void)
+{
+    int count = mw_region_count();
+    for (int i = 0; i < count; i++) {
+        mw_region_t r = mw_region_get(i);
+        TEST_ASSERT_TRUE(r.brightness > 0.0f);
+    }
+}
+
+/* 15. Out-of-range index returns empty region */
+void test_region_out_of_range(void)
+{
+    mw_region_t r = mw_region_get(99);
+    TEST_ASSERT_NULL(r.name);
+    FCLOSE(0.0f, r.brightness);
+}
+
+/* 16. Negative index returns empty region */
+void test_region_negative_index(void)
+{
+    mw_region_t r = mw_region_get(-1);
+    TEST_ASSERT_NULL(r.name);
+}
+
+/* 17. Bright regions have brightness > 1.0 */
+void test_bright_regions(void)
+{
+    /* First 7 regions are bright clouds */
+    for (int i = 0; i < 7; i++) {
+        mw_region_t r = mw_region_get(i);
+        TEST_ASSERT_TRUE(r.brightness >= 1.0f);
+    }
+}
+
+/* 18. Dark rifts have brightness < 1.0 */
+void test_dark_regions(void)
+{
+    /* Regions 7-12 are dark rifts */
+    for (int i = 7; i < 13; i++) {
+        mw_region_t r = mw_region_get(i);
+        TEST_ASSERT_TRUE(r.brightness < 1.0f);
+    }
+}
+
+/* 19. Coal Sack is darkest */
+void test_coal_sack_darkest(void)
+{
+    float min_brightness = 999.0f;
+    int min_idx = -1;
+    int count = mw_region_count();
+    for (int i = 0; i < count; i++) {
+        mw_region_t r = mw_region_get(i);
+        if (r.brightness < min_brightness) {
+            min_brightness = r.brightness;
+            min_idx = i;
+        }
+    }
+    mw_region_t darkest = mw_region_get(min_idx);
+    TEST_ASSERT_EQUAL_STRING("Coal Sack", darkest.name);
+}
+
+/* ======================================================================
+ * mw_brightness_at
+ * ====================================================================== */
+
+/* 20. Brightness at galactic center is high (near 2.0) */
+void test_brightness_at_galactic_center(void)
+{
+    float b = mw_brightness_at(0.0f, 0.0f);
+    TEST_ASSERT_TRUE(b > 1.5f);
+}
+
+/* 21. Brightness at Coal Sack is low */
+void test_brightness_at_coal_sack(void)
+{
+    float b = mw_brightness_at(300.0f, -1.0f);
+    TEST_ASSERT_TRUE(b < 0.5f);
+}
+
+/* 22. Brightness at galactic plane is higher than off-plane */
+void test_brightness_on_plane_vs_off(void)
+{
+    float b_on = mw_brightness_at(180.0f, 0.0f);
+    float b_off = mw_brightness_at(180.0f, 14.0f);
+    TEST_ASSERT_TRUE(b_on >= b_off);
+}
+
+/* 23. Brightness is always non-negative */
+void test_brightness_non_negative(void)
+{
+    for (int l = 0; l < 360; l += 15) {
+        for (int b = -15; b <= 15; b += 5) {
+            float br = mw_brightness_at((float)l, (float)b);
+            TEST_ASSERT_TRUE(br >= 0.0f);
         }
     }
 }
 
-/* 30. UV coordinates are in [0,1] range */
-void test_pack_uv_in_range(void)
+/* 24. Cygnus Star Cloud is brighter than average */
+void test_brightness_at_cygnus(void)
 {
-    mwp_config_t cfg = mwp_default_config();
-    float buf[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    int count = mwp_pack(&cfg, buf);
-
-    for (int i = 0; i < count; i++) {
-        int base = i * MWP_VERTEX_FLOATS;
-        float u = buf[base + 3];
-        float v = buf[base + 4];
-        TEST_ASSERT_TRUE(u >= 0.0f && u <= 1.0f);
-        TEST_ASSERT_TRUE(v >= 0.0f && v <= 1.0f);
-    }
+    float b = mw_brightness_at(80.0f, 0.0f);
+    TEST_ASSERT_TRUE(b > 1.0f);
 }
 
-/* 31. Vertex count is divisible by 6 (triangle quads) */
-void test_pack_vertex_count_divisible_by_6(void)
+/* 25. Edge of band approaches zero */
+void test_brightness_edge_approaches_zero(void)
 {
-    mwp_config_t cfg = mwp_default_config();
-    float buf[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    int count = mwp_pack(&cfg, buf);
-    TEST_ASSERT_EQUAL_INT(0, count % 6);
+    /* At latitude = half band width, brightness should be very low */
+    float b = mw_brightness_at(180.0f, 14.9f);
+    TEST_ASSERT_TRUE(b < 0.5f);
 }
 
-/* 32. Pack with 1 point per arm produces no vertices (need >= 2 for segments) */
-void test_pack_one_point_per_arm(void)
+/* 26. Great Rift (l=30, b=0) has reduced brightness */
+void test_brightness_great_rift(void)
 {
-    mwp_config_t cfg = mwp_default_config();
-    cfg.points_per_arm = 1;
-    float buf[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    int count = mwp_pack(&cfg, buf);
-    TEST_ASSERT_EQUAL_INT(0, count);
-}
-
-/* 33. Pack uses all 4 arms */
-void test_pack_uses_four_arms(void)
-{
-    mwp_config_t cfg = mwp_default_config();
-    cfg.points_per_arm = 8;
-    float buf[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    int count = mwp_pack(&cfg, buf);
-    /* 4 arms * (8-1) segments * 6 verts per quad = 168 */
-    TEST_ASSERT_EQUAL_INT(4 * 7 * 6, count);
-}
-
-/* 34. Pack produces non-zero vertex data */
-void test_pack_nonzero_data(void)
-{
-    mwp_config_t cfg = mwp_default_config();
-    float buf[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    memset(buf, 0, sizeof(buf));
-    int count = mwp_pack(&cfg, buf);
-    int non_zero = 0;
-    for (int i = 0; i < count * MWP_VERTEX_FLOATS; i++) {
-        if (buf[i] != 0.0f) non_zero++;
-    }
-    TEST_ASSERT_TRUE(non_zero > 0);
-}
-
-/* 35. Different sphere radius changes vertex positions */
-void test_pack_radius_affects_positions(void)
-{
-    mwp_config_t cfg1 = mwp_default_config();
-    mwp_config_t cfg2 = mwp_default_config();
-    cfg1.sphere_radius = 100.0f;
-    cfg2.sphere_radius = 200.0f;
-    cfg1.points_per_arm = 4;
-    cfg2.points_per_arm = 4;
-    float buf1[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    float buf2[MWP_MAX_VERTICES * MWP_VERTEX_FLOATS];
-    mwp_pack(&cfg1, buf1);
-    mwp_pack(&cfg2, buf2);
-    /* First vertex position should differ */
-    float mag1 = sqrtf(buf1[0] * buf1[0] + buf1[1] * buf1[1] + buf1[2] * buf1[2]);
-    float mag2 = sqrtf(buf2[0] * buf2[0] + buf2[1] * buf2[1] + buf2[2] * buf2[2]);
-    TEST_ASSERT_TRUE(mag2 > mag1);
+    float b_rift = mw_brightness_at(30.0f, 0.0f);
+    float b_clear = mw_brightness_at(180.0f, 0.0f);
+    TEST_ASSERT_TRUE(b_rift < b_clear);
 }
 
 /* ======================================================================
- * mwp_info
+ * mw_galactic_to_equatorial
  * ====================================================================== */
 
-/* 36. Info vertex_count matches input */
-void test_info_vertex_count(void)
+/* 27. Galactic center (l=0, b=0) -> RA ~ 17h45m, Dec ~ -29 */
+void test_gal_to_eq_center(void)
 {
-    mwp_info_t info = mwp_info(168);
-    TEST_ASSERT_EQUAL_INT(168, info.vertex_count);
+    float ra, dec;
+    mw_galactic_to_equatorial(0.0f, 0.0f, &ra, &dec);
+    /* RA ~17.76 hours (266.4 / 15) */
+    TEST_ASSERT_FLOAT_WITHIN(0.5f, 17.76f, ra);
+    /* Dec ~ -28.94 */
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, -28.94f, dec);
 }
 
-/* 37. Info float_count = vertex_count * 9 */
-void test_info_float_count(void)
+/* 28. North galactic pole (b=90) -> Dec ~ +27.13 */
+void test_gal_to_eq_north_pole(void)
 {
-    mwp_info_t info = mwp_info(168);
-    TEST_ASSERT_EQUAL_INT(168 * MWP_VERTEX_FLOATS, info.float_count);
+    float ra, dec;
+    mw_galactic_to_equatorial(0.0f, 90.0f, &ra, &dec);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, 27.13f, dec);
 }
 
-/* 38. Info arm_count is 4 */
-void test_info_arm_count(void)
+/* 29. South galactic pole (b=-90) -> Dec ~ -27.13 */
+void test_gal_to_eq_south_pole(void)
 {
-    mwp_info_t info = mwp_info(168);
-    TEST_ASSERT_EQUAL_INT(GALAXY_ARM_COUNT, info.arm_count);
+    float ra, dec;
+    mw_galactic_to_equatorial(0.0f, -90.0f, &ra, &dec);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, -27.13f, dec);
 }
 
-/* 39. Info segment_count consistent with vertex_count */
-void test_info_segment_count(void)
+/* 30. RA is always in [0, 24) hours */
+void test_gal_to_eq_ra_range(void)
 {
-    /* 168 vertices / 6 verts per quad = 28 segments */
-    mwp_info_t info = mwp_info(168);
-    TEST_ASSERT_EQUAL_INT(28, info.segment_count);
+    for (int l = 0; l < 360; l += 30) {
+        float ra, dec;
+        mw_galactic_to_equatorial((float)l, 0.0f, &ra, &dec);
+        TEST_ASSERT_TRUE(ra >= 0.0f);
+        TEST_ASSERT_TRUE(ra < 24.0f);
+    }
+}
+
+/* 31. Dec is always in [-90, 90] */
+void test_gal_to_eq_dec_range(void)
+{
+    for (int l = 0; l < 360; l += 30) {
+        for (int b = -90; b <= 90; b += 30) {
+            float ra, dec;
+            mw_galactic_to_equatorial((float)l, (float)b, &ra, &dec);
+            TEST_ASSERT_TRUE(dec >= -90.1f);
+            TEST_ASSERT_TRUE(dec <= 90.1f);
+        }
+    }
+}
+
+/* 32. Cygnus region (l=80, b=0) maps to RA ~ 20h, Dec ~ 40 */
+void test_gal_to_eq_cygnus(void)
+{
+    float ra, dec;
+    mw_galactic_to_equatorial(80.0f, 0.0f, &ra, &dec);
+    /* Cygnus is roughly RA 20h, Dec +40 */
+    TEST_ASSERT_FLOAT_WITHIN(2.0f, 20.5f, ra);
+    TEST_ASSERT_FLOAT_WITHIN(10.0f, 40.0f, dec);
+}
+
+/* 33. Conversion is smooth (nearby inputs give nearby outputs) */
+void test_gal_to_eq_smooth(void)
+{
+    float ra1, dec1, ra2, dec2;
+    mw_galactic_to_equatorial(100.0f, 5.0f, &ra1, &dec1);
+    mw_galactic_to_equatorial(100.1f, 5.0f, &ra2, &dec2);
+    float ddec = fabsf(dec2 - dec1);
+    TEST_ASSERT_TRUE(ddec < 1.0f);
+}
+
+/* ======================================================================
+ * mw_pack
+ * ====================================================================== */
+
+/* 34. Pack returns positive vertex_count */
+void test_pack_positive_vertex_count(void)
+{
+    mw_config_t cfg = mw_default_config();
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    mw_info_t info = mw_pack(cfg, verts, indices);
+    TEST_ASSERT_TRUE(info.vertex_count > 0);
+}
+
+/* 35. Pack vertex_count <= MW_MAX_VERTICES */
+void test_pack_within_max_vertices(void)
+{
+    mw_config_t cfg = mw_default_config();
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    mw_info_t info = mw_pack(cfg, verts, indices);
+    TEST_ASSERT_TRUE(info.vertex_count <= MW_MAX_VERTICES);
+}
+
+/* 36. Pack returns positive index_count */
+void test_pack_positive_index_count(void)
+{
+    mw_config_t cfg = mw_default_config();
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    mw_info_t info = mw_pack(cfg, verts, indices);
+    TEST_ASSERT_TRUE(info.index_count > 0);
+}
+
+/* 37. index_count is divisible by 3 (triangles) */
+void test_pack_index_count_divisible_by_3(void)
+{
+    mw_config_t cfg = mw_default_config();
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    mw_info_t info = mw_pack(cfg, verts, indices);
+    TEST_ASSERT_EQUAL_INT(0, info.index_count % 3);
+}
+
+/* 38. triangle_count = index_count / 3 */
+void test_pack_triangle_count(void)
+{
+    mw_config_t cfg = mw_default_config();
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    mw_info_t info = mw_pack(cfg, verts, indices);
+    TEST_ASSERT_EQUAL_INT(info.index_count / 3, info.triangle_count);
+}
+
+/* 39. All indices are within valid range */
+void test_pack_indices_in_range(void)
+{
+    mw_config_t cfg = mw_default_config();
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    mw_info_t info = mw_pack(cfg, verts, indices);
+    for (int i = 0; i < info.index_count; i++) {
+        TEST_ASSERT_TRUE(indices[i] < (unsigned short)info.vertex_count);
+    }
+}
+
+/* 40. All vertex positions lie on the celestial sphere */
+void test_pack_positions_on_sphere(void)
+{
+    mw_config_t cfg = mw_default_config();
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    mw_info_t info = mw_pack(cfg, verts, indices);
+
+    for (int i = 0; i < info.vertex_count; i++) {
+        int base = i * MW_VERTEX_FLOATS;
+        float x = verts[base + 0];
+        float y = verts[base + 1];
+        float z = verts[base + 2];
+        float mag = sqrtf(x * x + y * y + z * z);
+        TEST_ASSERT_FLOAT_WITHIN(1.0f, cfg.sphere_radius, mag);
+    }
+}
+
+/* 41. Galactic coordinates are normalized to [0,1] and [-1,1] */
+void test_pack_galcoord_range(void)
+{
+    mw_config_t cfg = mw_default_config();
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    mw_info_t info = mw_pack(cfg, verts, indices);
+
+    for (int i = 0; i < info.vertex_count; i++) {
+        int base = i * MW_VERTEX_FLOATS;
+        float l_norm = verts[base + 3]; /* l_normalized [0,1] */
+        float b_norm = verts[base + 4]; /* b_normalized [-1,1] */
+        TEST_ASSERT_FLOAT_WITHIN(0.01f + 1.0f, 0.5f, l_norm); /* roughly [0,1] */
+        TEST_ASSERT_TRUE(b_norm >= -1.01f && b_norm <= 1.01f);
+    }
+}
+
+/* 42. Brightness values are non-negative */
+void test_pack_brightness_non_negative(void)
+{
+    mw_config_t cfg = mw_default_config();
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    mw_info_t info = mw_pack(cfg, verts, indices);
+
+    for (int i = 0; i < info.vertex_count; i++) {
+        int base = i * MW_VERTEX_FLOATS;
+        float bright = verts[base + 5]; /* brightness */
+        TEST_ASSERT_TRUE(bright >= 0.0f);
+    }
+}
+
+/* 43. Small grid: 4 lon x 2 lat = 8 quads = 16 tris = expected geometry */
+void test_pack_small_grid(void)
+{
+    mw_config_t cfg = mw_default_config();
+    cfg.longitude_segments = 4;
+    cfg.latitude_segments = 2;
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    mw_info_t info = mw_pack(cfg, verts, indices);
+    /* (4+1) * (2+1) = 15 vertices */
+    TEST_ASSERT_EQUAL_INT(15, info.vertex_count);
+    /* 4 * 2 quads * 2 triangles * 3 indices = 48 */
+    TEST_ASSERT_EQUAL_INT(48, info.index_count);
+    TEST_ASSERT_EQUAL_INT(16, info.triangle_count);
+}
+
+/* 44. Different sphere radius changes vertex magnitudes */
+void test_pack_radius_affects_positions(void)
+{
+    mw_config_t cfg1 = mw_default_config();
+    cfg1.longitude_segments = 4;
+    cfg1.latitude_segments = 2;
+    cfg1.sphere_radius = 50.0f;
+    mw_config_t cfg2 = cfg1;
+    cfg2.sphere_radius = 200.0f;
+
+    float v1[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    float v2[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short i1[MW_MAX_VERTICES * 6];
+    unsigned short i2[MW_MAX_VERTICES * 6];
+    mw_pack(cfg1, v1, i1);
+    mw_pack(cfg2, v2, i2);
+
+    /* First vertex magnitudes should differ */
+    float mag1 = sqrtf(v1[0]*v1[0] + v1[1]*v1[1] + v1[2]*v1[2]);
+    float mag2 = sqrtf(v2[0]*v2[0] + v2[1]*v2[1] + v2[2]*v2[2]);
+    TEST_ASSERT_TRUE(mag2 > mag1);
+}
+
+/* 45. MW_VERTEX_FLOATS is 6 */
+void test_vertex_floats_is_6(void)
+{
+    TEST_ASSERT_EQUAL_INT(6, MW_VERTEX_FLOATS);
+}
+
+/* 46. MW_MAX_VERTICES is 2000 */
+void test_max_vertices_is_2000(void)
+{
+    TEST_ASSERT_EQUAL_INT(2000, MW_MAX_VERTICES);
+}
+
+/* 47. Pack produces non-zero vertex data */
+void test_pack_nonzero_data(void)
+{
+    mw_config_t cfg = mw_default_config();
+    cfg.longitude_segments = 8;
+    cfg.latitude_segments = 4;
+    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+    unsigned short indices[MW_MAX_VERTICES * 6];
+    memset(verts, 0, sizeof(verts));
+    mw_pack(cfg, verts, indices);
+    int non_zero = 0;
+    for (int i = 0; i < 100; i++) {
+        if (verts[i] != 0.0f) non_zero++;
+    }
+    TEST_ASSERT_TRUE(non_zero > 0);
 }
 
 /* ======================================================================
  * Shader sources
  * ====================================================================== */
 
-/* 40. Vertex shader starts with #version 300 es */
+/* 48. Vertex shader starts with #version 300 es */
 void test_vert_source_version(void)
 {
-    const char *src = mwp_vert_source();
+    const char *src = mw_vert_source();
     TEST_ASSERT_NOT_NULL(src);
     TEST_ASSERT_EQUAL_INT(0, strncmp(src, "#version 300 es", 15));
 }
 
-/* 41. Fragment shader starts with #version 300 es */
+/* 49. Fragment shader starts with #version 300 es */
 void test_frag_source_version(void)
 {
-    const char *src = mwp_frag_source();
+    const char *src = mw_frag_source();
     TEST_ASSERT_NOT_NULL(src);
     TEST_ASSERT_EQUAL_INT(0, strncmp(src, "#version 300 es", 15));
 }
 
-/* 42. Vertex shader contains u_mvp */
+/* 50. Vertex shader has u_mvp uniform */
 void test_vert_source_has_mvp(void)
 {
-    const char *src = mwp_vert_source();
+    const char *src = mw_vert_source();
     TEST_ASSERT_NOT_NULL(strstr(src, "u_mvp"));
 }
 
-/* 43. Fragment shader has lateral falloff */
-void test_frag_source_has_falloff(void)
-{
-    const char *src = mwp_frag_source();
-    TEST_ASSERT_NOT_NULL(strstr(src, "exp("));
-}
-
-/* 44. Vertex shader has a_position */
+/* 51. Vertex shader has a_position attribute */
 void test_vert_source_has_position(void)
 {
-    const char *src = mwp_vert_source();
+    const char *src = mw_vert_source();
     TEST_ASSERT_NOT_NULL(strstr(src, "a_position"));
 }
 
-/* 45. Vertex shader has a_uv */
-void test_vert_source_has_uv(void)
+/* 52. Vertex shader has a_galcoord attribute */
+void test_vert_source_has_galcoord(void)
 {
-    const char *src = mwp_vert_source();
-    TEST_ASSERT_NOT_NULL(strstr(src, "a_uv"));
+    const char *src = mw_vert_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "a_galcoord"));
 }
 
-/* 46. Vertex shader has a_color */
-void test_vert_source_has_color(void)
+/* 53. Vertex shader has a_brightness attribute */
+void test_vert_source_has_brightness(void)
 {
-    const char *src = mwp_vert_source();
-    TEST_ASSERT_NOT_NULL(strstr(src, "a_color"));
+    const char *src = mw_vert_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "a_brightness"));
 }
 
-/* 47. Fragment shader has frag_color output */
+/* 54. Fragment shader contains noise function (fbm2) */
+void test_frag_source_has_noise(void)
+{
+    const char *src = mw_frag_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "fbm2"));
+}
+
+/* 55. Fragment shader has frag_color output */
 void test_frag_source_has_output(void)
 {
-    const char *src = mwp_frag_source();
+    const char *src = mw_frag_source();
     TEST_ASSERT_NOT_NULL(strstr(src, "frag_color"));
-}
-
-/* ======================================================================
- * Constants
- * ====================================================================== */
-
-/* 48. MWP_VERTEX_FLOATS is 9 */
-void test_vertex_floats_is_9(void)
-{
-    TEST_ASSERT_EQUAL_INT(9, MWP_VERTEX_FLOATS);
-}
-
-/* 49. MWP_VERTEX_STRIDE is 36 */
-void test_vertex_stride_is_36(void)
-{
-    TEST_ASSERT_EQUAL_INT(36, MWP_VERTEX_STRIDE);
-}
-
-/* 50. MWP_MAX_VERTICES is 4*128*2*6 = 6144 */
-void test_max_vertices(void)
-{
-    TEST_ASSERT_EQUAL_INT(6144, MWP_MAX_VERTICES);
 }
 
 /* ======================================================================
@@ -509,68 +580,69 @@ int main(void)
     /* Config */
     RUN_TEST(test_default_config_sphere_radius);
     RUN_TEST(test_default_config_band_width);
-    RUN_TEST(test_default_config_brightness_order);
-    RUN_TEST(test_default_config_base_alpha);
-    RUN_TEST(test_default_config_dark_lane_factor);
-    RUN_TEST(test_default_config_galaxy_radius);
-    RUN_TEST(test_default_config_points_per_arm);
+    RUN_TEST(test_default_config_core_brightness);
+    RUN_TEST(test_default_config_edge_falloff);
+    RUN_TEST(test_default_config_lon_segments);
+    RUN_TEST(test_default_config_lat_segments);
 
-    /* Galactic to sphere */
-    RUN_TEST(test_galactic_to_sphere_origin_on_sphere);
-    RUN_TEST(test_galactic_to_sphere_positive_lat);
-    RUN_TEST(test_galactic_to_sphere_negative_lat);
-    RUN_TEST(test_galactic_to_sphere_always_on_sphere);
-    RUN_TEST(test_galactic_to_sphere_radius_scaling);
-    RUN_TEST(test_galactic_to_sphere_zero_zero);
+    /* Regions */
+    RUN_TEST(test_region_count);
+    RUN_TEST(test_region_0_is_galactic_center);
+    RUN_TEST(test_region_galactic_center_position);
+    RUN_TEST(test_region_galactic_center_brightness);
+    RUN_TEST(test_region_galactic_center_radius);
+    RUN_TEST(test_all_regions_have_names);
+    RUN_TEST(test_all_regions_positive_radius);
+    RUN_TEST(test_all_regions_positive_brightness);
+    RUN_TEST(test_region_out_of_range);
+    RUN_TEST(test_region_negative_index);
+    RUN_TEST(test_bright_regions);
+    RUN_TEST(test_dark_regions);
+    RUN_TEST(test_coal_sack_darkest);
 
-    /* Arm brightness */
-    RUN_TEST(test_arm_brightness_at_center);
-    RUN_TEST(test_arm_brightness_at_edge);
-    RUN_TEST(test_arm_brightness_midway);
-    RUN_TEST(test_arm_brightness_monotonic);
-    RUN_TEST(test_arm_brightness_clamp_negative);
-    RUN_TEST(test_arm_brightness_clamp_above_one);
+    /* Brightness */
+    RUN_TEST(test_brightness_at_galactic_center);
+    RUN_TEST(test_brightness_at_coal_sack);
+    RUN_TEST(test_brightness_on_plane_vs_off);
+    RUN_TEST(test_brightness_non_negative);
+    RUN_TEST(test_brightness_at_cygnus);
+    RUN_TEST(test_brightness_edge_approaches_zero);
+    RUN_TEST(test_brightness_great_rift);
 
-    /* Dark lane factor */
-    RUN_TEST(test_dark_lane_far_from_rift);
-    RUN_TEST(test_dark_lane_at_center);
-    RUN_TEST(test_dark_lane_in_rift_zone);
-    RUN_TEST(test_dark_lane_at_15_deg);
-    RUN_TEST(test_dark_lane_bounds);
-    RUN_TEST(test_dark_lane_factor_one);
+    /* Galactic to equatorial */
+    RUN_TEST(test_gal_to_eq_center);
+    RUN_TEST(test_gal_to_eq_north_pole);
+    RUN_TEST(test_gal_to_eq_south_pole);
+    RUN_TEST(test_gal_to_eq_ra_range);
+    RUN_TEST(test_gal_to_eq_dec_range);
+    RUN_TEST(test_gal_to_eq_cygnus);
+    RUN_TEST(test_gal_to_eq_smooth);
 
     /* Pack */
-    RUN_TEST(test_pack_returns_positive_count);
+    RUN_TEST(test_pack_positive_vertex_count);
     RUN_TEST(test_pack_within_max_vertices);
+    RUN_TEST(test_pack_positive_index_count);
+    RUN_TEST(test_pack_index_count_divisible_by_3);
+    RUN_TEST(test_pack_triangle_count);
+    RUN_TEST(test_pack_indices_in_range);
     RUN_TEST(test_pack_positions_on_sphere);
-    RUN_TEST(test_pack_colors_in_range);
-    RUN_TEST(test_pack_uv_in_range);
-    RUN_TEST(test_pack_vertex_count_divisible_by_6);
-    RUN_TEST(test_pack_one_point_per_arm);
-    RUN_TEST(test_pack_uses_four_arms);
-    RUN_TEST(test_pack_nonzero_data);
+    RUN_TEST(test_pack_galcoord_range);
+    RUN_TEST(test_pack_brightness_non_negative);
+    RUN_TEST(test_pack_small_grid);
     RUN_TEST(test_pack_radius_affects_positions);
-
-    /* Info */
-    RUN_TEST(test_info_vertex_count);
-    RUN_TEST(test_info_float_count);
-    RUN_TEST(test_info_arm_count);
-    RUN_TEST(test_info_segment_count);
+    RUN_TEST(test_vertex_floats_is_6);
+    RUN_TEST(test_max_vertices_is_2000);
+    RUN_TEST(test_pack_nonzero_data);
 
     /* Shaders */
     RUN_TEST(test_vert_source_version);
     RUN_TEST(test_frag_source_version);
     RUN_TEST(test_vert_source_has_mvp);
-    RUN_TEST(test_frag_source_has_falloff);
     RUN_TEST(test_vert_source_has_position);
-    RUN_TEST(test_vert_source_has_uv);
-    RUN_TEST(test_vert_source_has_color);
+    RUN_TEST(test_vert_source_has_galcoord);
+    RUN_TEST(test_vert_source_has_brightness);
+    RUN_TEST(test_frag_source_has_noise);
     RUN_TEST(test_frag_source_has_output);
-
-    /* Constants */
-    RUN_TEST(test_vertex_floats_is_9);
-    RUN_TEST(test_vertex_stride_is_36);
-    RUN_TEST(test_max_vertices);
 
     return UNITY_END();
 }

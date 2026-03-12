@@ -1,267 +1,353 @@
 /*
- * milkyway_pack.c -- Milky Way band vertex packing
+ * milkyway_pack.c -- Procedural Milky Way galaxy band vertex packing
  *
- * Packs galaxy_geometry spiral arm data into triangle quad vertex arrays
- * for Milky Way band rendering. Each consecutive pair of arm points
- * forms a quad segment: two vertices offset above and below the galactic
- * plane, projected onto the celestial sphere. Brightness fades from
- * core to edge. The Great Rift dark lane reduces opacity in the
- * galactic center region.
+ * Generates a lat/lon mesh on the celestial sphere using galactic coordinates.
+ * 13 named regions (bright clouds and dark rifts) modulate per-vertex
+ * brightness via Gaussian-weighted influence. Galactic (l, b) coordinates
+ * are converted to equatorial (RA, Dec) using the standard IAU J2000
+ * transformation, then mapped to Cartesian XYZ on the celestial sphere.
+ *
+ * Fragment shader uses noise_shader.h fbm2 for procedural cloud texture.
  *
  * Pure module: no GL calls, no malloc, no globals, no side effects.
+ * EXCEPTION: static buffer for shader string concatenation (sun_shader.c pattern).
  */
 
 #include "milkyway_pack.h"
-#include "galaxy_geometry.h"
+#include "noise_shader.h"
 
 #include <math.h>
 
-#define PI 3.14159265358979323846
-
-/* Milky Way band base color: milky white with slight blue tint (physical/observational) */
-#define MW_COLOR_R 0.85f
-#define MW_COLOR_G 0.88f
-#define MW_COLOR_B 0.95f
-
 /* ======================================================================
- * mwp_default_config
+ * Constants
  * ====================================================================== */
 
-mwp_config_t mwp_default_config(void)
+#define DEG2RAD(d) ((d) * PI / 180.0)
+#define RAD2DEG(r) ((r) * 180.0 / PI)
+
+/* North Galactic Pole in equatorial coordinates (J2000) */
+#define NGP_RA_DEG  192.85
+#define NGP_DEC_DEG  27.13
+
+/* Galactic longitude of the north celestial pole (IAU 1958) */
+#define L_NCP_DEG  123.0
+
+/* Default band half-width used by mw_brightness_at edge falloff */
+#define DEFAULT_BAND_HALF_WIDTH 15.0f
+
+/* Default edge falloff exponent */
+#define DEFAULT_EDGE_FALLOFF 2.0f
+
+/* ======================================================================
+ * Named Galactic Regions (13 total)
+ * ====================================================================== */
+
+#define MW_REGION_COUNT 13
+
+static const mw_region_t s_regions[MW_REGION_COUNT] = {
+    /* Bright clouds (brightness > 1.0) */
+    { "Galactic Center",     0.0f,   0.0f,  15.0f, 2.0f  },
+    { "Cygnus Star Cloud",  80.0f,   0.0f,  12.0f, 1.6f  },
+    { "Scutum Star Cloud",  28.0f,  -2.0f,   8.0f, 1.5f  },
+    { "Carina Nebula",     287.0f,  -1.0f,  10.0f, 1.4f  },
+    { "Centaurus",         310.0f,   0.0f,  12.0f, 1.3f  },
+    { "Norma Star Cloud",  330.0f,  -1.0f,   8.0f, 1.3f  },
+    { "Vela",              265.0f,  -2.0f,  10.0f, 1.1f  },
+
+    /* Dark rifts (brightness < 1.0) */
+    { "Great Rift",          30.0f,  0.0f,  20.0f, 0.3f  },
+    { "Coal Sack",          300.0f, -1.0f,   6.0f, 0.15f },
+    { "Pipe Nebula",          0.0f,  5.0f,   4.0f, 0.2f  },
+    { "Dark Horse",          15.0f,  5.0f,   5.0f, 0.25f },
+    { "Northern Coal Sack",  65.0f,  3.0f,   5.0f, 0.3f  },
+    { "Aquila Rift",         20.0f,  3.0f,   8.0f, 0.35f },
+};
+
+/* ======================================================================
+ * mw_default_config
+ * ====================================================================== */
+
+mw_config_t mw_default_config(void)
 {
-    mwp_config_t cfg;
-    cfg.sphere_radius   = 200.0f;
-    cfg.band_width      = 15.0f;
-    cfg.core_brightness = 0.8f;
-    cfg.edge_brightness = 0.15f;
-    cfg.base_alpha      = 0.4f;
-    cfg.dark_lane_factor = 0.3f;
-    cfg.galaxy_radius   = 50000.0f;
-    cfg.sun_distance    = 26000.0f;
-    cfg.rotation_deg    = 0.0f;
-    cfg.points_per_arm  = 64;
+    mw_config_t cfg;
+    cfg.sphere_radius      = 200.0f;
+    cfg.band_width_deg     = 30.0f;
+    cfg.core_brightness    = 1.5f;
+    cfg.edge_falloff       = 2.0f;
+    cfg.longitude_segments = 72;
+    cfg.latitude_segments  = 12;
     return cfg;
 }
 
 /* ======================================================================
- * mwp_galactic_to_sphere
- *
- * Convert a galactic plane position (gal_x, gal_z) plus a latitude
- * offset to a 3D point on the celestial sphere.
- *
- * 1. Compute galactic longitude from atan2(gal_z, gal_x)
- * 2. Combine with galactic latitude offset
- * 3. Spherical to Cartesian on the sphere surface
- *
- * Convention: XZ = ecliptic/galactic plane, Y = up (north)
+ * mw_region_count / mw_region_get
  * ====================================================================== */
 
-void mwp_galactic_to_sphere(float gal_x, float gal_z, float galactic_lat_deg,
-                             float sphere_radius, float out[3])
+int mw_region_count(void)
 {
-    float lon = atan2f(gal_z, gal_x);
-    float lat = galactic_lat_deg * (float)PI / 180.0f;
+    return MW_REGION_COUNT;
+}
 
-    float cl = cosf(lat);
-    out[0] = sphere_radius * cl * cosf(lon);
-    out[1] = sphere_radius * sinf(lat);
-    out[2] = sphere_radius * cl * sinf(lon);
+mw_region_t mw_region_get(int index)
+{
+    if (index < 0 || index >= MW_REGION_COUNT) {
+        mw_region_t empty;
+        empty.name = 0;
+        empty.l_center_deg = 0.0f;
+        empty.b_center_deg = 0.0f;
+        empty.angular_radius = 0.0f;
+        empty.brightness = 0.0f;
+        return empty;
+    }
+    return s_regions[index];
 }
 
 /* ======================================================================
- * mwp_arm_brightness
+ * Angular distance between two galactic coordinates (degrees)
  *
- * Quadratic falloff from core to edge (smooth taper).
- * t: 0 = center, 1 = edge. Clamped to [0,1].
+ * Uses the haversine formula for accuracy at small separations.
  * ====================================================================== */
 
-float mwp_arm_brightness(float t, float core_brightness, float edge_brightness)
+static float angular_distance_deg(float l1, float b1, float l2, float b2)
 {
-    if (t <= 0.0f) return core_brightness;
-    if (t >= 1.0f) return edge_brightness;
+    double l1r = DEG2RAD(l1);
+    double b1r = DEG2RAD(b1);
+    double l2r = DEG2RAD(l2);
+    double b2r = DEG2RAD(b2);
 
-    /* Quadratic ease-out: (1-t)^2 maps [0,1] -> [1,0] */
-    float inv = 1.0f - t;
-    float factor = inv * inv;
-    return edge_brightness + factor * (core_brightness - edge_brightness);
+    double dlat = b2r - b1r;
+    double dlon = l2r - l1r;
+
+    double a = sin(dlat / 2.0) * sin(dlat / 2.0)
+             + cos(b1r) * cos(b2r) * sin(dlon / 2.0) * sin(dlon / 2.0);
+    double c = 2.0 * atan2(sqrt(a), sqrt(1.0 - a));
+
+    return (float)RAD2DEG(c);
 }
 
 /* ======================================================================
- * mwp_dark_lane_factor
+ * mw_brightness_at
  *
- * The Great Rift spans roughly galactic longitude 300-360 and 0-30 degrees.
- * We model this as a smooth absorption band using a cosine window centered
- * on longitude 345 with half-width 45 degrees (covers 300-30).
+ * For each galactic coordinate (l, b):
+ * 1. Start with base brightness = 1.0
+ * 2. For each named region, compute angular distance
+ * 3. If distance < radius, blend using Gaussian falloff
+ * 4. Bright regions (>1) add, dark regions (<1) reduce
+ * 5. Multiply by edge falloff: pow(1 - |b|/half_width, edge_falloff)
  * ====================================================================== */
 
-float mwp_dark_lane_factor(float galactic_lon_deg, float dark_factor)
+float mw_brightness_at(float l_deg, float b_deg)
 {
-    if (dark_factor >= 1.0f) return 1.0f;
+    float brightness = 1.0f;
 
-    /* Normalize longitude to [0, 360) */
-    float lon = fmodf(galactic_lon_deg, 360.0f);
-    if (lon < 0.0f) lon += 360.0f;
+    for (int i = 0; i < MW_REGION_COUNT; i++) {
+        const mw_region_t *r = &s_regions[i];
+        float dist = angular_distance_deg(l_deg, b_deg,
+                                           r->l_center_deg, r->b_center_deg);
+        if (dist < r->angular_radius) {
+            /* Gaussian-like falloff: exp(-3 * (d/r)^2) */
+            float norm = dist / r->angular_radius;
+            float weight = expf(-3.0f * norm * norm);
 
-    /* Angular distance from rift center (345 deg), wrapping at 360 */
-    float center = 345.0f;
-    float half_width = 45.0f;
-
-    float delta = fabsf(lon - center);
-    if (delta > 180.0f) delta = 360.0f - delta;
-
-    if (delta >= half_width) return 1.0f;
-
-    /* Smooth cosine window inside the rift zone */
-    float t = delta / half_width; /* 0 at center, 1 at edge */
-    float window = 0.5f * (1.0f - cosf(t * (float)PI));
-    /* window: 0 at center -> 1 at edge */
-    return dark_factor + window * (1.0f - dark_factor);
-}
-
-/* ======================================================================
- * mwp_pack
- *
- * Algorithm:
- * 1. Generate galaxy arm geometry via galaxy_generate()
- * 2. For each arm, iterate consecutive point pairs
- * 3. For each pair, compute the arm direction vector on the galactic plane
- * 4. Compute a perpendicular (normal) direction
- * 5. Place two vertices above and below the galactic plane
- *    (offset by band_width in latitude)
- * 6. Map all four points to the celestial sphere
- * 7. Form a quad (6 vertices: 2 triangles)
- * 8. Apply brightness and dark lane factor to color/alpha
- *
- * Vertex layout per vertex: pos(3) + uv(2) + color(4) = 9 floats
- * ====================================================================== */
-
-/* UV for quad corners: BL, BR, TR, BL, TR, TL */
-static const float QUAD_UVS[6][2] = {
-    {0.0f, 0.0f},
-    {1.0f, 0.0f},
-    {1.0f, 1.0f},
-    {0.0f, 0.0f},
-    {1.0f, 1.0f},
-    {0.0f, 1.0f},
-};
-
-static void emit_vertex(float *out, int idx,
-                         const float pos[3], float u, float v,
-                         float r, float g, float b, float a)
-{
-    int base = idx * MWP_VERTEX_FLOATS;
-    out[base + 0] = pos[0];
-    out[base + 1] = pos[1];
-    out[base + 2] = pos[2];
-    out[base + 3] = u;
-    out[base + 4] = v;
-    out[base + 5] = r;
-    out[base + 6] = g;
-    out[base + 7] = b;
-    out[base + 8] = a;
-}
-
-int mwp_pack(const mwp_config_t *config, float *out)
-{
-    /* Generate galaxy arm data */
-    galaxy_mesh_t mesh = galaxy_generate(config->galaxy_radius,
-                                          config->sun_distance,
-                                          config->rotation_deg,
-                                          config->points_per_arm);
-
-    int vertex_count = 0;
-
-    for (int arm = 0; arm < GALAXY_ARM_COUNT; arm++) {
-        const galaxy_arm_t *a = &mesh.arms[arm];
-        if (a->count < 2) continue;
-
-        for (int i = 0; i < a->count - 1; i++) {
-            /* Current and next point on the galactic plane */
-            float x0 = a->positions[i * 3 + 0];
-            float z0 = a->positions[i * 3 + 2];
-            float x1 = a->positions[(i + 1) * 3 + 0];
-            float z1 = a->positions[(i + 1) * 3 + 2];
-
-            /* Galactic longitude (degrees) of current point for dark lane */
-            float lon_deg = atan2f(z0, x0) * 180.0f / (float)PI;
-            if (lon_deg < 0.0f) lon_deg += 360.0f;
-
-            /* Average brightness of the two endpoints */
-            float bright0 = a->brightnesses[i];
-            float bright1 = a->brightnesses[i + 1];
-            float avg_bright = 0.5f * (bright0 + bright1);
-
-            /* Map brightness through the gradient:
-             * bright=1.0 -> core_brightness, bright=0.0 -> edge_brightness */
-            float t_edge = 1.0f - avg_bright;
-            float brightness = mwp_arm_brightness(t_edge,
-                                                   config->core_brightness,
-                                                   config->edge_brightness);
-
-            /* Dark lane factor */
-            float dlf = mwp_dark_lane_factor(lon_deg, config->dark_lane_factor);
-
-            /* Final alpha */
-            float alpha = config->base_alpha * brightness * dlf;
-
-            /* Final color (physical milky white/blue-white glow, not theme) */
-            float cr = MW_COLOR_R * brightness;
-            float cg = MW_COLOR_G * brightness;
-            float cb = MW_COLOR_B * brightness;
-
-            /* Four sphere positions for the quad:
-             * Two at current point (upper/lower latitude offset)
-             * Two at next point (upper/lower latitude offset) */
-            float p0_upper[3], p0_lower[3], p1_upper[3], p1_lower[3];
-
-            mwp_galactic_to_sphere(x0, z0, config->band_width,
-                                    config->sphere_radius, p0_upper);
-            mwp_galactic_to_sphere(x0, z0, -config->band_width,
-                                    config->sphere_radius, p0_lower);
-            mwp_galactic_to_sphere(x1, z1, config->band_width,
-                                    config->sphere_radius, p1_upper);
-            mwp_galactic_to_sphere(x1, z1, -config->band_width,
-                                    config->sphere_radius, p1_lower);
-
-            /* Guard against buffer overflow */
-            if (vertex_count + 6 > MWP_MAX_VERTICES) goto done;
-
-            /* Quad: BL=p0_lower, BR=p1_lower, TR=p1_upper, TL=p0_upper */
-            /* Triangle 1: BL, BR, TR */
-            emit_vertex(out, vertex_count + 0, p0_lower,
-                         QUAD_UVS[0][0], QUAD_UVS[0][1], cr, cg, cb, alpha);
-            emit_vertex(out, vertex_count + 1, p1_lower,
-                         QUAD_UVS[1][0], QUAD_UVS[1][1], cr, cg, cb, alpha);
-            emit_vertex(out, vertex_count + 2, p1_upper,
-                         QUAD_UVS[2][0], QUAD_UVS[2][1], cr, cg, cb, alpha);
-
-            /* Triangle 2: BL, TR, TL */
-            emit_vertex(out, vertex_count + 3, p0_lower,
-                         QUAD_UVS[3][0], QUAD_UVS[3][1], cr, cg, cb, alpha);
-            emit_vertex(out, vertex_count + 4, p1_upper,
-                         QUAD_UVS[4][0], QUAD_UVS[4][1], cr, cg, cb, alpha);
-            emit_vertex(out, vertex_count + 5, p0_upper,
-                         QUAD_UVS[5][0], QUAD_UVS[5][1], cr, cg, cb, alpha);
-
-            vertex_count += 6;
+            /* Blend toward region brightness */
+            if (r->brightness > 1.0f) {
+                /* Bright cloud: additive boost */
+                brightness += (r->brightness - 1.0f) * weight;
+            } else {
+                /* Dark rift: multiplicative reduction */
+                float reduction = 1.0f - (1.0f - r->brightness) * weight;
+                brightness *= reduction;
+            }
         }
     }
 
-done:
-    return vertex_count;
+    /* Edge falloff based on galactic latitude */
+    float half_width = DEFAULT_BAND_HALF_WIDTH;
+    float b_abs = fabsf(b_deg);
+    if (b_abs >= half_width) {
+        brightness = 0.0f;
+    } else {
+        float edge_t = 1.0f - b_abs / half_width;
+        float falloff = powf(edge_t, DEFAULT_EDGE_FALLOFF);
+        brightness *= falloff;
+    }
+
+    if (brightness < 0.0f) brightness = 0.0f;
+
+    return brightness;
 }
 
 /* ======================================================================
- * mwp_info
+ * mw_galactic_to_equatorial
+ *
+ * Standard IAU J2000 galactic-to-equatorial coordinate conversion.
+ *
+ * sin(dec) = sin(dec_ngp)*sin(b) + cos(dec_ngp)*cos(b)*cos(l - l_NCP)
+ * sin(ra - ra_ngp) = cos(b)*sin(l_NCP - l) / cos(dec)
+ *
+ * Where:
+ *   dec_ngp = 27.13 deg, ra_ngp = 192.85 deg, l_NCP = 123.0 deg
  * ====================================================================== */
 
-mwp_info_t mwp_info(int vertex_count)
+void mw_galactic_to_equatorial(float l_deg, float b_deg,
+                                float *ra_hours, float *dec_deg)
 {
-    mwp_info_t info;
-    info.vertex_count  = vertex_count;
-    info.float_count   = vertex_count * MWP_VERTEX_FLOATS;
-    info.arm_count     = GALAXY_ARM_COUNT;
-    info.segment_count = vertex_count / 6;
+    double l_rad = DEG2RAD((double)l_deg);
+    double b_rad = DEG2RAD((double)b_deg);
+    double dec_ngp_rad = DEG2RAD(NGP_DEC_DEG);
+    double ra_ngp_rad  = DEG2RAD(NGP_RA_DEG);
+    double l_ncp_rad   = DEG2RAD(L_NCP_DEG);
+
+    double sin_b = sin(b_rad);
+    double cos_b = cos(b_rad);
+    double sin_dec_ngp = sin(dec_ngp_rad);
+    double cos_dec_ngp = cos(dec_ngp_rad);
+
+    /* Standard IAU galactic-to-equatorial conversion:
+     * sin(dec) = sin(dec_NGP)*sin(b) + cos(dec_NGP)*cos(b)*cos(l - l_NCP)
+     */
+    double dl = l_rad - l_ncp_rad;
+    double sin_dec = sin_dec_ngp * sin_b + cos_dec_ngp * cos_b * cos(dl);
+    if (sin_dec > 1.0) sin_dec = 1.0;
+    if (sin_dec < -1.0) sin_dec = -1.0;
+    double dec_rad = asin(sin_dec);
+
+    /* Right ascension:
+     * cos(dec)*sin(alpha - alpha_NGP) = cos(b)*sin(l_NCP - l)
+     * cos(dec)*cos(alpha - alpha_NGP) = sin(b)*cos(dec_NGP)
+     *                                   - cos(b)*sin(dec_NGP)*cos(l - l_NCP)
+     */
+    double cos_dec = cos(dec_rad);
+    double sin_ra_diff, cos_ra_diff;
+
+    if (fabs(cos_dec) < 1e-12) {
+        /* At poles, RA is arbitrary */
+        sin_ra_diff = 0.0;
+        cos_ra_diff = 1.0;
+    } else {
+        sin_ra_diff = cos_b * sin(l_ncp_rad - l_rad) / cos_dec;
+        cos_ra_diff = (sin_b * cos_dec_ngp
+                       - cos_b * sin_dec_ngp * cos(dl)) / cos_dec;
+    }
+
+    double ra_diff = atan2(sin_ra_diff, cos_ra_diff);
+    double ra_rad = ra_ngp_rad + ra_diff;
+
+    /* Normalize RA to [0, 2*PI) */
+    double two_pi = 2.0 * PI;
+    while (ra_rad < 0.0) ra_rad += two_pi;
+    while (ra_rad >= two_pi) ra_rad -= two_pi;
+
+    /* Convert to output units */
+    *ra_hours = (float)(RAD2DEG(ra_rad) / 15.0);
+    *dec_deg  = (float)RAD2DEG(dec_rad);
+}
+
+/* ======================================================================
+ * mw_pack
+ *
+ * Generates a lat/lon grid on the celestial sphere in galactic coordinates:
+ *   Longitude: 0-360 deg around galactic equator
+ *   Latitude: -band_width/2 to +band_width/2
+ *
+ * Each vertex: position(vec3) + galactic_coord(vec2) + brightness(float) = 6 floats
+ *
+ * Vertices are indexed: each grid quad becomes 2 triangles.
+ * Galactic (l, b) -> equatorial (RA, Dec) -> Cartesian XYZ on sphere.
+ * ====================================================================== */
+
+static void emit_vertex(float *out, int idx,
+                         float x, float y, float z,
+                         float l_norm, float b_norm, float brightness)
+{
+    int base = idx * MW_VERTEX_FLOATS;
+    out[base + 0] = x;
+    out[base + 1] = y;
+    out[base + 2] = z;
+    out[base + 3] = l_norm;
+    out[base + 4] = b_norm;
+    out[base + 5] = brightness;
+}
+
+mw_info_t mw_pack(mw_config_t config, float *out_verts, unsigned short *out_indices)
+{
+    mw_info_t info;
+    info.vertex_count = 0;
+    info.index_count = 0;
+    info.triangle_count = 0;
+
+    int lon_seg = config.longitude_segments;
+    int lat_seg = config.latitude_segments;
+    float half_bw = config.band_width_deg / 2.0f;
+    float radius = config.sphere_radius;
+
+    int verts_needed = (lon_seg + 1) * (lat_seg + 1);
+    if (verts_needed > MW_MAX_VERTICES) {
+        /* Clamp to fit */
+        return info;
+    }
+
+    int vert_idx = 0;
+
+    /* Generate vertices */
+    for (int j = 0; j <= lat_seg; j++) {
+        float b_deg = -half_bw + (float)j * (2.0f * half_bw) / (float)lat_seg;
+        float b_norm = b_deg / half_bw; /* [-1, 1] */
+
+        for (int i = 0; i <= lon_seg; i++) {
+            float l_deg = (float)i * 360.0f / (float)lon_seg;
+            float l_norm = l_deg / 360.0f; /* [0, 1] */
+
+            /* Brightness from named regions */
+            float brightness = mw_brightness_at(l_deg, b_deg);
+
+            /* Convert galactic to equatorial */
+            float ra_hours, dec_d;
+            mw_galactic_to_equatorial(l_deg, b_deg, &ra_hours, &dec_d);
+
+            /* Equatorial to Cartesian on sphere */
+            double ra_rad = DEG2RAD((double)ra_hours * 15.0);
+            double dec_rad = DEG2RAD((double)dec_d);
+
+            float x = radius * (float)(cos(dec_rad) * cos(ra_rad));
+            float y = radius * (float)(sin(dec_rad));
+            float z = -radius * (float)(cos(dec_rad) * sin(ra_rad));
+
+            emit_vertex(out_verts, vert_idx, x, y, z,
+                         l_norm, b_norm, brightness);
+            vert_idx++;
+        }
+    }
+
+    info.vertex_count = vert_idx;
+
+    /* Generate indices: each quad is 2 triangles */
+    int idx = 0;
+    for (int j = 0; j < lat_seg; j++) {
+        for (int i = 0; i < lon_seg; i++) {
+            int row0 = j * (lon_seg + 1);
+            int row1 = (j + 1) * (lon_seg + 1);
+
+            unsigned short bl = (unsigned short)(row0 + i);
+            unsigned short br = (unsigned short)(row0 + i + 1);
+            unsigned short tl = (unsigned short)(row1 + i);
+            unsigned short tr = (unsigned short)(row1 + i + 1);
+
+            /* Triangle 1: bl, br, tr */
+            out_indices[idx++] = bl;
+            out_indices[idx++] = br;
+            out_indices[idx++] = tr;
+
+            /* Triangle 2: bl, tr, tl */
+            out_indices[idx++] = bl;
+            out_indices[idx++] = tr;
+            out_indices[idx++] = tl;
+        }
+    }
+
+    info.index_count = idx;
+    info.triangle_count = idx / 3;
+
     return info;
 }
 
@@ -269,52 +355,90 @@ mwp_info_t mwp_info(int vertex_count)
  * GLSL ES 3.00 shader source strings
  * ====================================================================== */
 
-/* Milky Way band vertex shader.
- * Passes position, UV, and per-vertex color to fragment stage. */
-static const char MWP_VERT_SRC[] =
+/* Vertex shader: passthrough with galactic coords and brightness */
+static const char *s_vert_source =
     "#version 300 es\n"
-    "precision highp float;\n"
-    "\n"
-    "uniform mat4 u_mvp;\n"
-    "\n"
     "layout(location = 0) in vec3 a_position;\n"
-    "layout(location = 1) in vec2 a_uv;\n"
-    "layout(location = 2) in vec4 a_color;\n"
-    "\n"
-    "out vec2 v_uv;\n"
-    "out vec4 v_color;\n"
-    "\n"
+    "layout(location = 1) in vec2 a_galcoord;\n"
+    "layout(location = 2) in float a_brightness;\n"
+    "uniform mat4 u_mvp;\n"
+    "out vec2 v_galcoord;\n"
+    "out float v_brightness;\n"
     "void main() {\n"
+    "    v_galcoord = a_galcoord;\n"
+    "    v_brightness = a_brightness;\n"
     "    gl_Position = u_mvp * vec4(a_position, 1.0);\n"
-    "    v_uv = a_uv;\n"
-    "    v_color = a_color;\n"
     "}\n";
 
-/* Milky Way band fragment shader.
- * Lateral falloff using UV.y distance from band center (0.5).
- * Exponential decay gives the soft milky glow effect.
- * v_uv.y: 0 = lower edge, 1 = upper edge, 0.5 = band center. */
-static const char MWP_FRAG_SRC[] =
+/* Fragment shader preamble: version, precision, uniforms, inputs */
+static const char *s_frag_preamble =
     "#version 300 es\n"
     "precision highp float;\n"
-    "\n"
-    "in vec2 v_uv;\n"
-    "in vec4 v_color;\n"
+    "in vec2 v_galcoord;\n"
+    "in float v_brightness;\n"
+    "uniform float u_time;\n"
+    "uniform vec2 u_resolution;\n"
     "out vec4 frag_color;\n"
+    "\n";
+
+/* Fragment shader body: procedural Milky Way cloud texture */
+static const char *s_frag_body =
+    "\n"
+    /* Color palette */
+    "const vec3 MW_CORE  = vec3(0.85, 0.88, 1.0);\n"
+    "const vec3 MW_EDGE  = vec3(1.0, 0.92, 0.75);\n"
     "\n"
     "void main() {\n"
-    "    float d = abs(v_uv.y - 0.5) * 2.0;\n"
-    "    float falloff = exp(-4.0 * d * d);\n"
-    "    if (falloff < 0.01) discard;\n"
-    "    frag_color = vec4(v_color.rgb, v_color.a * falloff);\n"
+    "    float lat_abs = abs(v_galcoord.y);\n"
+    "\n"
+    "    /* Edge alpha fade */\n"
+    "    float alpha = smoothstep(1.0, 0.0, lat_abs);\n"
+    "    if (alpha < 0.01) discard;\n"
+    "\n"
+    "    /* Procedural cloud texture from noise */\n"
+    "    float t = u_time * 0.01;\n"
+    "    vec2 noise_coord = v_galcoord * vec2(8.0, 3.0) + vec2(t, 0.0);\n"
+    "    float cloud = fbm2(noise_coord) * 0.5 + 0.5;\n"
+    "\n"
+    "    /* Fine detail layer */\n"
+    "    vec2 detail_coord = v_galcoord * vec2(20.0, 8.0) + vec2(t * 0.7, t * 0.3);\n"
+    "    float detail = snoise2(detail_coord) * 0.5 + 0.5;\n"
+    "\n"
+    "    float texture_val = cloud * 0.7 + detail * 0.3;\n"
+    "\n"
+    "    /* Color: core -> edge mix based on latitude */\n"
+    "    vec3 color = mix(MW_CORE, MW_EDGE, lat_abs);\n"
+    "\n"
+    "    /* Apply brightness from vertex attribute */\n"
+    "    color *= v_brightness * texture_val;\n"
+    "\n"
+    "    /* Final alpha: edge fade * brightness */\n"
+    "    float final_alpha = alpha * v_brightness * texture_val * 0.6;\n"
+    "\n"
+    "    frag_color = vec4(color, final_alpha);\n"
     "}\n";
 
-const char *mwp_vert_source(void)
+/* Concatenated fragment source: preamble + noise lib + body */
+static char s_full_frag[8192];
+static int s_frag_built = 0;
+
+static const char *build_frag_source(void)
 {
-    return MWP_VERT_SRC;
+    if (!s_frag_built) {
+        /* Manual string concatenation — no snprintf dependency */
+        char *dst = s_full_frag;
+        const char *parts[] = { s_frag_preamble, noise_shader_source(), s_frag_body };
+        for (int i = 0; i < 3; i++) {
+            const char *src = parts[i];
+            while (*src && (dst - s_full_frag) < 8190) {
+                *dst++ = *src++;
+            }
+        }
+        *dst = '\0';
+        s_frag_built = 1;
+    }
+    return s_full_frag;
 }
 
-const char *mwp_frag_source(void)
-{
-    return MWP_FRAG_SRC;
-}
+const char *mw_vert_source(void) { return s_vert_source; }
+const char *mw_frag_source(void) { return build_frag_source(); }
