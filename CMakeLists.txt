@@ -83,6 +83,7 @@ set(RENDER_SOURCES
     src/render/tarot_visual.c
     src/render/star_field.c
     src/render/planet_pack.c
+    src/render/orbit_trail_pack.c
     src/render/saturn_ring_pack.c
     src/render/zodiac_pack.c
     src/render/bodygraph_pack.c
@@ -369,6 +370,7 @@ else()
     add_library(time_hexagram_geometry OBJECT src/render/hexagram_geometry.c)
     add_library(time_milkyway_pack   OBJECT src/render/milkyway_pack.c)
     add_library(time_moon_pack       OBJECT src/render/moon_pack.c)
+    add_library(time_orbit_trail_pack OBJECT src/render/orbit_trail_pack.c)
     add_library(time_planet_pack     OBJECT src/render/planet_pack.c)
     add_library(time_saturn_ring_pack OBJECT src/render/saturn_ring_pack.c)
     add_library(time_star_field      OBJECT src/render/star_field.c)
@@ -615,6 +617,7 @@ else()
     time_add_test(NAME test_earth_globe    TEST tests/render/test_earth_globe.c     DEPS earth_globe)
     time_add_test(NAME test_hexagram_geometry TEST tests/render/test_hexagram_geometry.c DEPS hexagram_geometry iching color_theory color)
     time_add_test(NAME test_moon_pack      TEST tests/render/test_moon_pack.c       DEPS moon_pack moon_data kepler planets orbit)
+    time_add_test(NAME test_orbit_trail_pack TEST tests/render/test_orbit_trail_pack.c DEPS orbit_trail_pack orbit kepler planet_data)
     time_add_test(NAME test_planet_pack    TEST tests/render/test_planet_pack.c     DEPS planet_pack planets orbit kepler planet_data atmo_ring)
     time_add_test(NAME test_saturn_ring_pack TEST tests/render/test_saturn_ring_pack.c DEPS saturn_ring_pack)
     time_add_test(NAME test_star_field     TEST tests/render/test_star_field.c      DEPS star_field star_catalog star_catalog_ext constellation star_colors)
