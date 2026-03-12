@@ -83,6 +83,7 @@ set(RENDER_SOURCES
     src/render/tarot_visual.c
     src/render/star_field.c
     src/render/planet_pack.c
+    src/render/saturn_ring_pack.c
     src/render/zodiac_pack.c
     src/render/bodygraph_pack.c
     src/render/card_pack.c
@@ -193,6 +194,7 @@ set(SYSTEMS_SOURCES
     src/systems/earth/tidal.c
     src/systems/earth/wind_patterns.c
     src/systems/earth/tide_predict.c
+    src/systems/earth/location_alerts.c
     # Unified
     src/systems/unified/structural_map.c
     src/systems/unified/cycle_analysis.c
@@ -221,6 +223,8 @@ set(SYSTEMS_SOURCES
     src/systems/chakra/chakra.c
     # Coptic
     src/systems/coptic/coptic.c
+    # Tamil
+    src/systems/tamil/tamil_calendar.c
     # Egyptian
     src/systems/egyptian/egyptian.c
     # Ethiopian
@@ -354,6 +358,7 @@ else()
     add_library(time_milkyway_pack   OBJECT src/render/milkyway_pack.c)
     add_library(time_moon_pack       OBJECT src/render/moon_pack.c)
     add_library(time_planet_pack     OBJECT src/render/planet_pack.c)
+    add_library(time_saturn_ring_pack OBJECT src/render/saturn_ring_pack.c)
     add_library(time_star_field      OBJECT src/render/star_field.c)
     add_library(time_text_render     OBJECT src/render/text_render.c)
     add_library(time_zodiac_pack     OBJECT src/render/zodiac_pack.c)
@@ -446,6 +451,7 @@ else()
     add_library(time_tidal           OBJECT src/systems/earth/tidal.c)
     add_library(time_wind_patterns   OBJECT src/systems/earth/wind_patterns.c)
     add_library(time_tide_predict    OBJECT src/systems/earth/tide_predict.c)
+    add_library(time_location_alerts OBJECT src/systems/earth/location_alerts.c)
 
     # Systems — Unified
     add_library(time_structural_map  OBJECT src/systems/unified/structural_map.c)
@@ -478,6 +484,9 @@ else()
 
     # Systems — Coptic
     add_library(time_coptic          OBJECT src/systems/coptic/coptic.c)
+
+    # Systems — Tamil
+    add_library(time_tamil_calendar  OBJECT src/systems/tamil/tamil_calendar.c)
 
     # Systems — Egyptian
     add_library(time_egyptian        OBJECT src/systems/egyptian/egyptian.c)
@@ -584,6 +593,7 @@ else()
     time_add_test(NAME test_hexagram_geometry TEST tests/render/test_hexagram_geometry.c DEPS hexagram_geometry iching color_theory color)
     time_add_test(NAME test_moon_pack      TEST tests/render/test_moon_pack.c       DEPS moon_pack moon_data kepler planets orbit)
     time_add_test(NAME test_planet_pack    TEST tests/render/test_planet_pack.c     DEPS planet_pack planets orbit kepler planet_data atmo_ring)
+    time_add_test(NAME test_saturn_ring_pack TEST tests/render/test_saturn_ring_pack.c DEPS saturn_ring_pack)
     time_add_test(NAME test_star_field     TEST tests/render/test_star_field.c      DEPS star_field star_catalog star_catalog_ext constellation star_colors)
     time_add_test(NAME test_text_render    TEST tests/render/test_text_render.c     DEPS text_render)
     time_add_test(NAME test_zodiac_pack    TEST tests/render/test_zodiac_pack.c     DEPS zodiac_pack ring_geometry cusp_lines aspect_lines billboard color_palette color_theory color vec3 mat4)
@@ -683,6 +693,7 @@ else()
     time_add_test(NAME test_tidal           TEST tests/systems/earth/test_tidal.c           DEPS tidal)
     time_add_test(NAME test_wind_patterns   TEST tests/systems/earth/test_wind_patterns.c   DEPS wind_patterns)
     time_add_test(NAME test_tide_predict    TEST tests/systems/earth/test_tide_predict.c    DEPS tide_predict tidal surf_spots lunar julian)
+    time_add_test(NAME test_location_alerts TEST tests/systems/earth/test_location_alerts.c DEPS location_alerts tide_predict tidal surf_spots ski_resorts snow_season daylight solar_events prayer_times julian lunar)
 
     # Tzolkin extended tests
     time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
