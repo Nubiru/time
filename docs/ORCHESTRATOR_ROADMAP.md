@@ -1505,48 +1505,54 @@ COMPLETED:
   29.6     Calendar epoch — delivered (59 tests, BETA)
   41.2     Megalithic alignments — delivered (45 tests, ALPHA)
 
-AGENTS DELIVERING (2026-03-12):
-  ALPHA: Saturn Ring Pack (8.8) — COMMITTED. Post-Process FBO queued.
-  BETA:  Kin Social (34.2) + Location Alerts (33.2) — COMMITTED. Milky Way queued.
-  GAMMA: Tamil Calendar (52.2) — COMMITTED. Celtic Tree (53.1) in progress. Coptic queued.
-  OMEGA: Health Sweep #4 — COMMITTED. Pass wiring + dead code cleanup queued.
+ROUND 3 DELIVERED (2026-03-12):
+  ALPHA: Post-Process FBO Pipeline (30.3) — 58 tests, COMMITTED
+  BETA:  Milky Way Band Pack (7.x) — 55 tests, COMMITTED
+  GAMMA: Celtic Tree Calendar (53.1) — 120 tests, COMMITTED
+  OMEGA: Health Sweep #4 — COMMITTED
+
+ROUND 4 QUEUED (2026-03-12):
+  ALPHA: Orbit Trail Pack (8.7) — Kepler ellipses + gradient fade
+  BETA:  Convergence Detector (19.1) — cross-system alignment scanner
+  GAMMA: Coptic Calendar (40.1) — oldest continuous calendar, 13 months
+  OMEGA: Wire 3 passes (constellation, saturn, milkyway) + dead code cleanup
 
 ═══════════════════════════════════════════════════════════════
   COMPRESSION: MEGA CONVERTS DREAMS → TASKS (2026-03-12)
-  150+ data modules exist. 3 render passes exist.
-  CLOSE THE GAP. Make the data VISIBLE.
+  150+ data modules. 4 render passes (star, planet, zodiac, diffraction).
+  OMEGA wiring 3 more this round → 7 passes. CLOSE THE GAP.
 ═══════════════════════════════════════════════════════════════
 
 SHORT-TERM — OMEGA WIRING QUEUE (mechanical, immediate):
-  ✓ constellation_bounds → constellation_pass (data committed, wire it)
-  ✓ saturn_ring_pack → saturn_pass (data committed, wire it)
-  ✓ post_process → post_pass (FBO pipeline — bloom/tonemap/vignette)
+  → constellation_bounds → constellation_pass (ROUND 4 — IN PROGRESS)
+  → saturn_ring_pack → saturn_pass (ROUND 4 — IN PROGRESS)
+  → milkyway_pack → milkyway_pass (ROUND 4 — IN PROGRESS)
+  ✓ post_process → post_pass (FBO pipeline — NEXT ROUND)
   ✓ earth_pack → earth_pass (Earth globe view)
   ✓ moon_pack → moon_pass (9 major moons)
   ✓ bodygraph_pack → bodygraph_pass (Human Design)
   ✓ hexagram_geometry → hexagram_pass (I Ching)
   ✓ tree_geometry → tree_pass (Kabbalah Tree of Life)
-  ✓ Dead function cleanup (5 functions, MEGA-approved)
+  → Dead function cleanup (ROUND 4 — IN PROGRESS)
   ✓ zodiac_pass decomposition (god functions → static helpers)
-  ✓ Brand color fix (zodiac_pass solar gold)
+  → Brand color fix (ROUND 4 — IN PROGRESS)
 
 SHORT-TERM — ALPHA RENDER DATA QUEUE:
-  1. Post-Process FBO Pipeline (30.3) — bloom, tonemap, vignette, grain shaders
-  2. Diffraction Spike Pack (9.5) — 4/6-point star cross glare
-  3. Planet Surface Shader Pack (8.3) — procedural per-planet surface
+  1. Orbit Trail Pack (8.7) — Kepler orbit lines with gradient fade (ROUND 4)
+  2. Planet Surface Shader Pack (8.3) — procedural per-planet surface
   4. Orbit Trail Pack (8.7) — Kepler orbit lines with gradient fade
   5. Lens Flare Pack (30.3b) — sun/bright star screen-space flare
 
 SHORT-TERM — BETA DATA QUEUE:
-  1. Milky Way Band Pack (7.x) — galaxy band on celestial sphere
-  2. Convergence Detector (19.1) — cross-system cycle alignment scanner
+  1. Convergence Detector (19.1) — cross-system alignment scanner (ROUND 4)
+  2. Structural Map (19.3) — structural patterns across knowledge systems
   3. Structural Map (19.3) — structural patterns across knowledge systems
   4. Dreamspell Oracle (31.3) — interactive Tzolkin game oracle
   5. Card Render Pack (4.x) — knowledge system info card vertex data
 
 SHORT-TERM — GAMMA CALENDAR QUEUE:
-  1. Celtic Tree Calendar (53.1) — IN PROGRESS
-  2. Coptic Calendar (40.1) — oldest continuous calendar
+  1. Coptic Calendar (40.1) — oldest continuous calendar (ROUND 4)
+  2. Ethiopian Calendar (40.2) — follows from Coptic, shared structure
   3. Ethiopian Calendar (40.2) — follows from Coptic, shared structure
   4. Zoroastrian Calendar (39.1) — first dualist calendar
   5. Egyptian Calendar (43.1) — Ma'at and the Sothic cycle
