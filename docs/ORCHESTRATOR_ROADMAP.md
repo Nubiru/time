@@ -1505,85 +1505,86 @@ COMPLETED:
   29.6     Calendar epoch — delivered (59 tests, BETA)
   41.2     Megalithic alignments — delivered (45 tests, ALPHA)
 
-ROUND 3 DELIVERED (2026-03-12):
-  ALPHA: Post-Process FBO Pipeline (30.3) — 58 tests, COMMITTED
-  BETA:  Milky Way Band Pack (7.x) — 55 tests, COMMITTED
-  GAMMA: Celtic Tree Calendar (53.1) — 120 tests, COMMITTED
-  OMEGA: Health Sweep #4 — COMMITTED
+ROUND 4 DELIVERED (2026-03-12):
+  ALPHA: Horizon Geometry (24.5) — 55 tests, COMMITTED
+  BETA:  Time Philosophy (35.2) — 82 tests + Birth Profile (36.2) — 66 tests, COMMITTED
+  GAMMA: Korean Calendar (53.2) — 123 tests, COMMITTED
+  OMEGA: 3 passes wired (constellation, saturn, post_process) + dead code + zodiac decomp + brand fix
 
-ROUND 4 QUEUED (2026-03-12):
-  ALPHA: Orbit Trail Pack (8.7) — Kepler ellipses + gradient fade
-  BETA:  Convergence Detector (19.1) — cross-system alignment scanner
-  GAMMA: Coptic Calendar (40.1) — oldest continuous calendar, 13 months
-  OMEGA: Wire 3 passes (constellation, saturn, milkyway) + dead code cleanup
+ROUND 5 QUEUED (2026-03-12):
+  ALPHA: Orbit Trail Pack (8.7) — Kepler ellipses with gradient fade
+  BETA:  Convergence Detector (19.1) — cross-system cycle alignment scanner
+  GAMMA: Coptic Calendar (40.1) — oldest continuous calendar
+  OMEGA: Wire 3 more passes (milkyway, moon, earth) + horizon wiring
 
 ═══════════════════════════════════════════════════════════════
-  COMPRESSION: MEGA CONVERTS DREAMS → TASKS (2026-03-12)
-  150+ data modules. 4 render passes (star, planet, zodiac, diffraction).
-  OMEGA wiring 3 more this round → 7 passes. CLOSE THE GAP.
+  COMPRESSION CYCLE 3 (2026-03-12)
+  160+ data modules. 7 render passes (was 4 last cycle).
+  OMEGA wiring 3 more → 10 passes. 8 packs still awaiting passes.
+  RENDERING GAP CLOSING. UI INTERACTION NEXT.
 ═══════════════════════════════════════════════════════════════
 
-SHORT-TERM — OMEGA WIRING QUEUE (mechanical, immediate):
-  → constellation_bounds → constellation_pass (ROUND 4 — IN PROGRESS)
-  → saturn_ring_pack → saturn_pass (ROUND 4 — IN PROGRESS)
-  → milkyway_pack → milkyway_pass (ROUND 4 — IN PROGRESS)
-  ✓ post_process → post_pass (FBO pipeline — NEXT ROUND)
-  ✓ earth_pack → earth_pass (Earth globe view)
-  ✓ moon_pack → moon_pass (9 major moons)
-  ✓ bodygraph_pack → bodygraph_pass (Human Design)
-  ✓ hexagram_geometry → hexagram_pass (I Ching)
-  ✓ tree_geometry → tree_pass (Kabbalah Tree of Life)
-  → Dead function cleanup (ROUND 4 — IN PROGRESS)
-  ✓ zodiac_pass decomposition (god functions → static helpers)
-  → Brand color fix (ROUND 4 — IN PROGRESS)
+SHORT-TERM — OMEGA WIRING QUEUE (priority order):
+  ✅ constellation_bounds → constellation_pass (ROUND 4 — DONE)
+  ✅ saturn_ring_pack → saturn_pass (ROUND 4 — DONE)
+  ✅ post_process → post_pass (ROUND 4 — DONE)
+  ✅ Dead function cleanup (ROUND 4 — DONE, 5 removed + 2 static)
+  ✅ Zodiac decomposition (ROUND 4 — DONE, init→3 + draw→5 helpers)
+  ✅ Brand color fix (ROUND 4 — DONE, solar gold)
+  → milkyway_pack → milkyway_pass (ROUND 5)
+  → moon_pack → moon_pass (ROUND 5)
+  → earth_pack → earth_pass (ROUND 5)
+  → horizon_geometry → horizon_pass (ROUND 5 — bonus if time)
+  ✓ bodygraph_pack → bodygraph_pass (Human Design view)
+  ✓ hexagram_geometry → hexagram_pass (I Ching view)
+  ✓ tree_geometry → tree_pass (Kabbalah Tree of Life view)
+  ✓ deep_sky_pack → deep_sky_pass (Messier/NGC objects)
+  ✓ card_pack → card_pass (knowledge info cards)
 
 SHORT-TERM — ALPHA RENDER DATA QUEUE:
-  1. Orbit Trail Pack (8.7) — Kepler orbit lines with gradient fade (ROUND 4)
-  2. Planet Surface Shader Pack (8.3) — procedural per-planet surface
-  4. Orbit Trail Pack (8.7) — Kepler orbit lines with gradient fade
-  5. Lens Flare Pack (30.3b) — sun/bright star screen-space flare
+  1. Orbit Trail Pack (8.7) — Kepler orbit lines with gradient fade (ROUND 5)
+  2. Planet Surface Shader Pack (8.3) — procedural per-planet surfaces
+  3. Lens Flare Pack (30.3b) — sun/bright star screen-space flare
+  4. Atmosphere Glow Pack (24.3) — atmospheric scattering for Earth View
+  5. Click Target Pack (5.1) — hit-test geometry for interactive objects
 
 SHORT-TERM — BETA DATA QUEUE:
-  1. Convergence Detector (19.1) — cross-system alignment scanner (ROUND 4)
+  1. Convergence Detector (19.1) — cross-system alignment scanner (ROUND 5)
   2. Structural Map (19.3) — structural patterns across knowledge systems
-  3. Structural Map (19.3) — structural patterns across knowledge systems
-  4. Dreamspell Oracle (31.3) — interactive Tzolkin game oracle
-  5. Card Render Pack (4.x) — knowledge system info card vertex data
+  3. Dreamspell Oracle (31.3) — interactive Tzolkin game oracle
+  4. Card Render Pack (4.x) — knowledge system info card vertex data
+  5. Wisdom Engine (32.1) — contextual quote/insight correlator
 
 SHORT-TERM — GAMMA CALENDAR QUEUE:
-  1. Coptic Calendar (40.1) — oldest continuous calendar (ROUND 4)
+  1. Coptic Calendar (40.1) — oldest continuous calendar (ROUND 5)
   2. Ethiopian Calendar (40.2) — follows from Coptic, shared structure
-  3. Ethiopian Calendar (40.2) — follows from Coptic, shared structure
-  4. Zoroastrian Calendar (39.1) — first dualist calendar
-  5. Egyptian Calendar (43.1) — Ma'at and the Sothic cycle
+  3. Zoroastrian Calendar (39.1) — first dualist calendar
+  4. Egyptian Calendar (43.1) — Ma'at and the Sothic cycle
+  5. Balinese Pawukon (42.2) — 210-day cycle, Southeast Asian system
   6. Wheel of the Year (41.1) — Celtic 8 festivals + solar position
   7. Myanmar Calendar (42.1) — Southeast Asian lunar system
 
-MID-TERM — ORCHESTRATOR RENDER PASSES (OMEGA wires after data packs deliver):
-  post_pass (FBO composite)        — OMEGA wires after ALPHA post_process
-  milkyway_pass                     — OMEGA wires after BETA milkyway_pack
-  diffraction_pass                  — OMEGA wires after ALPHA diffraction_pack
-  planet_surface_pass               — OMEGA wires after ALPHA planet_surface
-  orbit_trail_pass                  — OMEGA wires after ALPHA orbit_trail_pack
+MID-TERM → PROMOTING TO SHORT-TERM:
+  UI Interaction (was MID-TERM, now decomposable — 7 passes wired):
+  → Click-to-focus: ALPHA builds click_target_pack → OMEGA wires input handler
+  → Keyboard overlay: BETA builds help_overlay data → OMEGA wires as HUD element
+  → Timeline scrubber: BETA builds timeline_data → ALPHA builds scrubber geometry
 
-MID-TERM — UI INTERACTION (Tracks 5, 30.4):
-  Click-to-focus: click object → smooth zoom + info card
-  Scroll-driven exploration: wheel = navigate time scales
-  Timeline scrubber: drag through time with visual feedback
-  Keyboard overlay: ? key shows shortcuts
-  → DECOMPOSE INTO AGENT TASKS when render passes are wired
+  View Modes (data packs exist, passes needed):
+  → Earth View (E key): earth_pass (OMEGA R5) + horizon_pass + daylight data
+  → Human Design (D key): bodygraph_pass (OMEGA R6) + gate activation overlay
+  → I Ching (I key): hexagram_pass (OMEGA R6) + changing lines animation
+  → Kabbalah (K key): tree_pass (OMEGA R6) + Sefirot glow shader
 
-MID-TERM — VIEW MODES (need render passes first):
-  Earth View mode (E key): earth_pass + daylight + coastlines
-  Human Design view (D key): bodygraph_pass + gate activations
-  I Ching view (I key): hexagram_pass + changing lines
-  Kabbalah view (K key): tree_pass + Sefirot glow
-  Correlation mode (/ key): alignment dashboard
-  → EACH becomes an OMEGA wiring task as passes exist
+MID-TERM:
+  orbit_trail_pass  — OMEGA wires after ALPHA orbit_trail_pack (ROUND 5 delivery)
+  planet_surface_pass — OMEGA wires after ALPHA planet_surface (ROUND 6)
+  lens_flare_pass   — OMEGA wires after ALPHA lens_flare (ROUND 7)
+  Correlation mode (/ key): convergence_detect + alignment dashboard UI
+  Card renderer: card_pack (BETA) → card_pass (OMEGA) → cards visible
 
 LONG-TERM → COMPRESSED TO MID-TERM:
-  4.1-4.6  Card renderer: card_pack (BETA) → card_pass (OMEGA) → cards visible
-  5.1-5.4  Interaction: decompose into input_handler module (ALPHA) → OMEGA wires
+  5.2-5.4  Scroll + scrubber: input handler decomposition (ALPHA geometry + OMEGA wiring)
   6.1-6.4  Infrastructure: performance profiling, error recovery, memory guard
   34.1     Community backend: server decision deferred (localStorage first)
   45.1     Audio layer: Web Audio data module (BETA) after frequency mapper

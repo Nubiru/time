@@ -1,11 +1,41 @@
 # Books I Need — Gabriel's Shopping List
 
 Claude maintains this list. You find them, drop them in `~/Desktop/temp/time/inbox/`. Done.
-Full library catalog: `LIBRARY.md` (204 items acquired).
+Full library catalog: `LIBRARY.md` (215 items acquired).
 
 ---
 
-## ACQUIRED THIS SESSION (2026-03-06) — COLOR & ART HAUL
+## ACQUIRED 2026-03-12 — RENDERING & GPU HAUL (11 books!)
+
+### GPU & Real-Time Rendering (5 books)
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"GPU Gems 3"** | Hubert Nguyen (ed.) | Procedural shaders, bloom, HDR, atmosphere, shadows — **P0 for cinematic rendering** |
+| **"GPU Computing Gems: Emerald Edition"** | Wen-mei Hwu (ed.) | GPU algorithms, parallel computing patterns |
+| **"Real-Time Rendering"** | Tomas Akenine-Möller et al. | **THE reference** — PBR, shadows, atmosphere, post-processing |
+| **"Real-Time Rendering, Third Edition"** | Tomas Akenine-Möller et al. | Earlier edition, still valuable for foundations |
+| **"Texturing & Modeling: A Procedural Approach"** | Ebert et al. | Noise functions, procedural sky, terrain, planets — **P0 for planet surfaces** |
+
+### Game Engine & WebGL (1 book)
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"Build Your Own 2D Game Engine"** | Kelvin Sung et al. | WebGL2 patterns, game loop, input, rendering pipeline |
+
+### Pixel Art (3 books)
+| Book | Author | Tracks |
+|------|--------|--------|
+| **"Pixel Logic: A Guide to Pixel Art"** | Michael Azzi | Low-res aesthetic, glyph design |
+| **"Pixel Art Secrets 1"** | (various) | Pixel art techniques |
+| **"Pixel Secrets, Pixel Art"** | (various) | Pixel art techniques |
+
+### Academic (1 paper)
+| Paper | Topic |
+|-------|-------|
+| **"Image reconstruction by OPED algorithm"** | Image processing algorithm |
+
+---
+
+## ACQUIRED 2026-03-06 — COLOR & ART HAUL
 
 ### Color Science (9 books!)
 | Book | Author | Tracks |
