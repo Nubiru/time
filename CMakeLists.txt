@@ -103,6 +103,7 @@ set(RENDER_SOURCES
     src/render/noise_shader.c
     src/render/sun_shader.c
     src/render/constellation_bounds.c
+    src/render/horizon_geometry.c
     src/render/post_process.c
     src/render/passes/star_pass.c
     src/render/passes/planet_pass.c
@@ -220,6 +221,7 @@ set(SYSTEMS_SOURCES
     src/systems/unified/phase_space.c
     src/systems/unified/ratio_analysis.c
     src/systems/unified/sacred_numbers.c
+    src/systems/unified/time_philosophy.c
     # Celtic
     src/systems/celtic/wheel_of_year.c
     # Chakra
@@ -371,6 +373,7 @@ else()
     add_library(time_noise_shader   OBJECT src/render/noise_shader.c)
     add_library(time_sun_shader     OBJECT src/render/sun_shader.c)
     add_library(time_constellation_bounds OBJECT src/render/constellation_bounds.c)
+    add_library(time_horizon_geometry OBJECT src/render/horizon_geometry.c)
     add_library(time_post_process OBJECT src/render/post_process.c)
 
     # Systems — Astronomy
@@ -482,6 +485,7 @@ else()
     add_library(time_phase_space     OBJECT src/systems/unified/phase_space.c)
     add_library(time_ratio_analysis  OBJECT src/systems/unified/ratio_analysis.c)
     add_library(time_sacred_numbers  OBJECT src/systems/unified/sacred_numbers.c)
+    add_library(time_time_philosophy OBJECT src/systems/unified/time_philosophy.c)
 
     # Systems — Celtic
     add_library(time_wheel_of_year   OBJECT src/systems/celtic/wheel_of_year.c)
@@ -608,6 +612,7 @@ else()
     time_add_test(NAME test_text_render    TEST tests/render/test_text_render.c     DEPS text_render)
     time_add_test(NAME test_zodiac_pack    TEST tests/render/test_zodiac_pack.c     DEPS zodiac_pack ring_geometry cusp_lines aspect_lines billboard color_palette color_theory color vec3 mat4)
     time_add_test(NAME test_constellation_bounds TEST tests/render/test_constellation_bounds.c DEPS constellation_bounds)
+    time_add_test(NAME test_horizon_geometry TEST tests/render/test_horizon_geometry.c DEPS horizon_geometry)
     time_add_test(NAME test_post_process TEST tests/render/test_post_process.c DEPS post_process noise_shader)
 
     # Core tests
@@ -738,6 +743,7 @@ else()
     time_add_test(NAME test_phase_space    TEST tests/systems/unified/test_phase_space.c    DEPS phase_space)
     time_add_test(NAME test_ratio_analysis TEST tests/systems/unified/test_ratio_analysis.c DEPS ratio_analysis)
     time_add_test(NAME test_sacred_numbers TEST tests/systems/unified/test_sacred_numbers.c DEPS sacred_numbers)
+    time_add_test(NAME test_time_philosophy TEST tests/systems/unified/test_time_philosophy.c DEPS time_philosophy)
 
     # UI tests
     time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
