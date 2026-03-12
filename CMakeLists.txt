@@ -137,6 +137,7 @@ set(SYSTEMS_SOURCES
     src/systems/tzolkin/cr_cycle.c
     src/systems/tzolkin/dreamspell.c
     src/systems/tzolkin/tzolkin_board.c
+    src/systems/tzolkin/kin_social.c
     # I Ching
     src/systems/iching/iching.c
     # Chinese
@@ -395,6 +396,7 @@ else()
     add_library(time_cr_cycle        OBJECT src/systems/tzolkin/cr_cycle.c)
     add_library(time_dreamspell      OBJECT src/systems/tzolkin/dreamspell.c)
     add_library(time_tzolkin_board   OBJECT src/systems/tzolkin/tzolkin_board.c)
+    add_library(time_kin_social      OBJECT src/systems/tzolkin/kin_social.c)
     add_library(time_iching          OBJECT src/systems/iching/iching.c)
     add_library(time_chinese         OBJECT src/systems/chinese/chinese.c)
     add_library(time_numerology      OBJECT src/systems/numerology/numerology.c)
@@ -645,6 +647,7 @@ else()
     time_add_test(NAME test_sabbatical     TEST tests/systems/hebrew/test_sabbatical.c    DEPS sabbatical hebrew)
     time_add_test(NAME test_dreamspell     TEST tests/systems/tzolkin/test_dreamspell.c   DEPS dreamspell)
     time_add_test(NAME test_tzolkin_board  TEST tests/systems/tzolkin/test_tzolkin_board.c DEPS tzolkin_board)
+    time_add_test(NAME test_kin_social    TEST tests/systems/tzolkin/test_kin_social.c   DEPS kin_social dreamspell)
     time_add_test(NAME test_coptic         TEST tests/systems/coptic/test_coptic.c        DEPS coptic)
     time_add_test(NAME test_egyptian       TEST tests/systems/egyptian/test_egyptian.c    DEPS egyptian)
     time_add_test(NAME test_ethiopian      TEST tests/systems/ethiopian/test_ethiopian.c  DEPS ethiopian)
@@ -669,6 +672,9 @@ else()
 
     # Aztec tests
     time_add_test(NAME test_aztec           TEST tests/systems/aztec/test_aztec.c      DEPS aztec)
+
+    # Tamil tests
+    time_add_test(NAME test_tamil_calendar  TEST tests/systems/tamil/test_tamil_calendar.c DEPS tamil_calendar)
 
     # French Republican tests
     time_add_test(NAME test_french_republican TEST tests/systems/french_republican/test_french_republican.c DEPS french_republican)

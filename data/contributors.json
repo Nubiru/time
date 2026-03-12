@@ -165,7 +165,24 @@
         { "file": "src/systems/astronomy/precession.c", "line": 10, "note": "Lahiri ayanamsa at J2000.0" },
         { "file": "src/systems/astronomy/precession.c", "line": 60, "note": "prec_ayanamsa_lahiri() implementation" },
         { "file": "src/systems/astronomy/precession.h", "line": 17, "note": "prec_ayanamsa_lahiri() declaration" },
-        { "file": "src/systems/hindu/nakshatra.c", "line": 1, "note": "Lahiri ayanamsa approximation for Nakshatra computation" }
+        { "file": "src/systems/hindu/nakshatra.c", "line": 1, "note": "Lahiri ayanamsa approximation for Nakshatra computation" },
+        { "file": "src/systems/tamil/tamil_calendar.c", "line": 1, "note": "Lahiri ayanamsa for Tamil sidereal solar calendar" }
+      ]
+    },
+    {
+      "id": "thiruvalluvar",
+      "name": "Thiruvalluvar",
+      "category": ["philosopher", "calendar-tradition"],
+      "contributions": [
+        {
+          "work": "Thirukkural / Thiruvalluvar Era",
+          "description": "Tamil poet-philosopher (~31 BCE) whose birth marks the epoch of the Thiruvalluvar era used in the Tamil calendar",
+          "year": -31
+        }
+      ],
+      "references": [
+        { "file": "src/systems/tamil/tamil_calendar.h", "line": 1, "note": "Thiruvalluvar era epoch" },
+        { "file": "src/systems/tamil/tamil_calendar.c", "line": 1, "note": "TV_OFFSET = 31 (Thiruvalluvar era offset)" }
       ]
     },
     {
@@ -337,7 +354,9 @@
         { "file": "src/systems/astronomy/orbit.c", "line": 16, "note": "JPL Approximate Positions of the Planets" },
         { "file": "src/systems/astronomy/orbit.c", "line": 58, "note": "Earth orbital elements (JPL Table 1)" },
         { "file": "src/systems/astronomy/planet_data.c", "line": 1, "note": "NASA Planetary Fact Sheet: radii, masses, albedos, tilts, rotations, colors" },
-        { "file": "src/systems/astronomy/moon_data.c", "line": 1, "note": "JPL Planetary Satellite Physical Parameters: moon orbital elements and radii" }
+        { "file": "src/systems/astronomy/moon_data.c", "line": 1, "note": "JPL Planetary Satellite Physical Parameters: moon orbital elements and radii" },
+        { "file": "src/render/saturn_ring_pack.c", "line": 6, "note": "Saturn ring radii and opacity from NASA/JPL Voyager/Cassini measurements" },
+        { "file": "src/render/saturn_ring_pack.h", "line": 13, "note": "Saturn ring system physical data (1 Rs = 60,268 km)" }
       ]
     },
     {
