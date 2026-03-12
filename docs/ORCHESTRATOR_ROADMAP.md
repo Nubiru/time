@@ -1,25 +1,47 @@
 # Orchestrator Roadmap — Primary Agent Work Plan
 
 **Owner**: Primary Claude (orchestrator)
-**Last Updated**: 2026-03-06
+**Last Updated**: 2026-03-08
 **Philosophy**: I build the architecture and the visuals. Agents build the modules. I focus on what connects everything.
+
+---
+
+## ADR-006 PIVOT: Art-First Rendering (2026-03-08)
+
+**ALL rendering work now targets cinematic visual quality.** The data engine is massive (147+ deliveries, 172 tests) but visuals are prototype-level. Priority shifts from "build more invisible modules" to "make what exists beautiful."
+
+**Key changes:**
+- Render pass architecture (ADR-005): GL code in `src/render/passes/`, wiring is 4-step recipe
+- Procedural sun shader: `noise_shader.h/.c` + `sun_shader.h/.c` replace flat yellow sphere
+- OMEGA now wires delivered packs (see OMEGA priority.md section 11)
+- DELTA now researches shader techniques alongside book extraction
+- ALPHA builds shader data packs (noise, atmosphere, procedural surfaces)
+
+**Immediate MEGA priorities:** Sun shader, Earth View mode, planet surface shaders, bloom/glow
 
 ---
 
 ## Delegation Model
 
 ```
-PRIMARY (me):  Architecture, visual rendering, camera systems, integration,
-               wiring modules into the live build, UI/UX, the art itself.
+MEGA (me):     Architecture, shader authorship, the art itself, cinematic rendering.
                Macro-level direction: I define WHAT needs building in this roadmap.
+               I write shaders. I make it beautiful.
 
-AGENTS (A/B):  Autonomous 4-phase pipeline (evaluate → plan → execute → document).
-               Agents read THIS roadmap, find unchecked [ ] items in their domain,
-               design their own TDD task specs, implement, and report back.
-               Pipeline command: /execute A  or  /execute B
+OMEGA:         Wiring delivered packs into render passes, git commits, codebase health.
+               The finisher. Mechanical maintenance following recipes.
 
-AGENT A DOMAIN: Geometry, render infrastructure, vertex data, projection math
-AGENT B DOMAIN: UI data, formatting, knowledge system visuals, display logic
+ALPHA:         Shader data packs, procedural noise, atmosphere models, GPU-ready vertex data.
+               /execute ALPHA
+
+BETA:          UI data, formatting, knowledge system visuals, display logic.
+               /execute BETA
+
+GAMMA:         Sacred calendars, world calendar algorithms, book extraction (code tasks).
+               /execute GAMMA
+
+DELTA:         Research mining: PDF books + shader technique research (Shadertoy, papers).
+               No C code. /execute DELTA
 ```
 
 ---

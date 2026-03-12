@@ -2,7 +2,7 @@
  * planet_pass.c — Sun + planet sprites + orbit trail render pass
  *
  * Stateful module (S1): owns GPU resource handles as module-static s_ variables.
- * Extracted from main.c.
+ * Extracted from main.c. Sun upgraded from flat mesh to procedural plasma shader.
  */
 
 #ifdef __EMSCRIPTEN__
@@ -12,26 +12,28 @@
 #include <math.h>
 #include <GLES3/gl3.h>
 #include "../shader.h"
-#include "../mesh.h"
-#include "../mesh_shader.h"
+#include "../sun_shader.h"
 #include "../planet_pack.h"
 
 /* sqrt scale: compresses outer planets while keeping inner planets visible.
  * Mercury ~1.9, Earth ~3.0, Jupiter ~6.8, Neptune ~16.4 scene units. */
 static const float ORBIT_SCALE = 3.0f;
 
+/* Sun billboard size in scene units (slightly larger than old 0.4 sphere
+ * to accommodate corona glow that extends beyond the disk) */
+static const float SUN_SIZE = 0.7f;
+
 /* --- Module-static GL handles --- */
 
-/* Lit mesh shader (Sun sphere) */
-static GLuint s_mesh_program;
-static GLint  s_loc_model;
-static GLint  s_loc_view;
-static GLint  s_loc_proj;
-static GLint  s_loc_color;
-static GLint  s_loc_light_dir;
-static GLint  s_loc_emissive;
-static GLint  s_loc_opacity;
-static mesh_t s_sun_mesh;
+/* Procedural Sun shader (billboard quad with animated plasma) */
+static GLuint s_sun_program;
+static GLint  s_sun_loc_view;
+static GLint  s_sun_loc_proj;
+static GLint  s_sun_loc_sun_pos;
+static GLint  s_sun_loc_size;
+static GLint  s_sun_loc_time;
+static GLuint s_sun_vao;
+static GLuint s_sun_vbo;
 
 /* Planet pack (point sprites) */
 static GLuint s_pp_program;
@@ -83,22 +85,41 @@ static void sqrt_scale_trail_vertices(float *verts, int count) {
 }
 
 int planet_pass_init(void) {
-    /* --- Lit mesh shader (Sun) --- */
-    s_mesh_program = shader_create_program(
-        mesh_shader_vert_source(), mesh_shader_frag_source());
-    if (s_mesh_program == 0) {
-        printf("Failed to create mesh shader\n");
+    /* --- Procedural Sun shader (billboard with animated plasma) --- */
+    s_sun_program = shader_create_program(
+        sun_shader_vert_source(), sun_shader_frag_source());
+    if (s_sun_program == 0) {
+        printf("Failed to create sun shader\n");
         return 1;
     }
-    s_loc_model     = glGetUniformLocation(s_mesh_program, "u_model");
-    s_loc_view      = glGetUniformLocation(s_mesh_program, "u_view");
-    s_loc_proj      = glGetUniformLocation(s_mesh_program, "u_proj");
-    s_loc_color     = glGetUniformLocation(s_mesh_program, "u_color");
-    s_loc_light_dir = glGetUniformLocation(s_mesh_program, "u_light_dir");
-    s_loc_emissive  = glGetUniformLocation(s_mesh_program, "u_emissive");
-    s_loc_opacity   = glGetUniformLocation(s_mesh_program, "u_opacity");
+    s_sun_loc_view    = glGetUniformLocation(s_sun_program, "u_view");
+    s_sun_loc_proj    = glGetUniformLocation(s_sun_program, "u_proj");
+    s_sun_loc_sun_pos = glGetUniformLocation(s_sun_program, "u_sun_pos");
+    s_sun_loc_size    = glGetUniformLocation(s_sun_program, "u_size");
+    s_sun_loc_time    = glGetUniformLocation(s_sun_program, "u_time");
 
-    s_sun_mesh = mesh_create_sphere(16, 32);
+    /* Billboard quad: 4 vertices, 2 triangles, as triangle strip */
+    static const float quad_verts[] = {
+        -1.0f, -1.0f,  /* bottom-left */
+         1.0f, -1.0f,  /* bottom-right */
+        -1.0f,  1.0f,  /* top-left */
+         1.0f,  1.0f,  /* top-right */
+    };
+
+    glGenVertexArrays(1, &s_sun_vao);
+    glBindVertexArray(s_sun_vao);
+
+    glGenBuffers(1, &s_sun_vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, s_sun_vbo);
+    glBufferData(GL_ARRAY_BUFFER, (GLsizeiptr)sizeof(quad_verts),
+                 quad_verts, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(0); /* a_quad */
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 0, (void*)0);
+
+    glBindVertexArray(0);
+
+    printf("Sun: procedural plasma shader compiled\n");
 
     /* --- Planet pack shader (point sprites with atmosphere glow) --- */
     s_pp_program = shader_create_program(
@@ -164,20 +185,25 @@ int planet_pass_init(void) {
 }
 
 void planet_pass_draw(const render_frame_t *frame) {
-    /* --- Sun + Planets (only when LAYER_PLANETS visible) --- */
+    /* --- Sun (procedural plasma billboard) --- */
     if (layer_is_visible(frame->layers, LAYER_PLANETS)) {
-        glUseProgram(s_mesh_program);
-        glUniformMatrix4fv(s_loc_view, 1, GL_FALSE, frame->view.m);
-        glUniformMatrix4fv(s_loc_proj, 1, GL_FALSE, frame->proj.m);
-        glUniform1f(s_loc_opacity, 1.0f);
+        glUseProgram(s_sun_program);
+        glUniformMatrix4fv(s_sun_loc_view, 1, GL_FALSE, frame->view.m);
+        glUniformMatrix4fv(s_sun_loc_proj, 1, GL_FALSE, frame->proj.m);
+        glUniform3f(s_sun_loc_sun_pos, 0.0f, 0.0f, 0.0f);
+        glUniform1f(s_sun_loc_size, SUN_SIZE);
+        glUniform1f(s_sun_loc_time, frame->time_sec);
 
-        /* Sun: emissive yellow sphere at origin */
-        glUniform1f(s_loc_emissive, 1.0f);
-        mat4_t sun_model = mat4_scale(0.4f, 0.4f, 0.4f);
-        glUniformMatrix4fv(s_loc_model, 1, GL_FALSE, sun_model.m);
-        glUniform3f(s_loc_color, 1.0f, 0.85f, 0.2f);
-        glUniform3f(s_loc_light_dir, 0.0f, 0.0f, 1.0f);
-        mesh_draw(&s_sun_mesh);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE); /* additive for glow */
+        glDepthMask(GL_FALSE);
+
+        glBindVertexArray(s_sun_vao);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        glBindVertexArray(0);
+
+        glDepthMask(GL_TRUE);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         /* Planets: packed point sprites with atmosphere glow */
         {
@@ -189,9 +215,6 @@ void planet_pass_draw(const render_frame_t *frame) {
             glUniformMatrix4fv(s_pp_loc_mvp, 1, GL_FALSE, frame->view_proj.m);
             glUniform1f(s_pp_loc_scale, 800.0f);
 
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
             glBindVertexArray(s_pp_vao);
             glBindBuffer(GL_ARRAY_BUFFER, s_pp_vbo);
             glBufferSubData(GL_ARRAY_BUFFER, 0,
@@ -200,8 +223,9 @@ void planet_pass_draw(const render_frame_t *frame) {
             glDrawArrays(GL_POINTS, 0, pdata.planet_count);
 
             glBindVertexArray(0);
-            glDisable(GL_BLEND);
         }
+
+        glDisable(GL_BLEND);
     }
 
     /* --- Orbit trails (only when LAYER_ORBITS visible) --- */
@@ -235,8 +259,9 @@ void planet_pass_draw(const render_frame_t *frame) {
 }
 
 void planet_pass_destroy(void) {
-    glDeleteProgram(s_mesh_program);
-    mesh_destroy(&s_sun_mesh);
+    glDeleteProgram(s_sun_program);
+    glDeleteBuffers(1, &s_sun_vbo);
+    glDeleteVertexArrays(1, &s_sun_vao);
     glDeleteProgram(s_pp_program);
     glDeleteBuffers(1, &s_pp_vbo);
     glDeleteVertexArrays(1, &s_pp_vao);

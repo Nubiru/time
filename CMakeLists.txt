@@ -99,6 +99,9 @@ set(RENDER_SOURCES
     src/render/text_render.c
     src/render/hexagram_geometry.c
     src/render/mesh_shader.c
+    src/render/noise_shader.c
+    src/render/sun_shader.c
+    src/render/constellation_bounds.c
     src/render/passes/star_pass.c
     src/render/passes/planet_pass.c
     src/render/passes/zodiac_pass.c
@@ -355,6 +358,9 @@ else()
     add_library(time_text_render     OBJECT src/render/text_render.c)
     add_library(time_zodiac_pack     OBJECT src/render/zodiac_pack.c)
     add_library(time_mesh_shader    OBJECT src/render/mesh_shader.c)
+    add_library(time_noise_shader   OBJECT src/render/noise_shader.c)
+    add_library(time_sun_shader     OBJECT src/render/sun_shader.c)
+    add_library(time_constellation_bounds OBJECT src/render/constellation_bounds.c)
 
     # Systems — Astronomy
     add_library(time_orbit           OBJECT src/systems/astronomy/orbit.c)
@@ -581,6 +587,7 @@ else()
     time_add_test(NAME test_star_field     TEST tests/render/test_star_field.c      DEPS star_field star_catalog star_catalog_ext constellation star_colors)
     time_add_test(NAME test_text_render    TEST tests/render/test_text_render.c     DEPS text_render)
     time_add_test(NAME test_zodiac_pack    TEST tests/render/test_zodiac_pack.c     DEPS zodiac_pack ring_geometry cusp_lines aspect_lines billboard color_palette color_theory color vec3 mat4)
+    time_add_test(NAME test_constellation_bounds TEST tests/render/test_constellation_bounds.c DEPS constellation_bounds)
 
     # Core tests
     time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)

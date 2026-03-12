@@ -1,8 +1,8 @@
 {
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
-    "last_updated": "2026-03-07",
-    "total_contributors": 123
+    "last_updated": "2026-03-08",
+    "total_contributors": 143
   },
   "contributors": [
     {
@@ -29,7 +29,8 @@
         { "file": "src/systems/astronomy/moon_nodes.c", "line": 18, "note": "Chapter 47: mean longitude of ascending node" },
         { "file": "src/ui/time_hud.c", "line": 13, "note": "Sidereal rate reference" },
         { "file": "src/systems/unified/calendar_epoch.c", "line": 22, "note": "Chapter 8: Computus (Anonymous Gregorian Easter algorithm)" },
-        { "file": "src/render/decan_stars.c", "line": 243, "note": "Chapter 14: Ascendant formula for decan rising computation" }
+        { "file": "src/render/decan_stars.c", "line": 243, "note": "Chapter 14: Ascendant formula for decan rising computation" },
+        { "file": "src/render/eclipse_geometry.c", "line": 121, "note": "Simplified Earth-Sun distance formula for eclipse geometry" }
       ]
     },
     {
@@ -2003,6 +2004,285 @@
       "references": [
         { "file": "src/systems/french_republican/french_republican.h", "line": 13, "note": "Calendar designer, leap year proposal" },
         { "file": "src/systems/french_republican/french_republican.c", "line": 8, "note": "Romme leap year rule implementation" }
+      ]
+    },
+    {
+      "id": "stefan-gustavson",
+      "name": "Stefan Gustavson",
+      "category": ["computer-scientist", "graphics-researcher"],
+      "contributions": [
+        {
+          "work": "Simplex noise demystified",
+          "description": "GLSL simplex noise implementation based on Perlin's simplex noise, widely used in shader programming",
+          "year": 2005
+        }
+      ],
+      "references": [
+        { "file": "src/render/noise_shader.c", "line": 4, "note": "Simplex noise GLSL implementation (Ashima Arts / MIT license)" }
+      ]
+    },
+    {
+      "id": "ian-mcewan",
+      "name": "Ian McEwan",
+      "category": ["computer-scientist", "graphics-researcher"],
+      "contributions": [
+        {
+          "work": "WebGL noise functions",
+          "description": "Co-author of the widely-used GLSL noise library with Stefan Gustavson (Ashima Arts)",
+          "year": 2011
+        }
+      ],
+      "references": [
+        { "file": "src/render/noise_shader.c", "line": 4, "note": "Co-author of simplex noise GLSL implementation (Ashima Arts / MIT license)" }
+      ]
+    },
+    {
+      "id": "sean-oneil",
+      "name": "Sean O'Neil",
+      "category": ["graphics-programmer", "researcher"],
+      "contributions": [
+        {
+          "work": "GPU Gems 2 Ch.16: Accurate Atmospheric Scattering",
+          "description": "Real-time atmospheric scattering shaders: Rayleigh + Mie with exponential density falloff, lookup table optimization, inner/outer atmosphere views",
+          "year": 2005
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "GPU Gems 2 Ch.16 algorithm extraction for planet limb glow and sky rendering" }
+      ]
+    },
+    {
+      "id": "aj-preetham",
+      "name": "A.J. Preetham",
+      "category": ["computer-scientist", "graphics-researcher"],
+      "contributions": [
+        {
+          "work": "A Practical Analytic Model for Daylight",
+          "description": "Analytical sky color model: Perez luminance distribution, turbidity-based Rayleigh/Mie coefficients, zenith color computation (SIGGRAPH 99)",
+          "year": 1999
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "Preetham sky model for analytical daylight rendering" }
+      ]
+    },
+    {
+      "id": "tomoyuki-nishita",
+      "name": "Tomoyuki Nishita",
+      "category": ["computer-scientist", "graphics-researcher"],
+      "contributions": [
+        {
+          "work": "Display of the Earth Taking into Account Atmospheric Scattering",
+          "description": "Foundational paper on rendering planetary atmospheres with physically-based Rayleigh and Mie scattering, optical depth integration along view rays",
+          "year": 1993
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "Original atmospheric scattering rendering algorithm" }
+      ]
+    },
+    {
+      "id": "lord-rayleigh",
+      "name": "Lord Rayleigh (John William Strutt)",
+      "born": 1842,
+      "died": 1919,
+      "category": ["physicist", "Nobel-laureate"],
+      "contributions": [
+        {
+          "work": "Theory of light scattering by particles small compared to wavelength",
+          "description": "Rayleigh scattering: intensity proportional to 1/lambda^4, explains why the sky is blue. Fundamental to all atmospheric rendering.",
+          "year": 1871
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "Rayleigh scattering physics used in atmosphere shaders" }
+      ]
+    },
+    {
+      "id": "gustav-mie",
+      "name": "Gustav Mie",
+      "born": 1868,
+      "died": 1957,
+      "category": ["physicist"],
+      "contributions": [
+        {
+          "work": "Mie theory of electromagnetic scattering by spherical particles",
+          "description": "Mie scattering: wavelength-independent scattering by particles comparable to wavelength size (dust, aerosols). Forward-biased. Explains haze and sun glare.",
+          "year": 1908
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "Mie scattering physics used in atmosphere shaders" }
+      ]
+    },
+    {
+      "id": "henyey-greenstein",
+      "name": "Louis G. Henyey & Jesse L. Greenstein",
+      "category": ["astrophysicist"],
+      "contributions": [
+        {
+          "work": "Diffuse radiation in the galaxy",
+          "description": "Henyey-Greenstein phase function: single-parameter model for anisotropic scattering, widely used in atmospheric and volumetric rendering",
+          "year": 1941
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "HG phase function for Mie scattering direction" }
+      ]
+    },
+    {
+      "id": "rye-terrell",
+      "name": "Rye Terrell (wwwtyro)",
+      "category": ["graphics-programmer", "open-source"],
+      "contributions": [
+        {
+          "work": "glsl-atmosphere",
+          "description": "Clean MIT-licensed GLSL implementation of ray-marched atmospheric scattering with configurable planet/atmosphere parameters",
+          "year": 2017
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "Reference GLSL atmosphere implementation (MIT license)" }
+      ]
+    },
+    {
+      "id": "masaki-kawase",
+      "name": "Masaki Kawase",
+      "category": ["graphics-programmer", "game-developer"],
+      "contributions": [
+        {
+          "work": "Fast blur techniques for real-time rendering",
+          "description": "Kawase and Dual Kawase blur: progressive downsample/upsample blur approximation, faster than Gaussian with acceptable quality for bloom effects (GDC 2003)",
+          "year": 2003
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "Dual Kawase blur for bloom pipeline" }
+      ]
+    },
+    {
+      "id": "krzysztof-narkowicz",
+      "name": "Krzysztof Narkowicz",
+      "category": ["graphics-programmer", "researcher"],
+      "contributions": [
+        {
+          "work": "ACES Filmic Tone Mapping Curve fit",
+          "description": "Practical fitted approximation of ACES RRT+ODT: 5 coefficients, max error 0.0138, public domain (CC0/MIT). Industry standard for real-time HDR rendering.",
+          "year": 2016
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "ACES filmic tone mapping curve for HDR rendering" }
+      ]
+    },
+    {
+      "id": "john-hable",
+      "name": "John Hable",
+      "category": ["graphics-programmer", "game-developer"],
+      "contributions": [
+        {
+          "work": "Uncharted 2 filmic tone mapping",
+          "description": "Parametric filmic curve with shoulder/toe/linear sections for cinematic HDR rendering. Used in Uncharted 2/3, widely adopted in game industry.",
+          "year": 2010
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "Uncharted 2 filmic tone mapping operator" }
+      ]
+    },
+    {
+      "id": "timothy-lottes",
+      "name": "Timothy Lottes",
+      "category": ["graphics-programmer", "researcher"],
+      "contributions": [
+        {
+          "work": "FXAA (Fast Approximate Anti-Aliasing)",
+          "description": "Single-pass screen-space edge detection and blurring along edge direction. 9 texture lookups per pixel. Industry standard post-process AA.",
+          "year": 2009
+        },
+        {
+          "work": "Advanced HDR Color Pipelines tone mapping",
+          "description": "Parametric tone mapping operator with configurable mid-tone anchor, HDR max, and shoulder (AMD, GDC 2016)",
+          "year": 2016
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "FXAA anti-aliasing and Lottes tone mapping operator" }
+      ]
+    },
+    {
+      "id": "hajime-uchimura",
+      "name": "Hajime Uchimura",
+      "category": ["graphics-programmer", "game-developer"],
+      "contributions": [
+        {
+          "work": "HDR Theory and Practice (Gran Turismo tone mapping)",
+          "description": "Three-segment tone mapping curve (toe/linear/shoulder) with 6 controllable parameters. Designed for automotive visualization. Polyphony Digital / Gran Turismo.",
+          "year": 2017
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "Uchimura/Gran Turismo tone mapping operator" }
+      ]
+    },
+    {
+      "id": "troy-sobotka",
+      "name": "Troy Sobotka",
+      "category": ["color-scientist", "graphics-researcher"],
+      "contributions": [
+        {
+          "work": "AgX tone mapping",
+          "description": "Modern tone mapper with superior color preservation. Log2 encoding + polynomial sigmoid + color space transforms. Avoids ACES hue shifts on saturated colors. Adopted by Blender and Three.js.",
+          "year": 2023
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "AgX tone mapping for accurate HDR color rendering" }
+      ]
+    },
+    {
+      "id": "joey-de-vries",
+      "name": "Joey de Vries",
+      "category": ["educator", "graphics-programmer"],
+      "contributions": [
+        {
+          "work": "LearnOpenGL tutorials",
+          "description": "Comprehensive OpenGL/GLSL tutorial series including bloom, HDR, PBR, shadows. Standard reference for learning real-time graphics.",
+          "year": 2014
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "Bloom pipeline and HDR rendering tutorials" }
+      ]
+    },
+    {
+      "id": "inigo-quilez",
+      "name": "Inigo Quilez",
+      "category": ["graphics-programmer", "mathematician", "artist"],
+      "contributions": [
+        {
+          "work": "Domain warping and procedural noise techniques",
+          "description": "Pioneered domain warping ('warp by fbm of fbm') for organic cloud and terrain shapes. Co-created Shadertoy. Extensive library of signed distance functions, noise algorithms, and procedural techniques.",
+          "year": 2002
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-procedural-planets.md", "line": 1, "note": "Domain warping technique for gas giant cloud patterns" }
+      ]
+    },
+    {
+      "id": "ben-arnold",
+      "name": "Ben Arnold (Seed of Andromeda)",
+      "category": ["game-developer", "graphics-programmer"],
+      "contributions": [
+        {
+          "work": "Procedural gas giant rendering with GPU noise",
+          "description": "Latitude-stretched FBM noise technique for gas giant banding: asymmetric frequency scaling creates horizontal bands, domain warping adds turbulence",
+          "year": 2015
+        }
+      ],
+      "references": [
+        { "file": ".context/research/digested/shader-procedural-planets.md", "line": 1, "note": "Gas giant banding algorithm" }
       ]
     }
   ]

@@ -92,3 +92,94 @@ Jung's concept of synchronicity ("meaningful coincidence") connects astrology to
 ### Consequences
 
 The astrology layer should visualize archetypal patterns and synchronistic connections, not generate horoscope predictions. Planet positions are astronomical facts; their interpretation follows the Jungian archetypal framework.
+
+---
+
+## ADR-004: Golden Ratio Design System
+
+**Date**: 2026-03-06
+**Status**: Accepted
+
+### Decision
+
+phi (1.618...) governs EVERY visual proportion. No magic numbers. Typography, spacing, screen layout, card dimensions, animation timing, opacity cascade, ring proportions, zoom factors — all derived from phi. Brand colors: Solar gold {1.0, 0.85, 0.55} + Celestial teal {0.2, 0.75, 0.8}. Space-black #060709 not #000000. Golden angle 137.508 degrees for color palette spacing.
+
+### Files
+
+- `src/ui/golden_layout.h` — spatial proportions
+- `src/render/color_theory.h` — color science + palettes
+- `src/ui/theme.h` — unified design token system (Cosmos + Dawn themes)
+
+---
+
+## ADR-005: Render Pass Architecture (Level 2)
+
+**Date**: 2026-03-08
+**Status**: Accepted
+
+### Context
+
+main.c was 960 lines of mixed GL code. app_state_t carried 75 lines of GL handle fields. Every new visual feature required modifying main.c in 2+ places, creating coupling and merge conflicts between agents.
+
+### Decision
+
+Extract GL into self-contained pass modules (`src/render/passes/`). Each pass exports `xxx_pass_init()`, `xxx_pass_draw(const render_frame_t *)`, `xxx_pass_destroy()`. GL handles live as module-static `s_` prefix variables. No vtables, no registration — direct function calls in explicit draw order. `render_frame_t` built once per frame, passed by const pointer.
+
+### Consequences
+
+- main.c: 960 -> 108 lines. app_state.h: GL-free.
+- Wiring a new visual is 3 lines in main.c + 1 CMake entry.
+- Module-static GL handles follow the input.c precedent (resource IDs, not application state).
+- Three initial passes: star_pass, planet_pass, zodiac_pass.
+
+---
+
+## ADR-006: Art-First Rendering — Cinematic Visual Quality Pivot
+
+**Date**: 2026-03-08
+**Status**: Accepted
+
+### Context
+
+After 147+ agent deliveries, 172 test suites, and 16+ calendar systems, the visual output remains a prototype: flat yellow Sun sphere, colored planet dots, basic zodiac ring. The data engine is massive but the art is not visible. Gabriel's vision: "game quality rendering but as real as we can make it." The Sun should be living plasma, planets should have atmosphere and surface detail, the Milky Way should feel cinematic.
+
+### Decision
+
+**Pivot ALL rendering work toward cinematic visual quality.** Every pixel must be earned art. Specifically:
+
+1. **Procedural Sun shader**: Animated Perlin noise plasma, corona rays, solar prominences. Not a yellow sphere — a living star.
+2. **Planetary atmosphere shaders**: Rayleigh scattering, limb glow, latitude-dependent gas giant banding, day/night terminators.
+3. **Earth View mode**: AR-style star map from observer's perspective. Sun = daylight, Moon = realistic phase and position, constellations as seen from the ground.
+4. **Milky Way**: Volumetric band across the sky, not a placeholder spiral.
+5. **Post-processing**: Bloom/glow pass, HDR-like tone mapping, anti-aliased lines.
+6. **Everything uses phi**: Golden ratio design system (ADR-004) governs all proportions, spacing, timing, opacity. Brand colors throughout.
+
+### Constraints
+
+- WebGL2 / GLSL ES 3.00 (no compute shaders, no geometry shaders)
+- Must maintain 60fps
+- Procedural over textures (smaller binary, infinite resolution)
+- All techniques researched from real references (GPU Gems, Shadertoy, NASA imagery)
+
+### Agent Role Changes
+
+- **MEGA**: Architecture, shader authorship, the art itself. Highest-impact visual work.
+- **OMEGA**: Expanded to include wiring delivered packs, git commits, maintenance. The finisher.
+- **DELTA**: Expanded to include shader technique research (Shadertoy, papers, books) alongside book mining.
+- **ALPHA**: Shader data packs — procedural noise functions, atmosphere models, as pure C modules.
+- **BETA/GAMMA**: Continue calendar/data work, UI data formatting.
+
+### Books / Resources Needed
+
+- "The Book of Shaders" (Gonzalez Vivo) — procedural noise, fire, atmosphere
+- "GPU Gems 2, Ch.16" — accurate atmospheric scattering (Preetham/O'Neil)
+- "Texturing & Modeling: A Procedural Approach" (Ebert et al) — procedural planets
+- Shadertoy implementations: solar fire, planetary atmospheres, Milky Way
+- NASA/ESA texture references for visual accuracy (public domain)
+
+### Consequences
+
+- Agent work shifts from "build more invisible data modules" to "make what exists beautiful"
+- Wiring work delegated to OMEGA, freeing MEGA for art
+- DELTA's scope grows to include shader/technique research
+- Visual progress becomes the primary success metric, not test count

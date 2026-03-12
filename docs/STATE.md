@@ -1,6 +1,6 @@
 # Time — State Inventory
 
-**Last Updated**: 2026-03-07 (OMEGA sweep)
+**Last Updated**: 2026-03-08 (OMEGA sweep)
 
 This document tracks what is **pure** (stateless) and what is **stateful** in the codebase. The goal: maximize pure code, minimize and isolate mutable state.
 
@@ -15,11 +15,14 @@ This document tracks what is **pure** (stateless) and what is **stateful** in th
  No side effects                GL calls, input handling
  Fully testable                 Tested visually / integration
  ─────────────────────          ───────────────────────────
- src/math/* (15 modules)        src/core/main.c (orchestrator)
- src/systems/* (99 modules)     src/core/app_state.c (init)
- src/render/* (most, 31)        src/render/gl_init.c
- src/ui/* (24 modules)          src/render/mesh.c
+ src/math/* (13 modules)        src/core/main.c (orchestrator)
+ src/systems/* (93 modules)     src/core/app_state.c (init)
+ src/render/* (most, 42)        src/core/hud.c (DOM overlay)
+ src/ui/* (25 modules)          src/core/input.c (callbacks)
+                                src/render/gl_init.c
+                                src/render/mesh.c
                                 src/render/shader.c
+                                src/render/passes/* (3 passes)
 ```
 
 ---
@@ -32,13 +35,13 @@ This document tracks what is **pure** (stateless) and what is **stateful** in th
 
 ---
 
-## Pure Modules by Domain (155 total)
+## Pure Modules by Domain (173 total)
 
-### Math (15 modules)
-vec3, mat4, julian, kepler, sidereal, ecliptic, easing, arc_geometry, bezier, color, projection, sacred_geometry, wheel_layout, date_parse (core)
+### Math (13 modules)
+vec3, mat4, julian, kepler, sidereal, ecliptic, easing, arc_geometry, bezier, color, projection, sacred_geometry, wheel_layout
 
-### Render (26 pure + 5 stateful)
-Pure: aspect_lines, atmo_ring, billboard, camera, camera_scale, card_pack, catalog_ingest, color_palette, color_theory, constellation, cusp_lines, decan_stars, deep_sky, earth_atmosphere, earth_globe, font_atlas, galaxy_geometry, glyph_batch, hexagram_geometry, megalithic, moon_pack, planet_pack, render_layers, ring_data, ring_geometry, star_catalog, star_catalog_ext, star_colors, star_field, tarot_visual, text_render, zodiac_pack
+### Render (42 pure + 6 stateful)
+Pure: aspect_lines, atmo_ring, billboard, bodygraph_pack, camera, camera_scale, card_pack, catalog_ingest, color_palette, color_theory, constellation, cusp_lines, decan_stars, deep_sky, deep_sky_pack, diffraction, earth_atmosphere, earth_globe, earth_pack, eclipse_geometry, font_atlas, galaxy_geometry, glyph_batch, hexagram_geometry, megalithic, mesh_shader, milkyway_pack, moon_pack, noise_shader, planet_pack, render_frame (header-only), render_layers, ring_data, ring_geometry, star_catalog, star_catalog_ext, star_colors, star_field, sun_shader, tarot_visual, text_render, tree_pack, zodiac_pack
 
 ### Astronomy (10)
 orbit, planets, lunar, precession, solar_events, cosmic_time, moon_data, moon_nodes, planet_data, retrograde
@@ -52,26 +55,33 @@ tidal, tide_predict, surf_spots, daylight, seasons, snow_season, ski_resorts, so
 ### Geology (6)
 geo_time, radiometric, thermo, climate_history, fossil_milestones, tectonic
 
-### Unified (20)
-cycle_analysis, structural_map, convergence, frequency, phase_space, sacred_numbers, codon_hexagram, number_scanner, calendar_epoch, calendar_politics, calendar_reform, precession_detect, earth_drama, knowledge_graph, achievement, audio_data, fun_facts, ratio_analysis, wisdom, wisdom_engine
+### Unified (21)
+cycle_analysis, structural_map, convergence, frequency, phase_space, sacred_numbers, codon_hexagram, number_scanner, calendar_epoch, calendar_politics, calendar_reform, precession_detect, earth_drama, knowledge_graph, achievement, audio_data, cultural_stories, fun_facts, ratio_analysis, wisdom, wisdom_engine
 
-### Calendars (20)
-gregorian, tzolkin, haab, cr_cycle, tzolkin_board, iching, chinese, human_design, bodygraph, hebrew, sabbatical, hijri, prayer_times, buddhist, kalpa, coptic, ethiopian, egyptian, numerology, panchanga, nakshatra, yuga, wheel_of_year, chakra, sefirot, four_worlds, tree_geometry, myanmar, thai_calendar, cosmic_duality, zoroastrian
+### Calendars (38)
+aztec, bahai, gregorian, tzolkin, haab, cr_cycle, tzolkin_board, dreamspell, iching, chinese, human_design, bodygraph, hebrew, sabbatical, hijri, prayer_times, buddhist, kalpa, coptic, ethiopian, egyptian, french_republican, numerology, panchanga, nakshatra, yuga, wheel_of_year, chakra, sefirot, four_worlds, tree_geometry, myanmar, thai_calendar, cosmic_duality, zoroastrian, japanese, persian, tarot
 
-### UI (24)
+### UI (25)
 time_hud, fmt, card_data, card_layout, astro_fmt, astro_summary, zodiac_glyphs, hexagram_visual, glyph_layout, scale_hud, system_scale_map, time_format, animation, location_presets, hd_card, iching_card, chinese_fmt, lunar_display, tzolkin_card, accessibility, rtl_layout, i18n, scroll_layers, golden_layout, theme
 
 ---
 
-## Stateful Modules (imperative shell — 5 total)
+## Stateful Modules (imperative shell — 10 total)
 
 | Module | Side effects | Guarded by |
 |--------|-------------|-----------|
 | main.c | Owns g_state, runs loop, registers callbacks | `#ifdef __EMSCRIPTEN__` |
 | app_state.c | Creates initial state (no GL) | pure initializer |
+| hud.c | Pushes time data to HTML DOM via EM_ASM | `#ifdef __EMSCRIPTEN__` |
+| input.c | Registers input callbacks, mutates g_state | `#ifdef __EMSCRIPTEN__` |
 | gl_init.c | Creates WebGL2 context, sets viewport | `#ifdef __EMSCRIPTEN__` |
 | shader.c | Creates/deletes GL shader objects | `#ifdef __EMSCRIPTEN__` |
 | mesh.c | Allocates VAO/VBO/EBO, uploads to GPU | `#ifdef __EMSCRIPTEN__` |
+| star_pass.c | Star field render pass (GL resources) | `#ifdef __EMSCRIPTEN__` |
+| planet_pass.c | Planet/Sun render pass (GL resources) | `#ifdef __EMSCRIPTEN__` |
+| zodiac_pass.c | Zodiac ring render pass (GL resources) | `#ifdef __EMSCRIPTEN__` |
+
+**Core pure utilities** (live in src/core/ but are stateless): date_parse
 
 **Rule**: All GL code behind `#ifdef __EMSCRIPTEN__` guards. Native build never sees it.
 

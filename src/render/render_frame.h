@@ -13,6 +13,7 @@
 
 typedef struct {
     double simulation_jd;
+    float  time_sec;          /* wall-clock seconds since start (for shader animation) */
     mat4_t view;
     mat4_t proj;
     mat4_t view_proj;

@@ -49,6 +49,7 @@ void main_loop(void) {
     mat4_t proj = camera_projection_matrix(&g_state.camera);
     render_frame_t frame = {
         .simulation_jd = g_state.simulation_jd,
+        .time_sec      = (float)(now_ms / 1000.0),
         .view          = view,
         .proj          = proj,
         .view_proj     = mat4_multiply(proj, view),
