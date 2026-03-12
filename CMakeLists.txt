@@ -491,6 +491,7 @@ else()
     add_library(time_ratio_analysis  OBJECT src/systems/unified/ratio_analysis.c)
     add_library(time_sacred_numbers  OBJECT src/systems/unified/sacred_numbers.c)
     add_library(time_time_philosophy OBJECT src/systems/unified/time_philosophy.c)
+    add_library(time_birth_profile  OBJECT src/systems/unified/birth_profile.c)
 
     # Systems — Celtic
     add_library(time_wheel_of_year   OBJECT src/systems/celtic/wheel_of_year.c)
@@ -755,6 +756,8 @@ else()
     time_add_test(NAME test_ratio_analysis TEST tests/systems/unified/test_ratio_analysis.c DEPS ratio_analysis)
     time_add_test(NAME test_sacred_numbers TEST tests/systems/unified/test_sacred_numbers.c DEPS sacred_numbers)
     time_add_test(NAME test_time_philosophy TEST tests/systems/unified/test_time_philosophy.c DEPS time_philosophy)
+    time_add_test(NAME test_birth_profile TEST tests/systems/unified/test_birth_profile.c
+        DEPS birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 
     # UI tests
     time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
