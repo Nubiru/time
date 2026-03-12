@@ -112,6 +112,9 @@ set(RENDER_SOURCES
     src/render/passes/diffraction_pass.c
     src/render/passes/constellation_pass.c
     src/render/passes/saturn_pass.c
+    src/render/passes/milkyway_pass.c
+    src/render/passes/moon_pass.c
+    src/render/passes/earth_pass.c
     src/render/passes/post_pass.c
 )
 
@@ -476,6 +479,7 @@ else()
     add_library(time_calendar_epoch  OBJECT src/systems/unified/calendar_epoch.c)
     add_library(time_calendar_politics OBJECT src/systems/unified/calendar_politics.c)
     add_library(time_convergence     OBJECT src/systems/unified/convergence.c)
+    add_library(time_convergence_detect OBJECT src/systems/unified/convergence_detect.c)
     add_library(time_earth_drama     OBJECT src/systems/unified/earth_drama.c)
     add_library(time_frequency       OBJECT src/systems/unified/frequency.c)
     add_library(time_precession_detect OBJECT src/systems/unified/precession_detect.c)
@@ -742,6 +746,7 @@ else()
     time_add_test(NAME test_calendar_epoch  TEST tests/systems/unified/test_calendar_epoch.c  DEPS calendar_epoch)
     time_add_test(NAME test_calendar_politics TEST tests/systems/unified/test_calendar_politics.c DEPS calendar_politics)
     time_add_test(NAME test_convergence     TEST tests/systems/unified/test_convergence.c     DEPS convergence)
+    time_add_test(NAME test_convergence_detect TEST tests/systems/unified/test_convergence_detect.c DEPS convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri)
     time_add_test(NAME test_earth_drama     TEST tests/systems/unified/test_earth_drama.c     DEPS earth_drama climate_history fossil_milestones geo_time)
     time_add_test(NAME test_frequency       TEST tests/systems/unified/test_frequency.c       DEPS frequency)
     time_add_test(NAME test_precession_detect TEST tests/systems/unified/test_precession_detect.c DEPS precession_detect)

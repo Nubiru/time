@@ -17,6 +17,9 @@
 #include "../render/passes/diffraction_pass.h"
 #include "../render/passes/constellation_pass.h"
 #include "../render/passes/saturn_pass.h"
+#include "../render/passes/milkyway_pass.h"
+#include "../render/passes/moon_pass.h"
+#include "../render/passes/earth_pass.h"
 #include "../render/passes/post_pass.h"
 #endif
 
@@ -68,10 +71,13 @@ void main_loop(void) {
 
     star_pass_draw(&frame);
     constellation_pass_draw(&frame);
+    milkyway_pass_draw(&frame);
     diffraction_pass_draw(&frame);
     planet_pass_draw(&frame);
     saturn_pass_draw(&frame);
+    moon_pass_draw(&frame);
     zodiac_pass_draw(&frame);
+    earth_pass_draw(&frame);
 
     post_pass_end(&frame);
 
@@ -104,7 +110,10 @@ int main(void) {
     if (planet_pass_init() != 0) return 1;
     if (saturn_pass_init() != 0) return 1;
     if (zodiac_pass_init() != 0) return 1;
+    if (milkyway_pass_init() != 0) return 1;
     if (diffraction_pass_init() != 0) return 1;
+    if (moon_pass_init() != 0) return 1;
+    if (earth_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
 
     /* Initialize timing */
