@@ -1,26 +1,28 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-08 (OMEGA sweep #3)
+**Last refreshed**: 2026-03-12 (OMEGA sweep #4)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 184 |
-| Header files (.h) | 184 |
-| Lines of C code | 55,252 |
-| Test files | 174 |
+| Source files (.c) | 185 |
+| Header files (.h) | 185 |
+| Lines of source (.c) | 44,192 |
+| Lines of headers (.h) | 12,027 |
+| Lines of tests | 81,465 |
+| Test files | 175 |
 | Shader files | 4 |
 | Scripts | 5 |
-| Contributors | 125 |
+| Contributors | 140 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 172 |
-| Test functions (RUN_TEST) | 7,861 |
-| Test assertions (TEST_ASSERT) | 12,744 |
+| Test suites (CTest) | 174 |
+| Test functions (RUN_TEST) | 7,926 |
+| Test assertions (TEST_ASSERT) | 12,853 |
 | Failures | 0 |
 | CTest time | 0.31s |
 
@@ -29,7 +31,7 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (172/172) |
+| CTest -j12 | PASS (174/174) |
 | TODOs in code | 0 |
 
 ## Purity
@@ -41,14 +43,14 @@
 | P3 violations (I/O in pure zones) | 0 |
 | P4 violations (globals in pure zones) | 0 |
 | Style violations (hardcoded constants) | 5 files |
-| Stateful modules | 5 (gl_init, shader, mesh, main, app_state) |
+| Stateful modules | 10 (gl_init, shader, mesh, main, app_state, hud, input, 3 passes) |
 
 ## System Domains
 
 | Domain | Modules | Tests |
 |--------|---------|-------|
 | math | 15 | 14 |
-| render | 36 | 33 |
+| render | 43 | 40 |
 | astrology | 7 | 7 |
 | astronomy | 10 | 10 |
 | aztec | 1 | 1 |
@@ -75,18 +77,18 @@
 | tzolkin | 5 | 5 |
 | unified | 21 | 21 |
 | zoroastrian | 2 | 2 |
-| ui | 24 | 24 |
+| ui | 25 | 25 |
 | core | 3 | 1 |
 
-## Health (OMEGA sweep #3)
+## Health (OMEGA sweep #4)
 
 | Check | Status |
 |-------|--------|
-| Git integrity | OK (dangling commits only) |
-| Git tracked violations | 0 (fixed since sweep #2) |
-| Purity audit | CLEAN |
-| Dead code | None detected |
+| Git integrity | OK (clean working tree) |
+| Git tracked violations | 0 |
+| Purity audit | CLEAN (0 violations P1-P5) |
+| Dead code | 10 items (5 genuinely unused functions) |
 | Naked TODOs | 0 |
-| Missing attribution | 0 (fixed this sweep) |
-| Test coverage | 97% (3 shader modules lack tests) |
+| Missing attribution | 0 |
+| Test coverage | 97.4% (3 shader modules lack tests) |
 | All tests >= 18 | 13 legacy modules below minimum |
