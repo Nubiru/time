@@ -122,7 +122,7 @@ parsed_date_t date_parse(const char *str)
     return d;
 }
 
-double date_to_jd(parsed_date_t d)
+static double date_to_jd(parsed_date_t d)
 {
     if (!d.valid) return -1.0;
 

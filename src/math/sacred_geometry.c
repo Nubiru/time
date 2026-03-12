@@ -60,49 +60,6 @@ spiral_path_t golden_spiral(vec3_t center, float start_radius, float turns,
     return path;
 }
 
-/* --- Fibonacci Spiral (quarter-circle arcs in Fibonacci-sized squares) --- */
-
-spiral_path_t fibonacci_spiral(vec3_t center, int n_squares, float scale,
-                                int points_per_arc)
-{
-    spiral_path_t path;
-    path.count = 0;
-    if (n_squares < 1) n_squares = 1;
-    if (points_per_arc < 2) points_per_arc = 2;
-
-    float cx = 0.0f, cy = 0.0f;
-    float angle_offset = (float)PI;
-
-    for (int s = 0; s < n_squares; s++) {
-        float r = (float)fibonacci(s + 1) * scale;
-        int start_i = (s > 0) ? 1 : 0;
-
-        for (int i = start_i; i < points_per_arc; i++) {
-            if (path.count >= 256) break;
-            float t = (float)i / (float)(points_per_arc - 1);
-            float angle = angle_offset + t * ((float)PI / 2.0f);
-            path.points[path.count++] = vec3_create(
-                center.x + cx + r * cosf(angle),
-                center.y + cy + r * sinf(angle),
-                center.z
-            );
-        }
-        if (path.count >= 256) break;
-
-        /* Compute arc endpoint and shift center for next arc */
-        float end_angle = angle_offset + (float)PI / 2.0f;
-        float end_x = cx + r * cosf(end_angle);
-        float end_y = cy + r * sinf(end_angle);
-
-        float next_r = (float)fibonacci(s + 2) * scale;
-        cx = end_x - next_r * cosf(end_angle);
-        cy = end_y - next_r * sinf(end_angle);
-        angle_offset = end_angle;
-    }
-
-    return path;
-}
-
 /* --- Regular Polygon --- */
 
 polygon_t regular_polygon(vec3_t center, float radius, int sides,
@@ -187,57 +144,6 @@ golden_rect_t golden_rectangle(vec3_t center, float width)
     r.corners[2] = vec3_create(center.x + hw, center.y + hh, center.z);
     r.corners[3] = vec3_create(center.x - hw, center.y + hh, center.z);
     return r;
-}
-
-/* --- Golden Subdivision --- */
-
-golden_subdivision_t golden_subdivide(golden_rect_t rect, int depth)
-{
-    golden_subdivision_t s;
-    s.count = 0;
-    if (depth < 1) return s;
-    if (depth > 32) depth = 32;
-
-    float left  = rect.corners[0].x;
-    float bot   = rect.corners[0].y;
-    float right = rect.corners[2].x;
-    float top   = rect.corners[2].y;
-    float z     = rect.corners[0].z;
-
-    for (int i = 0; i < depth && s.count < 32; i++) {
-        float w = right - left;
-        float h = top - bot;
-        float sq = (w > h) ? h : w;
-        float cx = 0.0f, cy = 0.0f;
-
-        switch (i % 4) {
-        case 0:
-            cx = left + sq / 2.0f;
-            cy = bot + sq / 2.0f;
-            left += sq;
-            break;
-        case 1:
-            cx = left + sq / 2.0f;
-            cy = bot + sq / 2.0f;
-            bot += sq;
-            break;
-        case 2:
-            cx = right - sq / 2.0f;
-            cy = bot + sq / 2.0f;
-            right -= sq;
-            break;
-        default:
-            cx = left + sq / 2.0f;
-            cy = top - sq / 2.0f;
-            top -= sq;
-            break;
-        }
-
-        s.centers[s.count] = vec3_create(cx, cy, z);
-        s.sizes[s.count] = sq;
-        s.count++;
-    }
-    return s;
 }
 
 /* --- Golden Section --- */

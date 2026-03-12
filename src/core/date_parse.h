@@ -22,9 +22,6 @@ typedef struct {
  * Returns parsed_date_t with valid=0 on failure. */
 parsed_date_t date_parse(const char *str);
 
-/* Convert parsed date to Julian Day Number. Returns -1.0 on invalid input. */
-double date_to_jd(parsed_date_t d);
-
 /* Parse string directly to JD. Convenience wrapper.
  * Returns -1.0 on parse failure. */
 double date_parse_to_jd(const char *str);

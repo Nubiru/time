@@ -56,9 +56,4 @@ void calendar_round_fmt(calendar_round_t cr, char *buf, size_t sz);
 /* Calendar Round cycle length in days (LCM of 260 and 365). */
 int calendar_round_cycle(void);
 
-/* Days until next occurrence of a Calendar Round date from given JD.
- * Returns 0 if already on that date, otherwise 1-18979.
- * Returns -1 if not found (should not happen for valid input). */
-int calendar_round_next(double jd, calendar_round_t target);
-
 #endif

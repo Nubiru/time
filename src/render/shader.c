@@ -5,7 +5,7 @@
 #include <GLES3/gl3.h>
 #include <stdio.h>
 
-GLuint shader_compile(GLenum type, const char *source) {
+static GLuint shader_compile(GLenum type, const char *source) {
     GLuint shader = glCreateShader(type);
     glShaderSource(shader, 1, &source, NULL);
     glCompileShader(shader);

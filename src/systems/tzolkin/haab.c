@@ -116,18 +116,3 @@ int calendar_round_cycle(void)
     /* LCM(260, 365) = 18980 */
     return 18980;
 }
-
-int calendar_round_next(double jd, calendar_round_t target)
-{
-    /* Brute force up to 18980 days. Acceptable for a pure function. */
-    for (int d = 0; d < 18980; d++) {
-        calendar_round_t cr = calendar_round_from_jd(jd + (double)d);
-        if (cr.tone == target.tone &&
-            cr.seal == target.seal &&
-            cr.haab_month == target.haab_month &&
-            cr.haab_day == target.haab_day) {
-            return d;
-        }
-    }
-    return -1;
-}

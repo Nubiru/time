@@ -26,12 +26,6 @@ fmt_buf_t fmt_degrees_dms(double degrees) {
     return r;
 }
 
-fmt_buf_t fmt_degrees_decimal(double degrees, int precision) {
-    fmt_buf_t r;
-    snprintf(r.buf, sizeof(r.buf), "%.*f\xc2\xb0", precision, degrees);
-    return r;
-}
-
 fmt_buf_t fmt_hours_hms(double hours) {
     fmt_buf_t r;
     double abs_h = fabs(hours);

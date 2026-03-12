@@ -26,7 +26,6 @@ vec3_t bezier_quad_tangent(bezier_quad_t b, float t);
 vec3_t bezier_cubic_tangent(bezier_cubic_t b, float t);
 
 /* Path sampling */
-bezier_path_t bezier_quad_sample(bezier_quad_t b, int num_points);
 bezier_path_t bezier_cubic_sample(bezier_cubic_t b, int num_points);
 
 /* Arc length (approximate by sampling) */

@@ -53,23 +53,6 @@ vec3_t bezier_cubic_tangent(bezier_cubic_t b, float t)
 
 /* --- Path sampling --- */
 
-bezier_path_t bezier_quad_sample(bezier_quad_t b, int num_points)
-{
-    bezier_path_t path;
-    if (num_points < 2) num_points = 2;
-    if (num_points > 64) num_points = 64;
-    path.count = num_points;
-    path.total_length = 0.0f;
-
-    float step = 1.0f / (float)(num_points - 1);
-    for (int i = 0; i < num_points; i++) {
-        path.points[i] = bezier_quad_eval(b, (float)i * step);
-        if (i > 0)
-            path.total_length += vec3_length(vec3_sub(path.points[i], path.points[i - 1]));
-    }
-    return path;
-}
-
 bezier_path_t bezier_cubic_sample(bezier_cubic_t b, int num_points)
 {
     bezier_path_t path;

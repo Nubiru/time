@@ -7,7 +7,6 @@ typedef struct {
 
 /* Angle formatting */
 fmt_buf_t fmt_degrees_dms(double degrees);
-fmt_buf_t fmt_degrees_decimal(double degrees, int precision);
 fmt_buf_t fmt_hours_hms(double hours);
 fmt_buf_t fmt_right_ascension(double degrees);
 fmt_buf_t fmt_declination(double degrees);

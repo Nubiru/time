@@ -15,6 +15,9 @@
 #include "../render/passes/planet_pass.h"
 #include "../render/passes/zodiac_pass.h"
 #include "../render/passes/diffraction_pass.h"
+#include "../render/passes/constellation_pass.h"
+#include "../render/passes/saturn_pass.h"
+#include "../render/passes/post_pass.h"
 #endif
 
 #ifdef __EMSCRIPTEN__
@@ -60,13 +63,17 @@ void main_loop(void) {
         .observer_lon  = g_state.observer_lon,
     };
 
-    /* --- Clear + draw --- */
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    /* --- Clear + draw (post-process wraps all passes) --- */
+    post_pass_begin(&frame);
 
     star_pass_draw(&frame);
+    constellation_pass_draw(&frame);
     diffraction_pass_draw(&frame);
     planet_pass_draw(&frame);
+    saturn_pass_draw(&frame);
     zodiac_pass_draw(&frame);
+
+    post_pass_end(&frame);
 
     /* --- Time HUD overlay --- */
     if (g_state.show_hud &&
@@ -93,9 +100,12 @@ int main(void) {
 
     /* Initialize render passes */
     if (star_pass_init() != 0) return 1;
+    if (constellation_pass_init() != 0) return 1;
     if (planet_pass_init() != 0) return 1;
+    if (saturn_pass_init() != 0) return 1;
     if (zodiac_pass_init() != 0) return 1;
     if (diffraction_pass_init() != 0) return 1;
+    if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
 
     /* Initialize timing */
     g_state.prev_time_ms = emscripten_get_now();

@@ -22,9 +22,6 @@ typedef struct {
 
 spiral_path_t golden_spiral(vec3_t center, float start_radius, float turns,
                              int num_points, int clockwise);
-spiral_path_t fibonacci_spiral(vec3_t center, int n_squares, float scale,
-                                int points_per_arc);
-
 /* Regular polygons (inscribed in circle) */
 typedef struct {
     vec3_t vertices[64];
@@ -65,15 +62,6 @@ typedef struct {
 } golden_rect_t;
 
 golden_rect_t golden_rectangle(vec3_t center, float width);
-
-/* Golden subdivision */
-typedef struct {
-    vec3_t centers[32];
-    float sizes[32];
-    int count;
-} golden_subdivision_t;
-
-golden_subdivision_t golden_subdivide(golden_rect_t rect, int depth);
 
 /* Golden section: divide segment at golden ratio point */
 vec3_t golden_section_point(vec3_t a, vec3_t b);
