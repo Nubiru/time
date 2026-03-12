@@ -1505,54 +1505,91 @@ COMPLETED:
   29.6     Calendar epoch — delivered (59 tests, BETA)
   41.2     Megalithic alignments — delivered (45 tests, ALPHA)
 
-AGENTS IN PROGRESS:
-  Agents self-selecting next unclaimed items from roadmap
+AGENTS DELIVERING (2026-03-12):
+  ALPHA: Saturn Ring Pack (8.8) — COMMITTED. Post-Process FBO queued.
+  BETA:  Kin Social (34.2) + Location Alerts (33.2) — COMMITTED. Milky Way queued.
+  GAMMA: Tamil Calendar (52.2) — COMMITTED. Celtic Tree (53.1) in progress. Coptic queued.
+  OMEGA: Health Sweep #4 — COMMITTED. Pass wiring + dead code cleanup queued.
 
-REMAINING AGENT WORK:
-  ALPHA (geometry/render): 3.9 zodiac_pack, 8.6 planet_pack, 11.1 hexagram_geometry, 24.3 earth_pack
-  BETA (data/knowledge):   30.2, 31.3, 19.1, 19.3
-  GAMMA (sacred calendars/extraction): book extraction pipeline, then code tasks
+═══════════════════════════════════════════════════════════════
+  COMPRESSION: MEGA CONVERTS DREAMS → TASKS (2026-03-12)
+  150+ data modules exist. 3 render passes exist.
+  CLOSE THE GAP. Make the data VISIBLE.
+═══════════════════════════════════════════════════════════════
 
-ROUND 3+ — AGENTS (Tzolkin + Wisdom + Earth Social):
-  BETA:  31.3 Dreamspell oracle
-  BETA:  32.1-32.2 Wisdom Engine (quotes database, correlation engine)
-  BETA:  33.1-33.3 Fun Facts (generator, location alerts, user context)
-  BETA:  34.2 Kin social compatibility
-  BETA:  35.1-35.2 Cultural stories + philosophy of time
-  BETA:  36.2 Birth profile computer
-  BETA:  47.1-47.3 Earth Social (interest profile, privacy, preferences)
-  BETA:  48.1-48.3 Extrovert Layer (events, filter, roulette)
-  BETA:  49.1-49.2 Introvert Layer (personal space, content curator)
+SHORT-TERM — OMEGA WIRING QUEUE (mechanical, immediate):
+  ✓ constellation_bounds → constellation_pass (data committed, wire it)
+  ✓ saturn_ring_pack → saturn_pass (data committed, wire it)
+  ✓ post_process → post_pass (FBO pipeline — bloom/tonemap/vignette)
+  ✓ earth_pack → earth_pass (Earth globe view)
+  ✓ moon_pack → moon_pass (9 major moons)
+  ✓ bodygraph_pack → bodygraph_pass (Human Design)
+  ✓ hexagram_geometry → hexagram_pass (I Ching)
+  ✓ tree_geometry → tree_pass (Kabbalah Tree of Life)
+  ✓ Dead function cleanup (5 functions, MEGA-approved)
+  ✓ zodiac_pass decomposition (god functions → static helpers)
+  ✓ Brand color fix (zodiac_pass solar gold)
 
-GAMMA: 50.1-54.3 World calendars expansion (Persian, Baha'i, Japanese, Aztec,
-        French Republican, Tamil, Celtic Tree, Korean, festival detector,
-        lunar harmonics, calendar conversion engine)
+SHORT-TERM — ALPHA RENDER DATA QUEUE:
+  1. Post-Process FBO Pipeline (30.3) — bloom, tonemap, vignette, grain shaders
+  2. Diffraction Spike Pack (9.5) — 4/6-point star cross glare
+  3. Planet Surface Shader Pack (8.3) — procedural per-planet surface
+  4. Orbit Trail Pack (8.7) — Kepler orbit lines with gradient fade
+  5. Lens Flare Pack (30.3b) — sun/bright star screen-space flare
 
-ORCHESTRATOR (MEGA wires — unblocked as ALPHA delivers vertex packs):
-  7.7b       Star rendering — DONE (wired)
-  7.8-7.9    Constellation overlay + star labels (UNBLOCKED)
-  8.3, 8.5   Planet rendering + moon rendering (UNBLOCKED — planet_pack + moon_pack delivered)
-  3.x        Zodiac wheel GL wiring (UNBLOCKED — zodiac_pack delivered)
-  11.3       Tzolkin grid (expanded by Track 31 deep data)
-  24.4+      Earth view wiring (blocked by 24.3 earth_pack)
-  31.4       Tzolkin board interactive
-  32.3       Wisdom overlay
-  33.4       Fun facts display
-  34.3       Community Kin discovery
-  47.4       User identity (localStorage + onboarding + profile editor)
-  48.4       Extrovert layer display (event feed + map pins + roulette card)
-  49.3       Personal space display (dashboard + curated feed + learning map)
+SHORT-TERM — BETA DATA QUEUE:
+  1. Milky Way Band Pack (7.x) — galaxy band on celestial sphere
+  2. Convergence Detector (19.1) — cross-system cycle alignment scanner
+  3. Structural Map (19.3) — structural patterns across knowledge systems
+  4. Dreamspell Oracle (31.3) — interactive Tzolkin game oracle
+  5. Card Render Pack (4.x) — knowledge system info card vertex data
 
-LONG-TERM:
-  4.1-4.6    Card renderer + knowledge cards
-  5.1-5.4    User interaction
-  6.1-6.4    Infrastructure hardening
-  13.3, 20.3 Deep time + sacred system orchestrator items
-  34.1       Community backend (server decision needed)
+SHORT-TERM — GAMMA CALENDAR QUEUE:
+  1. Celtic Tree Calendar (53.1) — IN PROGRESS
+  2. Coptic Calendar (40.1) — oldest continuous calendar
+  3. Ethiopian Calendar (40.2) — follows from Coptic, shared structure
+  4. Zoroastrian Calendar (39.1) — first dualist calendar
+  5. Egyptian Calendar (43.1) — Ma'at and the Sothic cycle
+  6. Wheel of the Year (41.1) — Celtic 8 festivals + solar position
+  7. Myanmar Calendar (42.1) — Southeast Asian lunar system
 
-OMEGA (codebase health — permanent, rotating):
-  Git health, build sync, purity, refactor, style, dead code,
-  metrics, diagrams, attribution, test quality
+MID-TERM — ORCHESTRATOR RENDER PASSES (OMEGA wires after data packs deliver):
+  post_pass (FBO composite)        — OMEGA wires after ALPHA post_process
+  milkyway_pass                     — OMEGA wires after BETA milkyway_pack
+  diffraction_pass                  — OMEGA wires after ALPHA diffraction_pack
+  planet_surface_pass               — OMEGA wires after ALPHA planet_surface
+  orbit_trail_pass                  — OMEGA wires after ALPHA orbit_trail_pack
+
+MID-TERM — UI INTERACTION (Tracks 5, 30.4):
+  Click-to-focus: click object → smooth zoom + info card
+  Scroll-driven exploration: wheel = navigate time scales
+  Timeline scrubber: drag through time with visual feedback
+  Keyboard overlay: ? key shows shortcuts
+  → DECOMPOSE INTO AGENT TASKS when render passes are wired
+
+MID-TERM — VIEW MODES (need render passes first):
+  Earth View mode (E key): earth_pass + daylight + coastlines
+  Human Design view (D key): bodygraph_pass + gate activations
+  I Ching view (I key): hexagram_pass + changing lines
+  Kabbalah view (K key): tree_pass + Sefirot glow
+  Correlation mode (/ key): alignment dashboard
+  → EACH becomes an OMEGA wiring task as passes exist
+
+LONG-TERM → COMPRESSED TO MID-TERM:
+  4.1-4.6  Card renderer: card_pack (BETA) → card_pass (OMEGA) → cards visible
+  5.1-5.4  Interaction: decompose into input_handler module (ALPHA) → OMEGA wires
+  6.1-6.4  Infrastructure: performance profiling, error recovery, memory guard
+  34.1     Community backend: server decision deferred (localStorage first)
+  45.1     Audio layer: Web Audio data module (BETA) after frequency mapper
+
+LONG-TERM (TRUE FUTURE):
+  47.4     User identity (localStorage + onboarding + profile editor)
+  48.4     Extrovert layer display
+  49.3     Personal space display
+  34.3     Community Kin discovery (needs 34.1 backend)
+
+OMEGA (permanent, rotating):
+  Health sweeps + pass wiring + red flag cleanup
   See .context/execute/OMEGA/priority.md
 ```
 
@@ -2580,7 +2617,7 @@ depend on pure modules (delivered or needed).
 | 23.2 Ski resorts | ski_resorts (GAMMA) | DELIVERED — 47 tests |
 | 24.1 Earth globe | earth_globe (ALPHA) | DELIVERED — 38 tests |
 | 24.2 Atmosphere render | earth_atmosphere (ALPHA) | DELIVERED — 45 tests |
-| 24.3 Earth render pack | earth_pack (ALPHA) | NEEDED — depends on earth_globe, earth_atmosphere |
+| 24.3 Earth render pack | earth_pack (ALPHA) | DELIVERED — 48 tests |
 | 25.1 Daylight worldwide | daylight (BETA) | DELIVERED |
 | 25.2 Seasonal cycles | seasons (GAMMA) | DELIVERED |
 | 29.1 Achievements | achievement (GAMMA) | DELIVERED — 62 tests |
@@ -2588,15 +2625,21 @@ depend on pure modules (delivered or needed).
 | 29.3 Earth drama | earth_drama (BETA) | DELIVERED — 62 tests |
 | 29.5 Patriarchal decision | calendar_politics (GAMMA) | DELIVERED |
 | 29.6 Jesus & calendar | calendar_epoch (BETA) | DELIVERED — 59 tests |
+| 30.3a Post-process pipeline | post_process (ALPHA) | DELIVERED |
 | 31.1 Tzolkin board | tzolkin_board (BETA) | DELIVERED |
 | 31.2 Calendar Round | calendar_round (BETA) | DELIVERED — 33 tests |
 | 31.3 Dreamspell oracle | dreamspell (Agent B) | NEEDED |
-| 32.1 Wisdom quotes | wisdom (Agent B) | NEEDED |
+| 32.1 Wisdom quotes | wisdom (Agent B) | DELIVERED |
 | 32.2 Wisdom engine | wisdom_engine (Agent B) | NEEDED |
-| 33.1 Fun facts | fun_facts (Agent B) | NEEDED |
-| 33.2 Location alerts | location_alerts (Agent B) | NEEDED — depends on 21, 22, 23 |
+| 33.1 Fun facts | fun_facts (Agent B) | DELIVERED |
+| 33.2 Location alerts | location_alerts (BETA) | DELIVERED |
 | 33.3 User context | user_context (Agent B) | NEEDED |
-| 34.2 Kin social | kin_social (Agent B) | NEEDED |
+| 34.2 Kin social | kin_social (BETA) | DELIVERED |
+| 7.11 Constellation bounds | constellation_bounds (ALPHA) | DELIVERED — 65 tests |
+| 8.8 Saturn ring pack | saturn_ring_pack (ALPHA) | DELIVERED — 61 tests |
+| 51.2 Aztec calendar | aztec (GAMMA) | DELIVERED |
+| 52.1 French Republican | french_republican (GAMMA) | DELIVERED — 116 tests |
+| 52.2 Tamil calendar | tamil_calendar (GAMMA) | DELIVERED — 95 tests |
 | 2.4 Scale transitions | easing | DELIVERED |
 | 7.2 Milky Way spiral | sacred_geometry | DELIVERED |
 | 7.3 Cosmic time | cosmic_time | DELIVERED |
