@@ -14,6 +14,7 @@
 #include "../render/passes/star_pass.h"
 #include "../render/passes/planet_pass.h"
 #include "../render/passes/zodiac_pass.h"
+#include "../render/passes/diffraction_pass.h"
 #endif
 
 #ifdef __EMSCRIPTEN__
@@ -63,6 +64,7 @@ void main_loop(void) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     star_pass_draw(&frame);
+    diffraction_pass_draw(&frame);
     planet_pass_draw(&frame);
     zodiac_pass_draw(&frame);
 
@@ -93,6 +95,7 @@ int main(void) {
     if (star_pass_init() != 0) return 1;
     if (planet_pass_init() != 0) return 1;
     if (zodiac_pass_init() != 0) return 1;
+    if (diffraction_pass_init() != 0) return 1;
 
     /* Initialize timing */
     g_state.prev_time_ms = emscripten_get_now();

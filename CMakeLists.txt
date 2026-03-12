@@ -107,6 +107,7 @@ set(RENDER_SOURCES
     src/render/passes/star_pass.c
     src/render/passes/planet_pass.c
     src/render/passes/zodiac_pass.c
+    src/render/passes/diffraction_pass.c
 )
 
 # --- Systems ---

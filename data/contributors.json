@@ -186,6 +186,24 @@
       ]
     },
     {
+      "id": "robert-graves",
+      "name": "Robert Graves",
+      "born": 1895,
+      "died": 1985,
+      "category": ["poet", "novelist", "mythographer"],
+      "contributions": [
+        {
+          "work": "The White Goddess",
+          "description": "Celtic Tree Calendar system: 13 months of 28 days + 1 intercalary (Yew), mapped to Ogham alphabet trees with symbolic meanings",
+          "year": 1948
+        }
+      ],
+      "references": [
+        { "file": "src/systems/celtic/celtic_tree.h", "line": 6, "note": "Celtic Tree Calendar source" },
+        { "file": "src/systems/celtic/celtic_tree.c", "line": 5, "note": "Celtic Tree Calendar implementation" }
+      ]
+    },
+    {
       "id": "ra-uru-hu",
       "name": "Ra Uru Hu",
       "born": 1948,
