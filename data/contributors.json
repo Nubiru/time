@@ -360,6 +360,21 @@
       ]
     },
     {
+      "id": "erik-reinhard",
+      "name": "Erik Reinhard",
+      "category": ["computer-scientist", "researcher"],
+      "contributions": [
+        {
+          "work": "Photographic Tone Reproduction for Digital Images",
+          "description": "Reinhard tone mapping operator: color / (color + 1.0), simple global operator for HDR to LDR conversion",
+          "year": 2002
+        }
+      ],
+      "references": [
+        { "file": "src/render/post_process.c", "line": 1, "note": "Reinhard tone mapping in composite fragment shader" }
+      ]
+    },
+    {
       "id": "nachum-dershowitz",
       "name": "Nachum Dershowitz",
       "born": 1951,

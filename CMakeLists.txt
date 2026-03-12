@@ -103,6 +103,7 @@ set(RENDER_SOURCES
     src/render/noise_shader.c
     src/render/sun_shader.c
     src/render/constellation_bounds.c
+    src/render/post_process.c
     src/render/passes/star_pass.c
     src/render/passes/planet_pass.c
     src/render/passes/zodiac_pass.c
@@ -224,6 +225,8 @@ set(SYSTEMS_SOURCES
     src/systems/chakra/chakra.c
     # Coptic
     src/systems/coptic/coptic.c
+    # Celtic Tree
+    src/systems/celtic/celtic_tree.c
     # Tamil
     src/systems/tamil/tamil_calendar.c
     # Egyptian
@@ -367,6 +370,7 @@ else()
     add_library(time_noise_shader   OBJECT src/render/noise_shader.c)
     add_library(time_sun_shader     OBJECT src/render/sun_shader.c)
     add_library(time_constellation_bounds OBJECT src/render/constellation_bounds.c)
+    add_library(time_post_process OBJECT src/render/post_process.c)
 
     # Systems — Astronomy
     add_library(time_orbit           OBJECT src/systems/astronomy/orbit.c)
@@ -487,6 +491,9 @@ else()
     # Systems — Coptic
     add_library(time_coptic          OBJECT src/systems/coptic/coptic.c)
 
+    # Systems — Celtic Tree
+    add_library(time_celtic_tree     OBJECT src/systems/celtic/celtic_tree.c)
+
     # Systems — Tamil
     add_library(time_tamil_calendar  OBJECT src/systems/tamil/tamil_calendar.c)
 
@@ -575,7 +582,7 @@ else()
     time_add_test(NAME test_star_colors     TEST tests/render/test_star_colors.c     DEPS star_colors)
     time_add_test(NAME test_deep_sky        TEST tests/render/test_deep_sky.c        DEPS deep_sky)
     time_add_test(NAME test_deep_sky_pack  TEST tests/render/test_deep_sky_pack.c  DEPS deep_sky_pack deep_sky)
-    time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack galaxy_geometry)
+    time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack noise_shader)
     time_add_test(NAME test_bodygraph_pack TEST tests/render/test_bodygraph_pack.c DEPS bodygraph_pack bodygraph)
     time_add_test(NAME test_earth_pack    TEST tests/render/test_earth_pack.c    DEPS earth_pack earth_globe earth_atmosphere)
     time_add_test(NAME test_tree_pack    TEST tests/render/test_tree_pack.c    DEPS tree_pack tree_geometry sefirot)
@@ -600,6 +607,7 @@ else()
     time_add_test(NAME test_text_render    TEST tests/render/test_text_render.c     DEPS text_render)
     time_add_test(NAME test_zodiac_pack    TEST tests/render/test_zodiac_pack.c     DEPS zodiac_pack ring_geometry cusp_lines aspect_lines billboard color_palette color_theory color vec3 mat4)
     time_add_test(NAME test_constellation_bounds TEST tests/render/test_constellation_bounds.c DEPS constellation_bounds)
+    time_add_test(NAME test_post_process TEST tests/render/test_post_process.c DEPS post_process noise_shader)
 
     # Core tests
     time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
@@ -675,6 +683,9 @@ else()
 
     # Tamil tests
     time_add_test(NAME test_tamil_calendar  TEST tests/systems/tamil/test_tamil_calendar.c DEPS tamil_calendar)
+
+    # Celtic Tree tests
+    time_add_test(NAME test_celtic_tree     TEST tests/systems/celtic/test_celtic_tree.c   DEPS celtic_tree)
 
     # French Republican tests
     time_add_test(NAME test_french_republican TEST tests/systems/french_republican/test_french_republican.c DEPS french_republican)
