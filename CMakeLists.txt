@@ -109,6 +109,9 @@ set(RENDER_SOURCES
     src/render/passes/planet_pass.c
     src/render/passes/zodiac_pass.c
     src/render/passes/diffraction_pass.c
+    src/render/passes/constellation_pass.c
+    src/render/passes/saturn_pass.c
+    src/render/passes/post_pass.c
 )
 
 # --- Systems ---
@@ -230,6 +233,8 @@ set(SYSTEMS_SOURCES
     src/systems/coptic/coptic.c
     # Celtic Tree
     src/systems/celtic/celtic_tree.c
+    # Korean
+    src/systems/korean/korean_calendar.c
     # Tamil
     src/systems/tamil/tamil_calendar.c
     # Egyptian
@@ -499,6 +504,9 @@ else()
     # Systems — Celtic Tree
     add_library(time_celtic_tree     OBJECT src/systems/celtic/celtic_tree.c)
 
+    # Systems — Korean
+    add_library(time_korean_calendar OBJECT src/systems/korean/korean_calendar.c)
+
     # Systems — Tamil
     add_library(time_tamil_calendar  OBJECT src/systems/tamil/tamil_calendar.c)
 
@@ -692,6 +700,9 @@ else()
 
     # Celtic Tree tests
     time_add_test(NAME test_celtic_tree     TEST tests/systems/celtic/test_celtic_tree.c   DEPS celtic_tree)
+
+    # Korean tests
+    time_add_test(NAME test_korean_calendar TEST tests/systems/korean/test_korean_calendar.c DEPS korean_calendar)
 
     # French Republican tests
     time_add_test(NAME test_french_republican TEST tests/systems/french_republican/test_french_republican.c DEPS french_republican)
