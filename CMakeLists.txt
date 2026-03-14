@@ -105,6 +105,7 @@ set(RENDER_SOURCES
     src/render/sun_shader.c
     src/render/constellation_bounds.c
     src/render/horizon_geometry.c
+    src/render/weather_overlay.c
     src/render/post_process.c
     src/render/passes/star_pass.c
     src/render/passes/planet_pass.c
@@ -389,6 +390,7 @@ else()
     add_library(time_sun_shader     OBJECT src/render/sun_shader.c)
     add_library(time_constellation_bounds OBJECT src/render/constellation_bounds.c)
     add_library(time_horizon_geometry OBJECT src/render/horizon_geometry.c)
+    add_library(time_weather_overlay OBJECT src/render/weather_overlay.c)
     add_library(time_post_process OBJECT src/render/post_process.c)
 
     # Systems — Astronomy
@@ -503,6 +505,7 @@ else()
     add_library(time_sacred_numbers  OBJECT src/systems/unified/sacred_numbers.c)
     add_library(time_time_philosophy OBJECT src/systems/unified/time_philosophy.c)
     add_library(time_birth_profile  OBJECT src/systems/unified/birth_profile.c)
+    add_library(time_festival_detector OBJECT src/systems/unified/festival_detector.c)
 
     # Systems — Celtic
     add_library(time_wheel_of_year   OBJECT src/systems/celtic/wheel_of_year.c)
@@ -634,6 +637,7 @@ else()
     time_add_test(NAME test_zodiac_pack    TEST tests/render/test_zodiac_pack.c     DEPS zodiac_pack ring_geometry cusp_lines aspect_lines billboard color_palette color_theory color vec3 mat4)
     time_add_test(NAME test_constellation_bounds TEST tests/render/test_constellation_bounds.c DEPS constellation_bounds)
     time_add_test(NAME test_horizon_geometry TEST tests/render/test_horizon_geometry.c DEPS horizon_geometry)
+    time_add_test(NAME test_weather_overlay TEST tests/render/test_weather_overlay.c DEPS weather_overlay wind_patterns storm_data)
     time_add_test(NAME test_post_process TEST tests/render/test_post_process.c DEPS post_process noise_shader)
 
     # Core tests
@@ -771,6 +775,8 @@ else()
     time_add_test(NAME test_time_philosophy TEST tests/systems/unified/test_time_philosophy.c DEPS time_philosophy)
     time_add_test(NAME test_birth_profile TEST tests/systems/unified/test_birth_profile.c
         DEPS birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
+    time_add_test(NAME test_festival_detector TEST tests/systems/unified/test_festival_detector.c
+        DEPS festival_detector korean_calendar hebrew sabbatical hijri buddhist lunar wheel_of_year thai_calendar tamil_calendar myanmar persian zoroastrian)
 
     # UI tests
     time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

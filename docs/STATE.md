@@ -41,7 +41,7 @@ This document tracks what is **pure** (stateless) and what is **stateful** in th
 vec3, mat4, julian, kepler, sidereal, ecliptic, easing, arc_geometry, bezier, color, projection, sacred_geometry, wheel_layout
 
 ### Render (43 pure + 6 stateful)
-Pure: aspect_lines, atmo_ring, billboard, bodygraph_pack, camera, camera_scale, card_pack, catalog_ingest, color_palette, color_theory, constellation, constellation_bounds, cusp_lines, decan_stars, deep_sky, deep_sky_pack, diffraction, earth_atmosphere, earth_globe, earth_pack, eclipse_geometry, font_atlas, galaxy_geometry, glyph_batch, hexagram_geometry, horizon_geometry, megalithic, mesh_shader, milkyway_pack, moon_pack, noise_shader, orbit_trail_pack, planet_pack, post_process, render_frame (header-only), render_layers, ring_data, ring_geometry, saturn_ring_pack, star_catalog, star_catalog_ext, star_colors, star_field, sun_shader, tarot_visual, text_render, tree_pack, zodiac_pack
+Pure: aspect_lines, atmo_ring, billboard, bodygraph_pack, camera, camera_scale, card_pack, catalog_ingest, color_palette, color_theory, constellation, constellation_bounds, cusp_lines, decan_stars, deep_sky, deep_sky_pack, diffraction, earth_atmosphere, earth_globe, earth_pack, eclipse_geometry, font_atlas, galaxy_geometry, glyph_batch, hexagram_geometry, horizon_geometry, megalithic, mesh_shader, milkyway_pack, moon_pack, noise_shader, orbit_trail_pack, planet_pack, post_process, render_frame (header-only), render_layers, ring_data, ring_geometry, saturn_ring_pack, star_catalog, star_catalog_ext, star_colors, star_field, sun_shader, tarot_visual, text_render, tree_pack, weather_overlay, zodiac_pack
 
 ### Astronomy (10)
 orbit, planets, lunar, precession, solar_events, cosmic_time, moon_data, moon_nodes, planet_data, retrograde
