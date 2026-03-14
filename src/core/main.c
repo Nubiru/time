@@ -24,6 +24,7 @@
 #include "../render/passes/bodygraph_pass.h"
 #include "../render/passes/hexagram_pass.h"
 #include "../render/passes/tree_pass.h"
+#include "../render/passes/orbit_trail_pass.h"
 #include "../render/passes/card_pass.h"
 #include "../render/passes/post_pass.h"
 #endif
@@ -79,6 +80,7 @@ void main_loop(void) {
     deep_sky_pass_draw(&frame);
     milkyway_pass_draw(&frame);
     diffraction_pass_draw(&frame);
+    orbit_trail_pass_draw(&frame);
     planet_pass_draw(&frame);
     saturn_pass_draw(&frame);
     moon_pass_draw(&frame);
@@ -128,6 +130,7 @@ int main(void) {
     if (bodygraph_pass_init() != 0) return 1;
     if (hexagram_pass_init() != 0) return 1;
     if (tree_pass_init() != 0) return 1;
+    if (orbit_trail_pass_init() != 0) return 1;
     if (card_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
 

@@ -121,6 +121,7 @@ set(RENDER_SOURCES
     src/render/passes/bodygraph_pass.c
     src/render/passes/hexagram_pass.c
     src/render/passes/tree_pass.c
+    src/render/passes/orbit_trail_pass.c
     src/render/passes/card_pass.c
     src/render/passes/post_pass.c
 )

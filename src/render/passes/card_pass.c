@@ -105,7 +105,7 @@ void card_pass_draw(const render_frame_t *frame) {
         return;
 
     /* Get card layout (defaults to no visible cards if none toggled) */
-    card_layout_t layout = card_layout_default();
+    card_layout_t layout = card_layout_compute(card_default_mask(), 1920.0f / 1080.0f);
     int visible = cp_visible_count(&layout);
     if (visible == 0) return;
 
