@@ -750,7 +750,7 @@ else()
     time_add_test(NAME test_tidal           TEST tests/systems/earth/test_tidal.c           DEPS tidal)
     time_add_test(NAME test_wind_patterns   TEST tests/systems/earth/test_wind_patterns.c   DEPS wind_patterns)
     time_add_test(NAME test_tide_predict    TEST tests/systems/earth/test_tide_predict.c    DEPS tide_predict tidal surf_spots lunar julian)
-    time_add_test(NAME test_location_alerts TEST tests/systems/earth/test_location_alerts.c DEPS location_alerts tide_predict tidal surf_spots ski_resorts snow_season daylight solar_events prayer_times julian lunar)
+    time_add_test(NAME test_location_alerts TEST tests/systems/earth/test_location_alerts.c DEPS location_alerts tide_predict tidal surf_spots ski_resorts snow_season daylight solar_events solar_radiation prayer_times storm_data convergence_detect julian lunar tzolkin tzolkin_board iching chinese hebrew hijri)
 
     # Tzolkin extended tests
     time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
