@@ -20,6 +20,11 @@
 #include "../render/passes/milkyway_pass.h"
 #include "../render/passes/moon_pass.h"
 #include "../render/passes/earth_pass.h"
+#include "../render/passes/deep_sky_pass.h"
+#include "../render/passes/bodygraph_pass.h"
+#include "../render/passes/hexagram_pass.h"
+#include "../render/passes/tree_pass.h"
+#include "../render/passes/card_pass.h"
 #include "../render/passes/post_pass.h"
 #endif
 
@@ -71,6 +76,7 @@ void main_loop(void) {
 
     star_pass_draw(&frame);
     constellation_pass_draw(&frame);
+    deep_sky_pass_draw(&frame);
     milkyway_pass_draw(&frame);
     diffraction_pass_draw(&frame);
     planet_pass_draw(&frame);
@@ -78,6 +84,10 @@ void main_loop(void) {
     moon_pass_draw(&frame);
     zodiac_pass_draw(&frame);
     earth_pass_draw(&frame);
+    bodygraph_pass_draw(&frame);
+    hexagram_pass_draw(&frame);
+    tree_pass_draw(&frame);
+    card_pass_draw(&frame);
 
     post_pass_end(&frame);
 
@@ -114,6 +124,11 @@ int main(void) {
     if (diffraction_pass_init() != 0) return 1;
     if (moon_pass_init() != 0) return 1;
     if (earth_pass_init() != 0) return 1;
+    if (deep_sky_pass_init() != 0) return 1;
+    if (bodygraph_pass_init() != 0) return 1;
+    if (hexagram_pass_init() != 0) return 1;
+    if (tree_pass_init() != 0) return 1;
+    if (card_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
 
     /* Initialize timing */

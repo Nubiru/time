@@ -236,8 +236,8 @@ void earth_pass_draw(const render_frame_t *frame) {
 
     /* Model matrix: translate to Earth position */
     float tilt_rad = (float)(23.44 * DEG_TO_RAD);
-    mat4_t translate = mat4_translation(ex, ey, ez);
-    mat4_t tilt = mat4_rotation_x(tilt_rad);
+    mat4_t translate = mat4_translate(ex, ey, ez);
+    mat4_t tilt = mat4_rotate_x(tilt_rad);
     mat4_t model = mat4_multiply(translate, tilt);
     mat4_t mvp = mat4_multiply(frame->view_proj, model);
 

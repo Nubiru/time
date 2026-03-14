@@ -115,6 +115,11 @@ set(RENDER_SOURCES
     src/render/passes/milkyway_pass.c
     src/render/passes/moon_pass.c
     src/render/passes/earth_pass.c
+    src/render/passes/deep_sky_pass.c
+    src/render/passes/bodygraph_pass.c
+    src/render/passes/hexagram_pass.c
+    src/render/passes/tree_pass.c
+    src/render/passes/card_pass.c
     src/render/passes/post_pass.c
 )
 
