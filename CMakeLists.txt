@@ -236,6 +236,7 @@ set(SYSTEMS_SOURCES
     src/systems/unified/ratio_analysis.c
     src/systems/unified/sacred_numbers.c
     src/systems/unified/time_philosophy.c
+    src/systems/unified/calendar_convert.c
     # Celtic
     src/systems/celtic/wheel_of_year.c
     # Chakra
@@ -508,6 +509,7 @@ else()
     add_library(time_time_philosophy OBJECT src/systems/unified/time_philosophy.c)
     add_library(time_birth_profile  OBJECT src/systems/unified/birth_profile.c)
     add_library(time_festival_detector OBJECT src/systems/unified/festival_detector.c)
+    add_library(time_calendar_convert OBJECT src/systems/unified/calendar_convert.c)
 
     # Systems — Celtic
     add_library(time_wheel_of_year   OBJECT src/systems/celtic/wheel_of_year.c)
@@ -780,6 +782,8 @@ else()
         DEPS birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
     time_add_test(NAME test_festival_detector TEST tests/systems/unified/test_festival_detector.c
         DEPS festival_detector korean_calendar hebrew sabbatical hijri buddhist lunar wheel_of_year thai_calendar tamil_calendar myanmar persian zoroastrian)
+    time_add_test(NAME test_calendar_convert TEST tests/systems/unified/test_calendar_convert.c
+        DEPS calendar_convert julian tzolkin haab cr_cycle chinese iching hebrew hijri persian coptic ethiopian egyptian french_republican japanese bahai korean_calendar thai_calendar tamil_calendar myanmar zoroastrian celtic_tree)
 
     # UI tests
     time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

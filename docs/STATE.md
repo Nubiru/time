@@ -35,7 +35,7 @@ This document tracks what is **pure** (stateless) and what is **stateful** in th
 
 ---
 
-## Pure Modules by Domain (179 total)
+## Pure Modules by Domain (180 total)
 
 ### Math (13 modules)
 vec3, mat4, julian, kepler, sidereal, ecliptic, easing, arc_geometry, bezier, color, projection, sacred_geometry, wheel_layout
@@ -55,8 +55,8 @@ tidal, tide_predict, surf_spots, daylight, seasons, snow_season, ski_resorts, so
 ### Geology (6)
 geo_time, radiometric, thermo, climate_history, fossil_milestones, tectonic
 
-### Unified (22)
-cycle_analysis, structural_map, convergence, frequency, phase_space, sacred_numbers, codon_hexagram, number_scanner, calendar_epoch, calendar_politics, calendar_reform, precession_detect, earth_drama, knowledge_graph, achievement, audio_data, cultural_stories, fun_facts, ratio_analysis, wisdom, wisdom_engine, festival_detector
+### Unified (23)
+cycle_analysis, structural_map, convergence, frequency, phase_space, sacred_numbers, codon_hexagram, number_scanner, calendar_epoch, calendar_politics, calendar_reform, precession_detect, earth_drama, knowledge_graph, achievement, audio_data, cultural_stories, fun_facts, ratio_analysis, wisdom, wisdom_engine, festival_detector, calendar_convert
 
 ### Calendars (41)
 aztec, bahai, gregorian, tzolkin, haab, cr_cycle, tzolkin_board, dreamspell, iching, chinese, human_design, bodygraph, hebrew, sabbatical, hijri, prayer_times, buddhist, kalpa, coptic, ethiopian, egyptian, french_republican, numerology, panchanga, nakshatra, yuga, wheel_of_year, celtic_tree, chakra, sefirot, four_worlds, tree_geometry, myanmar, thai_calendar, cosmic_duality, zoroastrian, japanese, persian, tarot, tamil_calendar, korean_calendar
