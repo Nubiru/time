@@ -83,6 +83,7 @@ set(RENDER_SOURCES
     src/render/tarot_visual.c
     src/render/star_field.c
     src/render/planet_pack.c
+    src/render/planet_surface_pack.c
     src/render/orbit_trail_pack.c
     src/render/saturn_ring_pack.c
     src/render/zodiac_pack.c
@@ -210,6 +211,7 @@ set(SYSTEMS_SOURCES
     src/systems/earth/solar_radiation.c
     src/systems/earth/storm_data.c
     src/systems/earth/surf_spots.c
+    src/systems/earth/interest_profile.c
     src/systems/earth/tidal.c
     src/systems/earth/wind_patterns.c
     src/systems/earth/tide_predict.c
@@ -248,6 +250,8 @@ set(SYSTEMS_SOURCES
     src/systems/celtic/celtic_tree.c
     # Korean
     src/systems/korean/korean_calendar.c
+    # Balinese
+    src/systems/balinese/pawukon.c
     # Tamil
     src/systems/tamil/tamil_calendar.c
     # Egyptian
@@ -384,6 +388,7 @@ else()
     add_library(time_moon_pack       OBJECT src/render/moon_pack.c)
     add_library(time_orbit_trail_pack OBJECT src/render/orbit_trail_pack.c)
     add_library(time_planet_pack     OBJECT src/render/planet_pack.c)
+    add_library(time_planet_surface_pack OBJECT src/render/planet_surface_pack.c)
     add_library(time_saturn_ring_pack OBJECT src/render/saturn_ring_pack.c)
     add_library(time_star_field      OBJECT src/render/star_field.c)
     add_library(time_text_render     OBJECT src/render/text_render.c)
@@ -478,7 +483,8 @@ else()
     add_library(time_snow_season     OBJECT src/systems/earth/snow_season.c)
     add_library(time_solar_radiation OBJECT src/systems/earth/solar_radiation.c)
     add_library(time_storm_data      OBJECT src/systems/earth/storm_data.c)
-    add_library(time_surf_spots      OBJECT src/systems/earth/surf_spots.c)
+    add_library(time_surf_spots        OBJECT src/systems/earth/surf_spots.c)
+    add_library(time_interest_profile OBJECT src/systems/earth/interest_profile.c)
     add_library(time_tidal           OBJECT src/systems/earth/tidal.c)
     add_library(time_wind_patterns   OBJECT src/systems/earth/wind_patterns.c)
     add_library(time_tide_predict    OBJECT src/systems/earth/tide_predict.c)
@@ -526,6 +532,9 @@ else()
 
     # Systems — Korean
     add_library(time_korean_calendar OBJECT src/systems/korean/korean_calendar.c)
+
+    # Systems — Balinese
+    add_library(time_pawukon         OBJECT src/systems/balinese/pawukon.c)
 
     # Systems — Tamil
     add_library(time_tamil_calendar  OBJECT src/systems/tamil/tamil_calendar.c)
@@ -636,6 +645,7 @@ else()
     time_add_test(NAME test_moon_pack      TEST tests/render/test_moon_pack.c       DEPS moon_pack moon_data kepler planets orbit)
     time_add_test(NAME test_orbit_trail_pack TEST tests/render/test_orbit_trail_pack.c DEPS orbit_trail_pack orbit kepler planet_data)
     time_add_test(NAME test_planet_pack    TEST tests/render/test_planet_pack.c     DEPS planet_pack planets orbit kepler planet_data atmo_ring)
+    time_add_test(NAME test_planet_surface_pack TEST tests/render/test_planet_surface_pack.c DEPS planet_surface_pack orbit kepler planet_data noise_shader)
     time_add_test(NAME test_saturn_ring_pack TEST tests/render/test_saturn_ring_pack.c DEPS saturn_ring_pack)
     time_add_test(NAME test_star_field     TEST tests/render/test_star_field.c      DEPS star_field star_catalog star_catalog_ext constellation star_colors)
     time_add_test(NAME test_text_render    TEST tests/render/test_text_render.c     DEPS text_render)
@@ -727,6 +737,9 @@ else()
     # Korean tests
     time_add_test(NAME test_korean_calendar TEST tests/systems/korean/test_korean_calendar.c DEPS korean_calendar)
 
+    # Balinese tests
+    time_add_test(NAME test_pawukon         TEST tests/systems/balinese/test_pawukon.c       DEPS pawukon)
+
     # French Republican tests
     time_add_test(NAME test_french_republican TEST tests/systems/french_republican/test_french_republican.c DEPS french_republican)
 
@@ -747,6 +760,7 @@ else()
     time_add_test(NAME test_solar_radiation TEST tests/systems/earth/test_solar_radiation.c DEPS solar_radiation)
     time_add_test(NAME test_storm_data      TEST tests/systems/earth/test_storm_data.c      DEPS storm_data)
     time_add_test(NAME test_surf_spots      TEST tests/systems/earth/test_surf_spots.c      DEPS surf_spots)
+    time_add_test(NAME test_interest_profile TEST tests/systems/earth/test_interest_profile.c DEPS interest_profile)
     time_add_test(NAME test_tidal           TEST tests/systems/earth/test_tidal.c           DEPS tidal)
     time_add_test(NAME test_wind_patterns   TEST tests/systems/earth/test_wind_patterns.c   DEPS wind_patterns)
     time_add_test(NAME test_tide_predict    TEST tests/systems/earth/test_tide_predict.c    DEPS tide_predict tidal surf_spots lunar julian)
