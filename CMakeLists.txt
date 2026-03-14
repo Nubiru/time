@@ -317,6 +317,8 @@ if(EMSCRIPTEN)
         -sUSE_WEBGL2=1
         -sFULL_ES3=1
         -sWASM=1
+        -sSTACK_SIZE=524288
+        -sALLOW_MEMORY_GROWTH=1
         -Os
         "SHELL:--shell-file ${CMAKE_SOURCE_DIR}/web/index.html"
     )
