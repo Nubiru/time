@@ -107,6 +107,7 @@ set(RENDER_SOURCES
     src/render/horizon_geometry.c
     src/render/weather_overlay.c
     src/render/post_process.c
+    src/render/seasonal_lighting.c
     src/render/passes/star_pass.c
     src/render/passes/planet_pass.c
     src/render/passes/zodiac_pass.c
@@ -392,6 +393,7 @@ else()
     add_library(time_horizon_geometry OBJECT src/render/horizon_geometry.c)
     add_library(time_weather_overlay OBJECT src/render/weather_overlay.c)
     add_library(time_post_process OBJECT src/render/post_process.c)
+    add_library(time_seasonal_lighting OBJECT src/render/seasonal_lighting.c)
 
     # Systems — Astronomy
     add_library(time_orbit           OBJECT src/systems/astronomy/orbit.c)
@@ -639,6 +641,7 @@ else()
     time_add_test(NAME test_horizon_geometry TEST tests/render/test_horizon_geometry.c DEPS horizon_geometry)
     time_add_test(NAME test_weather_overlay TEST tests/render/test_weather_overlay.c DEPS weather_overlay wind_patterns storm_data)
     time_add_test(NAME test_post_process TEST tests/render/test_post_process.c DEPS post_process noise_shader)
+    time_add_test(NAME test_seasonal_lighting TEST tests/render/test_seasonal_lighting.c DEPS seasonal_lighting)
 
     # Core tests
     time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
