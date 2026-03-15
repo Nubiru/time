@@ -298,6 +298,7 @@ set(UI_SOURCES
     src/ui/help_overlay.c
     src/ui/ui_state.c
     src/ui/layer_panel.c
+    src/ui/command_palette.c
 )
 
 set(ALL_SOURCES
@@ -599,6 +600,7 @@ else()
     add_library(time_help_overlay   OBJECT src/ui/help_overlay.c)
     add_library(time_ui_state       OBJECT src/ui/ui_state.c)
     add_library(time_layer_panel    OBJECT src/ui/layer_panel.c)
+    add_library(time_command_palette OBJECT src/ui/command_palette.c)
 
     # ---------------------------------------------------------------
     # Tests — 116 suites, Unity framework, per-test dependencies
@@ -853,6 +855,7 @@ else()
     time_add_test(NAME test_help_overlay  TEST tests/ui/test_help_overlay.c   DEPS help_overlay)
     time_add_test(NAME test_ui_state     TEST tests/ui/test_ui_state.c       DEPS ui_state)
     time_add_test(NAME test_layer_panel TEST tests/ui/test_layer_panel.c   DEPS layer_panel)
+    time_add_test(NAME test_command_palette TEST tests/ui/test_command_palette.c DEPS command_palette)
 
     # Cross-system validation test
     time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validation.c
