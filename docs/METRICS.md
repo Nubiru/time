@@ -1,35 +1,35 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-14 (OMEGA sweep #9)
+**Last refreshed**: 2026-03-15 (OMEGA sweep #10)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 222 |
-| Header files (.h) | 222 |
-| Lines of code (src/) | 68,721 |
-| Lines of tests | 98,515 |
-| Test files | 197 |
+| Source files (.c) | 226 |
+| Header files (.h) | 227 |
+| Lines of code (src/) | 70,421 |
+| Lines of tests | 101,038 |
+| Test files | 205 |
 | Render pass files | 16 |
-| Contributors | 162 |
+| Contributors | 171 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 197 |
-| Test functions (RUN_TEST) | 9,553 |
-| Test assertions (TEST_ASSERT) | 15,184 |
+| Test suites (CTest) | 205 |
+| Test functions (RUN_TEST) | 9,822 |
+| Test assertions (TEST_ASSERT) | 15,585 |
 | Failures | 0 |
-| CTest time | 0.72s |
+| CTest time | 0.85s |
 
 ## Build
 
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (197/197) |
+| CTest -j12 | PASS (205/205) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 
 ## Render Pipeline (16 passes)
@@ -69,7 +69,7 @@
 | Domain | Modules | Tests |
 |--------|---------|-------|
 | math | 13 | 13 |
-| render | 53 pure + 19 stateful | 43 |
+| render | 56 pure + 19 stateful | 47 |
 | astrology | 7 | 7 |
 | astronomy | 10 | 10 |
 | aztec | 1 | 1 |
@@ -103,20 +103,20 @@
 | tzolkin | 6 | 6 |
 | unified | 27 | 27 |
 | zoroastrian | 2 | 2 |
-| ui | 26 | 26 |
+| ui | 28 | 28 |
 | core | 5 | 1 |
 
-## Health (OMEGA sweep #9)
+## Health (OMEGA sweep #10)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (222 files, all registered) |
-| Purity audit | 4 P5 (milkyway_pack, planet_surface_pack — lazy init) |
-| Dead code | 0 (Section 12.1 fully cleared) |
+| Build system sync | OK (226 files, all registered) |
+| Purity audit | 0 NEW (4 P5 known near-pure, unchanged) |
+| Dead code | 0 (7 new modules unwired — expected) |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
-| Missing attribution | 1 (E.G. Richards — celtic_tree.c algorithm) |
+| Missing attribution | 1 (E.G. Richards — celtic_tree.c) |
 | Render pipeline | COMPLETE (16/16 passes wired) |
-| Style compliance | 153+ hardcoded visual constants across 14 files |
-| Test coverage | 98.5% (3 shader string modules missing tests) |
-| Refactor candidates | 2 HIGH, 5 MEDIUM, 5 LOW |
+| Style compliance | 153+ hardcoded visual constants (policy pending) |
+| Test coverage | 91% file coverage (205/226) |
+| Refactor candidates | earth_pass.c (init 140L, draw 121L), srp_pack 118L, wov_arrow_glyph 104L |
