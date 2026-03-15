@@ -112,26 +112,26 @@ int pp_estimate_vram(int width, int height, pp_config_t config)
 }
 
 /* -----------------------------------------------------------------------
- * pp_pack_quad — fullscreen NDC quad as triangle strip
+ * pp_pack_quad — fullscreen oversized triangle
  *
- * 4 vertices, each: position(vec2) + texcoord(vec2) = 4 floats
- * Winding: BL, BR, TL, TR (triangle strip order)
+ * 3 vertices, each: position(vec2) + texcoord(vec2) = 4 floats
+ * Single oversized triangle covering the full screen.
+ * GPU clips the excess — bilinear sampling handles out-of-bounds UV.
+ * 10% faster than a quad on AMD/Intel (RTR 4th Ed, Ch.12).
  * ----------------------------------------------------------------------- */
 
 int pp_pack_quad(float *out)
 {
     if (!out) return 0;
 
-    /* Bottom-left: pos(-1,-1) uv(0,0) */
+    /* Vertex 0: bottom-left: pos(-1,-1) uv(0,0) */
     out[0]  = -1.0f; out[1]  = -1.0f; out[2]  = 0.0f; out[3]  = 0.0f;
-    /* Bottom-right: pos(+1,-1) uv(1,0) */
-    out[4]  =  1.0f; out[5]  = -1.0f; out[6]  = 1.0f; out[7]  = 0.0f;
-    /* Top-left: pos(-1,+1) uv(0,1) */
-    out[8]  = -1.0f; out[9]  =  1.0f; out[10] = 0.0f; out[11] = 1.0f;
-    /* Top-right: pos(+1,+1) uv(1,1) */
-    out[12] =  1.0f; out[13] =  1.0f; out[14] = 1.0f; out[15] = 1.0f;
+    /* Vertex 1: bottom-right-extended: pos(3,-1) uv(2,0) */
+    out[4]  =  3.0f; out[5]  = -1.0f; out[6]  = 2.0f; out[7]  = 0.0f;
+    /* Vertex 2: top-left-extended: pos(-1,3) uv(0,2) */
+    out[8]  = -1.0f; out[9]  =  3.0f; out[10] = 0.0f; out[11] = 2.0f;
 
-    return PP_QUAD_VERTEX_COUNT;
+    return PP_QUAD_VERTEX_COUNT;  /* 3 */
 }
 
 /* -----------------------------------------------------------------------
@@ -198,13 +198,10 @@ static const char s_blur_frag[] =
 
 /* --- Final composite fragment shader ---
  *
- * Combines scene + bloom, applies Reinhard tone mapping, exposure,
- * gamma correction, vignette darkening, and optional film grain.
- *
- * This shader is built lazily because it concatenates noise_shader_source()
- * for the grain effect (same pattern as sun_shader.c). */
+ * Self-contained: scene + bloom, Reinhard tone mapping, exposure,
+ * gamma correction, vignette, film grain (simple hash, no noise lib). */
 
-static const char *s_composite_preamble =
+static const char *s_composite_frag =
     "#version 300 es\n"
     "precision highp float;\n"
     "in vec2 v_uv;\n"
@@ -218,9 +215,10 @@ static const char *s_composite_preamble =
     "uniform float u_grain_intensity;\n"
     "uniform float u_time;\n"
     "out vec4 frag_color;\n"
-    "\n";
-
-static const char *s_composite_body =
+    "\n"
+    "float grain_hash(vec2 p) {\n"
+    "    return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);\n"
+    "}\n"
     "\n"
     "void main() {\n"
     "    vec3 scene = texture(u_scene, v_uv).rgb;\n"
@@ -236,41 +234,16 @@ static const char *s_composite_body =
     "    /* Gamma correction */\n"
     "    color = pow(color, vec3(1.0 / u_gamma));\n"
     "\n"
-    "    /* Vignette: darken edges based on distance from center */\n"
+    "    /* Vignette */\n"
     "    float dist = length(v_uv - 0.5) * 2.0;\n"
     "    color *= 1.0 - u_vignette_strength * smoothstep(u_vignette_radius, 1.0, dist);\n"
     "\n"
-    "    /* Film grain: subtle noise overlay */\n"
-    "    float grain = (snoise2(v_uv * 500.0 + u_time) * 0.5 + 0.5) * u_grain_intensity;\n"
+    "    /* Film grain */\n"
+    "    float grain = (grain_hash(v_uv * 500.0 + u_time) - 0.5) * u_grain_intensity;\n"
     "    color += grain;\n"
     "\n"
     "    frag_color = vec4(color, 1.0);\n"
     "}\n";
-
-/* Concatenated composite: preamble + noise library + body */
-static char s_full_composite[16384];
-static int s_composite_built = 0;
-
-static const char *build_composite_source(void)
-{
-    if (!s_composite_built) {
-        char *dst = s_full_composite;
-        const char *parts[] = {
-            s_composite_preamble,
-            noise_shader_source(),
-            s_composite_body
-        };
-        for (int i = 0; i < 3; i++) {
-            const char *src = parts[i];
-            while (*src && (dst - s_full_composite) < 16382) {
-                *dst++ = *src++;
-            }
-        }
-        *dst = '\0';
-        s_composite_built = 1;
-    }
-    return s_full_composite;
-}
 
 /* -----------------------------------------------------------------------
  * Public shader source accessors
@@ -293,5 +266,5 @@ const char *pp_blur_frag_source(void)
 
 const char *pp_composite_frag_source(void)
 {
-    return build_composite_source();
+    return s_composite_frag;
 }

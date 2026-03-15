@@ -90,7 +90,7 @@ static void create_fbo(GLuint *fbo, GLuint *tex, int w, int h) {
 
 static void draw_quad(void) {
     glBindVertexArray(s_pp_quad_vao);
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, PP_QUAD_VERTEX_COUNT);
+    glDrawArrays(GL_TRIANGLES, 0, PP_QUAD_VERTEX_COUNT);
     glBindVertexArray(0);
 }
 

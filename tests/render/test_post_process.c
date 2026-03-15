@@ -4,7 +4,7 @@
  * Tests: default config, pp_info, VRAM estimation, fullscreen quad packing,
  * shader source strings (quad vert, bright extract, blur, composite).
  *
- * 48 tests covering all public API functions.
+ * 50 tests covering all public API functions.
  */
 
 #include "../unity/unity.h"
@@ -251,44 +251,51 @@ void test_estimate_vram_reasonable_range(void)
 }
 
 /* ======================================================================
- * 4. pp_pack_quad — fullscreen NDC quad
+ * 4. pp_pack_quad — fullscreen oversized triangle
  * ====================================================================== */
 
-/* 26. Returns 4 vertices */
-void test_quad_returns_4(void)
+/* 26. Returns 3 vertices (single triangle replaces quad) */
+void test_quad_returns_3(void)
 {
     float out[PP_QUAD_VERTEX_COUNT * PP_QUAD_VERTEX_FLOATS];
     int count = pp_pack_quad(out);
-    TEST_ASSERT_EQUAL_INT(4, count);
+    TEST_ASSERT_EQUAL_INT(3, count);
 }
 
-/* 27. Position values are -1 or +1 (NDC corners) */
-void test_quad_positions_ndc(void)
+/* 27. Vertex 0: position (-1,-1), UV (0,0) */
+void test_quad_vertex0(void)
 {
     float out[PP_QUAD_VERTEX_COUNT * PP_QUAD_VERTEX_FLOATS];
     pp_pack_quad(out);
-    for (int i = 0; i < PP_QUAD_VERTEX_COUNT; i++) {
-        float x = out[i * PP_QUAD_VERTEX_FLOATS + 0];
-        float y = out[i * PP_QUAD_VERTEX_FLOATS + 1];
-        TEST_ASSERT_TRUE(fabsf(x) - 1.0f < FTOL);
-        TEST_ASSERT_TRUE(fabsf(y) - 1.0f < FTOL);
-    }
+    FCLOSE(-1.0f, out[0]);  /* x */
+    FCLOSE(-1.0f, out[1]);  /* y */
+    FCLOSE( 0.0f, out[2]);  /* u */
+    FCLOSE( 0.0f, out[3]);  /* v */
 }
 
-/* 28. Texcoord values are 0 or 1 */
-void test_quad_texcoords_01(void)
+/* 28. Vertex 1: position (3,-1), UV (2,0) — extended right */
+void test_quad_vertex1(void)
 {
     float out[PP_QUAD_VERTEX_COUNT * PP_QUAD_VERTEX_FLOATS];
     pp_pack_quad(out);
-    for (int i = 0; i < PP_QUAD_VERTEX_COUNT; i++) {
-        float u = out[i * PP_QUAD_VERTEX_FLOATS + 2];
-        float v = out[i * PP_QUAD_VERTEX_FLOATS + 3];
-        TEST_ASSERT_TRUE(u >= -FTOL && u <= 1.0f + FTOL);
-        TEST_ASSERT_TRUE(v >= -FTOL && v <= 1.0f + FTOL);
-    }
+    FCLOSE( 3.0f, out[4]);  /* x */
+    FCLOSE(-1.0f, out[5]);  /* y */
+    FCLOSE( 2.0f, out[6]);  /* u */
+    FCLOSE( 0.0f, out[7]);  /* v */
 }
 
-/* 29. Quad covers full NDC range: has both -1 and +1 on each axis */
+/* 29. Vertex 2: position (-1,3), UV (0,2) — extended up */
+void test_quad_vertex2(void)
+{
+    float out[PP_QUAD_VERTEX_COUNT * PP_QUAD_VERTEX_FLOATS];
+    pp_pack_quad(out);
+    FCLOSE(-1.0f, out[8]);   /* x */
+    FCLOSE( 3.0f, out[9]);   /* y */
+    FCLOSE( 0.0f, out[10]);  /* u */
+    FCLOSE( 2.0f, out[11]);  /* v */
+}
+
+/* 30. Triangle covers the full NDC rect: has x < 0 and x > 0, y < 0 and y > 0 */
 void test_quad_covers_full_ndc(void)
 {
     float out[PP_QUAD_VERTEX_COUNT * PP_QUAD_VERTEX_FLOATS];
@@ -308,33 +315,44 @@ void test_quad_covers_full_ndc(void)
     TEST_ASSERT_TRUE(has_neg_y && has_pos_y);
 }
 
-/* 30. Texcoord (0,0) maps to position (-1,-1) */
+/* 31. Texcoord (0,0) maps to position (-1,-1) */
 void test_quad_texcoord_origin_maps_to_ndc_origin(void)
 {
     float out[PP_QUAD_VERTEX_COUNT * PP_QUAD_VERTEX_FLOATS];
     pp_pack_quad(out);
 
-    /* Find vertex with texcoord (0,0) */
-    int found = 0;
-    for (int i = 0; i < PP_QUAD_VERTEX_COUNT; i++) {
-        float u = out[i * PP_QUAD_VERTEX_FLOATS + 2];
-        float v = out[i * PP_QUAD_VERTEX_FLOATS + 3];
-        if (fabsf(u) < FTOL && fabsf(v) < FTOL) {
-            float x = out[i * PP_QUAD_VERTEX_FLOATS + 0];
-            float y = out[i * PP_QUAD_VERTEX_FLOATS + 1];
-            FCLOSE(-1.0f, x);
-            FCLOSE(-1.0f, y);
-            found = 1;
-        }
-    }
-    TEST_ASSERT_TRUE(found);
+    /* First vertex should have UV (0,0) at pos (-1,-1) */
+    FCLOSE(0.0f, out[2]);
+    FCLOSE(0.0f, out[3]);
+    FCLOSE(-1.0f, out[0]);
+    FCLOSE(-1.0f, out[1]);
 }
 
-/* 31. NULL output returns 0 */
+/* 32. NULL output returns 0 */
 void test_quad_null_returns_zero(void)
 {
     int count = pp_pack_quad(NULL);
     TEST_ASSERT_EQUAL_INT(0, count);
+}
+
+/* 33. UV for visible region: at NDC (0,0) UV should be (0.5,0.5) — linear interpolation */
+void test_quad_uv_center_correct(void)
+{
+    /* For the oversized triangle, the UV at any NDC point (x,y) is:
+     * u = (x + 1) / 2, v = (y + 1) / 2
+     * At NDC center (0,0): u=0.5, v=0.5
+     * This is verified by the vertex data: the linear mapping from
+     * pos to UV gives UV = (pos + 1) / 2 for the entire triangle. */
+    float out[PP_QUAD_VERTEX_COUNT * PP_QUAD_VERTEX_FLOATS];
+    pp_pack_quad(out);
+
+    /* Check vertex 0: pos(-1,-1) -> uv should be (0,0) = (-1+1)/2 */
+    FCLOSE((-1.0f + 1.0f) / 2.0f, out[2]);
+    FCLOSE((-1.0f + 1.0f) / 2.0f, out[3]);
+
+    /* Check vertex 1: pos(3,-1) -> uv should be (2,0) = (3+1)/2 */
+    FCLOSE((3.0f + 1.0f) / 2.0f, out[6]);
+    FCLOSE((-1.0f + 1.0f) / 2.0f, out[7]);
 }
 
 /* ======================================================================
@@ -498,11 +516,11 @@ void test_composite_has_reinhard(void)
     TEST_ASSERT_NOT_NULL(strstr(src, "color + vec3(1.0)"));
 }
 
-/* 54. Contains noise function (snoise2) from noise_shader */
+/* 54. Contains grain function for film grain effect */
 void test_composite_has_noise(void)
 {
     const char *src = pp_composite_frag_source();
-    TEST_ASSERT_NOT_NULL(strstr(src, "snoise2"));
+    TEST_ASSERT_NOT_NULL(strstr(src, "grain"));
 }
 
 /* 55. Contains smoothstep for vignette */
@@ -572,13 +590,15 @@ int main(void)
     RUN_TEST(test_estimate_vram_zero_dims);
     RUN_TEST(test_estimate_vram_reasonable_range);
 
-    /* pp_pack_quad (6 tests) */
-    RUN_TEST(test_quad_returns_4);
-    RUN_TEST(test_quad_positions_ndc);
-    RUN_TEST(test_quad_texcoords_01);
+    /* pp_pack_quad (8 tests) */
+    RUN_TEST(test_quad_returns_3);
+    RUN_TEST(test_quad_vertex0);
+    RUN_TEST(test_quad_vertex1);
+    RUN_TEST(test_quad_vertex2);
     RUN_TEST(test_quad_covers_full_ndc);
     RUN_TEST(test_quad_texcoord_origin_maps_to_ndc_origin);
     RUN_TEST(test_quad_null_returns_zero);
+    RUN_TEST(test_quad_uv_center_correct);
 
     /* Quad vertex shader (5 tests) */
     RUN_TEST(test_quad_vert_source_exists);

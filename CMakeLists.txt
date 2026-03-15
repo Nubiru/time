@@ -108,6 +108,7 @@ set(RENDER_SOURCES
     src/render/horizon_geometry.c
     src/render/weather_overlay.c
     src/render/post_process.c
+    src/render/shared_uniforms.c
     src/render/seasonal_lighting.c
     src/render/passes/star_pass.c
     src/render/passes/planet_pass.c
@@ -301,6 +302,7 @@ set(UI_SOURCES
     src/ui/command_palette.c
     src/ui/time_control.c
     src/ui/toast_message.c
+    src/ui/ui_html.c
 )
 
 set(ALL_SOURCES
@@ -409,6 +411,7 @@ else()
     add_library(time_horizon_geometry OBJECT src/render/horizon_geometry.c)
     add_library(time_weather_overlay OBJECT src/render/weather_overlay.c)
     add_library(time_post_process OBJECT src/render/post_process.c)
+    add_library(time_shared_uniforms OBJECT src/render/shared_uniforms.c)
     add_library(time_seasonal_lighting OBJECT src/render/seasonal_lighting.c)
     add_library(time_shader_builder OBJECT src/render/shader_builder.c)
     add_library(time_billboard_shader OBJECT src/render/billboard_shader.c)
@@ -605,6 +608,7 @@ else()
     add_library(time_command_palette OBJECT src/ui/command_palette.c)
     add_library(time_time_control   OBJECT src/ui/time_control.c)
     add_library(time_toast_message  OBJECT src/ui/toast_message.c)
+    add_library(time_ui_html        OBJECT src/ui/ui_html.c)
 
     # ---------------------------------------------------------------
     # Tests — 116 suites, Unity framework, per-test dependencies
@@ -675,6 +679,7 @@ else()
     time_add_test(NAME test_horizon_geometry TEST tests/render/test_horizon_geometry.c DEPS horizon_geometry)
     time_add_test(NAME test_weather_overlay TEST tests/render/test_weather_overlay.c DEPS weather_overlay wind_patterns storm_data)
     time_add_test(NAME test_post_process TEST tests/render/test_post_process.c DEPS post_process noise_shader)
+    time_add_test(NAME test_shared_uniforms TEST tests/render/test_shared_uniforms.c DEPS shared_uniforms)
     time_add_test(NAME test_seasonal_lighting TEST tests/render/test_seasonal_lighting.c DEPS seasonal_lighting)
     time_add_test(NAME test_shader_builder TEST tests/render/test_shader_builder.c DEPS shader_builder)
     time_add_test(NAME test_mesh_shader TEST tests/render/test_mesh_shader.c DEPS mesh_shader)
@@ -865,6 +870,7 @@ else()
     time_add_test(NAME test_command_palette TEST tests/ui/test_command_palette.c DEPS command_palette)
     time_add_test(NAME test_time_control   TEST tests/ui/test_time_control.c   DEPS time_control)
     time_add_test(NAME test_toast_message TEST tests/ui/test_toast_message.c  DEPS toast_message)
+    time_add_test(NAME test_ui_html      TEST tests/ui/test_ui_html.c       DEPS ui_html help_overlay command_palette layer_panel toast_message)
 
     # Cross-system validation test
     time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validation.c
