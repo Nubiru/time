@@ -22,8 +22,6 @@
 #include "shader_builder.h"
 
 #include "../systems/astronomy/orbit.h"
-#include "../systems/astronomy/planet_data.h"
-#include "../systems/astronomy/planets.h"
 
 #include <math.h>
 
@@ -61,158 +59,134 @@ static const float PSP_SCENE_RADII[PSP_MAX_PLANETS] = {
 };
 
 /* ──────────────────────────────────────────────────────────────────────────
- * psp_planet_config — per-planet visual configuration
+ * PSP_CONFIGS — static const per-planet visual configuration table
+ *
+ * Color literals match planet_data.c PLANET_TABLE exactly:
+ *   Mercury: {0.66, 0.66, 0.66} / alt {0.55, 0.55, 0.55}
+ *   Venus:   {0.90, 0.78, 0.55} / alt {0.85, 0.75, 0.50}
+ *   Earth:   {0.14, 0.25, 0.51} / alt {0.30, 0.55, 0.25}
+ *   Mars:    {0.73, 0.38, 0.22} / alt {0.60, 0.30, 0.15}
+ *   Jupiter: {0.78, 0.67, 0.51} / alt {0.65, 0.50, 0.35}
+ *   Saturn:  {0.82, 0.75, 0.59} / alt {0.75, 0.68, 0.52}
+ *   Uranus:  {0.71, 0.82, 0.86} / alt {0.60, 0.75, 0.80}
+ *   Neptune: {0.24, 0.35, 0.67} / alt {0.20, 0.30, 0.60}
  * ────────────────────────────────────────────────────────────────────── */
+
+static const psp_config_t PSP_CONFIGS[PSP_MAX_PLANETS] = {
+    /* Sun — solar gold, handled by sun_shader, included for completeness */
+    [PSP_SUN] = {
+        .base_color       = { 1.0f, 0.85f, 0.55f },
+        .band_color       = { 0.0f, 0.0f, 0.0f },
+        .atmosphere_color = { 0.0f, 0.0f, 0.0f },
+        .atmo_thickness   = 0.0f,
+        .band_frequency   = 0.0f,
+        .band_amplitude   = 0.0f,
+        .noise_scale      = 0.0f,
+        .noise_amplitude  = 0.0f,
+        .type             = PSP_TYPE_STAR
+    },
+    /* Mercury — gray rocky, cratered, no atmosphere */
+    [PSP_MERCURY] = {
+        .base_color       = { 0.66f, 0.66f, 0.66f },
+        .band_color       = { 0.0f, 0.0f, 0.0f },
+        .atmosphere_color = { 0.0f, 0.0f, 0.0f },
+        .atmo_thickness   = 0.0f,
+        .band_frequency   = 0.0f,
+        .band_amplitude   = 0.0f,
+        .noise_scale      = 5.0f,
+        .noise_amplitude  = 0.15f,
+        .type             = PSP_TYPE_ROCKY
+    },
+    /* Venus — pale yellow-white, thick atmosphere, smooth cloud cover */
+    [PSP_VENUS] = {
+        .base_color       = { 0.90f, 0.78f, 0.55f },
+        .band_color       = { 0.0f, 0.0f, 0.0f },
+        .atmosphere_color = { 0.95f, 0.85f, 0.55f },
+        .atmo_thickness   = 0.12f,
+        .band_frequency   = 0.0f,
+        .band_amplitude   = 0.0f,
+        .noise_scale      = 2.0f,
+        .noise_amplitude  = 0.08f,
+        .type             = PSP_TYPE_ROCKY
+    },
+    /* Earth — blue ocean base, thin blue atmosphere */
+    [PSP_EARTH] = {
+        .base_color       = { 0.14f, 0.25f, 0.51f },
+        .band_color       = { 0.0f, 0.0f, 0.0f },
+        .atmosphere_color = { 0.4f, 0.6f, 1.0f },
+        .atmo_thickness   = 0.05f,
+        .band_frequency   = 0.0f,
+        .band_amplitude   = 0.0f,
+        .noise_scale      = 3.0f,
+        .noise_amplitude  = 0.25f,
+        .type             = PSP_TYPE_ROCKY
+    },
+    /* Mars — rusty red-orange, thin atmosphere */
+    [PSP_MARS] = {
+        .base_color       = { 0.73f, 0.38f, 0.22f },
+        .band_color       = { 0.0f, 0.0f, 0.0f },
+        .atmosphere_color = { 0.9f, 0.6f, 0.4f },
+        .atmo_thickness   = 0.02f,
+        .band_frequency   = 0.0f,
+        .band_amplitude   = 0.0f,
+        .noise_scale      = 4.0f,
+        .noise_amplitude  = 0.2f,
+        .type             = PSP_TYPE_ROCKY
+    },
+    /* Jupiter — orange-white-brown latitude bands, high frequency */
+    [PSP_JUPITER] = {
+        .base_color       = { 0.78f, 0.67f, 0.51f },
+        .band_color       = { 0.65f, 0.50f, 0.35f },
+        .atmosphere_color = { 0.85f, 0.75f, 0.55f },
+        .atmo_thickness   = 0.06f,
+        .band_frequency   = 12.0f,
+        .band_amplitude   = 0.45f,
+        .noise_scale      = 3.0f,
+        .noise_amplitude  = 0.15f,
+        .type             = PSP_TYPE_GAS_GIANT
+    },
+    /* Saturn — pale gold banding, less contrast than Jupiter */
+    [PSP_SATURN] = {
+        .base_color       = { 0.82f, 0.75f, 0.59f },
+        .band_color       = { 0.75f, 0.68f, 0.52f },
+        .atmosphere_color = { 0.9f, 0.82f, 0.6f },
+        .atmo_thickness   = 0.05f,
+        .band_frequency   = 8.0f,
+        .band_amplitude   = 0.3f,
+        .noise_scale      = 2.5f,
+        .noise_amplitude  = 0.1f,
+        .type             = PSP_TYPE_GAS_GIANT
+    },
+    /* Uranus — teal-cyan, very subtle banding */
+    [PSP_URANUS] = {
+        .base_color       = { 0.71f, 0.82f, 0.86f },
+        .band_color       = { 0.60f, 0.75f, 0.80f },
+        .atmosphere_color = { 0.55f, 0.8f, 0.85f },
+        .atmo_thickness   = 0.04f,
+        .band_frequency   = 4.0f,
+        .band_amplitude   = 0.12f,
+        .noise_scale      = 2.0f,
+        .noise_amplitude  = 0.08f,
+        .type             = PSP_TYPE_ICE_GIANT
+    },
+    /* Neptune — deep blue, subtle dark spots, moderate banding */
+    [PSP_NEPTUNE] = {
+        .base_color       = { 0.24f, 0.35f, 0.67f },
+        .band_color       = { 0.20f, 0.30f, 0.60f },
+        .atmosphere_color = { 0.3f, 0.45f, 0.85f },
+        .atmo_thickness   = 0.045f,
+        .band_frequency   = 6.0f,
+        .band_amplitude   = 0.18f,
+        .noise_scale      = 3.0f,
+        .noise_amplitude  = 0.12f,
+        .type             = PSP_TYPE_ICE_GIANT
+    }
+};
 
 psp_config_t psp_planet_config(psp_planet_t planet)
 {
-    psp_config_t c;
-
-    /* Zero-init */
-    c.base_color[0] = 0.0f; c.base_color[1] = 0.0f; c.base_color[2] = 0.0f;
-    c.band_color[0] = 0.0f; c.band_color[1] = 0.0f; c.band_color[2] = 0.0f;
-    c.atmosphere_color[0] = 0.0f; c.atmosphere_color[1] = 0.0f;
-    c.atmosphere_color[2] = 0.0f;
-    c.atmo_thickness = 0.0f;
-    c.band_frequency = 0.0f;
-    c.band_amplitude = 0.0f;
-    c.noise_scale = 0.0f;
-    c.noise_amplitude = 0.0f;
-    c.type = PSP_TYPE_STAR;
-
-    switch (planet) {
-    case PSP_SUN:
-        /* Solar gold — handled by sun_shader, included here for completeness */
-        c.base_color[0] = 1.0f; c.base_color[1] = 0.85f; c.base_color[2] = 0.55f;
-        c.type = PSP_TYPE_STAR;
-        break;
-
-    case PSP_MERCURY: {
-        /* Gray rocky, cratered, no atmosphere */
-        planet_color_t pc = planet_data_color(PLANET_MERCURY);
-        c.base_color[0] = pc.r; c.base_color[1] = pc.g; c.base_color[2] = pc.b;
-        c.noise_scale = 5.0f;
-        c.noise_amplitude = 0.15f;
-        c.atmo_thickness = 0.0f;
-        c.type = PSP_TYPE_ROCKY;
-        break;
-    }
-
-    case PSP_VENUS: {
-        /* Pale yellow-white, thick atmosphere, smooth cloud cover */
-        planet_color_t pc = planet_data_color(PLANET_VENUS);
-        c.base_color[0] = pc.r; c.base_color[1] = pc.g; c.base_color[2] = pc.b;
-        c.atmosphere_color[0] = 0.95f; c.atmosphere_color[1] = 0.85f;
-        c.atmosphere_color[2] = 0.55f;
-        c.noise_scale = 2.0f;
-        c.noise_amplitude = 0.08f;
-        c.atmo_thickness = 0.12f;
-        c.type = PSP_TYPE_ROCKY;
-        break;
-    }
-
-    case PSP_EARTH: {
-        /* Blue ocean base, thin blue atmosphere */
-        planet_color_t pc = planet_data_color(PLANET_EARTH);
-        c.base_color[0] = pc.r; c.base_color[1] = pc.g; c.base_color[2] = pc.b;
-        c.atmosphere_color[0] = 0.4f; c.atmosphere_color[1] = 0.6f;
-        c.atmosphere_color[2] = 1.0f;
-        c.noise_scale = 3.0f;
-        c.noise_amplitude = 0.25f;
-        c.atmo_thickness = 0.05f;
-        c.type = PSP_TYPE_ROCKY;
-        break;
-    }
-
-    case PSP_MARS: {
-        /* Rusty red-orange, thin atmosphere */
-        planet_color_t pc = planet_data_color(PLANET_MARS);
-        c.base_color[0] = pc.r; c.base_color[1] = pc.g; c.base_color[2] = pc.b;
-        c.atmosphere_color[0] = 0.9f; c.atmosphere_color[1] = 0.6f;
-        c.atmosphere_color[2] = 0.4f;
-        c.noise_scale = 4.0f;
-        c.noise_amplitude = 0.2f;
-        c.atmo_thickness = 0.02f;
-        c.type = PSP_TYPE_ROCKY;
-        break;
-    }
-
-    case PSP_JUPITER: {
-        /* Orange-white-brown latitude bands, high frequency */
-        planet_color_t pc = planet_data_color(PLANET_JUPITER);
-        planet_color_t pa = planet_data_get(PLANET_JUPITER).color_alt;
-        c.base_color[0] = pc.r; c.base_color[1] = pc.g; c.base_color[2] = pc.b;
-        c.band_color[0] = pa.r; c.band_color[1] = pa.g; c.band_color[2] = pa.b;
-        c.atmosphere_color[0] = 0.85f; c.atmosphere_color[1] = 0.75f;
-        c.atmosphere_color[2] = 0.55f;
-        c.band_frequency = 12.0f;
-        c.band_amplitude = 0.45f;
-        c.noise_scale = 3.0f;
-        c.noise_amplitude = 0.15f;
-        c.atmo_thickness = 0.06f;
-        c.type = PSP_TYPE_GAS_GIANT;
-        break;
-    }
-
-    case PSP_SATURN: {
-        /* Pale gold banding, less contrast than Jupiter */
-        planet_color_t pc = planet_data_color(PLANET_SATURN);
-        planet_color_t pa = planet_data_get(PLANET_SATURN).color_alt;
-        c.base_color[0] = pc.r; c.base_color[1] = pc.g; c.base_color[2] = pc.b;
-        c.band_color[0] = pa.r; c.band_color[1] = pa.g; c.band_color[2] = pa.b;
-        c.atmosphere_color[0] = 0.9f; c.atmosphere_color[1] = 0.82f;
-        c.atmosphere_color[2] = 0.6f;
-        c.band_frequency = 8.0f;
-        c.band_amplitude = 0.3f;
-        c.noise_scale = 2.5f;
-        c.noise_amplitude = 0.1f;
-        c.atmo_thickness = 0.05f;
-        c.type = PSP_TYPE_GAS_GIANT;
-        break;
-    }
-
-    case PSP_URANUS: {
-        /* Teal-cyan, very subtle banding */
-        planet_color_t pc = planet_data_color(PLANET_URANUS);
-        planet_color_t pa = planet_data_get(PLANET_URANUS).color_alt;
-        c.base_color[0] = pc.r; c.base_color[1] = pc.g; c.base_color[2] = pc.b;
-        c.band_color[0] = pa.r; c.band_color[1] = pa.g; c.band_color[2] = pa.b;
-        c.atmosphere_color[0] = 0.55f; c.atmosphere_color[1] = 0.8f;
-        c.atmosphere_color[2] = 0.85f;
-        c.band_frequency = 4.0f;
-        c.band_amplitude = 0.12f;
-        c.noise_scale = 2.0f;
-        c.noise_amplitude = 0.08f;
-        c.atmo_thickness = 0.04f;
-        c.type = PSP_TYPE_ICE_GIANT;
-        break;
-    }
-
-    case PSP_NEPTUNE: {
-        /* Deep blue, subtle dark spots, moderate banding */
-        planet_color_t pc = planet_data_color(PLANET_NEPTUNE);
-        planet_color_t pa = planet_data_get(PLANET_NEPTUNE).color_alt;
-        c.base_color[0] = pc.r; c.base_color[1] = pc.g; c.base_color[2] = pc.b;
-        c.band_color[0] = pa.r; c.band_color[1] = pa.g; c.band_color[2] = pa.b;
-        c.atmosphere_color[0] = 0.3f; c.atmosphere_color[1] = 0.45f;
-        c.atmosphere_color[2] = 0.85f;
-        c.band_frequency = 6.0f;
-        c.band_amplitude = 0.18f;
-        c.noise_scale = 3.0f;
-        c.noise_amplitude = 0.12f;
-        c.atmo_thickness = 0.045f;
-        c.type = PSP_TYPE_ICE_GIANT;
-        break;
-    }
-
-    default:
-        /* Invalid planet — return star type with solar gold */
-        c.base_color[0] = 1.0f; c.base_color[1] = 0.85f; c.base_color[2] = 0.55f;
-        c.type = PSP_TYPE_STAR;
-        break;
-    }
-
-    return c;
+    if (planet < 0 || planet >= PSP_MAX_PLANETS) return PSP_CONFIGS[PSP_SUN];
+    return PSP_CONFIGS[planet];
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -529,7 +503,7 @@ static const char *s_frag_body =
     "    /* === Fresnel Atmosphere Limb Glow === */\n"
     "    if (u_atmo_thick > 0.0) {\n"
     "        float rim = 1.0 - max(dot(N, V), 0.0);\n"
-    "        float fresnel = pow(rim, 3.0);\n"
+    "        float fresnel = pow(rim, 5.0);\n"  /* Schlick exponent (RTR Ch.9) */
     "\n"
     "        /* Modulate by sunlight (some glow on dark side too) */\n"
     "        float sun_facing = max(NdotL, 0.0) * 0.7 + 0.3;\n"

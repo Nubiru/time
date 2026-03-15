@@ -482,102 +482,68 @@ int kg_edge_count(void)
     return total;
 }
 
-/* BFS path finder between two systems using undirected traversal.
- * Neighbors of node N = N.influenced_by[] union N.influenced[].
- *
- * Algorithm:
- * 1. Check for direct bridge (contributor in both systems).
- * 2. BFS from all source system contributors, following undirected edges.
- * 3. If a target system contributor is reached, reconstruct path.
- * 4. Return path with length=0 if no connection. */
-kg_path_t kg_knowledge_path(kg_system_t system_a, kg_system_t system_b)
+/* --- BFS helper: initialize visited/parent/queue, seed with system_a contributors --- */
+static void kg_bfs_init(kg_system_t system_a,
+                         int *visited, int *parent, int *queue, int *q_tail)
 {
-    kg_path_t result;
-    result.length = 0;
-
-    /* Step 1: Check for direct bridge (contributor in both systems) */
-    for (int i = 0; i < KG_CONTRIBUTOR_COUNT; i++) {
-        if (contributor_has_system(&CONTRIBUTORS[i], system_a) &&
-            contributor_has_system(&CONTRIBUTORS[i], system_b)) {
-            result.path[0] = i;
-            result.length = 1;
-            return result;
-        }
-    }
-
-    /* Step 2: BFS from source contributors, undirected traversal */
-    /* With 20 nodes, all arrays fit on the stack easily. */
-    int visited[KG_CONTRIBUTOR_COUNT];
-    int parent[KG_CONTRIBUTOR_COUNT];
-    int queue[KG_CONTRIBUTOR_COUNT];
-    int q_head = 0;
-    int q_tail = 0;
-
     for (int i = 0; i < KG_CONTRIBUTOR_COUNT; i++) {
         visited[i] = 0;
         parent[i] = -1;
     }
-
-    /* Seed queue with all contributors in system_a */
+    *q_tail = 0;
     for (int i = 0; i < KG_CONTRIBUTOR_COUNT; i++) {
         if (contributor_has_system(&CONTRIBUTORS[i], system_a)) {
             visited[i] = 1;
             parent[i] = -1; /* root node */
-            queue[q_tail++] = i;
+            queue[(*q_tail)++] = i;
         }
     }
+}
 
-    int target = -1;
+/* --- BFS helper: single expansion step, process one node from queue.
+ * Returns target contributor index if system_b reached, else -1. --- */
+static int kg_bfs_step(kg_system_t system_b,
+                        int *visited, int *parent, int *queue,
+                        int *q_head, int *q_tail)
+{
+    int cur = queue[(*q_head)++];
+    const kg_contributor_t *c = &CONTRIBUTORS[cur];
 
-    while (q_head < q_tail && target < 0) {
-        int cur = queue[q_head++];
-        const kg_contributor_t *c = &CONTRIBUTORS[cur];
-
-        /* Check if current node is in target system (and not a seed) */
-        if (parent[cur] != -1 || !contributor_has_system(c, system_a)) {
-            /* Only check non-seed nodes, but actually we should check
-             * all reached nodes that are in system_b.
-             * However, seed nodes in system_a that are also in system_b
-             * were already caught by the direct bridge check above.
-             * So any newly reached node in system_b is a valid target. */
-        }
-
-        /* Explore neighbors: influenced (forward edges) */
-        for (int i = 0; i < c->successor_count; i++) {
-            int neighbor = c->influenced[i];
-            if (neighbor >= 0 && neighbor < KG_CONTRIBUTOR_COUNT && !visited[neighbor]) {
-                visited[neighbor] = 1;
-                parent[neighbor] = cur;
-                if (contributor_has_system(&CONTRIBUTORS[neighbor], system_b)) {
-                    target = neighbor;
-                    break;
-                }
-                queue[q_tail++] = neighbor;
+    /* Explore neighbors: influenced (forward edges) */
+    for (int i = 0; i < c->successor_count; i++) {
+        int neighbor = c->influenced[i];
+        if (neighbor >= 0 && neighbor < KG_CONTRIBUTOR_COUNT && !visited[neighbor]) {
+            visited[neighbor] = 1;
+            parent[neighbor] = cur;
+            if (contributor_has_system(&CONTRIBUTORS[neighbor], system_b)) {
+                return neighbor;
             }
+            queue[(*q_tail)++] = neighbor;
         }
-        if (target >= 0) break;
+    }
 
-        /* Explore neighbors: influenced_by (backward edges) */
-        for (int i = 0; i < c->influence_count; i++) {
-            int neighbor = c->influenced_by[i];
-            if (neighbor >= 0 && neighbor < KG_CONTRIBUTOR_COUNT && !visited[neighbor]) {
-                visited[neighbor] = 1;
-                parent[neighbor] = cur;
-                if (contributor_has_system(&CONTRIBUTORS[neighbor], system_b)) {
-                    target = neighbor;
-                    break;
-                }
-                queue[q_tail++] = neighbor;
+    /* Explore neighbors: influenced_by (backward edges) */
+    for (int i = 0; i < c->influence_count; i++) {
+        int neighbor = c->influenced_by[i];
+        if (neighbor >= 0 && neighbor < KG_CONTRIBUTOR_COUNT && !visited[neighbor]) {
+            visited[neighbor] = 1;
+            parent[neighbor] = cur;
+            if (contributor_has_system(&CONTRIBUTORS[neighbor], system_b)) {
+                return neighbor;
             }
+            queue[(*q_tail)++] = neighbor;
         }
     }
 
-    if (target < 0) {
-        /* No path found */
-        return result;
-    }
+    return -1;
+}
 
-    /* Reconstruct path from target back to a source */
+/* --- BFS helper: reconstruct path from target back to source using parent array --- */
+static kg_path_t kg_bfs_trace(int target, const int *parent)
+{
+    kg_path_t result;
+    result.length = 0;
+
     int rev_path[KG_MAX_PATH];
     int rev_len = 0;
     int node = target;
@@ -593,4 +559,50 @@ kg_path_t kg_knowledge_path(kg_system_t system_a, kg_system_t system_b)
     }
 
     return result;
+}
+
+/* BFS path finder between two systems using undirected traversal.
+ * Neighbors of node N = N.influenced_by[] union N.influenced[].
+ *
+ * Algorithm:
+ * 1. Check for direct bridge (contributor in both systems).
+ * 2. BFS from all source system contributors, following undirected edges.
+ * 3. If a target system contributor is reached, reconstruct path.
+ * 4. Return path with length=0 if no connection. */
+kg_path_t kg_knowledge_path(kg_system_t system_a, kg_system_t system_b)
+{
+    kg_path_t result;
+    result.length = 0;
+
+    /* Fast path: direct bridge (contributor in both systems) */
+    for (int i = 0; i < KG_CONTRIBUTOR_COUNT; i++) {
+        if (contributor_has_system(&CONTRIBUTORS[i], system_a) &&
+            contributor_has_system(&CONTRIBUTORS[i], system_b)) {
+            result.path[0] = i;
+            result.length = 1;
+            return result;
+        }
+    }
+
+    /* BFS from source contributors, undirected traversal.
+     * With 20 nodes, all arrays fit on the stack easily. */
+    int visited[KG_CONTRIBUTOR_COUNT];
+    int parent[KG_CONTRIBUTOR_COUNT];
+    int queue[KG_CONTRIBUTOR_COUNT];
+    int q_head = 0;
+    int q_tail = 0;
+
+    kg_bfs_init(system_a, visited, parent, queue, &q_tail);
+
+    int target = -1;
+    while (q_head < q_tail && target < 0) {
+        target = kg_bfs_step(system_b, visited, parent, queue,
+                             &q_head, &q_tail);
+    }
+
+    if (target < 0) {
+        return result;
+    }
+
+    return kg_bfs_trace(target, parent);
 }
