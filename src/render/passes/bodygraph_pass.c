@@ -10,6 +10,7 @@
 
 #include "bodygraph_pass.h"
 #include <stdio.h>
+#include <math.h>
 #include <GLES3/gl3.h>
 #include "../shader.h"
 #include "../bodygraph_pack.h"
@@ -21,6 +22,15 @@ static GLuint s_bgp_program;
 static GLint  s_bgp_loc_projection;
 static GLuint s_bgp_vao;
 static GLuint s_bgp_vbo;
+
+/* --- Static scratch buffer (BSS, zero stack cost) --- */
+static float s_bgp_scratch[BGP_MAX_VERTICES * BGP_VERTEX_FLOATS];
+
+/* --- Dirty-flag caching --- */
+#define BGP_DIRTY_THRESHOLD 0.001  /* Re-pack when JD changes by ~1.4 minutes */
+static double     s_bgp_last_jd = 0.0;
+static int        s_bgp_cached_total = 0;
+static bgp_info_t s_bgp_cached_info;
 
 int bodygraph_pass_init(void) {
     s_bgp_program = shader_create_program(
@@ -58,25 +68,38 @@ void bodygraph_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
 
-    /* Compute active gates from planetary positions */
-    solar_system_t sys = planets_at(frame->simulation_jd);
-    int active_gates[65] = {0};
-    for (int p = 0; p < 8; p++) {
-        int gate = hd_gate_at_degree(sys.positions[p].longitude);
-        if (gate >= 1 && gate <= 64)
-            active_gates[gate] = 1;
+    bgp_config_t config = bgp_default_config();
+
+    /* Only recompute when time has changed beyond threshold */
+    if (fabs(frame->simulation_jd - s_bgp_last_jd) > BGP_DIRTY_THRESHOLD) {
+        /* Compute active gates from planetary positions */
+        solar_system_t sys = planets_at(frame->simulation_jd);
+        int active_gates[65] = {0};
+        for (int p = 0; p < 8; p++) {
+            int gate = hd_gate_at_degree(sys.positions[p].longitude);
+            if (gate >= 1 && gate <= 64)
+                active_gates[gate] = 1;
+        }
+
+        /* Compute defined centers from active gates */
+        int defined_centers[9] = {0};
+        bodygraph_defined_centers(active_gates, defined_centers);
+
+        /* Pack all bodygraph geometry */
+        s_bgp_cached_total = bgp_pack(defined_centers, active_gates,
+                                       &config, s_bgp_scratch);
+        s_bgp_cached_info = bgp_info(defined_centers, active_gates);
+
+        if (s_bgp_cached_total > 0) {
+            glBindBuffer(GL_ARRAY_BUFFER, s_bgp_vbo);
+            glBufferSubData(GL_ARRAY_BUFFER, 0,
+                            (GLsizeiptr)(s_bgp_cached_total * BGP_VERTEX_STRIDE),
+                            s_bgp_scratch);
+        }
+        s_bgp_last_jd = frame->simulation_jd;
     }
 
-    /* Compute defined centers from active gates */
-    int defined_centers[9] = {0};
-    bodygraph_defined_centers(active_gates, defined_centers);
-
-    /* Pack all bodygraph geometry */
-    bgp_config_t config = bgp_default_config();
-    float verts[BGP_MAX_VERTICES * BGP_VERTEX_FLOATS];
-    int total_verts = bgp_pack(defined_centers, active_gates, &config, verts);
-
-    if (total_verts == 0) return;
+    if (s_bgp_cached_total == 0) return;
 
     /* Build simple orthographic projection for screen-space */
     mat4_t ortho = mat4_identity();
@@ -94,30 +117,22 @@ void bodygraph_pass_draw(const render_frame_t *frame) {
     glDisable(GL_DEPTH_TEST);
 
     glBindVertexArray(s_bgp_vao);
-    glBindBuffer(GL_ARRAY_BUFFER, s_bgp_vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0,
-                    (GLsizeiptr)(total_verts * BGP_VERTEX_STRIDE),
-                    verts);
-
-    /* Centers + gates are triangles, channels are lines.
-     * Pack order: centers first, then channels, then gates.
-     * We need bgp_info to know the split. */
-    bgp_info_t info = bgp_info(defined_centers, active_gates);
 
     /* Draw center quads + gate quads as triangles */
-    int tri_verts = info.center_verts + info.gate_verts;
+    int tri_verts = s_bgp_cached_info.center_verts + s_bgp_cached_info.gate_verts;
     if (tri_verts > 0) {
-        glDrawArrays(GL_TRIANGLES, 0, info.center_verts);
-        if (info.gate_verts > 0) {
+        glDrawArrays(GL_TRIANGLES, 0, s_bgp_cached_info.center_verts);
+        if (s_bgp_cached_info.gate_verts > 0) {
             glDrawArrays(GL_TRIANGLES,
-                         info.center_verts + info.channel_verts,
-                         info.gate_verts);
+                         s_bgp_cached_info.center_verts + s_bgp_cached_info.channel_verts,
+                         s_bgp_cached_info.gate_verts);
         }
     }
 
     /* Draw channel lines */
-    if (info.channel_verts > 0) {
-        glDrawArrays(GL_LINES, info.center_verts, info.channel_verts);
+    if (s_bgp_cached_info.channel_verts > 0) {
+        glDrawArrays(GL_LINES, s_bgp_cached_info.center_verts,
+                     s_bgp_cached_info.channel_verts);
     }
 
     glBindVertexArray(0);

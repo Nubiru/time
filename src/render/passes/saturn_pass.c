@@ -41,6 +41,10 @@ static GLuint s_srp_vbo;
 static GLuint s_srp_ebo;
 static int    s_srp_index_count;
 
+/* --- Static scratch buffers (BSS, zero stack cost) --- */
+static float          s_srp_init_verts[SRP_MAX_VERTICES * SRP_VERTEX_FLOATS];
+static unsigned short s_srp_init_indices[SRP_MAX_VERTICES * 6];
+
 int saturn_pass_init(void) {
     /* Compile ring shaders */
     s_srp_program = shader_create_program(
@@ -59,9 +63,7 @@ int saturn_pass_init(void) {
     srp_config_t config = srp_default_config();
     config.saturn_scene_radius = SATURN_SCENE_RADIUS;
 
-    float verts[SRP_MAX_VERTICES * SRP_VERTEX_FLOATS];
-    unsigned short indices[SRP_MAX_VERTICES * 6];
-    srp_info_t info = srp_pack(config, verts, indices);
+    srp_info_t info = srp_pack(config, s_srp_init_verts, s_srp_init_indices);
 
     s_srp_index_count = info.index_count;
     if (s_srp_index_count == 0) {
@@ -77,13 +79,13 @@ int saturn_pass_init(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_srp_vbo);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(info.vertex_count * SRP_VERTEX_FLOATS * (int)sizeof(float)),
-                 verts, GL_STATIC_DRAW);
+                 s_srp_init_verts, GL_STATIC_DRAW);
 
     glGenBuffers(1, &s_srp_ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_srp_ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  (GLsizeiptr)(info.index_count * (int)sizeof(unsigned short)),
-                 indices, GL_STATIC_DRAW);
+                 s_srp_init_indices, GL_STATIC_DRAW);
 
     /* Interleaved: pos(3) + normal(3) + uv(2) + opacity(1) = 9 floats = 36 bytes */
     int stride = SRP_VERTEX_FLOATS * (int)sizeof(float);

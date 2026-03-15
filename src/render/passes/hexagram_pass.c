@@ -10,6 +10,7 @@
 
 #include "hexagram_pass.h"
 #include <stdio.h>
+#include <math.h>
 #include <GLES3/gl3.h>
 #include "../shader.h"
 #include "../hexagram_geometry.h"
@@ -20,6 +21,11 @@ static GLuint s_hg_program;
 static GLint  s_hg_loc_mvp;
 static GLuint s_hg_vao;
 static GLuint s_hg_vbo;
+
+/* --- Dirty-flag caching --- */
+#define HG_DIRTY_THRESHOLD 0.01  /* Re-pack when JD changes by ~14 minutes */
+static double s_hg_last_jd = 0.0;
+static int    s_hg_cached_count = 0;
 
 int hexagram_pass_init(void) {
     s_hg_program = shader_create_program(
@@ -57,16 +63,32 @@ void hexagram_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
 
-    /* Compute current hexagram from Julian Day */
-    hexagram_t hex = iching_from_jd(frame->simulation_jd);
-    if (hex.king_wen < 1 || hex.king_wen > 64)
-        return;
+    /* Only recompute when time has changed beyond threshold */
+    if (fabs(frame->simulation_jd - s_hg_last_jd) > HG_DIRTY_THRESHOLD) {
+        /* Compute current hexagram from Julian Day */
+        hexagram_t hex = iching_from_jd(frame->simulation_jd);
+        if (hex.king_wen < 1 || hex.king_wen > 64) {
+            s_hg_cached_count = 0;
+            s_hg_last_jd = frame->simulation_jd;
+            return;
+        }
 
-    /* Pack hexagram with nuclear hexagrams */
-    hg_data_t data = hg_pack_with_nuclear(
-        hex.king_wen, 0.8f, 1.2f, NULL, 1.2f, 0.5f);
+        /* Pack hexagram with nuclear hexagrams */
+        hg_data_t data = hg_pack_with_nuclear(
+            hex.king_wen, 0.8f, 1.2f, NULL, 1.2f, 0.5f);
 
-    if (data.vertex_count == 0) return;
+        s_hg_cached_count = data.vertex_count;
+
+        if (s_hg_cached_count > 0) {
+            glBindBuffer(GL_ARRAY_BUFFER, s_hg_vbo);
+            glBufferSubData(GL_ARRAY_BUFFER, 0,
+                            (GLsizeiptr)hg_vertex_bytes(&data),
+                            data.vertices);
+        }
+        s_hg_last_jd = frame->simulation_jd;
+    }
+
+    if (s_hg_cached_count == 0) return;
 
     /* Build ortho projection for screen-space NDC */
     mat4_t ortho = mat4_identity();
@@ -79,11 +101,7 @@ void hexagram_pass_draw(const render_frame_t *frame) {
     glDisable(GL_DEPTH_TEST);
 
     glBindVertexArray(s_hg_vao);
-    glBindBuffer(GL_ARRAY_BUFFER, s_hg_vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0,
-                    (GLsizeiptr)hg_vertex_bytes(&data),
-                    data.vertices);
-    glDrawArrays(GL_LINES, 0, data.vertex_count);
+    glDrawArrays(GL_LINES, 0, s_hg_cached_count);
     glBindVertexArray(0);
 
     glEnable(GL_DEPTH_TEST);

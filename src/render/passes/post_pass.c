@@ -59,6 +59,10 @@ static GLint  s_pp_comp_loc_time;
 static pp_config_t s_pp_config;
 static int s_pp_width;
 static int s_pp_height;
+static int s_pp_active; /* 0 = passthrough (FBO failed), 1 = full pipeline */
+
+/* --- Static scratch buffer (BSS, zero stack cost) --- */
+static float s_pp_quad_data[PP_QUAD_VERTEX_COUNT * PP_QUAD_VERTEX_FLOATS];
 
 /* --- Internal helpers --- */
 
@@ -96,10 +100,10 @@ int post_pass_init(int width, int height) {
     s_pp_config = pp_default_config();
     s_pp_width = width;
     s_pp_height = height;
+    s_pp_active = 0; /* assume passthrough until FBOs confirmed working */
 
     /* Setup fullscreen quad */
-    float quad[PP_QUAD_VERTEX_COUNT * PP_QUAD_VERTEX_FLOATS];
-    pp_pack_quad(quad);
+    pp_pack_quad(s_pp_quad_data);
 
     glGenVertexArrays(1, &s_pp_quad_vao);
     glBindVertexArray(s_pp_quad_vao);
@@ -107,7 +111,8 @@ int post_pass_init(int width, int height) {
     glGenBuffers(1, &s_pp_quad_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, s_pp_quad_vbo);
     glBufferData(GL_ARRAY_BUFFER,
-                 (GLsizeiptr)sizeof(quad), quad, GL_STATIC_DRAW);
+                 (GLsizeiptr)(PP_QUAD_VERTEX_COUNT * PP_QUAD_VERTEX_FLOATS * (int)sizeof(float)),
+                 s_pp_quad_data, GL_STATIC_DRAW);
 
     /* position(vec2) at loc 0, texcoord(vec2) at loc 1 */
     int stride = PP_QUAD_VERTEX_FLOATS * (int)sizeof(float);
@@ -130,7 +135,15 @@ int post_pass_init(int width, int height) {
                            GL_TEXTURE_2D, s_pp_scene_tex, 0);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
                               GL_RENDERBUFFER, s_pp_scene_depth);
+
+    GLenum fbo_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    if (fbo_status != GL_FRAMEBUFFER_COMPLETE) {
+        printf("Scene FBO incomplete: 0x%x — falling back to direct rendering\n",
+               (unsigned)fbo_status);
+        return 0; /* not a fatal error — passthrough mode */
+    }
 
     /* Bloom FBOs (half resolution for performance) */
     int bw = width / 2, bh = height / 2;
@@ -146,8 +159,8 @@ int post_pass_init(int width, int height) {
     s_pp_bright_program = shader_create_program(
         quad_vert, pp_bright_extract_frag_source());
     if (s_pp_bright_program == 0) {
-        printf("Failed to create brightness extract shader\n");
-        return 1;
+        printf("Bloom shader failed — falling back to direct rendering\n");
+        return 0;
     }
     s_pp_bright_loc_scene = glGetUniformLocation(s_pp_bright_program, "u_scene");
     s_pp_bright_loc_threshold = glGetUniformLocation(s_pp_bright_program, "u_threshold");
@@ -155,8 +168,8 @@ int post_pass_init(int width, int height) {
     s_pp_blur_program = shader_create_program(
         quad_vert, pp_blur_frag_source());
     if (s_pp_blur_program == 0) {
-        printf("Failed to create blur shader\n");
-        return 1;
+        printf("Blur shader failed — falling back to direct rendering\n");
+        return 0;
     }
     s_pp_blur_loc_image = glGetUniformLocation(s_pp_blur_program, "u_image");
     s_pp_blur_loc_horizontal = glGetUniformLocation(s_pp_blur_program, "u_horizontal");
@@ -164,8 +177,8 @@ int post_pass_init(int width, int height) {
     s_pp_composite_program = shader_create_program(
         quad_vert, pp_composite_frag_source());
     if (s_pp_composite_program == 0) {
-        printf("Failed to create composite shader\n");
-        return 1;
+        printf("Composite shader failed — falling back to direct rendering\n");
+        return 0;
     }
     s_pp_comp_loc_scene = glGetUniformLocation(s_pp_composite_program, "u_scene");
     s_pp_comp_loc_bloom = glGetUniformLocation(s_pp_composite_program, "u_bloom");
@@ -177,6 +190,7 @@ int post_pass_init(int width, int height) {
     s_pp_comp_loc_grain_intensity = glGetUniformLocation(s_pp_composite_program, "u_grain_intensity");
     s_pp_comp_loc_time = glGetUniformLocation(s_pp_composite_program, "u_time");
 
+    s_pp_active = 1; /* everything succeeded — full pipeline */
     printf("Post-process: bloom + tonemap + vignette, %dx%d, shaders compiled\n",
            width, height);
     return 0;
@@ -184,12 +198,20 @@ int post_pass_init(int width, int height) {
 
 void post_pass_begin(const render_frame_t *frame) {
     (void)frame;
-    glBindFramebuffer(GL_FRAMEBUFFER, s_pp_scene_fbo);
+    if (s_pp_active) {
+        glBindFramebuffer(GL_FRAMEBUFFER, s_pp_scene_fbo);
+    }
     glViewport(0, 0, s_pp_width, s_pp_height);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void post_pass_end(const render_frame_t *frame) {
+    if (!s_pp_active) {
+        /* Passthrough mode — passes already rendered to default framebuffer */
+        (void)frame;
+        return;
+    }
+
     int bw = s_pp_width / 2, bh = s_pp_height / 2;
     if (bw < 1) bw = 1;
     if (bh < 1) bh = 1;

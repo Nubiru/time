@@ -32,6 +32,14 @@
 /* Must match planet_pass.c scaling */
 #define ORBIT_SCALE 3.0f
 
+/* --- MAX constants for static buffers (2x headroom over default config) --- */
+/* Default config: lat=32, lon=64 -> globe_verts=2145, globe_indices=12288 */
+#define ERP_MAX_GLOBE_VERTS   4096
+#define ERP_MAX_GLOBE_INDICES 16384
+#define ERP_MAX_COAST_VERTS   512    /* ~107 segments * 2 = ~214, 2x headroom */
+#define ERP_MAX_ATMO_VERTS    4096   /* atmo shell same as globe */
+#define ERP_MAX_ATMO_INDICES  16384
+
 /* --- Module-static GL handles --- */
 
 /* Globe (Earth surface with day/night) */
@@ -66,6 +74,14 @@ static int    s_atmo_index_count;
 /* Config */
 static erp_config_t s_erp_config;
 
+/* --- Static scratch buffers (BSS, zero stack cost) --- */
+static float        s_erp_globe_verts[ERP_MAX_GLOBE_VERTS * ERP_GLOBE_VERTEX_FLOATS];
+static unsigned int s_erp_globe_indices[ERP_MAX_GLOBE_INDICES];
+static float        s_erp_coast_verts[ERP_MAX_COAST_VERTS * ERP_LINE_VERTEX_FLOATS];
+static float        s_erp_atmo_verts[ERP_MAX_ATMO_VERTS * 7]; /* pos3+normal3+opacity1 */
+static unsigned int s_erp_atmo_indices[ERP_MAX_ATMO_INDICES];
+static float        s_erp_term_verts[ERP_TERMINATOR_POINTS * ERP_LINE_VERTEX_FLOATS];
+
 int earth_pass_init(void) {
     s_erp_config = erp_default_config();
     erp_info_t info = erp_info(&s_erp_config);
@@ -82,9 +98,7 @@ int earth_pass_init(void) {
     s_globe_loc_sun_dir = glGetUniformLocation(s_globe_program, "u_sun_dir");
 
     /* Pack globe mesh (static) */
-    float globe_verts[info.globe_verts * ERP_GLOBE_VERTEX_FLOATS];
-    unsigned int globe_indices[info.globe_indices];
-    erp_pack_globe(&s_erp_config, globe_verts, globe_indices);
+    erp_pack_globe(&s_erp_config, s_erp_globe_verts, s_erp_globe_indices);
 
     s_globe_index_count = info.globe_indices;
 
@@ -95,13 +109,13 @@ int earth_pass_init(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_globe_vbo);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(info.globe_verts * ERP_GLOBE_VERTEX_STRIDE),
-                 globe_verts, GL_STATIC_DRAW);
+                 s_erp_globe_verts, GL_STATIC_DRAW);
 
     glGenBuffers(1, &s_globe_ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_globe_ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  (GLsizeiptr)(info.globe_indices * (int)sizeof(unsigned int)),
-                 globe_indices, GL_STATIC_DRAW);
+                 s_erp_globe_indices, GL_STATIC_DRAW);
 
     /* pos(3) + normal(3) + uv(2) = 8 floats = 32 bytes */
     glEnableVertexAttribArray(0);
@@ -123,8 +137,7 @@ int earth_pass_init(void) {
     s_line_loc_mvp = glGetUniformLocation(s_line_program, "u_mvp");
 
     /* Pack coastlines (static) */
-    float coast_verts[info.coastline_verts * ERP_LINE_VERTEX_FLOATS];
-    s_coast_vertex_count = erp_pack_coastlines(&s_erp_config, coast_verts);
+    s_coast_vertex_count = erp_pack_coastlines(&s_erp_config, s_erp_coast_verts);
 
     glGenVertexArrays(1, &s_coast_vao);
     glBindVertexArray(s_coast_vao);
@@ -133,7 +146,7 @@ int earth_pass_init(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_coast_vbo);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(s_coast_vertex_count * ERP_LINE_VERTEX_STRIDE),
-                 coast_verts, GL_STATIC_DRAW);
+                 s_erp_coast_verts, GL_STATIC_DRAW);
 
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, ERP_LINE_VERTEX_STRIDE, (void*)0);
@@ -171,9 +184,7 @@ int earth_pass_init(void) {
     s_atmo_loc_camera_pos = glGetUniformLocation(s_atmo_program, "u_camera_pos");
 
     /* Pack atmosphere shell (static) */
-    float atmo_verts[info.atmo_verts * 7]; /* pos3+normal3+opacity1 */
-    unsigned int atmo_indices[info.atmo_indices];
-    erp_pack_atmosphere(&s_erp_config, atmo_verts, atmo_indices);
+    erp_pack_atmosphere(&s_erp_config, s_erp_atmo_verts, s_erp_atmo_indices);
 
     s_atmo_index_count = info.atmo_indices;
 
@@ -184,13 +195,13 @@ int earth_pass_init(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_atmo_vbo);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(info.atmo_verts * 7 * (int)sizeof(float)),
-                 atmo_verts, GL_STATIC_DRAW);
+                 s_erp_atmo_verts, GL_STATIC_DRAW);
 
     glGenBuffers(1, &s_atmo_ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_atmo_ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  (GLsizeiptr)(info.atmo_indices * (int)sizeof(unsigned int)),
-                 atmo_indices, GL_STATIC_DRAW);
+                 s_erp_atmo_indices, GL_STATIC_DRAW);
 
     /* pos(3)+normal(3)+opacity(1) = 7 floats = 28 bytes */
     glEnableVertexAttribArray(0);
@@ -283,9 +294,8 @@ void earth_pass_draw(const render_frame_t *frame) {
                                 sin(obliquity * DEG_TO_RAD)) / DEG_TO_RAD;
         double solar_ra = sun_geo_lon / 15.0; /* approximate RA in hours */
 
-        float term_verts[ERP_TERMINATOR_POINTS * ERP_LINE_VERTEX_FLOATS];
         int term_count = erp_pack_terminator(
-            solar_dec, solar_ra, &s_erp_config, term_verts);
+            solar_dec, solar_ra, &s_erp_config, s_erp_term_verts);
 
         if (term_count > 0) {
             glUseProgram(s_line_program);
@@ -298,7 +308,7 @@ void earth_pass_draw(const render_frame_t *frame) {
             glBindBuffer(GL_ARRAY_BUFFER, s_term_vbo);
             glBufferSubData(GL_ARRAY_BUFFER, 0,
                             (GLsizeiptr)(term_count * ERP_LINE_VERTEX_STRIDE),
-                            term_verts);
+                            s_erp_term_verts);
             glDrawArrays(GL_LINE_STRIP, 0, term_count);
             glBindVertexArray(0);
 

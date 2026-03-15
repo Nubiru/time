@@ -27,6 +27,10 @@ static GLuint s_cline_vao;
 static GLuint s_cline_vbo;
 static int    s_cline_vertex_count;
 
+/* --- Static scratch buffers (BSS, zero stack cost) --- */
+static float s_star_init_verts[600 * STAR_VERTEX_FLOATS];
+static float s_cline_init_verts[500 * 2 * CLINE_VERTEX_FLOATS];
+
 int star_pass_init(void) {
     /* --- Star field shader + data --- */
     s_star_program = shader_create_program(
@@ -38,9 +42,8 @@ int star_pass_init(void) {
     s_star_loc_mvp = glGetUniformLocation(s_star_program, "u_mvp");
     s_star_loc_scale = glGetUniformLocation(s_star_program, "u_scale_factor");
 
-    /* Pack star vertex data on stack */
-    float star_verts[600 * STAR_VERTEX_FLOATS];
-    s_star_count = star_field_pack(star_verts, 600, 8.0f, 100.0f);
+    /* Pack star vertex data */
+    s_star_count = star_field_pack(s_star_init_verts, 600, 8.0f, 100.0f);
 
     /* Upload to GPU */
     glGenVertexArrays(1, &s_star_vao);
@@ -50,7 +53,7 @@ int star_pass_init(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_star_vbo);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(s_star_count * STAR_VERTEX_STRIDE),
-                 star_verts, GL_STATIC_DRAW);
+                 s_star_init_verts, GL_STATIC_DRAW);
 
     /* Interleaved: pos(3) + color(3) + size(1) = 7 floats = 28 bytes */
     glEnableVertexAttribArray(0);
@@ -72,8 +75,7 @@ int star_pass_init(void) {
     }
     s_cline_loc_mvp = glGetUniformLocation(s_cline_program, "u_mvp");
 
-    float cline_verts[500 * 2 * CLINE_VERTEX_FLOATS];
-    int line_count = constellation_lines_pack(cline_verts, 500, 0.25f, 0.4f, 100.0f);
+    int line_count = constellation_lines_pack(s_cline_init_verts, 500, 0.25f, 0.4f, 100.0f);
     s_cline_vertex_count = line_count * 2;
 
     glGenVertexArrays(1, &s_cline_vao);
@@ -83,7 +85,7 @@ int star_pass_init(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_cline_vbo);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(s_cline_vertex_count * CLINE_VERTEX_STRIDE),
-                 cline_verts, GL_STATIC_DRAW);
+                 s_cline_init_verts, GL_STATIC_DRAW);
 
     /* Interleaved: pos(3) + color(4) = 7 floats = 28 bytes */
     glEnableVertexAttribArray(0);

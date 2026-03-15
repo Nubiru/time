@@ -24,6 +24,9 @@ static GLuint s_cb_vao;
 static GLuint s_cb_vbo;
 static int    s_cb_vertex_count;
 
+/* --- Static scratch buffer (BSS, zero stack cost) --- */
+static float s_cb_init_verts[CB_MAX_TOTAL_VERTICES * CB_VERTEX_FLOATS];
+
 int constellation_pass_init(void) {
     /* Compile boundary line shaders */
     s_cb_program = shader_create_program(
@@ -43,9 +46,8 @@ int constellation_pass_init(void) {
     }
 
     s_cb_vertex_count = total_segments * 2;
-    float verts[CB_MAX_TOTAL_VERTICES * CB_VERTEX_FLOATS];
 
-    cb_pack(SPHERE_RADIUS, 0.15f, 0.35f, verts);
+    cb_pack(SPHERE_RADIUS, 0.15f, 0.35f, s_cb_init_verts);
 
     /* Upload to GPU */
     glGenVertexArrays(1, &s_cb_vao);
@@ -55,7 +57,7 @@ int constellation_pass_init(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_cb_vbo);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(s_cb_vertex_count * CB_VERTEX_STRIDE),
-                 verts, GL_STATIC_DRAW);
+                 s_cb_init_verts, GL_STATIC_DRAW);
 
     /* Interleaved: position(vec3) + color(vec4) = 7 floats = 28 bytes */
     glEnableVertexAttribArray(0);

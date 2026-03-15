@@ -26,6 +26,9 @@ static GLint  s_dsp_loc_mvp;
 static GLuint s_dsp_vao;
 static GLuint s_dsp_vbo;
 
+/* --- Static scratch buffer (BSS, zero stack cost) --- */
+static float s_dsp_scratch[DSP_MAX_VERTS * DSP_VERTEX_FLOATS];
+
 int deep_sky_pass_init(void) {
     s_dsp_program = shader_create_program(
         dsp_vert_source(), dsp_frag_source());
@@ -72,8 +75,7 @@ void deep_sky_pass_draw(const render_frame_t *frame) {
 
     /* Pack DSO billboards for current camera orientation */
     dsp_config_t config = dsp_default_config();
-    float verts[DSP_MAX_VERTS * DSP_VERTEX_FLOATS];
-    int count = dsp_pack(right, up, &config, verts);
+    int count = dsp_pack(right, up, &config, s_dsp_scratch);
 
     if (count == 0) return;
 
@@ -90,7 +92,7 @@ void deep_sky_pass_draw(const render_frame_t *frame) {
     glBindBuffer(GL_ARRAY_BUFFER, s_dsp_vbo);
     glBufferSubData(GL_ARRAY_BUFFER, 0,
                     (GLsizeiptr)(vert_count * DSP_VERTEX_STRIDE),
-                    verts);
+                    s_dsp_scratch);
     glDrawArrays(GL_TRIANGLES, 0, vert_count);
     glBindVertexArray(0);
 

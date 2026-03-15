@@ -10,6 +10,7 @@
 
 #include "orbit_trail_pass.h"
 #include <stdio.h>
+#include <math.h>
 #include <GLES3/gl3.h>
 #include "../shader.h"
 #include "../orbit_trail_pack.h"
@@ -19,6 +20,14 @@ static GLuint s_otp_program;
 static GLint  s_otp_loc_mvp;
 static GLuint s_otp_vao;
 static GLuint s_otp_vbo;
+
+/* --- Static scratch buffer (BSS, zero stack cost) --- */
+static float s_otp_scratch[OTP_MAX_VERTICES * OTP_VERTEX_FLOATS];
+
+/* --- Dirty-flag caching --- */
+#define OTP_DIRTY_THRESHOLD 0.001  /* Re-pack when JD changes by ~1.4 minutes */
+static double s_otp_last_jd = 0.0;
+static int    s_otp_cached_count = 0;
 
 int orbit_trail_pass_init(void) {
     s_otp_program = shader_create_program(
@@ -57,12 +66,22 @@ void orbit_trail_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_ORBITS))
         return;
 
-    /* Pack orbit ellipses for current time */
+    /* Only recompute when time has changed beyond threshold */
     otp_config_t config = otp_default_config();
-    float verts[OTP_MAX_VERTICES * OTP_VERTEX_FLOATS];
-    otp_info_t info = otp_pack(frame->simulation_jd, config, verts);
+    if (fabs(frame->simulation_jd - s_otp_last_jd) > OTP_DIRTY_THRESHOLD) {
+        otp_info_t info = otp_pack(frame->simulation_jd, config, s_otp_scratch);
+        s_otp_cached_count = info.vertex_count;
 
-    if (info.vertex_count == 0) return;
+        if (s_otp_cached_count > 0) {
+            glBindBuffer(GL_ARRAY_BUFFER, s_otp_vbo);
+            glBufferSubData(GL_ARRAY_BUFFER, 0,
+                (GLsizeiptr)(s_otp_cached_count * OTP_VERTEX_FLOATS * (int)sizeof(float)),
+                s_otp_scratch);
+        }
+        s_otp_last_jd = frame->simulation_jd;
+    }
+
+    if (s_otp_cached_count == 0) return;
 
     glUseProgram(s_otp_program);
     glUniformMatrix4fv(s_otp_loc_mvp, 1, GL_FALSE, frame->view_proj.m);
@@ -72,18 +91,14 @@ void orbit_trail_pass_draw(const render_frame_t *frame) {
     glDepthMask(GL_FALSE);
 
     glBindVertexArray(s_otp_vao);
-    glBindBuffer(GL_ARRAY_BUFFER, s_otp_vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0,
-                    (GLsizeiptr)(info.vertex_count * OTP_VERTEX_FLOATS * (int)sizeof(float)),
-                    verts);
 
     /* Draw each orbit as a separate line strip.
      * Each planet gets points_per_orbit vertices. */
     int offset = 0;
     int pts = config.points_per_orbit;
-    for (int i = 0; i < info.orbit_count; i++) {
-        int count = (offset + pts <= info.vertex_count) ? pts
-                    : info.vertex_count - offset;
+    for (int i = 0; i < 8; i++) {
+        int count = (offset + pts <= s_otp_cached_count) ? pts
+                    : s_otp_cached_count - offset;
         if (count > 0) {
             glDrawArrays(GL_LINE_STRIP, offset, count);
         }

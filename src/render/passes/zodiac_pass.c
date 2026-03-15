@@ -41,6 +41,11 @@
 #define RING_MID_RADIUS   ((RING_INNER_RADIUS + RING_OUTER_RADIUS) / 2.0f)
 #define RING_SEGMENTS_PER_SIGN 8
 
+/* --- MAX constants for static ring buffers --- */
+/* With 8 segments/sign: vertex_count=194, index_count=576. 2x headroom. */
+#define ZP_MAX_RING_VERTS   512
+#define ZP_MAX_RING_INDICES 1536
+
 /* --- Module-static GL handles --- */
 
 /* Lit mesh shader (zodiac ring markers) */
@@ -82,6 +87,15 @@ static GLuint s_glyph_texture;
 static GLuint s_glyph_vao;
 static GLuint s_glyph_vbo;
 static GLuint s_glyph_ebo;
+
+/* --- Static scratch buffers (BSS, zero stack cost) --- */
+static float        s_zp_ring_positions[ZP_MAX_RING_VERTS * 3];
+static float        s_zp_ring_colors[ZP_MAX_RING_VERTS * 3];
+static unsigned int s_zp_ring_indices[ZP_MAX_RING_INDICES];
+static float        s_zp_aspect_verts[MAX_ASPECT_LINES * 14];
+static float        s_zp_cusp_verts[MAX_CUSP_LINES * 14];
+static float        s_zp_glyph_verts[12 * 4 * 8];
+static float        s_zp_ring_pos[8 * 3];
 
 /* --- Ring shader sources --- */
 
@@ -198,22 +212,19 @@ static int init_ring_and_mesh(void) {
     s_ring_loc_proj    = glGetUniformLocation(s_ring_program, "u_proj");
     s_ring_loc_opacity = glGetUniformLocation(s_ring_program, "u_opacity");
 
-    /* Generate ring mesh data on stack */
+    /* Generate ring mesh data */
     ring_mesh_info_t info = ring_mesh_size(RING_SEGMENTS_PER_SIGN);
-    float positions[info.vertex_count * 3];
-    float colors[info.vertex_count * 3];
-    unsigned int indices[info.index_count];
 
-    ring_generate_positions(positions, RING_INNER_RADIUS, RING_OUTER_RADIUS,
+    ring_generate_positions(s_zp_ring_positions, RING_INNER_RADIUS, RING_OUTER_RADIUS,
                             RING_SEGMENTS_PER_SIGN);
-    ring_generate_indices(indices, RING_SEGMENTS_PER_SIGN);
+    ring_generate_indices(s_zp_ring_indices, RING_SEGMENTS_PER_SIGN);
 
     for (int v = 0; v < info.vertex_count; v++) {
         int sign = ring_vertex_sign(v, RING_SEGMENTS_PER_SIGN);
         color_rgb_t c = color_zodiac_sign(sign);
-        colors[v * 3 + 0] = c.r;
-        colors[v * 3 + 1] = c.g;
-        colors[v * 3 + 2] = c.b;
+        s_zp_ring_colors[v * 3 + 0] = c.r;
+        s_zp_ring_colors[v * 3 + 1] = c.g;
+        s_zp_ring_colors[v * 3 + 2] = c.b;
     }
 
     s_ring_index_count = info.index_count;
@@ -225,7 +236,7 @@ static int init_ring_and_mesh(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_ring_vbo_pos);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(info.vertex_count * 3 * (int)sizeof(float)),
-                 positions, GL_STATIC_DRAW);
+                 s_zp_ring_positions, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
@@ -233,7 +244,7 @@ static int init_ring_and_mesh(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_ring_vbo_color);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(info.vertex_count * 3 * (int)sizeof(float)),
-                 colors, GL_STATIC_DRAW);
+                 s_zp_ring_colors, GL_STATIC_DRAW);
     glEnableVertexAttribArray(1);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
@@ -241,7 +252,7 @@ static int init_ring_and_mesh(void) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_ring_ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  (GLsizeiptr)(info.index_count * (int)sizeof(unsigned int)),
-                 indices, GL_STATIC_DRAW);
+                 s_zp_ring_indices, GL_STATIC_DRAW);
 
     glBindVertexArray(0);
     return 0;
@@ -418,24 +429,23 @@ static void draw_aspect_lines(const render_frame_t *frame, float opacity,
 
     if (alines.count == 0) return;
 
-    float line_verts[MAX_ASPECT_LINES * 14];
     for (int i = 0; i < alines.count; i++) {
         aspect_line_t *al = &alines.lines[i];
         int base = i * 14;
-        line_verts[base + 0]  = al->x1;
-        line_verts[base + 1]  = al->y1;
-        line_verts[base + 2]  = al->z1;
-        line_verts[base + 3]  = al->r;
-        line_verts[base + 4]  = al->g;
-        line_verts[base + 5]  = al->b;
-        line_verts[base + 6]  = al->opacity;
-        line_verts[base + 7]  = al->x2;
-        line_verts[base + 8]  = al->y2;
-        line_verts[base + 9]  = al->z2;
-        line_verts[base + 10] = al->r;
-        line_verts[base + 11] = al->g;
-        line_verts[base + 12] = al->b;
-        line_verts[base + 13] = al->opacity;
+        s_zp_aspect_verts[base + 0]  = al->x1;
+        s_zp_aspect_verts[base + 1]  = al->y1;
+        s_zp_aspect_verts[base + 2]  = al->z1;
+        s_zp_aspect_verts[base + 3]  = al->r;
+        s_zp_aspect_verts[base + 4]  = al->g;
+        s_zp_aspect_verts[base + 5]  = al->b;
+        s_zp_aspect_verts[base + 6]  = al->opacity;
+        s_zp_aspect_verts[base + 7]  = al->x2;
+        s_zp_aspect_verts[base + 8]  = al->y2;
+        s_zp_aspect_verts[base + 9]  = al->z2;
+        s_zp_aspect_verts[base + 10] = al->r;
+        s_zp_aspect_verts[base + 11] = al->g;
+        s_zp_aspect_verts[base + 12] = al->b;
+        s_zp_aspect_verts[base + 13] = al->opacity;
     }
 
     glUseProgram(s_line_program);
@@ -447,7 +457,7 @@ static void draw_aspect_lines(const render_frame_t *frame, float opacity,
     glBindBuffer(GL_ARRAY_BUFFER, s_line_vbo);
     glBufferSubData(GL_ARRAY_BUFFER, 0,
                     (GLsizeiptr)(alines.count * 14 * (int)sizeof(float)),
-                    line_verts);
+                    s_zp_aspect_verts);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -470,26 +480,25 @@ static void draw_cusp_lines(const render_frame_t *frame, float opacity) {
 
     if (cusps.count == 0) return;
 
-    float cusp_verts[MAX_CUSP_LINES * 14];
     for (int i = 0; i < cusps.count; i++) {
         cusp_line_t *cl = &cusps.lines[i];
         int base = i * 14;
         float alpha = cl->is_angular ? 0.8f : 0.35f;
         float gray = cl->is_angular ? 1.0f : 0.6f;
-        cusp_verts[base + 0]  = cl->x1;
-        cusp_verts[base + 1]  = cl->y1;
-        cusp_verts[base + 2]  = cl->z1;
-        cusp_verts[base + 3]  = gray;
-        cusp_verts[base + 4]  = gray;
-        cusp_verts[base + 5]  = gray;
-        cusp_verts[base + 6]  = alpha;
-        cusp_verts[base + 7]  = cl->x2;
-        cusp_verts[base + 8]  = cl->y2;
-        cusp_verts[base + 9]  = cl->z2;
-        cusp_verts[base + 10] = gray;
-        cusp_verts[base + 11] = gray;
-        cusp_verts[base + 12] = gray;
-        cusp_verts[base + 13] = alpha;
+        s_zp_cusp_verts[base + 0]  = cl->x1;
+        s_zp_cusp_verts[base + 1]  = cl->y1;
+        s_zp_cusp_verts[base + 2]  = cl->z1;
+        s_zp_cusp_verts[base + 3]  = gray;
+        s_zp_cusp_verts[base + 4]  = gray;
+        s_zp_cusp_verts[base + 5]  = gray;
+        s_zp_cusp_verts[base + 6]  = alpha;
+        s_zp_cusp_verts[base + 7]  = cl->x2;
+        s_zp_cusp_verts[base + 8]  = cl->y2;
+        s_zp_cusp_verts[base + 9]  = cl->z2;
+        s_zp_cusp_verts[base + 10] = gray;
+        s_zp_cusp_verts[base + 11] = gray;
+        s_zp_cusp_verts[base + 12] = gray;
+        s_zp_cusp_verts[base + 13] = alpha;
     }
 
     glUseProgram(s_line_program);
@@ -501,7 +510,7 @@ static void draw_cusp_lines(const render_frame_t *frame, float opacity) {
     glBindBuffer(GL_ARRAY_BUFFER, s_line_vbo);
     glBufferSubData(GL_ARRAY_BUFFER, 0,
                     (GLsizeiptr)(cusps.count * 14 * (int)sizeof(float)),
-                    cusp_verts);
+                    s_zp_cusp_verts);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -518,7 +527,6 @@ static void draw_sign_labels(const render_frame_t *frame, float opacity) {
     float gw = SIGN_LABEL_SIZE;
     float gh = gw * 1.5f;
 
-    float glyph_verts[12 * 4 * 8];
     for (int s = 0; s < 12; s++) {
         float angle_deg = (float)(s * 30 + 15);
         float angle_rad = angle_deg * (float)DEG_TO_RAD;
@@ -539,16 +547,16 @@ static void draw_sign_labels(const render_frame_t *frame, float opacity) {
         int base = s * 32;
         for (int v = 0; v < 4; v++) {
             int vi = base + v * 8;
-            glyph_verts[vi + 0] = quad.positions[v * 3 + 0];
-            glyph_verts[vi + 1] = quad.positions[v * 3 + 1];
-            glyph_verts[vi + 2] = quad.positions[v * 3 + 2];
+            s_zp_glyph_verts[vi + 0] = quad.positions[v * 3 + 0];
+            s_zp_glyph_verts[vi + 1] = quad.positions[v * 3 + 1];
+            s_zp_glyph_verts[vi + 2] = quad.positions[v * 3 + 2];
             float bu = quad.uvs[v * 2 + 0];
             float bv = quad.uvs[v * 2 + 1];
-            glyph_verts[vi + 3] = u0 + bu * (u1 - u0);
-            glyph_verts[vi + 4] = bv;
-            glyph_verts[vi + 5] = sc.r;
-            glyph_verts[vi + 6] = sc.g;
-            glyph_verts[vi + 7] = sc.b;
+            s_zp_glyph_verts[vi + 3] = u0 + bu * (u1 - u0);
+            s_zp_glyph_verts[vi + 4] = bv;
+            s_zp_glyph_verts[vi + 5] = sc.r;
+            s_zp_glyph_verts[vi + 6] = sc.g;
+            s_zp_glyph_verts[vi + 7] = sc.b;
         }
     }
 
@@ -564,7 +572,7 @@ static void draw_sign_labels(const render_frame_t *frame, float opacity) {
     glBindBuffer(GL_ARRAY_BUFFER, s_glyph_vbo);
     glBufferSubData(GL_ARRAY_BUFFER, 0,
                     (GLsizeiptr)(12 * 32 * (int)sizeof(float)),
-                    glyph_verts);
+                    s_zp_glyph_verts);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -589,7 +597,6 @@ void zodiac_pass_draw(const render_frame_t *frame) {
     double earth_lon = sys.positions[PLANET_EARTH].longitude;
     double sun_geo_lon = fmod(earth_lon + 180.0, 360.0);
     double geo_lons[8];
-    float ring_pos[8 * 3];
     for (int p = 0; p < 8; p++) {
         double gl;
         if (p == PLANET_EARTH)
@@ -600,13 +607,13 @@ void zodiac_pass_draw(const render_frame_t *frame) {
         }
         geo_lons[p] = gl;
         float lon_rad = (float)(gl * DEG_TO_RAD);
-        ring_pos[p * 3 + 0] = RING_MID_RADIUS * cosf(lon_rad);
-        ring_pos[p * 3 + 1] = 0.0f;
-        ring_pos[p * 3 + 2] = RING_MID_RADIUS * sinf(lon_rad);
+        s_zp_ring_pos[p * 3 + 0] = RING_MID_RADIUS * cosf(lon_rad);
+        s_zp_ring_pos[p * 3 + 1] = 0.0f;
+        s_zp_ring_pos[p * 3 + 2] = RING_MID_RADIUS * sinf(lon_rad);
     }
 
-    draw_planet_markers(frame, ring_opacity, ring_pos);
-    draw_aspect_lines(frame, ring_opacity, ring_pos, geo_lons);
+    draw_planet_markers(frame, ring_opacity, s_zp_ring_pos);
+    draw_aspect_lines(frame, ring_opacity, s_zp_ring_pos, geo_lons);
     draw_cusp_lines(frame, ring_opacity);
     draw_sign_labels(frame, ring_opacity);
 }

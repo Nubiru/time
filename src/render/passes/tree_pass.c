@@ -20,6 +20,9 @@ static GLint  s_trp_loc_projection;
 static GLuint s_trp_vao;
 static GLuint s_trp_vbo;
 
+/* --- Static scratch buffer (BSS, zero stack cost) --- */
+static float s_trp_scratch[TRP_MAX_VERTICES * TRP_VERTEX_FLOATS];
+
 int tree_pass_init(void) {
     s_trp_program = shader_create_program(
         trp_vert_source(), trp_frag_source());
@@ -62,8 +65,7 @@ void tree_pass_draw(const render_frame_t *frame) {
     for (int i = 0; i < 22; i++) active_paths[i] = 1;
 
     trp_config_t config = trp_default_config();
-    float verts[TRP_MAX_VERTICES * TRP_VERTEX_FLOATS];
-    int total_verts = trp_pack(active_nodes, active_paths, &config, verts);
+    int total_verts = trp_pack(active_nodes, active_paths, &config, s_trp_scratch);
 
     if (total_verts == 0) return;
 
@@ -88,7 +90,7 @@ void tree_pass_draw(const render_frame_t *frame) {
     glBindBuffer(GL_ARRAY_BUFFER, s_trp_vbo);
     glBufferSubData(GL_ARRAY_BUFFER, 0,
                     (GLsizeiptr)(total_verts * TRP_VERTEX_STRIDE),
-                    verts);
+                    s_trp_scratch);
 
     /* Node quads as triangles */
     if (info.node_verts > 0) {

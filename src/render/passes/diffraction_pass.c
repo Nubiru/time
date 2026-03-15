@@ -27,6 +27,12 @@ static GLuint s_diff_vao;
 static GLuint s_diff_vbo;
 static int    s_diff_vertex_count;
 
+/* --- Static scratch buffers (BSS, zero stack cost) --- */
+static float s_diff_positions[600 * 3];
+static float s_diff_colors[600 * 3];
+static float s_diff_magnitudes[600];
+static float s_diff_spike_verts[600 * DIFFRACTION_VERTS_PER_STAR * DIFFRACTION_VERTEX_FLOATS];
+
 int diffraction_pass_init(void) {
     /* Compile diffraction shaders */
     s_diff_program = shader_create_program(
@@ -39,32 +45,29 @@ int diffraction_pass_init(void) {
 
     /* Build star position/color/magnitude arrays from catalog */
     int count = star_catalog_count();
-    float positions[600 * 3];
-    float colors[600 * 3];
-    float magnitudes[600];
 
     int n = count < 600 ? count : 600;
     for (int i = 0; i < n; i++) {
         star_entry_t s = star_catalog_entry(i);
         star_xyz_t p = star_to_ecliptic_xyz(s.ra_hours, s.dec_deg, OBLIQUITY_DEG);
-        positions[i * 3 + 0] = p.x * SPHERE_RADIUS;
-        positions[i * 3 + 1] = p.y * SPHERE_RADIUS;
-        positions[i * 3 + 2] = p.z * SPHERE_RADIUS;
+        s_diff_positions[i * 3 + 0] = p.x * SPHERE_RADIUS;
+        s_diff_positions[i * 3 + 1] = p.y * SPHERE_RADIUS;
+        s_diff_positions[i * 3 + 2] = p.z * SPHERE_RADIUS;
 
         float r, g, b;
         star_bv_to_rgb(s.bv, &r, &g, &b);
-        colors[i * 3 + 0] = r;
-        colors[i * 3 + 1] = g;
-        colors[i * 3 + 2] = b;
+        s_diff_colors[i * 3 + 0] = r;
+        s_diff_colors[i * 3 + 1] = g;
+        s_diff_colors[i * 3 + 2] = b;
 
-        magnitudes[i] = s.magnitude;
+        s_diff_magnitudes[i] = s.magnitude;
     }
 
     /* Pack diffraction spike vertices */
     diffraction_config_t config = diffraction_default_config();
-    float spike_verts[600 * DIFFRACTION_VERTS_PER_STAR * DIFFRACTION_VERTEX_FLOATS];
     int spiked_stars = diffraction_pack(
-        positions, colors, magnitudes, n, &config, spike_verts);
+        s_diff_positions, s_diff_colors, s_diff_magnitudes, n, &config,
+        s_diff_spike_verts);
 
     diffraction_info_t info = diffraction_info(spiked_stars, config.spike_count);
     s_diff_vertex_count = info.vertex_count;
@@ -82,7 +85,7 @@ int diffraction_pass_init(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_diff_vbo);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(s_diff_vertex_count * DIFFRACTION_VERTEX_STRIDE),
-                 spike_verts, GL_STATIC_DRAW);
+                 s_diff_spike_verts, GL_STATIC_DRAW);
 
     /* Interleaved: position(vec3) + color(vec4) = 7 floats = 28 bytes */
     glEnableVertexAttribArray(0);

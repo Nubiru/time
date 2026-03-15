@@ -24,6 +24,10 @@ static GLuint s_mw_vbo;
 static GLuint s_mw_ebo;
 static int    s_mw_index_count;
 
+/* --- Static scratch buffers (BSS, zero stack cost) --- */
+static float          s_mw_init_verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
+static unsigned short s_mw_init_indices[MW_MAX_VERTICES * 6];
+
 int milkyway_pass_init(void) {
     /* Compile shaders */
     s_mw_program = shader_create_program(
@@ -39,9 +43,7 @@ int milkyway_pass_init(void) {
     /* Pack galaxy band mesh */
     mw_config_t config = mw_default_config();
 
-    float verts[MW_MAX_VERTICES * MW_VERTEX_FLOATS];
-    unsigned short indices[MW_MAX_VERTICES * 6];
-    mw_info_t info = mw_pack(config, verts, indices);
+    mw_info_t info = mw_pack(config, s_mw_init_verts, s_mw_init_indices);
 
     s_mw_index_count = info.index_count;
     if (s_mw_index_count == 0) {
@@ -57,13 +59,13 @@ int milkyway_pass_init(void) {
     glBindBuffer(GL_ARRAY_BUFFER, s_mw_vbo);
     glBufferData(GL_ARRAY_BUFFER,
                  (GLsizeiptr)(info.vertex_count * MW_VERTEX_FLOATS * (int)sizeof(float)),
-                 verts, GL_STATIC_DRAW);
+                 s_mw_init_verts, GL_STATIC_DRAW);
 
     glGenBuffers(1, &s_mw_ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_mw_ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
                  (GLsizeiptr)(info.index_count * (int)sizeof(unsigned short)),
-                 indices, GL_STATIC_DRAW);
+                 s_mw_init_indices, GL_STATIC_DRAW);
 
     /* Interleaved: pos(3) + galcoord(2) + brightness(1) = 6 floats = 24 bytes */
     int stride = MW_VERTEX_FLOATS * (int)sizeof(float);
