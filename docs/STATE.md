@@ -35,13 +35,13 @@ This document tracks what is **pure** (stateless) and what is **stateful** in th
 
 ---
 
-## Pure Modules by Domain (201 total)
+## Pure Modules by Domain (202 total)
 
 ### Math (13 modules)
 vec3, mat4, julian, kepler, sidereal, ecliptic, easing, arc_geometry, bezier, color, projection, sacred_geometry, wheel_layout
 
-### Render (55 pure + 19 stateful)
-Pure: aspect_lines, atmo_ring, billboard, billboard_shader, bodygraph_pack, camera, camera_scale, card_pack, catalog_ingest, color_palette, color_theory, constellation, constellation_bounds, cusp_lines, decan_stars, deep_sky, deep_sky_pack, diffraction, earth_atmosphere, earth_globe, earth_pack, eclipse_geometry, font_atlas, galaxy_geometry, glyph_batch, hexagram_geometry, horizon_geometry, lens_flare, megalithic, mesh_shader, milkyway_pack, moon_pack, noise_shader, orbit_trail_pack, planet_pack, planet_surface_pack, post_process, render_frame (header-only), render_layers, ring_data, ring_geometry, saturn_ring_pack, seasonal_lighting, shader_builder, shader_constants, star_catalog, star_catalog_ext, star_colors, star_field, sun_shader, tarot_visual, text_render, tree_pack, weather_overlay, zodiac_pack
+### Render (56 pure + 19 stateful)
+Pure: aspect_lines, atmo_ring, billboard, billboard_shader, bodygraph_pack, camera, camera_scale, card_pack, catalog_ingest, click_target, color_palette, color_theory, constellation, constellation_bounds, cusp_lines, decan_stars, deep_sky, deep_sky_pack, diffraction, earth_atmosphere, earth_globe, earth_pack, eclipse_geometry, font_atlas, galaxy_geometry, glyph_batch, hexagram_geometry, horizon_geometry, lens_flare, megalithic, mesh_shader, milkyway_pack, moon_pack, noise_shader, orbit_trail_pack, planet_pack, planet_surface_pack, post_process, render_frame (header-only), render_layers, ring_data, ring_geometry, saturn_ring_pack, seasonal_lighting, shader_builder, shader_constants, star_catalog, star_catalog_ext, star_colors, star_field, sun_shader, tarot_visual, text_render, tree_pack, weather_overlay, zodiac_pack
 Stateful infra: gl_init, shader, mesh (3) + 16 render passes
 
 ### Astronomy (10)

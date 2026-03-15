@@ -410,6 +410,7 @@ else()
     add_library(time_billboard_shader OBJECT src/render/billboard_shader.c)
     add_library(time_shader_constants OBJECT src/render/shader_constants.c)
     add_library(time_lens_flare OBJECT src/render/lens_flare.c)
+    add_library(time_click_target OBJECT src/render/click_target.c)
 
     # Systems — Astronomy
     add_library(time_orbit           OBJECT src/systems/astronomy/orbit.c)
@@ -671,6 +672,7 @@ else()
     time_add_test(NAME test_billboard_shader TEST tests/render/test_billboard_shader.c DEPS billboard_shader)
     time_add_test(NAME test_shader_constants TEST tests/render/test_shader_constants.c DEPS shader_constants)
     time_add_test(NAME test_lens_flare TEST tests/render/test_lens_flare.c DEPS lens_flare)
+    time_add_test(NAME test_click_target TEST tests/render/test_click_target.c DEPS click_target)
 
     # Core tests
     time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
