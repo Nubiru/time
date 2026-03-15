@@ -254,6 +254,8 @@ time_add_test(NAME test_calendar_convert TEST tests/systems/unified/test_calenda
     DEPS calendar_convert julian tzolkin haab cr_cycle chinese iching hebrew hijri persian coptic ethiopian egyptian french_republican japanese bahai korean_calendar thai_calendar tamil_calendar myanmar zoroastrian celtic_tree)
 time_add_test(NAME test_lunar_harmonics TEST tests/systems/unified/test_lunar_harmonics.c
     DEPS lunar_harmonics lunar julian)
+time_add_test(NAME test_user_context TEST tests/systems/unified/test_user_context.c
+    DEPS user_context birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler wisdom wisdom_engine fun_facts convergence_detect tzolkin_board)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

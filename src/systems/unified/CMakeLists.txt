@@ -26,6 +26,7 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/festival_detector.c
     ${CMAKE_CURRENT_SOURCE_DIR}/calendar_convert.c
     ${CMAKE_CURRENT_SOURCE_DIR}/lunar_harmonics.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/user_context.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -56,4 +57,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_festival_detector OBJECT festival_detector.c)
     add_library(time_calendar_convert  OBJECT calendar_convert.c)
     add_library(time_lunar_harmonics   OBJECT lunar_harmonics.c)
+    add_library(time_user_context     OBJECT user_context.c)
 endif()
