@@ -217,7 +217,8 @@ time_add_test(NAME test_interest_profile TEST tests/systems/earth/test_interest_
 time_add_test(NAME test_tidal           TEST tests/systems/earth/test_tidal.c           DEPS tidal)
 time_add_test(NAME test_wind_patterns   TEST tests/systems/earth/test_wind_patterns.c   DEPS wind_patterns)
 time_add_test(NAME test_tide_predict    TEST tests/systems/earth/test_tide_predict.c    DEPS tide_predict tidal surf_spots lunar julian)
-time_add_test(NAME test_location_alerts TEST tests/systems/earth/test_location_alerts.c DEPS location_alerts tide_predict tidal surf_spots ski_resorts snow_season daylight solar_events solar_radiation prayer_times storm_data convergence_detect julian lunar tzolkin tzolkin_board iching chinese hebrew hijri)
+time_add_test(NAME test_location_alerts TEST tests/systems/earth/test_location_alerts.c DEPS location_alerts tide_predict tidal surf_spots ski_resorts snow_season daylight solar_events solar_radiation prayer_times storm_data convergence_detect julian lunar tzolkin tzolkin_board iching chinese hebrew hijri buddhist persian coptic wheel_of_year bahai)
+time_add_test(NAME test_privacy_framework TEST tests/systems/earth/test_privacy_framework.c DEPS privacy_framework)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
@@ -228,7 +229,7 @@ time_add_test(NAME test_cycle_analysis  TEST tests/systems/test_cycle_analysis.c
 time_add_test(NAME test_calendar_epoch  TEST tests/systems/unified/test_calendar_epoch.c  DEPS calendar_epoch)
 time_add_test(NAME test_calendar_politics TEST tests/systems/unified/test_calendar_politics.c DEPS calendar_politics)
 time_add_test(NAME test_convergence     TEST tests/systems/unified/test_convergence.c     DEPS convergence)
-time_add_test(NAME test_convergence_detect TEST tests/systems/unified/test_convergence_detect.c DEPS convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri)
+time_add_test(NAME test_convergence_detect TEST tests/systems/unified/test_convergence_detect.c DEPS convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai)
 time_add_test(NAME test_earth_drama     TEST tests/systems/unified/test_earth_drama.c     DEPS earth_drama climate_history fossil_milestones geo_time)
 time_add_test(NAME test_frequency       TEST tests/systems/unified/test_frequency.c       DEPS frequency)
 time_add_test(NAME test_precession_detect TEST tests/systems/unified/test_precession_detect.c DEPS precession_detect)
@@ -255,7 +256,7 @@ time_add_test(NAME test_calendar_convert TEST tests/systems/unified/test_calenda
 time_add_test(NAME test_lunar_harmonics TEST tests/systems/unified/test_lunar_harmonics.c
     DEPS lunar_harmonics lunar julian)
 time_add_test(NAME test_user_context TEST tests/systems/unified/test_user_context.c
-    DEPS user_context birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler wisdom wisdom_engine fun_facts convergence_detect tzolkin_board)
+    DEPS user_context birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler wisdom wisdom_engine fun_facts convergence_detect tzolkin_board persian coptic wheel_of_year bahai)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

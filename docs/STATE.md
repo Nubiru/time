@@ -35,7 +35,7 @@ This document tracks what is **pure** (stateless) and what is **stateful** in th
 
 ---
 
-## Pure Modules by Domain (210 total)
+## Pure Modules by Domain (211 total)
 
 ### Math (13 modules)
 vec3, mat4, julian, kepler, sidereal, ecliptic, easing, arc_geometry, bezier, color, projection, sacred_geometry, wheel_layout
@@ -50,8 +50,8 @@ orbit, planets, lunar, precession, solar_events, cosmic_time, moon_data, moon_no
 ### Astrology (7)
 zodiac, aspects, observer, houses, dignity, planetary_hours, wheel_layout
 
-### Earth (13)
-tidal, tide_predict, surf_spots, daylight, seasons, snow_season, ski_resorts, solar_radiation, storm_data, wind_patterns, biorhythm, interest_profile, location_alerts
+### Earth (14)
+tidal, tide_predict, surf_spots, daylight, seasons, snow_season, ski_resorts, solar_radiation, storm_data, wind_patterns, biorhythm, interest_profile, location_alerts, privacy_framework
 
 ### Geology (6)
 geo_time, radiometric, thermo, climate_history, fossil_milestones, tectonic

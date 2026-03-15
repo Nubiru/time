@@ -12,6 +12,7 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/wind_patterns.c
     ${CMAKE_CURRENT_SOURCE_DIR}/tide_predict.c
     ${CMAKE_CURRENT_SOURCE_DIR}/location_alerts.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/privacy_framework.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -27,5 +28,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_tidal            OBJECT tidal.c)
     add_library(time_wind_patterns    OBJECT wind_patterns.c)
     add_library(time_tide_predict     OBJECT tide_predict.c)
-    add_library(time_location_alerts  OBJECT location_alerts.c)
+    add_library(time_location_alerts     OBJECT location_alerts.c)
+    add_library(time_privacy_framework  OBJECT privacy_framework.c)
 endif()
