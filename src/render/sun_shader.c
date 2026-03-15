@@ -14,6 +14,7 @@
 
 #include "sun_shader.h"
 #include "noise_shader.h"
+#include "shader_builder.h"
 
 /* --- Vertex shader: camera-facing billboard --- */
 static const char *s_vert_source =
@@ -142,24 +143,18 @@ static const char *s_frag_body =
     "}\n";
 
 /* Concatenated sources: preamble + noise lib + body */
-static char s_full_frag[8192];
+static shader_src_t s_frag_src;
 static int s_frag_built = 0;
 
 static const char *build_frag_source(void) {
     if (!s_frag_built) {
-        /* Manual string concatenation — no snprintf dependency for portability */
-        char *dst = s_full_frag;
-        const char *parts[] = { s_frag_preamble, noise_shader_source(), s_frag_body };
-        for (int i = 0; i < 3; i++) {
-            const char *src = parts[i];
-            while (*src && (dst - s_full_frag) < 8190) {
-                *dst++ = *src++;
-            }
-        }
-        *dst = '\0';
+        shader_src_init(&s_frag_src);
+        shader_src_append(&s_frag_src, s_frag_preamble);
+        shader_src_append(&s_frag_src, noise_shader_source());
+        shader_src_append(&s_frag_src, s_frag_body);
         s_frag_built = 1;
     }
-    return s_full_frag;
+    return shader_src_get(&s_frag_src);
 }
 
 const char *sun_shader_vert_source(void) { return s_vert_source; }

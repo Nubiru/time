@@ -296,6 +296,7 @@ set(UI_SOURCES
     src/ui/rtl_layout.c
     src/ui/scroll_layers.c
     src/ui/help_overlay.c
+    src/ui/ui_state.c
 )
 
 set(ALL_SOURCES
@@ -593,6 +594,7 @@ else()
     add_library(time_rtl_layout      OBJECT src/ui/rtl_layout.c)
     add_library(time_scroll_layers   OBJECT src/ui/scroll_layers.c)
     add_library(time_help_overlay   OBJECT src/ui/help_overlay.c)
+    add_library(time_ui_state       OBJECT src/ui/ui_state.c)
 
     # ---------------------------------------------------------------
     # Tests — 116 suites, Unity framework, per-test dependencies
@@ -843,6 +845,7 @@ else()
     time_add_test(NAME test_rtl_layout     TEST tests/ui/test_rtl_layout.c      DEPS rtl_layout)
     time_add_test(NAME test_scroll_layers  TEST tests/ui/test_scroll_layers.c   DEPS scroll_layers)
     time_add_test(NAME test_help_overlay  TEST tests/ui/test_help_overlay.c   DEPS help_overlay)
+    time_add_test(NAME test_ui_state     TEST tests/ui/test_ui_state.c       DEPS ui_state)
 
     # Cross-system validation test
     time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validation.c
