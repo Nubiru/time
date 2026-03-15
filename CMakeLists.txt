@@ -300,6 +300,7 @@ set(UI_SOURCES
     src/ui/layer_panel.c
     src/ui/command_palette.c
     src/ui/time_control.c
+    src/ui/toast_message.c
 )
 
 set(ALL_SOURCES
@@ -603,6 +604,7 @@ else()
     add_library(time_layer_panel    OBJECT src/ui/layer_panel.c)
     add_library(time_command_palette OBJECT src/ui/command_palette.c)
     add_library(time_time_control   OBJECT src/ui/time_control.c)
+    add_library(time_toast_message  OBJECT src/ui/toast_message.c)
 
     # ---------------------------------------------------------------
     # Tests — 116 suites, Unity framework, per-test dependencies
@@ -862,6 +864,7 @@ else()
     time_add_test(NAME test_layer_panel TEST tests/ui/test_layer_panel.c   DEPS layer_panel)
     time_add_test(NAME test_command_palette TEST tests/ui/test_command_palette.c DEPS command_palette)
     time_add_test(NAME test_time_control   TEST tests/ui/test_time_control.c   DEPS time_control)
+    time_add_test(NAME test_toast_message TEST tests/ui/test_toast_message.c  DEPS toast_message)
 
     # Cross-system validation test
     time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validation.c
