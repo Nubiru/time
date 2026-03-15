@@ -13,6 +13,11 @@
 #include "../chinese/chinese.h"
 #include "../hebrew/hebrew.h"
 #include "../islamic/hijri.h"
+#include "../buddhist/buddhist.h"
+#include "../persian/persian.h"
+#include "../coptic/coptic.h"
+#include "../celtic/wheel_of_year.h"
+#include "../bahai/bahai.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -165,6 +170,53 @@ static int cd_is_significant(cd_system_t sys, double jd)
         return 0;
     }
 
+    case CD_SYS_BUDDHIST: {
+        /* Uposatha: quarter moon observance days */
+        uposatha_t u = buddhist_uposatha(jd);
+        if (u.type != UPOSATHA_NONE)
+            return 1;
+        return 0;
+    }
+
+    case CD_SYS_PERSIAN: {
+        persian_date_t pd = persian_from_jd(jd);
+        /* Month boundary (day 1) */
+        if (pd.day == 1) return 1;
+        /* Nowruz: 1 Farvardin (month 1, day 1) already covered above.
+         * Sizdah Bedar: 13 Farvardin */
+        if (pd.month == 1 && pd.day == 13) return 1;
+        return 0;
+    }
+
+    case CD_SYS_COPTIC: {
+        coptic_date_t cd = coptic_from_jd(jd);
+        /* Month boundary (day 1) */
+        if (cd.day == 1) return 1;
+        /* Feast day detection */
+        coptic_feast_t feast = coptic_feast(cd);
+        if (feast != COPTIC_FEAST_NONE) return 1;
+        return 0;
+    }
+
+    case CD_SYS_CELTIC: {
+        /* Check if sun longitude is within 1.5 degrees of any sabbat.
+         * 1.5 deg ~ 1.5 day of solar motion. */
+        double sun_lon = approx_sun_longitude(jd);
+        if (wheel_is_festival_active(sun_lon, 1.5))
+            return 1;
+        return 0;
+    }
+
+    case CD_SYS_BAHAI: {
+        bahai_date_t bd = bahai_from_jd(jd);
+        /* Feast boundary: day 1 of any 19-day month */
+        if (bd.month >= 1 && bd.day == 1) return 1;
+        /* Holy day */
+        bahai_holy_day_t holy = bahai_holy_day(bd);
+        if (holy != BAHAI_HOLY_NONE) return 1;
+        return 0;
+    }
+
     default:
         return 0;
     }
@@ -185,6 +237,11 @@ const char *cd_system_name(cd_system_t sys)
     case CD_SYS_HEBREW:    return "Hebrew";
     case CD_SYS_ISLAMIC:   return "Islamic";
     case CD_SYS_HINDU:     return "Hindu";
+    case CD_SYS_BUDDHIST:  return "Buddhist";
+    case CD_SYS_PERSIAN:   return "Persian";
+    case CD_SYS_COPTIC:    return "Coptic";
+    case CD_SYS_CELTIC:    return "Celtic";
+    case CD_SYS_BAHAI:     return "Bahai";
     default:               return "?";
     }
 }

@@ -13,7 +13,7 @@
 #define TIME_CONVERGENCE_DETECT_H
 
 #define CD_MAX_CONVERGENCES 32
-#define CD_MAX_SYSTEMS 8
+#define CD_MAX_SYSTEMS 16
 
 typedef enum {
     CD_SYS_ASTRONOMY = 0,   /* lunar phases, solstice/equinox */
@@ -24,6 +24,11 @@ typedef enum {
     CD_SYS_HEBREW,          /* new month (day 1), Rosh Hashanah month */
     CD_SYS_ISLAMIC,         /* new month (day 1), Ramadan */
     CD_SYS_HINDU,           /* tithi transitions, sacred tithis */
+    CD_SYS_BUDDHIST,        /* Uposatha (quarter moon days), Vesak */
+    CD_SYS_PERSIAN,         /* Nowruz, month boundaries */
+    CD_SYS_COPTIC,          /* Coptic new year, month boundaries */
+    CD_SYS_CELTIC,          /* 8 Sabbats (solstice/equinox/cross-quarter) */
+    CD_SYS_BAHAI,           /* Naw-Ruz, 19-day Feast boundaries */
     CD_SYS_COUNT
 } cd_system_t;
 
