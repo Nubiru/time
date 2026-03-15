@@ -405,6 +405,9 @@ else()
     add_library(time_weather_overlay OBJECT src/render/weather_overlay.c)
     add_library(time_post_process OBJECT src/render/post_process.c)
     add_library(time_seasonal_lighting OBJECT src/render/seasonal_lighting.c)
+    add_library(time_shader_builder OBJECT src/render/shader_builder.c)
+    add_library(time_billboard_shader OBJECT src/render/billboard_shader.c)
+    add_library(time_shader_constants OBJECT src/render/shader_constants.c)
 
     # Systems — Astronomy
     add_library(time_orbit           OBJECT src/systems/astronomy/orbit.c)
@@ -521,6 +524,7 @@ else()
     add_library(time_birth_profile  OBJECT src/systems/unified/birth_profile.c)
     add_library(time_festival_detector OBJECT src/systems/unified/festival_detector.c)
     add_library(time_calendar_convert OBJECT src/systems/unified/calendar_convert.c)
+    add_library(time_lunar_harmonics OBJECT src/systems/unified/lunar_harmonics.c)
 
     # Systems — Celtic
     add_library(time_wheel_of_year   OBJECT src/systems/celtic/wheel_of_year.c)
@@ -629,7 +633,7 @@ else()
     time_add_test(NAME test_star_colors     TEST tests/render/test_star_colors.c     DEPS star_colors)
     time_add_test(NAME test_deep_sky        TEST tests/render/test_deep_sky.c        DEPS deep_sky)
     time_add_test(NAME test_deep_sky_pack  TEST tests/render/test_deep_sky_pack.c  DEPS deep_sky_pack deep_sky)
-    time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack noise_shader)
+    time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack noise_shader shader_builder)
     time_add_test(NAME test_bodygraph_pack TEST tests/render/test_bodygraph_pack.c DEPS bodygraph_pack bodygraph)
     time_add_test(NAME test_earth_pack    TEST tests/render/test_earth_pack.c    DEPS earth_pack earth_globe earth_atmosphere)
     time_add_test(NAME test_tree_pack    TEST tests/render/test_tree_pack.c    DEPS tree_pack tree_geometry sefirot)
@@ -650,7 +654,7 @@ else()
     time_add_test(NAME test_moon_pack      TEST tests/render/test_moon_pack.c       DEPS moon_pack moon_data kepler planets orbit)
     time_add_test(NAME test_orbit_trail_pack TEST tests/render/test_orbit_trail_pack.c DEPS orbit_trail_pack orbit kepler planet_data)
     time_add_test(NAME test_planet_pack    TEST tests/render/test_planet_pack.c     DEPS planet_pack planets orbit kepler planet_data atmo_ring)
-    time_add_test(NAME test_planet_surface_pack TEST tests/render/test_planet_surface_pack.c DEPS planet_surface_pack orbit kepler planet_data noise_shader)
+    time_add_test(NAME test_planet_surface_pack TEST tests/render/test_planet_surface_pack.c DEPS planet_surface_pack orbit kepler planet_data noise_shader shader_builder)
     time_add_test(NAME test_saturn_ring_pack TEST tests/render/test_saturn_ring_pack.c DEPS saturn_ring_pack)
     time_add_test(NAME test_star_field     TEST tests/render/test_star_field.c      DEPS star_field star_catalog star_catalog_ext constellation star_colors)
     time_add_test(NAME test_text_render    TEST tests/render/test_text_render.c     DEPS text_render)
@@ -660,6 +664,9 @@ else()
     time_add_test(NAME test_weather_overlay TEST tests/render/test_weather_overlay.c DEPS weather_overlay wind_patterns storm_data)
     time_add_test(NAME test_post_process TEST tests/render/test_post_process.c DEPS post_process noise_shader)
     time_add_test(NAME test_seasonal_lighting TEST tests/render/test_seasonal_lighting.c DEPS seasonal_lighting)
+    time_add_test(NAME test_shader_builder TEST tests/render/test_shader_builder.c DEPS shader_builder)
+    time_add_test(NAME test_billboard_shader TEST tests/render/test_billboard_shader.c DEPS billboard_shader)
+    time_add_test(NAME test_shader_constants TEST tests/render/test_shader_constants.c DEPS shader_constants)
 
     # Core tests
     time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
@@ -804,6 +811,8 @@ else()
         DEPS festival_detector korean_calendar hebrew sabbatical hijri buddhist lunar wheel_of_year thai_calendar tamil_calendar myanmar persian zoroastrian)
     time_add_test(NAME test_calendar_convert TEST tests/systems/unified/test_calendar_convert.c
         DEPS calendar_convert julian tzolkin haab cr_cycle chinese iching hebrew hijri persian coptic ethiopian egyptian french_republican japanese bahai korean_calendar thai_calendar tamil_calendar myanmar zoroastrian celtic_tree)
+    time_add_test(NAME test_lunar_harmonics TEST tests/systems/unified/test_lunar_harmonics.c
+        DEPS lunar_harmonics lunar julian)
 
     # UI tests
     time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

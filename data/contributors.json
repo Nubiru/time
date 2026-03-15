@@ -1,15 +1,19 @@
 {
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
-    "last_updated": "2026-03-08",
-    "total_contributors": 143
+    "last_updated": "2026-03-14",
+    "total_contributors": 165
   },
   "contributors": [
     {
       "id": "jean-meeus",
       "name": "Jean Meeus",
       "born": 1928,
-      "category": ["astronomer", "mathematician", "author"],
+      "category": [
+        "astronomer",
+        "mathematician",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Astronomical Algorithms",
@@ -18,19 +22,71 @@
         }
       ],
       "references": [
-        { "file": "src/math/julian.c", "line": 4, "note": "Chapter 7: Julian Day algorithm" },
-        { "file": "src/math/kepler.c", "line": 6, "note": "Chapter 30: Kepler's equation" },
-        { "file": "src/math/sidereal.c", "line": 4, "note": "Chapter 12: GMST/GAST (Eq. 12.3, 12.4)" },
-        { "file": "src/math/sidereal.c", "line": 42, "note": "Chapter 22: nutation, low-accuracy" },
-        { "file": "src/math/sidereal.c", "line": 67, "note": "Eq. 22.2: mean obliquity" },
-        { "file": "src/math/ecliptic.h", "line": 15, "note": "Chapter 22: obliquity formula" },
-        { "file": "src/math/ecliptic.c", "line": 34, "note": "Eq. 22.2: mean obliquity of ecliptic" },
-        { "file": "src/systems/astronomy/solar_events.c", "line": 19, "note": "Simplified Meeus/NOAA solar position" },
-        { "file": "src/systems/astronomy/moon_nodes.c", "line": 18, "note": "Chapter 47: mean longitude of ascending node" },
-        { "file": "src/ui/time_hud.c", "line": 13, "note": "Sidereal rate reference" },
-        { "file": "src/systems/unified/calendar_epoch.c", "line": 22, "note": "Chapter 8: Computus (Anonymous Gregorian Easter algorithm)" },
-        { "file": "src/render/decan_stars.c", "line": 243, "note": "Chapter 14: Ascendant formula for decan rising computation" },
-        { "file": "src/render/eclipse_geometry.c", "line": 121, "note": "Simplified Earth-Sun distance formula for eclipse geometry" }
+        {
+          "file": "src/math/julian.c",
+          "line": 4,
+          "note": "Chapter 7: Julian Day algorithm"
+        },
+        {
+          "file": "src/math/kepler.c",
+          "line": 6,
+          "note": "Chapter 30: Kepler's equation"
+        },
+        {
+          "file": "src/math/sidereal.c",
+          "line": 4,
+          "note": "Chapter 12: GMST/GAST (Eq. 12.3, 12.4)"
+        },
+        {
+          "file": "src/math/sidereal.c",
+          "line": 42,
+          "note": "Chapter 22: nutation, low-accuracy"
+        },
+        {
+          "file": "src/math/sidereal.c",
+          "line": 67,
+          "note": "Eq. 22.2: mean obliquity"
+        },
+        {
+          "file": "src/math/ecliptic.h",
+          "line": 15,
+          "note": "Chapter 22: obliquity formula"
+        },
+        {
+          "file": "src/math/ecliptic.c",
+          "line": 34,
+          "note": "Eq. 22.2: mean obliquity of ecliptic"
+        },
+        {
+          "file": "src/systems/astronomy/solar_events.c",
+          "line": 19,
+          "note": "Simplified Meeus/NOAA solar position"
+        },
+        {
+          "file": "src/systems/astronomy/moon_nodes.c",
+          "line": 18,
+          "note": "Chapter 47: mean longitude of ascending node"
+        },
+        {
+          "file": "src/ui/time_hud.c",
+          "line": 13,
+          "note": "Sidereal rate reference"
+        },
+        {
+          "file": "src/systems/unified/calendar_epoch.c",
+          "line": 22,
+          "note": "Chapter 8: Computus (Anonymous Gregorian Easter algorithm)"
+        },
+        {
+          "file": "src/render/decan_stars.c",
+          "line": 243,
+          "note": "Chapter 14: Ascendant formula for decan rising computation"
+        },
+        {
+          "file": "src/render/eclipse_geometry.c",
+          "line": 121,
+          "note": "Simplified Earth-Sun distance formula for eclipse geometry"
+        }
       ]
     },
     {
@@ -38,7 +94,11 @@
       "name": "Jose Arguelles",
       "born": 1939,
       "died": 2011,
-      "category": ["visionary", "philosopher", "author"],
+      "category": [
+        "visionary",
+        "philosopher",
+        "author"
+      ],
       "contributions": [
         {
           "work": "The Mayan Factor",
@@ -57,19 +117,71 @@
         }
       ],
       "references": [
-        { "file": "src/systems/tzolkin/tzolkin.h", "line": 4, "note": "Dreamspell/Arguelles system types" },
-        { "file": "src/systems/tzolkin/tzolkin.h", "line": 12, "note": "GMT correlation 584283 (Dreamspell count)" },
-        { "file": "src/systems/tzolkin/tzolkin.c", "line": 5, "note": "Dreamspell day reference value" },
-        { "file": "src/systems/tzolkin/tzolkin.c", "line": 47, "note": "Dreamspell Feb 29 rule (0.0 Hunab Ku)" },
-        { "file": "src/ui/tzolkin_card.c", "line": 4, "note": "Dreamspell color families" },
-        { "file": "src/ui/tzolkin_card.c", "line": 18, "note": "Tone keywords (Arguelles/Dreamspell)" },
-        { "file": "src/ui/tzolkin_card.c", "line": 42, "note": "Wavespell initiating seals" },
-        { "file": "src/ui/tzolkin_card.c", "line": 52, "note": "Oracle relationships (Dreamspell)" },
-        { "file": "src/systems/tzolkin/haab.c", "line": 9, "note": "GMT correlation 584283 for Haab" },
-        { "file": "docs/DECISIONS.md", "line": 44, "note": "ADR-002: Arguelles-only decision" },
-        { "file": "src/systems/tzolkin/tzolkin_board.c", "line": 17, "note": "Loom of the Maya GAP pattern (Dreamspell)" },
-        { "file": "src/systems/tzolkin/tzolkin_board.h", "line": 1, "note": "260-kin board data structure (Dreamspell)" },
-        { "file": "src/systems/tzolkin/cr_cycle.c", "line": 19, "note": "Calendar Round cycle, GMT correlation 584283" }
+        {
+          "file": "src/systems/tzolkin/tzolkin.h",
+          "line": 4,
+          "note": "Dreamspell/Arguelles system types"
+        },
+        {
+          "file": "src/systems/tzolkin/tzolkin.h",
+          "line": 12,
+          "note": "GMT correlation 584283 (Dreamspell count)"
+        },
+        {
+          "file": "src/systems/tzolkin/tzolkin.c",
+          "line": 5,
+          "note": "Dreamspell day reference value"
+        },
+        {
+          "file": "src/systems/tzolkin/tzolkin.c",
+          "line": 47,
+          "note": "Dreamspell Feb 29 rule (0.0 Hunab Ku)"
+        },
+        {
+          "file": "src/ui/tzolkin_card.c",
+          "line": 4,
+          "note": "Dreamspell color families"
+        },
+        {
+          "file": "src/ui/tzolkin_card.c",
+          "line": 18,
+          "note": "Tone keywords (Arguelles/Dreamspell)"
+        },
+        {
+          "file": "src/ui/tzolkin_card.c",
+          "line": 42,
+          "note": "Wavespell initiating seals"
+        },
+        {
+          "file": "src/ui/tzolkin_card.c",
+          "line": 52,
+          "note": "Oracle relationships (Dreamspell)"
+        },
+        {
+          "file": "src/systems/tzolkin/haab.c",
+          "line": 9,
+          "note": "GMT correlation 584283 for Haab"
+        },
+        {
+          "file": "docs/DECISIONS.md",
+          "line": 44,
+          "note": "ADR-002: Arguelles-only decision"
+        },
+        {
+          "file": "src/systems/tzolkin/tzolkin_board.c",
+          "line": 17,
+          "note": "Loom of the Maya GAP pattern (Dreamspell)"
+        },
+        {
+          "file": "src/systems/tzolkin/tzolkin_board.h",
+          "line": 1,
+          "note": "260-kin board data structure (Dreamspell)"
+        },
+        {
+          "file": "src/systems/tzolkin/cr_cycle.c",
+          "line": 19,
+          "note": "Calendar Round cycle, GMT correlation 584283"
+        }
       ]
     },
     {
@@ -77,7 +189,10 @@
       "name": "Johannes Kepler",
       "born": 1571,
       "died": 1630,
-      "category": ["astronomer", "mathematician"],
+      "category": [
+        "astronomer",
+        "mathematician"
+      ],
       "contributions": [
         {
           "work": "Astronomia Nova / Harmonices Mundi",
@@ -86,9 +201,21 @@
         }
       ],
       "references": [
-        { "file": "src/math/kepler.h", "line": 4, "note": "Kepler's equation solver declaration" },
-        { "file": "src/math/kepler.c", "line": 7, "note": "Kepler's equation implementation" },
-        { "file": "src/systems/astronomy/orbit.c", "line": 194, "note": "Kepler solve in orbital position" }
+        {
+          "file": "src/math/kepler.h",
+          "line": 4,
+          "note": "Kepler's equation solver declaration"
+        },
+        {
+          "file": "src/math/kepler.c",
+          "line": 7,
+          "note": "Kepler's equation implementation"
+        },
+        {
+          "file": "src/systems/astronomy/orbit.c",
+          "line": 194,
+          "note": "Kepler solve in orbital position"
+        }
       ]
     },
     {
@@ -96,7 +223,10 @@
       "name": "Isaac Newton",
       "born": 1643,
       "died": 1727,
-      "category": ["mathematician", "physicist"],
+      "category": [
+        "mathematician",
+        "physicist"
+      ],
       "contributions": [
         {
           "work": "Philosophiae Naturalis Principia Mathematica",
@@ -105,8 +235,16 @@
         }
       ],
       "references": [
-        { "file": "src/math/kepler.h", "line": 7, "note": "Newton-Raphson iteration method" },
-        { "file": "src/math/kepler.c", "line": 7, "note": "Newton-Raphson implementation for Kepler's equation" }
+        {
+          "file": "src/math/kepler.h",
+          "line": 7,
+          "note": "Newton-Raphson iteration method"
+        },
+        {
+          "file": "src/math/kepler.c",
+          "line": 7,
+          "note": "Newton-Raphson implementation for Kepler's equation"
+        }
       ]
     },
     {
@@ -114,7 +252,10 @@
       "name": "Claudius Ptolemy",
       "born": 100,
       "died": 170,
-      "category": ["astronomer", "mathematician"],
+      "category": [
+        "astronomer",
+        "mathematician"
+      ],
       "contributions": [
         {
           "work": "Tetrabiblos",
@@ -123,9 +264,21 @@
         }
       ],
       "references": [
-        { "file": "src/systems/astrology/aspects.h", "line": 4, "note": "Ptolemaic aspect types" },
-        { "file": "src/systems/astrology/aspects.c", "line": 4, "note": "Exact angles for Ptolemaic aspects" },
-        { "file": "src/systems/egyptian/egyptian.c", "line": 1, "note": "Nabonassar epoch from Almagest" }
+        {
+          "file": "src/systems/astrology/aspects.h",
+          "line": 4,
+          "note": "Ptolemaic aspect types"
+        },
+        {
+          "file": "src/systems/astrology/aspects.c",
+          "line": 4,
+          "note": "Exact angles for Ptolemaic aspects"
+        },
+        {
+          "file": "src/systems/egyptian/egyptian.c",
+          "line": 1,
+          "note": "Nabonassar epoch from Almagest"
+        }
       ]
     },
     {
@@ -133,7 +286,10 @@
       "name": "King Wen of Zhou",
       "born": -1112,
       "died": -1050,
-      "category": ["philosopher", "ruler"],
+      "category": [
+        "philosopher",
+        "ruler"
+      ],
       "contributions": [
         {
           "work": "I Ching hexagram arrangement",
@@ -142,10 +298,26 @@
         }
       ],
       "references": [
-        { "file": "src/systems/iching/iching.c", "line": 15, "note": "King Wen sequence data table" },
-        { "file": "src/systems/iching/iching.h", "line": 8, "note": "king_wen field in hexagram_t" },
-        { "file": "src/systems/iching/iching.h", "line": 27, "note": "iching_lines_to_king_wen() function" },
-        { "file": "src/ui/hexagram_visual.c", "line": 17, "note": "Unicode hexagram symbols in King Wen order" }
+        {
+          "file": "src/systems/iching/iching.c",
+          "line": 15,
+          "note": "King Wen sequence data table"
+        },
+        {
+          "file": "src/systems/iching/iching.h",
+          "line": 8,
+          "note": "king_wen field in hexagram_t"
+        },
+        {
+          "file": "src/systems/iching/iching.h",
+          "line": 27,
+          "note": "iching_lines_to_king_wen() function"
+        },
+        {
+          "file": "src/ui/hexagram_visual.c",
+          "line": 17,
+          "note": "Unicode hexagram symbols in King Wen order"
+        }
       ]
     },
     {
@@ -153,7 +325,9 @@
       "name": "B.K. Lahiri",
       "born": 1886,
       "died": 1958,
-      "category": ["astronomer"],
+      "category": [
+        "astronomer"
+      ],
       "contributions": [
         {
           "work": "Lahiri Ayanamsa",
@@ -162,17 +336,40 @@
         }
       ],
       "references": [
-        { "file": "src/systems/astronomy/precession.c", "line": 10, "note": "Lahiri ayanamsa at J2000.0" },
-        { "file": "src/systems/astronomy/precession.c", "line": 60, "note": "prec_ayanamsa_lahiri() implementation" },
-        { "file": "src/systems/astronomy/precession.h", "line": 17, "note": "prec_ayanamsa_lahiri() declaration" },
-        { "file": "src/systems/hindu/nakshatra.c", "line": 1, "note": "Lahiri ayanamsa approximation for Nakshatra computation" },
-        { "file": "src/systems/tamil/tamil_calendar.c", "line": 1, "note": "Lahiri ayanamsa for Tamil sidereal solar calendar" }
+        {
+          "file": "src/systems/astronomy/precession.c",
+          "line": 10,
+          "note": "Lahiri ayanamsa at J2000.0"
+        },
+        {
+          "file": "src/systems/astronomy/precession.c",
+          "line": 60,
+          "note": "prec_ayanamsa_lahiri() implementation"
+        },
+        {
+          "file": "src/systems/astronomy/precession.h",
+          "line": 17,
+          "note": "prec_ayanamsa_lahiri() declaration"
+        },
+        {
+          "file": "src/systems/hindu/nakshatra.c",
+          "line": 1,
+          "note": "Lahiri ayanamsa approximation for Nakshatra computation"
+        },
+        {
+          "file": "src/systems/tamil/tamil_calendar.c",
+          "line": 1,
+          "note": "Lahiri ayanamsa for Tamil sidereal solar calendar"
+        }
       ]
     },
     {
       "id": "thiruvalluvar",
       "name": "Thiruvalluvar",
-      "category": ["philosopher", "calendar-tradition"],
+      "category": [
+        "philosopher",
+        "calendar-tradition"
+      ],
       "contributions": [
         {
           "work": "Thirukkural / Thiruvalluvar Era",
@@ -181,8 +378,16 @@
         }
       ],
       "references": [
-        { "file": "src/systems/tamil/tamil_calendar.h", "line": 1, "note": "Thiruvalluvar era epoch" },
-        { "file": "src/systems/tamil/tamil_calendar.c", "line": 1, "note": "TV_OFFSET = 31 (Thiruvalluvar era offset)" }
+        {
+          "file": "src/systems/tamil/tamil_calendar.h",
+          "line": 1,
+          "note": "Thiruvalluvar era epoch"
+        },
+        {
+          "file": "src/systems/tamil/tamil_calendar.c",
+          "line": 1,
+          "note": "TV_OFFSET = 31 (Thiruvalluvar era offset)"
+        }
       ]
     },
     {
@@ -190,7 +395,11 @@
       "name": "Robert Graves",
       "born": 1895,
       "died": 1985,
-      "category": ["poet", "novelist", "mythographer"],
+      "category": [
+        "poet",
+        "novelist",
+        "mythographer"
+      ],
       "contributions": [
         {
           "work": "The White Goddess",
@@ -199,8 +408,16 @@
         }
       ],
       "references": [
-        { "file": "src/systems/celtic/celtic_tree.h", "line": 6, "note": "Celtic Tree Calendar source" },
-        { "file": "src/systems/celtic/celtic_tree.c", "line": 5, "note": "Celtic Tree Calendar implementation" }
+        {
+          "file": "src/systems/celtic/celtic_tree.h",
+          "line": 6,
+          "note": "Celtic Tree Calendar source"
+        },
+        {
+          "file": "src/systems/celtic/celtic_tree.c",
+          "line": 5,
+          "note": "Celtic Tree Calendar implementation"
+        }
       ]
     },
     {
@@ -208,7 +425,10 @@
       "name": "Ra Uru Hu",
       "born": 1948,
       "died": 2011,
-      "category": ["visionary", "author"],
+      "category": [
+        "visionary",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Human Design System",
@@ -217,16 +437,34 @@
         }
       ],
       "references": [
-        { "file": "src/systems/human_design/human_design.c", "line": 7, "note": "Gate sequence around the ecliptic" },
-        { "file": "src/systems/human_design/human_design.h", "line": 21, "note": "Gate name accessor" },
-        { "file": "docs/checklists/books.md", "line": 46, "note": "The Definitive Book of Human Design" },
-        { "file": "src/systems/human_design/bodygraph.c", "line": 1, "note": "Bodygraph topology: 9 centers, 36 channels, 64 gate assignments" }
+        {
+          "file": "src/systems/human_design/human_design.c",
+          "line": 7,
+          "note": "Gate sequence around the ecliptic"
+        },
+        {
+          "file": "src/systems/human_design/human_design.h",
+          "line": 21,
+          "note": "Gate name accessor"
+        },
+        {
+          "file": "docs/checklists/books.md",
+          "line": 46,
+          "note": "The Definitive Book of Human Design"
+        },
+        {
+          "file": "src/systems/human_design/bodygraph.c",
+          "line": 1,
+          "note": "Bodygraph topology: 9 centers, 36 channels, 64 gate assignments"
+        }
       ]
     },
     {
       "id": "lynda-bunnell",
       "name": "Lynda Bunnell",
-      "category": ["author"],
+      "category": [
+        "author"
+      ],
       "contributions": [
         {
           "work": "The Definitive Book of Human Design (co-author with Ra Uru Hu)",
@@ -235,7 +473,11 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 46, "note": "The Definitive Book of Human Design" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 46,
+          "note": "The Definitive Book of Human Design"
+        }
       ]
     },
     {
@@ -243,7 +485,10 @@
       "name": "Carl Gustav Jung",
       "born": 1875,
       "died": 1961,
-      "category": ["psychologist", "philosopher"],
+      "category": [
+        "psychologist",
+        "philosopher"
+      ],
       "contributions": [
         {
           "work": "Synchronicity: An Acausal Connecting Principle",
@@ -252,15 +497,30 @@
         }
       ],
       "references": [
-        { "file": "docs/DECISIONS.md", "line": 70, "note": "ADR-003: Include Jung's perspective" },
-        { "file": "docs/DECISIONS.md", "line": 81, "note": "Synchronicity framework for astrology" },
-        { "file": "docs/checklists/books.md", "line": 39, "note": "Synchronicity reference" }
+        {
+          "file": "docs/DECISIONS.md",
+          "line": 70,
+          "note": "ADR-003: Include Jung's perspective"
+        },
+        {
+          "file": "docs/DECISIONS.md",
+          "line": 81,
+          "note": "Synchronicity framework for astrology"
+        },
+        {
+          "file": "docs/checklists/books.md",
+          "line": 39,
+          "note": "Synchronicity reference"
+        }
       ]
     },
     {
       "id": "safron-rossi",
       "name": "Safron Rossi",
-      "category": ["scholar", "author"],
+      "category": [
+        "scholar",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Jung on Astrology (co-editor with Le Grice)",
@@ -269,14 +529,25 @@
         }
       ],
       "references": [
-        { "file": "docs/DECISIONS.md", "line": 89, "note": "Jung on Astrology reference" },
-        { "file": "docs/checklists/books.md", "line": 38, "note": "Jung on Astrology book" }
+        {
+          "file": "docs/DECISIONS.md",
+          "line": 89,
+          "note": "Jung on Astrology reference"
+        },
+        {
+          "file": "docs/checklists/books.md",
+          "line": 38,
+          "note": "Jung on Astrology book"
+        }
       ]
     },
     {
       "id": "keiron-le-grice",
       "name": "Keiron Le Grice",
-      "category": ["scholar", "author"],
+      "category": [
+        "scholar",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Jung on Astrology (co-editor with Rossi)",
@@ -285,8 +556,16 @@
         }
       ],
       "references": [
-        { "file": "docs/DECISIONS.md", "line": 89, "note": "Jung on Astrology reference" },
-        { "file": "docs/checklists/books.md", "line": 38, "note": "Jung on Astrology book" }
+        {
+          "file": "docs/DECISIONS.md",
+          "line": 89,
+          "note": "Jung on Astrology reference"
+        },
+        {
+          "file": "docs/checklists/books.md",
+          "line": 38,
+          "note": "Jung on Astrology book"
+        }
       ]
     },
     {
@@ -294,7 +573,10 @@
       "name": "Richard Wilhelm",
       "born": 1873,
       "died": 1930,
-      "category": ["translator", "sinologist"],
+      "category": [
+        "translator",
+        "sinologist"
+      ],
       "contributions": [
         {
           "work": "The I Ching or Book of Changes (German translation)",
@@ -303,8 +585,16 @@
         }
       ],
       "references": [
-        { "file": "src/systems/iching/iching.c", "line": 15, "note": "Hexagram names from Wilhelm translation" },
-        { "file": "docs/checklists/books.md", "line": 43, "note": "Wilhelm/Baynes I Ching" }
+        {
+          "file": "src/systems/iching/iching.c",
+          "line": 15,
+          "note": "Hexagram names from Wilhelm translation"
+        },
+        {
+          "file": "docs/checklists/books.md",
+          "line": 43,
+          "note": "Wilhelm/Baynes I Ching"
+        }
       ]
     },
     {
@@ -312,7 +602,9 @@
       "name": "Cary F. Baynes",
       "born": 1883,
       "died": 1977,
-      "category": ["translator"],
+      "category": [
+        "translator"
+      ],
       "contributions": [
         {
           "work": "The I Ching or Book of Changes (English translation from Wilhelm's German)",
@@ -321,7 +613,11 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 43, "note": "Wilhelm/Baynes I Ching" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 43,
+          "note": "Wilhelm/Baynes I Ching"
+        }
       ]
     },
     {
@@ -329,7 +625,10 @@
       "name": "Alfred Huang",
       "born": 1928,
       "died": 2019,
-      "category": ["author", "scholar"],
+      "category": [
+        "author",
+        "scholar"
+      ],
       "contributions": [
         {
           "work": "The Complete I Ching",
@@ -343,14 +642,24 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 44, "note": "The Complete I Ching" },
-        { "file": "docs/checklists/books.md", "line": 45, "note": "The Numerology of the I Ching" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 44,
+          "note": "The Complete I Ching"
+        },
+        {
+          "file": "docs/checklists/books.md",
+          "line": 45,
+          "note": "The Numerology of the I Ching"
+        }
       ]
     },
     {
       "id": "jpl-nasa",
       "name": "Jet Propulsion Laboratory (NASA)",
-      "category": ["research-organization"],
+      "category": [
+        "research-organization"
+      ],
       "contributions": [
         {
           "work": "Approximate Positions of the Planets",
@@ -369,18 +678,45 @@
         }
       ],
       "references": [
-        { "file": "src/systems/astronomy/orbit.c", "line": 16, "note": "JPL Approximate Positions of the Planets" },
-        { "file": "src/systems/astronomy/orbit.c", "line": 58, "note": "Earth orbital elements (JPL Table 1)" },
-        { "file": "src/systems/astronomy/planet_data.c", "line": 1, "note": "NASA Planetary Fact Sheet: radii, masses, albedos, tilts, rotations, colors" },
-        { "file": "src/systems/astronomy/moon_data.c", "line": 1, "note": "JPL Planetary Satellite Physical Parameters: moon orbital elements and radii" },
-        { "file": "src/render/saturn_ring_pack.c", "line": 6, "note": "Saturn ring radii and opacity from NASA/JPL Voyager/Cassini measurements" },
-        { "file": "src/render/saturn_ring_pack.h", "line": 13, "note": "Saturn ring system physical data (1 Rs = 60,268 km)" }
+        {
+          "file": "src/systems/astronomy/orbit.c",
+          "line": 16,
+          "note": "JPL Approximate Positions of the Planets"
+        },
+        {
+          "file": "src/systems/astronomy/orbit.c",
+          "line": 58,
+          "note": "Earth orbital elements (JPL Table 1)"
+        },
+        {
+          "file": "src/systems/astronomy/planet_data.c",
+          "line": 1,
+          "note": "NASA Planetary Fact Sheet: radii, masses, albedos, tilts, rotations, colors"
+        },
+        {
+          "file": "src/systems/astronomy/moon_data.c",
+          "line": 1,
+          "note": "JPL Planetary Satellite Physical Parameters: moon orbital elements and radii"
+        },
+        {
+          "file": "src/render/saturn_ring_pack.c",
+          "line": 6,
+          "note": "Saturn ring radii and opacity from NASA/JPL Voyager/Cassini measurements"
+        },
+        {
+          "file": "src/render/saturn_ring_pack.h",
+          "line": 13,
+          "note": "Saturn ring system physical data (1 Rs = 60,268 km)"
+        }
       ]
     },
     {
       "id": "erik-reinhard",
       "name": "Erik Reinhard",
-      "category": ["computer-scientist", "researcher"],
+      "category": [
+        "computer-scientist",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "Photographic Tone Reproduction for Digital Images",
@@ -389,14 +725,21 @@
         }
       ],
       "references": [
-        { "file": "src/render/post_process.c", "line": 1, "note": "Reinhard tone mapping in composite fragment shader" }
+        {
+          "file": "src/render/post_process.c",
+          "line": 1,
+          "note": "Reinhard tone mapping in composite fragment shader"
+        }
       ]
     },
     {
       "id": "nachum-dershowitz",
       "name": "Nachum Dershowitz",
       "born": 1951,
-      "category": ["mathematician", "computer-scientist"],
+      "category": [
+        "mathematician",
+        "computer-scientist"
+      ],
       "contributions": [
         {
           "work": "Calendrical Calculations (co-author with Reingold)",
@@ -405,23 +748,65 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 11, "note": "Calendrical Calculations book" },
-        { "file": "src/systems/chinese/chinese.c", "line": 4, "note": "Chinese calendar cycle epoch reference" },
-        { "file": "src/systems/hebrew/hebrew.h", "line": 4, "note": "Hebrew calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/hebrew/hebrew.c", "line": 3, "note": "Hebrew calendar implementation (Calendrical Calculations)" },
-        { "file": "src/systems/islamic/hijri.h", "line": 4, "note": "Hijri calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" },
-        { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/persian/persian.c", "line": 3, "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)" },
-        { "file": "src/systems/aztec/aztec.c", "line": 1, "note": "Aztec calendar correlation (GMT 584283, Calendrical Calculations)" },
-        { "file": "src/systems/french_republican/french_republican.c", "line": 8, "note": "French Republican calendar algorithm (Calendrical Calculations)" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 11,
+          "note": "Calendrical Calculations book"
+        },
+        {
+          "file": "src/systems/chinese/chinese.c",
+          "line": 4,
+          "note": "Chinese calendar cycle epoch reference"
+        },
+        {
+          "file": "src/systems/hebrew/hebrew.h",
+          "line": 4,
+          "note": "Hebrew calendar algorithm (Dershowitz & Reingold)"
+        },
+        {
+          "file": "src/systems/hebrew/hebrew.c",
+          "line": 3,
+          "note": "Hebrew calendar implementation (Calendrical Calculations)"
+        },
+        {
+          "file": "src/systems/islamic/hijri.h",
+          "line": 4,
+          "note": "Hijri calendar algorithm (Dershowitz & Reingold)"
+        },
+        {
+          "file": "src/systems/islamic/hijri.c",
+          "line": 3,
+          "note": "Hijri calendar implementation (Calendrical Calculations)"
+        },
+        {
+          "file": "src/systems/coptic/coptic.c",
+          "line": 8,
+          "note": "Coptic calendar algorithm (Dershowitz & Reingold)"
+        },
+        {
+          "file": "src/systems/persian/persian.c",
+          "line": 3,
+          "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)"
+        },
+        {
+          "file": "src/systems/aztec/aztec.c",
+          "line": 1,
+          "note": "Aztec calendar correlation (GMT 584283, Calendrical Calculations)"
+        },
+        {
+          "file": "src/systems/french_republican/french_republican.c",
+          "line": 8,
+          "note": "French Republican calendar algorithm (Calendrical Calculations)"
+        }
       ]
     },
     {
       "id": "edward-reingold",
       "name": "Edward M. Reingold",
       "born": 1945,
-      "category": ["computer-scientist"],
+      "category": [
+        "computer-scientist"
+      ],
       "contributions": [
         {
           "work": "Calendrical Calculations (co-author with Dershowitz)",
@@ -430,23 +815,70 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 11, "note": "Calendrical Calculations book" },
-        { "file": "src/systems/chinese/chinese.c", "line": 4, "note": "Chinese calendar cycle epoch reference" },
-        { "file": "src/systems/hebrew/hebrew.h", "line": 4, "note": "Hebrew calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/hebrew/hebrew.c", "line": 3, "note": "Hebrew calendar implementation (Calendrical Calculations)" },
-        { "file": "src/systems/islamic/hijri.h", "line": 4, "note": "Hijri calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/islamic/hijri.c", "line": 3, "note": "Hijri calendar implementation (Calendrical Calculations)" },
-        { "file": "src/systems/coptic/coptic.c", "line": 8, "note": "Coptic calendar algorithm (Dershowitz & Reingold)" },
-        { "file": "src/systems/egyptian/egyptian.c", "line": 1, "note": "Egyptian calendar algorithm (Calendrical Calculations ch. 1)" },
-        { "file": "src/systems/persian/persian.c", "line": 3, "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)" },
-        { "file": "src/systems/aztec/aztec.c", "line": 1, "note": "Aztec calendar correlation (GMT 584283, Calendrical Calculations)" },
-        { "file": "src/systems/french_republican/french_republican.c", "line": 8, "note": "French Republican calendar algorithm (Calendrical Calculations)" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 11,
+          "note": "Calendrical Calculations book"
+        },
+        {
+          "file": "src/systems/chinese/chinese.c",
+          "line": 4,
+          "note": "Chinese calendar cycle epoch reference"
+        },
+        {
+          "file": "src/systems/hebrew/hebrew.h",
+          "line": 4,
+          "note": "Hebrew calendar algorithm (Dershowitz & Reingold)"
+        },
+        {
+          "file": "src/systems/hebrew/hebrew.c",
+          "line": 3,
+          "note": "Hebrew calendar implementation (Calendrical Calculations)"
+        },
+        {
+          "file": "src/systems/islamic/hijri.h",
+          "line": 4,
+          "note": "Hijri calendar algorithm (Dershowitz & Reingold)"
+        },
+        {
+          "file": "src/systems/islamic/hijri.c",
+          "line": 3,
+          "note": "Hijri calendar implementation (Calendrical Calculations)"
+        },
+        {
+          "file": "src/systems/coptic/coptic.c",
+          "line": 8,
+          "note": "Coptic calendar algorithm (Dershowitz & Reingold)"
+        },
+        {
+          "file": "src/systems/egyptian/egyptian.c",
+          "line": 1,
+          "note": "Egyptian calendar algorithm (Calendrical Calculations ch. 1)"
+        },
+        {
+          "file": "src/systems/persian/persian.c",
+          "line": 3,
+          "note": "Persian (Solar Hijri) calendar algorithm (Calendrical Calculations)"
+        },
+        {
+          "file": "src/systems/aztec/aztec.c",
+          "line": 1,
+          "note": "Aztec calendar correlation (GMT 584283, Calendrical Calculations)"
+        },
+        {
+          "file": "src/systems/french_republican/french_republican.c",
+          "line": 8,
+          "note": "French Republican calendar algorithm (Calendrical Calculations)"
+        }
       ]
     },
     {
       "id": "ahmad-birashk",
       "name": "Ahmad Birashk",
-      "category": ["mathematician", "astronomer"],
+      "category": [
+        "mathematician",
+        "astronomer"
+      ],
       "contributions": [
         {
           "work": "A Comparative Calendar of the Iranian, Muslim Lunar, and Christian Eras for Three Thousand Years",
@@ -455,13 +887,19 @@
         }
       ],
       "references": [
-        { "file": "src/systems/persian/persian.c", "line": 5, "note": "2820-year grand cycle algorithm for Persian leap years" }
+        {
+          "file": "src/systems/persian/persian.c",
+          "line": 5,
+          "note": "2820-year grand cycle algorithm for Persian leap years"
+        }
       ]
     },
     {
       "id": "kazimierz-borkowski",
       "name": "Kazimierz M. Borkowski",
-      "category": ["astronomer"],
+      "category": [
+        "astronomer"
+      ],
       "contributions": [
         {
           "work": "EAA Supplement: Persian Calendar",
@@ -470,7 +908,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/persian/persian.c", "line": 5, "note": "Verification of 2820-year cycle accuracy for Persian calendar" }
+        {
+          "file": "src/systems/persian/persian.c",
+          "line": 5,
+          "note": "Verification of 2820-year cycle accuracy for Persian calendar"
+        }
       ]
     },
     {
@@ -478,7 +920,10 @@
       "name": "Baha'u'llah (Mirza Husayn-Ali Nuri)",
       "born": 1817,
       "died": 1892,
-      "category": ["religious-founder", "calendar-originator"],
+      "category": [
+        "religious-founder",
+        "calendar-originator"
+      ],
       "contributions": [
         {
           "work": "Kitab-i-Aqdas (The Most Holy Book)",
@@ -487,7 +932,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/bahai/bahai.c", "line": 3, "note": "Badi' calendar structure and holy days" }
+        {
+          "file": "src/systems/bahai/bahai.c",
+          "line": 3,
+          "note": "Badi' calendar structure and holy days"
+        }
       ]
     },
     {
@@ -495,7 +944,9 @@
       "name": "The Bab (Siyyid Ali-Muhammad)",
       "born": 1819,
       "died": 1850,
-      "category": ["religious-founder"],
+      "category": [
+        "religious-founder"
+      ],
       "contributions": [
         {
           "work": "Bayan (The Exposition)",
@@ -504,7 +955,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/bahai/bahai.c", "line": 3, "note": "Calendar epoch (1844 CE) and holy day dates" }
+        {
+          "file": "src/systems/bahai/bahai.c",
+          "line": 3,
+          "note": "Calendar epoch (1844 CE) and holy day dates"
+        }
       ]
     },
     {
@@ -512,7 +967,10 @@
       "name": "Otto Friedrich August Meinardus",
       "born": 1925,
       "died": 2005,
-      "category": ["historian", "theologian"],
+      "category": [
+        "historian",
+        "theologian"
+      ],
       "contributions": [
         {
           "work": "Two Thousand Years of Coptic Christianity",
@@ -521,13 +979,20 @@
         }
       ],
       "references": [
-        { "file": "src/systems/coptic/coptic.c", "line": 9, "note": "Coptic calendar feast data reference" }
+        {
+          "file": "src/systems/coptic/coptic.c",
+          "line": 9,
+          "note": "Coptic calendar feast data reference"
+        }
       ]
     },
     {
       "id": "yan-naing-aye",
       "name": "Yan Naing Aye",
-      "category": ["programmer", "mathematician"],
+      "category": [
+        "programmer",
+        "mathematician"
+      ],
       "contributions": [
         {
           "work": "Myanmar Calendar Algorithm",
@@ -536,13 +1001,20 @@
         }
       ],
       "references": [
-        { "file": "src/systems/myanmar/myanmar.c", "line": 6, "note": "Myanmar calendar intercalation algorithm" }
+        {
+          "file": "src/systems/myanmar/myanmar.c",
+          "line": 6,
+          "note": "Myanmar calendar intercalation algorithm"
+        }
       ]
     },
     {
       "id": "peter-duffett-smith",
       "name": "Peter Duffett-Smith",
-      "category": ["astronomer", "author"],
+      "category": [
+        "astronomer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Practical Astronomy with your Calculator or Spreadsheet",
@@ -551,13 +1023,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 15, "note": "P1 Active Development reference" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 15,
+          "note": "P1 Active Development reference"
+        }
       ]
     },
     {
       "id": "david-ewing-duncan",
       "name": "David Ewing Duncan",
-      "category": ["author", "historian"],
+      "category": [
+        "author",
+        "historian"
+      ],
       "contributions": [
         {
           "work": "The Calendar: The 5000-year Struggle to Align the Clock and the Heavens",
@@ -566,14 +1045,21 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 47, "note": "Calendar history reference" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 47,
+          "note": "Calendar history reference"
+        }
       ]
     },
     {
       "id": "brian-kernighan",
       "name": "Brian Kernighan",
       "born": 1942,
-      "category": ["programmer", "author"],
+      "category": [
+        "programmer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "The C Programming Language (co-author with Ritchie)",
@@ -582,7 +1068,11 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 5, "note": "P0 Foundation book (K&R)" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 5,
+          "note": "P0 Foundation book (K&R)"
+        }
       ]
     },
     {
@@ -590,7 +1080,10 @@
       "name": "Dennis Ritchie",
       "born": 1941,
       "died": 2011,
-      "category": ["programmer", "language-designer"],
+      "category": [
+        "programmer",
+        "language-designer"
+      ],
       "contributions": [
         {
           "work": "The C Programming Language (co-author with Kernighan)",
@@ -599,13 +1092,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 5, "note": "P0 Foundation book (K&R)" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 5,
+          "note": "P0 Foundation book (K&R)"
+        }
       ]
     },
     {
       "id": "ben-klemens",
       "name": "Ben Klemens",
-      "category": ["programmer", "author"],
+      "category": [
+        "programmer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "21st Century C",
@@ -614,13 +1114,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 48, "note": "C deepening reference" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 48,
+          "note": "C deepening reference"
+        }
       ]
     },
     {
       "id": "patricio-gonzalez-vivo",
       "name": "Patricio Gonzalez Vivo",
-      "category": ["programmer", "artist"],
+      "category": [
+        "programmer",
+        "artist"
+      ],
       "contributions": [
         {
           "work": "The Book of Shaders",
@@ -629,13 +1136,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 7, "note": "P0 Foundation (online, Phase 1-7)" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 7,
+          "note": "P0 Foundation (online, Phase 1-7)"
+        }
       ]
     },
     {
       "id": "mark-matsuda",
       "name": "Mark Matsuda",
-      "category": ["programmer", "author"],
+      "category": [
+        "programmer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "WebGL Programming Guide (co-author with Lea)",
@@ -644,13 +1158,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 12, "note": "P1 Active Development: WebGL guide" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 12,
+          "note": "P1 Active Development: WebGL guide"
+        }
       ]
     },
     {
       "id": "jake-lea",
       "name": "Jake Lea",
-      "category": ["programmer", "author"],
+      "category": [
+        "programmer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "WebGL Programming Guide (co-author with Matsuda)",
@@ -659,13 +1180,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 12, "note": "P1 Active Development: WebGL guide" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 12,
+          "note": "P1 Active Development: WebGL guide"
+        }
       ]
     },
     {
       "id": "eric-lengyel",
       "name": "Eric Lengyel",
-      "category": ["mathematician", "programmer"],
+      "category": [
+        "mathematician",
+        "programmer"
+      ],
       "contributions": [
         {
           "work": "Mathematics for 3D Game Programming and Computer Graphics",
@@ -674,13 +1202,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 13, "note": "P1 Active Development: 3D math" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 13,
+          "note": "P1 Active Development: 3D math"
+        }
       ]
     },
     {
       "id": "robert-penner",
       "name": "Robert Penner",
-      "category": ["programmer", "author"],
+      "category": [
+        "programmer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Easing Functions",
@@ -689,15 +1224,30 @@
         }
       ],
       "references": [
-        { "file": "src/math/easing.h", "line": 1, "note": "Easing function library" },
-        { "file": "src/math/easing.c", "line": 1, "note": "Easing function implementations" },
-        { "file": "src/render/camera_scale.c", "line": 2, "note": "Easing used in camera transitions" }
+        {
+          "file": "src/math/easing.h",
+          "line": 1,
+          "note": "Easing function library"
+        },
+        {
+          "file": "src/math/easing.c",
+          "line": 1,
+          "note": "Easing function implementations"
+        },
+        {
+          "file": "src/render/camera_scale.c",
+          "line": 2,
+          "note": "Easing used in camera transitions"
+        }
       ]
     },
     {
       "id": "daniel-shiffman",
       "name": "Daniel Shiffman",
-      "category": ["programmer", "educator"],
+      "category": [
+        "programmer",
+        "educator"
+      ],
       "contributions": [
         {
           "work": "The Nature of Code",
@@ -706,13 +1256,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 49, "note": "Phase 7-8: generative/creative coding" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 49,
+          "note": "Phase 7-8: generative/creative coding"
+        }
       ]
     },
     {
       "id": "golan-levin",
       "name": "Golan Levin",
-      "category": ["artist", "educator"],
+      "category": [
+        "artist",
+        "educator"
+      ],
       "contributions": [
         {
           "work": "Code as Creative Medium",
@@ -721,13 +1278,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 86, "note": "Not yet acquired, planned Phase 7-8" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 86,
+          "note": "Not yet acquired, planned Phase 7-8"
+        }
       ]
     },
     {
       "id": "john-f-hughes",
       "name": "John F. Hughes",
-      "category": ["computer-scientist", "author"],
+      "category": [
+        "computer-scientist",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Computer Graphics: Principles and Practice (lead author)",
@@ -736,14 +1300,21 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 14, "note": "P1 Active Development: CG reference (Hughes et al.)" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 14,
+          "note": "P1 Active Development: CG reference (Hughes et al.)"
+        }
       ]
     },
     {
       "id": "andries-van-dam",
       "name": "Andries van Dam",
       "born": 1938,
-      "category": ["computer-scientist", "author"],
+      "category": [
+        "computer-scientist",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Computer Graphics: Principles and Practice (co-author)",
@@ -752,14 +1323,21 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 14, "note": "CG: Principles and Practice co-author" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 14,
+          "note": "CG: Principles and Practice co-author"
+        }
       ]
     },
     {
       "id": "robert-bringhurst",
       "name": "Robert Bringhurst",
       "born": 1946,
-      "category": ["typographer", "author"],
+      "category": [
+        "typographer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "The Elements of Typographic Style",
@@ -768,13 +1346,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 50, "note": "Phase 7: font rendering, typography" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 50,
+          "note": "Phase 7: font rendering, typography"
+        }
       ]
     },
     {
       "id": "jenifer-tidwell",
       "name": "Jenifer Tidwell",
-      "category": ["designer", "author"],
+      "category": [
+        "designer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Designing Interfaces (lead author)",
@@ -783,14 +1368,21 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 51, "note": "Phase 4-7: UI patterns" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 51,
+          "note": "Phase 4-7: UI patterns"
+        }
       ]
     },
     {
       "id": "don-norman",
       "name": "Don Norman",
       "born": 1935,
-      "category": ["designer", "cognitive-scientist"],
+      "category": [
+        "designer",
+        "cognitive-scientist"
+      ],
       "contributions": [
         {
           "work": "The Design of Everyday Things",
@@ -799,13 +1391,20 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 52, "note": "Phase 4-7: UX fundamentals" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 52,
+          "note": "Phase 4-7: UX fundamentals"
+        }
       ]
     },
     {
       "id": "robert-lawlor",
       "name": "Robert Lawlor",
-      "category": ["author", "philosopher"],
+      "category": [
+        "author",
+        "philosopher"
+      ],
       "contributions": [
         {
           "work": "Sacred Geometry: Philosophy and Practice",
@@ -814,7 +1413,11 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 81, "note": "Not yet acquired, HIGH priority for Phase 7" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 81,
+          "note": "Not yet acquired, HIGH priority for Phase 7"
+        }
       ]
     },
     {
@@ -822,7 +1425,10 @@
       "name": "Gyorgy Doczi",
       "born": 1909,
       "died": 1995,
-      "category": ["architect", "author"],
+      "category": [
+        "architect",
+        "author"
+      ],
       "contributions": [
         {
           "work": "The Power of Limits",
@@ -831,13 +1437,19 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 82, "note": "Not yet acquired, HIGH priority for Phase 7" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 82,
+          "note": "Not yet acquired, HIGH priority for Phase 7"
+        }
       ]
     },
     {
       "id": "gary-meisner",
       "name": "Gary Meisner",
-      "category": ["author"],
+      "category": [
+        "author"
+      ],
       "contributions": [
         {
           "work": "The Golden Ratio: The Divine Beauty of Mathematics",
@@ -846,7 +1458,11 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 83, "note": "Not yet acquired, MEDIUM priority" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 83,
+          "note": "Not yet acquired, MEDIUM priority"
+        }
       ]
     },
     {
@@ -854,7 +1470,10 @@
       "name": "Aristid Lindenmayer",
       "born": 1925,
       "died": 1989,
-      "category": ["biologist", "mathematician"],
+      "category": [
+        "biologist",
+        "mathematician"
+      ],
       "contributions": [
         {
           "work": "L-systems (formal grammar for modeling plant growth)",
@@ -863,14 +1482,21 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 84, "note": "The Algorithmic Beauty of Plants (not yet acquired)" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 84,
+          "note": "The Algorithmic Beauty of Plants (not yet acquired)"
+        }
       ]
     },
     {
       "id": "przemyslaw-prusinkiewicz",
       "name": "Przemyslaw Prusinkiewicz",
       "born": 1952,
-      "category": ["computer-scientist", "author"],
+      "category": [
+        "computer-scientist",
+        "author"
+      ],
       "contributions": [
         {
           "work": "The Algorithmic Beauty of Plants (co-author with Lindenmayer)",
@@ -879,13 +1505,19 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 84, "note": "Not yet acquired, MEDIUM priority" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 84,
+          "note": "Not yet acquired, MEDIUM priority"
+        }
       ]
     },
     {
       "id": "esa-hipparcos",
       "name": "European Space Agency (Hipparcos mission)",
-      "category": ["research-organization"],
+      "category": [
+        "research-organization"
+      ],
       "contributions": [
         {
           "work": "The Hipparcos and Tycho Catalogues",
@@ -894,7 +1526,11 @@
         }
       ],
       "references": [
-        { "file": "src/render/star_catalog.c", "line": 7, "note": "Star positions (RA, Dec) and magnitudes from Hipparcos catalog" }
+        {
+          "file": "src/render/star_catalog.c",
+          "line": 7,
+          "note": "Star positions (RA, Dec) and magnitudes from Hipparcos catalog"
+        }
       ]
     },
     {
@@ -902,7 +1538,10 @@
       "name": "Dorrit Hoffleit",
       "born": 1907,
       "died": 2007,
-      "category": ["astronomer", "author"],
+      "category": [
+        "astronomer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Yale Bright Star Catalogue (5th revised edition)",
@@ -911,13 +1550,20 @@
         }
       ],
       "references": [
-        { "file": "src/render/star_catalog.c", "line": 7, "note": "Star names and B-V color indices from Yale BSC" }
+        {
+          "file": "src/render/star_catalog.c",
+          "line": 7,
+          "note": "Star names and B-V color indices from Yale BSC"
+        }
       ]
     },
     {
       "id": "christophe-schlick",
       "name": "Christophe Schlick",
-      "category": ["computer-scientist", "researcher"],
+      "category": [
+        "computer-scientist",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "An Inexpensive BRDF Model for Physically-based Rendering",
@@ -926,13 +1572,20 @@
         }
       ],
       "references": [
-        { "file": "src/render/atmo_ring.c", "line": 7, "note": "Fresnel limb glow approximation for planetary atmospheres" }
+        {
+          "file": "src/render/atmo_ring.c",
+          "line": 7,
+          "note": "Fresnel limb glow approximation for planetary atmospheres"
+        }
       ]
     },
     {
       "id": "francisco-ballesteros",
       "name": "F. J. Ballesteros",
-      "category": ["astrophysicist", "researcher"],
+      "category": [
+        "astrophysicist",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "New insights into the HR diagram",
@@ -941,13 +1594,20 @@
         }
       ],
       "references": [
-        { "file": "src/render/star_colors.c", "line": 5, "note": "Ballesteros (2012) B-V to temperature formula" }
+        {
+          "file": "src/render/star_colors.c",
+          "line": 5,
+          "note": "Ballesteros (2012) B-V to temperature formula"
+        }
       ]
     },
     {
       "id": "tanner-helland",
       "name": "Tanner Helland",
-      "category": ["programmer", "researcher"],
+      "category": [
+        "programmer",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "Color temperature to RGB approximation",
@@ -956,13 +1616,20 @@
         }
       ],
       "references": [
-        { "file": "src/render/star_colors.c", "line": 8, "note": "Temperature-to-RGB approximation algorithm" }
+        {
+          "file": "src/render/star_colors.c",
+          "line": 8,
+          "note": "Temperature-to-RGB approximation algorithm"
+        }
       ]
     },
     {
       "id": "mitchell-charity",
       "name": "Mitchell Charity",
-      "category": ["physicist", "researcher"],
+      "category": [
+        "physicist",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "Blackbody color datapage",
@@ -971,13 +1638,20 @@
         }
       ],
       "references": [
-        { "file": "src/render/star_colors.c", "line": 9, "note": "Original blackbody color data" }
+        {
+          "file": "src/render/star_colors.c",
+          "line": 9,
+          "note": "Original blackbody color data"
+        }
       ]
     },
     {
       "id": "gary-william-flake",
       "name": "Gary William Flake",
-      "category": ["computer-scientist", "author"],
+      "category": [
+        "computer-scientist",
+        "author"
+      ],
       "contributions": [
         {
           "work": "The Computational Beauty of Nature",
@@ -986,13 +1660,19 @@
         }
       ],
       "references": [
-        { "file": "docs/checklists/books.md", "line": 85, "note": "Not yet acquired, MEDIUM priority" }
+        {
+          "file": "docs/checklists/books.md",
+          "line": 85,
+          "note": "Not yet acquired, MEDIUM priority"
+        }
       ]
     },
     {
       "id": "ics",
       "name": "International Commission on Stratigraphy",
-      "category": ["research-organization"],
+      "category": [
+        "research-organization"
+      ],
       "contributions": [
         {
           "work": "International Chronostratigraphic Chart",
@@ -1001,7 +1681,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/geology/geo_time.c", "line": 1, "note": "ICS 2024 chronostratigraphic data: 4 eons, 10 eras, 22 periods, 34 epochs" }
+        {
+          "file": "src/systems/geology/geo_time.c",
+          "line": 1,
+          "note": "ICS 2024 chronostratigraphic data: 4 eons, 10 eras, 22 periods, 34 epochs"
+        }
       ]
     },
     {
@@ -1009,7 +1693,9 @@
       "name": "Charles Messier",
       "born": 1730,
       "died": 1817,
-      "category": ["astronomer"],
+      "category": [
+        "astronomer"
+      ],
       "contributions": [
         {
           "work": "Catalogue des Nebuleuses et des Amas d'Etoiles",
@@ -1018,13 +1704,19 @@
         }
       ],
       "references": [
-        { "file": "src/render/deep_sky.c", "line": 1, "note": "All 110 Messier objects: positions, types, magnitudes, angular sizes" }
+        {
+          "file": "src/render/deep_sky.c",
+          "line": 1,
+          "note": "All 110 Messier objects: positions, types, magnitudes, angular sizes"
+        }
       ]
     },
     {
       "id": "simbad-cds",
       "name": "SIMBAD / Centre de Donnees astronomiques de Strasbourg",
-      "category": ["research-organization"],
+      "category": [
+        "research-organization"
+      ],
       "contributions": [
         {
           "work": "SIMBAD Astronomical Database",
@@ -1033,13 +1725,19 @@
         }
       ],
       "references": [
-        { "file": "src/render/deep_sky.c", "line": 9, "note": "Messier object positions, magnitudes, and classifications" }
+        {
+          "file": "src/render/deep_sky.c",
+          "line": 9,
+          "note": "Messier object positions, magnitudes, and classifications"
+        }
       ]
     },
     {
       "id": "iupac",
       "name": "International Union of Pure and Applied Chemistry",
-      "category": ["research-organization"],
+      "category": [
+        "research-organization"
+      ],
       "contributions": [
         {
           "work": "Recommended Isotope Half-Life Values",
@@ -1048,13 +1746,19 @@
         }
       ],
       "references": [
-        { "file": "src/systems/geology/radiometric.c", "line": 12, "note": "Isotope half-life constants for all 8 decay systems" }
+        {
+          "file": "src/systems/geology/radiometric.c",
+          "line": 12,
+          "note": "Isotope half-life constants for all 8 decay systems"
+        }
       ]
     },
     {
       "id": "surya-siddhanta",
       "name": "Surya Siddhanta (traditional, attributed to Mayasura)",
-      "category": ["astronomical-text"],
+      "category": [
+        "astronomical-text"
+      ],
       "contributions": [
         {
           "work": "Surya Siddhanta",
@@ -1063,11 +1767,31 @@
         }
       ],
       "references": [
-        { "file": "src/systems/hindu/nakshatra.c", "line": 1, "note": "27 Nakshatras: names, boundaries, rulers, deities, yogataras" },
-        { "file": "src/systems/hindu/yuga.h", "line": 1, "note": "4 Yugas: cycle lengths, ratios, Maha-Yuga/Kalpa/Manvantara structure (Ch. 12)" },
-        { "file": "src/systems/hindu/yuga.c", "line": 1, "note": "Yuga position calculation, Kali Yuga epoch 3102 BCE" },
-        { "file": "src/systems/hindu/panchanga.c", "line": 1, "note": "Panchanga five-limb system: Tithi, Vara, Yoga, Karana computation" },
-        { "file": ".context/research/digested/040-surya-siddhanta.md", "line": 1, "note": "Digest 040: Primary source — sine table, epicycles, 4-process true longitude, retrogradation, day length" }
+        {
+          "file": "src/systems/hindu/nakshatra.c",
+          "line": 1,
+          "note": "27 Nakshatras: names, boundaries, rulers, deities, yogataras"
+        },
+        {
+          "file": "src/systems/hindu/yuga.h",
+          "line": 1,
+          "note": "4 Yugas: cycle lengths, ratios, Maha-Yuga/Kalpa/Manvantara structure (Ch. 12)"
+        },
+        {
+          "file": "src/systems/hindu/yuga.c",
+          "line": 1,
+          "note": "Yuga position calculation, Kali Yuga epoch 3102 BCE"
+        },
+        {
+          "file": "src/systems/hindu/panchanga.c",
+          "line": 1,
+          "note": "Panchanga five-limb system: Tithi, Vara, Yoga, Karana computation"
+        },
+        {
+          "file": ".context/research/digested/040-surya-siddhanta.md",
+          "line": 1,
+          "note": "Digest 040: Primary source — sine table, epicycles, 4-process true longitude, retrogradation, day length"
+        }
       ]
     },
     {
@@ -1075,7 +1799,11 @@
       "name": "Ebenezer Burgess",
       "born": 1805,
       "died": 1870,
-      "category": ["translator", "orientalist", "missionary"],
+      "category": [
+        "translator",
+        "orientalist",
+        "missionary"
+      ],
       "contributions": [
         {
           "work": "Translation of the Surya Siddhanta",
@@ -1084,13 +1812,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/040-surya-siddhanta.md", "line": 1, "note": "Primary source for digest 040" }
+        {
+          "file": ".context/research/digested/040-surya-siddhanta.md",
+          "line": 1,
+          "note": "Primary source for digest 040"
+        }
       ]
     },
     {
       "id": "phanindralal-gangooly",
       "name": "Phanindralal Gangooly",
-      "category": ["editor", "scholar"],
+      "category": [
+        "editor",
+        "scholar"
+      ],
       "contributions": [
         {
           "work": "Surya Siddhanta (1935 edition)",
@@ -1099,13 +1834,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/040-surya-siddhanta.md", "line": 1, "note": "Editor of Burgess translation reprint" }
+        {
+          "file": ".context/research/digested/040-surya-siddhanta.md",
+          "line": 1,
+          "note": "Editor of Burgess translation reprint"
+        }
       ]
     },
     {
       "id": "hamid-zarrabi-zadeh",
       "name": "Hamid Zarrabi-Zadeh",
-      "category": ["software-engineer", "researcher"],
+      "category": [
+        "software-engineer",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "PrayTimes.org Prayer Time Calculation",
@@ -1114,14 +1856,21 @@
         }
       ],
       "references": [
-        { "file": "src/systems/islamic/prayer_times.c", "line": 1, "note": "Prayer time algorithms: hour angle, Asr shadow, 5 calculation methods" }
+        {
+          "file": "src/systems/islamic/prayer_times.c",
+          "line": 1,
+          "note": "Prayer time algorithms: hour angle, Asr shadow, 5 calculation methods"
+        }
       ]
     },
     {
       "id": "buddhaghosa",
       "name": "Buddhaghosa",
       "born": 370,
-      "category": ["scholar", "commentator"],
+      "category": [
+        "scholar",
+        "commentator"
+      ],
       "contributions": [
         {
           "work": "Visuddhimagga (The Path of Purification)",
@@ -1130,13 +1879,19 @@
         }
       ],
       "references": [
-        { "file": "src/systems/buddhist/kalpa.c", "line": 1, "note": "Maha-kalpa phases, antarakalpa lifespan cycles, cosmic time hierarchy" }
+        {
+          "file": "src/systems/buddhist/kalpa.c",
+          "line": 1,
+          "note": "Maha-kalpa phases, antarakalpa lifespan cycles, cosmic time hierarchy"
+        }
       ]
     },
     {
       "id": "sefer-yetzirah",
       "name": "Sefer Yetzirah (Book of Formation, anonymous)",
-      "category": ["mystical-text"],
+      "category": [
+        "mystical-text"
+      ],
       "contributions": [
         {
           "work": "Sefer Yetzirah",
@@ -1145,13 +1900,19 @@
         }
       ],
       "references": [
-        { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "22 Hebrew letter classifications, 231 Gates" }
+        {
+          "file": "src/systems/kabbalah/tree_geometry.c",
+          "line": 1,
+          "note": "22 Hebrew letter classifications, 231 Gates"
+        }
       ]
     },
     {
       "id": "golden-dawn",
       "name": "Hermetic Order of the Golden Dawn",
-      "category": ["esoteric-order"],
+      "category": [
+        "esoteric-order"
+      ],
       "contributions": [
         {
           "work": "Golden Dawn correspondence tables",
@@ -1160,7 +1921,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "Path-to-Sefirot connections, Tarot attributions, zodiac/planet/element correspondences" }
+        {
+          "file": "src/systems/kabbalah/tree_geometry.c",
+          "line": 1,
+          "note": "Path-to-Sefirot connections, Tarot attributions, zodiac/planet/element correspondences"
+        }
       ]
     },
     {
@@ -1168,7 +1933,10 @@
       "name": "Aleister Crowley",
       "born": 1875,
       "died": 1947,
-      "category": ["occultist", "author"],
+      "category": [
+        "occultist",
+        "author"
+      ],
       "contributions": [
         {
           "work": "777 and Other Qabalistic Writings",
@@ -1177,8 +1945,16 @@
         }
       ],
       "references": [
-        { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "Correspondence tables for 22 paths" },
-        { "file": "src/render/tarot_visual.c", "line": 1, "note": "Book of Thoth: 22 Major Arcana names, color scales, attributions" }
+        {
+          "file": "src/systems/kabbalah/tree_geometry.c",
+          "line": 1,
+          "note": "Correspondence tables for 22 paths"
+        },
+        {
+          "file": "src/render/tarot_visual.c",
+          "line": 1,
+          "note": "Book of Thoth: 22 Major Arcana names, color scales, attributions"
+        }
       ]
     },
     {
@@ -1186,7 +1962,10 @@
       "name": "Lady Frieda Harris",
       "born": 1877,
       "died": 1962,
-      "category": ["artist", "occultist"],
+      "category": [
+        "artist",
+        "occultist"
+      ],
       "contributions": [
         {
           "work": "Thoth Tarot Deck",
@@ -1195,7 +1974,11 @@
         }
       ],
       "references": [
-        { "file": "src/render/tarot_visual.c", "line": 19, "note": "Thoth deck visual symbolism and geometric motifs" }
+        {
+          "file": "src/render/tarot_visual.c",
+          "line": 19,
+          "note": "Thoth deck visual symbolism and geometric motifs"
+        }
       ]
     },
     {
@@ -1203,7 +1986,10 @@
       "name": "Athanasius Kircher",
       "born": 1602,
       "died": 1680,
-      "category": ["scholar", "polymath"],
+      "category": [
+        "scholar",
+        "polymath"
+      ],
       "contributions": [
         {
           "work": "Oedipus Aegyptiacus",
@@ -1212,7 +1998,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/kabbalah/tree_geometry.c", "line": 1, "note": "Kircher Tree topology: 22 path connections between Sefirot" }
+        {
+          "file": "src/systems/kabbalah/tree_geometry.c",
+          "line": 1,
+          "note": "Kircher Tree topology: 22 path connections between Sefirot"
+        }
       ]
     },
     {
@@ -1220,7 +2010,10 @@
       "name": "Arthur Thomas Doodson",
       "born": 1890,
       "died": 1968,
-      "category": ["oceanographer", "mathematician"],
+      "category": [
+        "oceanographer",
+        "mathematician"
+      ],
       "contributions": [
         {
           "work": "The Harmonic Development of the Tide-Generating Potential",
@@ -1229,13 +2022,19 @@
         }
       ],
       "references": [
-        { "file": "src/systems/earth/tidal.c", "line": 1, "note": "5 tidal constituents: M2, S2, N2, K1, O1 periods and harmonic analysis" }
+        {
+          "file": "src/systems/earth/tidal.c",
+          "line": 1,
+          "note": "5 tidal constituents: M2, S2, N2, K1, O1 periods and harmonic analysis"
+        }
       ]
     },
     {
       "id": "noaa",
       "name": "National Oceanic and Atmospheric Administration",
-      "category": ["research-organization"],
+      "category": [
+        "research-organization"
+      ],
       "contributions": [
         {
           "work": "Tidal Constituent Tables",
@@ -1244,14 +2043,22 @@
         }
       ],
       "references": [
-        { "file": "src/systems/earth/tidal.c", "line": 1, "note": "Tidal constituent relative amplitudes (M2=1.0 reference)" }
+        {
+          "file": "src/systems/earth/tidal.c",
+          "line": 1,
+          "note": "Tidal constituent relative amplitudes (M2=1.0 reference)"
+        }
       ]
     },
     {
       "id": "anthony-aveni",
       "name": "Anthony Aveni",
       "born": 1938,
-      "category": ["anthropologist", "astronomer", "author"],
+      "category": [
+        "anthropologist",
+        "astronomer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Is Harmony at the Heart of Things?",
@@ -1265,15 +2072,30 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/aveni-harmony-heart-of-things.md", "line": 1, "note": "Full digest: commensuration, Venus 8:5, Mayan super number, Kirkwood's gaps" },
-        { "file": "src/render/color_theory.h", "line": 1, "note": "Aveni validates color harmony as cosmic harmony expression" },
-        { "file": "src/systems/tzolkin/tzolkin.h", "line": 4, "note": "Aveni confirms Tzolkin 260 = body + sky + number commensuration" }
+        {
+          "file": ".context/research/digested/aveni-harmony-heart-of-things.md",
+          "line": 1,
+          "note": "Full digest: commensuration, Venus 8:5, Mayan super number, Kirkwood's gaps"
+        },
+        {
+          "file": "src/render/color_theory.h",
+          "line": 1,
+          "note": "Aveni validates color harmony as cosmic harmony expression"
+        },
+        {
+          "file": "src/systems/tzolkin/tzolkin.h",
+          "line": 4,
+          "note": "Aveni confirms Tzolkin 260 = body + sky + number commensuration"
+        }
       ]
     },
     {
       "id": "claude-jaupart",
       "name": "Claude Jaupart",
-      "category": ["geophysicist", "author"],
+      "category": [
+        "geophysicist",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Heat Generation and Transport in the Earth (co-author with Mareschal)",
@@ -1282,14 +2104,25 @@
         }
       ],
       "references": [
-        { "file": "src/systems/geology/thermo.h", "line": 4, "note": "Thermochronology data source: thermal events, cooling model" },
-        { "file": "src/systems/geology/thermo.c", "line": 4, "note": "Earth cooling model constants and thermal event data" }
+        {
+          "file": "src/systems/geology/thermo.h",
+          "line": 4,
+          "note": "Thermochronology data source: thermal events, cooling model"
+        },
+        {
+          "file": "src/systems/geology/thermo.c",
+          "line": 4,
+          "note": "Earth cooling model constants and thermal event data"
+        }
       ]
     },
     {
       "id": "jean-claude-mareschal",
       "name": "Jean-Claude Mareschal",
-      "category": ["geophysicist", "author"],
+      "category": [
+        "geophysicist",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Heat Generation and Transport in the Earth (co-author with Jaupart)",
@@ -1298,14 +2131,25 @@
         }
       ],
       "references": [
-        { "file": "src/systems/geology/thermo.h", "line": 4, "note": "Thermochronology data source: thermal events, cooling model" },
-        { "file": "src/systems/geology/thermo.c", "line": 4, "note": "Earth cooling model constants and thermal event data" }
+        {
+          "file": "src/systems/geology/thermo.h",
+          "line": 4,
+          "note": "Thermochronology data source: thermal events, cooling model"
+        },
+        {
+          "file": "src/systems/geology/thermo.c",
+          "line": 4,
+          "note": "Earth cooling model constants and thermal event data"
+        }
       ]
     },
     {
       "id": "greg-kopp",
       "name": "Greg Kopp",
-      "category": ["solar-physicist", "researcher"],
+      "category": [
+        "solar-physicist",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "A new, lower value of total solar irradiance (co-author with Lean)",
@@ -1314,13 +2158,20 @@
         }
       ],
       "references": [
-        { "file": "src/systems/earth/solar_radiation.h", "line": 12, "note": "SOLAR_CONSTANT 1361.0 W/m^2 (Kopp & Lean 2011)" }
+        {
+          "file": "src/systems/earth/solar_radiation.h",
+          "line": 12,
+          "note": "SOLAR_CONSTANT 1361.0 W/m^2 (Kopp & Lean 2011)"
+        }
       ]
     },
     {
       "id": "judith-lean",
       "name": "Judith Lean",
-      "category": ["solar-physicist", "researcher"],
+      "category": [
+        "solar-physicist",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "A new, lower value of total solar irradiance (co-author with Kopp)",
@@ -1329,7 +2180,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/earth/solar_radiation.h", "line": 12, "note": "SOLAR_CONSTANT 1361.0 W/m^2 (Kopp & Lean 2011)" }
+        {
+          "file": "src/systems/earth/solar_radiation.h",
+          "line": 12,
+          "note": "SOLAR_CONSTANT 1361.0 W/m^2 (Kopp & Lean 2011)"
+        }
       ]
     },
     {
@@ -1337,7 +2192,10 @@
       "name": "Aden B. Meinel",
       "born": 1922,
       "died": 2011,
-      "category": ["physicist", "solar-energy-pioneer"],
+      "category": [
+        "physicist",
+        "solar-energy-pioneer"
+      ],
       "contributions": [
         {
           "work": "Applied Solar Energy: An Introduction (co-author with Marjorie Meinel)",
@@ -1346,7 +2204,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/earth/solar_radiation.c", "line": 67, "note": "Meinel atmospheric transmittance model: 0.7^(AM^0.678)" }
+        {
+          "file": "src/systems/earth/solar_radiation.c",
+          "line": 67,
+          "note": "Meinel atmospheric transmittance model: 0.7^(AM^0.678)"
+        }
       ]
     },
     {
@@ -1354,7 +2216,10 @@
       "name": "Marjorie P. Meinel",
       "born": 1922,
       "died": 2008,
-      "category": ["physicist", "author"],
+      "category": [
+        "physicist",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Applied Solar Energy: An Introduction (co-author with Aden Meinel)",
@@ -1363,13 +2228,19 @@
         }
       ],
       "references": [
-        { "file": "src/systems/earth/solar_radiation.c", "line": 67, "note": "Meinel atmospheric transmittance model: 0.7^(AM^0.678)" }
+        {
+          "file": "src/systems/earth/solar_radiation.c",
+          "line": 67,
+          "note": "Meinel atmospheric transmittance model: 0.7^(AM^0.678)"
+        }
       ]
     },
     {
       "id": "icao",
       "name": "International Civil Aviation Organization",
-      "category": ["standards-organization"],
+      "category": [
+        "standards-organization"
+      ],
       "contributions": [
         {
           "work": "ICAO International Standard Atmosphere (ISA)",
@@ -1378,7 +2249,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/earth/solar_radiation.c", "line": 177, "note": "Lapse rate -6.5 C/km for elevation temperature correction" }
+        {
+          "file": "src/systems/earth/solar_radiation.c",
+          "line": 177,
+          "note": "Lapse rate -6.5 C/km for elevation temperature correction"
+        }
       ]
     },
     {
@@ -1386,7 +2261,10 @@
       "name": "Martin Schönberger",
       "born": 1911,
       "died": 1986,
-      "category": ["physician", "researcher"],
+      "category": [
+        "physician",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "The I Ching and the Genetic Code",
@@ -1395,7 +2273,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/unified/codon_hexagram.c", "line": 1, "note": "Schonberger binary mapping: RNA bases to yin/yang lines (U=00, C=01, A=10, G=11)" }
+        {
+          "file": "src/systems/unified/codon_hexagram.c",
+          "line": 1,
+          "note": "Schonberger binary mapping: RNA bases to yin/yang lines (U=00, C=01, A=10, G=11)"
+        }
       ]
     },
     {
@@ -1403,12 +2285,24 @@
       "name": "Eratosthenes of Cyrene",
       "born": -276,
       "died": -194,
-      "category": ["mathematician", "astronomer", "geographer"],
+      "category": [
+        "mathematician",
+        "astronomer",
+        "geographer"
+      ],
       "contributions": [
-        { "work": "Measurement of Earth's circumference", "description": "Used shadow angles at Alexandria and Syene to compute Earth's circumference: 39,375 km (actual 40,075 km) — 1.7% error with a gnomon and geometry.", "year": -240 }
+        {
+          "work": "Measurement of Earth's circumference",
+          "description": "Used shadow angles at Alexandria and Syene to compute Earth's circumference: 39,375 km (actual 40,075 km) — 1.7% error with a gnomon and geometry.",
+          "year": -240
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Earth circumference measurement (240 BCE)" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Earth circumference measurement (240 BCE)"
+        }
       ]
     },
     {
@@ -1416,12 +2310,23 @@
       "name": "Hipparchus of Nicaea",
       "born": -190,
       "died": -120,
-      "category": ["astronomer", "mathematician"],
+      "category": [
+        "astronomer",
+        "mathematician"
+      ],
       "contributions": [
-        { "work": "Star catalog and precession discovery", "description": "Compiled first systematic star catalog (~850 stars). Discovered precession of equinoxes (~46 arcsec/year). Measured tropical year to 6.5-minute accuracy.", "year": -130 }
+        {
+          "work": "Star catalog and precession discovery",
+          "description": "Compiled first systematic star catalog (~850 stars). Discovered precession of equinoxes (~46 arcsec/year). Measured tropical year to 6.5-minute accuracy.",
+          "year": -130
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Tropical year measurement and precession discovery" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Tropical year measurement and precession discovery"
+        }
       ]
     },
     {
@@ -1429,13 +2334,28 @@
       "name": "Aryabhata",
       "born": 476,
       "died": 550,
-      "category": ["mathematician", "astronomer"],
+      "category": [
+        "mathematician",
+        "astronomer"
+      ],
       "contributions": [
-        { "work": "Aryabhatiya", "description": "Earth circumference 39,968 km (0.27% error). Sidereal year 365.25858 days (3.2-min error). Equation of center 1200 years before Kepler. Sine tables. Earth rotates on axis.", "year": 499 }
+        {
+          "work": "Aryabhatiya",
+          "description": "Earth circumference 39,968 km (0.27% error). Sidereal year 365.25858 days (3.2-min error). Equation of center 1200 years before Kepler. Sine tables. Earth rotates on axis.",
+          "year": 499
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Earth circumference, sidereal year, lunar month measurements" },
-        { "file": ".context/research/digested/041-bhaskara-aryabhatiya.md", "line": 1, "note": "Digest 041: Complete mathematical chapter via Bhaskara I commentary — sine table, pi, pulverizer, constants" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Earth circumference, sidereal year, lunar month measurements"
+        },
+        {
+          "file": ".context/research/digested/041-bhaskara-aryabhatiya.md",
+          "line": 1,
+          "note": "Digest 041: Complete mathematical chapter via Bhaskara I commentary — sine table, pi, pulverizer, constants"
+        }
       ]
     },
     {
@@ -1443,23 +2363,47 @@
       "name": "Bhaskara I",
       "born": 600,
       "died": 680,
-      "category": ["mathematician", "astronomer", "commentator"],
+      "category": [
+        "mathematician",
+        "astronomer",
+        "commentator"
+      ],
       "contributions": [
-        { "work": "Āryabhaṭīyabhāṣya", "description": "Oldest surviving Sanskrit prose commentary on mathematics. 24-entry sine table construction, pi debate (3.1416 vs √10), pulverizer (kuttaka) algorithm with 22 astronomical examples, eclipse geometry, arithmetic series formulas, Rule of Three hierarchy. Aryabhata's constants: civil days 1,577,917,500 per yuga.", "year": 629 }
+        {
+          "work": "Āryabhaṭīyabhāṣya",
+          "description": "Oldest surviving Sanskrit prose commentary on mathematics. 24-entry sine table construction, pi debate (3.1416 vs √10), pulverizer (kuttaka) algorithm with 22 astronomical examples, eclipse geometry, arithmetic series formulas, Rule of Three hierarchy. Aryabhata's constants: civil days 1,577,917,500 per yuga.",
+          "year": 629
+        }
       ],
       "references": [
-        { "file": ".context/research/digested/041-bhaskara-aryabhatiya.md", "line": 1, "note": "Digest 041: Full mathematical chapter BAB.2.1-33" }
+        {
+          "file": ".context/research/digested/041-bhaskara-aryabhatiya.md",
+          "line": 1,
+          "note": "Digest 041: Full mathematical chapter BAB.2.1-33"
+        }
       ]
     },
     {
       "id": "agathe-keller",
       "name": "Agathe Keller",
-      "category": ["historian", "translator", "mathematician"],
+      "category": [
+        "historian",
+        "translator",
+        "mathematician"
+      ],
       "contributions": [
-        { "work": "Expounding the Mathematical Seed", "description": "Academic translation of Bhaskara I's commentary on the Aryabhatiya mathematical chapter. Two volumes: translation + supplements.", "year": 2006 }
+        {
+          "work": "Expounding the Mathematical Seed",
+          "description": "Academic translation of Bhaskara I's commentary on the Aryabhatiya mathematical chapter. Two volumes: translation + supplements.",
+          "year": 2006
+        }
       ],
       "references": [
-        { "file": ".context/research/digested/041-bhaskara-aryabhatiya.md", "line": 1, "note": "Digest 041: Translator of Bhaskara I commentary" }
+        {
+          "file": ".context/research/digested/041-bhaskara-aryabhatiya.md",
+          "line": 1,
+          "note": "Digest 041: Translator of Bhaskara I commentary"
+        }
       ]
     },
     {
@@ -1467,12 +2411,23 @@
       "name": "Brahmagupta",
       "born": 598,
       "died": 668,
-      "category": ["mathematician", "astronomer"],
+      "category": [
+        "mathematician",
+        "astronomer"
+      ],
       "contributions": [
-        { "work": "Brahmasphutasiddhanta", "description": "Lunar month 29.530582 days (0.6-second error). Rules for zero and negative numbers. Interpolation formula.", "year": 628 }
+        {
+          "work": "Brahmasphutasiddhanta",
+          "description": "Lunar month 29.530582 days (0.6-second error). Rules for zero and negative numbers. Interpolation formula.",
+          "year": 628
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Lunar month measurement (628 CE)" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Lunar month measurement (628 CE)"
+        }
       ]
     },
     {
@@ -1480,13 +2435,28 @@
       "name": "Hillel II",
       "born": 300,
       "died": 365,
-      "category": ["rabbi", "astronomer"],
+      "category": [
+        "rabbi",
+        "astronomer"
+      ],
       "contributions": [
-        { "work": "Fixed Hebrew Calendar", "description": "Established the fixed Hebrew calendar (359 CE). Molad (lunar month) 29.530594 days — 0.4-second monthly error. Still used today.", "year": 359 }
+        {
+          "work": "Fixed Hebrew Calendar",
+          "description": "Established the fixed Hebrew calendar (359 CE). Molad (lunar month) 29.530594 days — 0.4-second monthly error. Still used today.",
+          "year": 359
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Molad accuracy (359 CE)" },
-        { "file": "src/systems/hebrew/hebrew.c", "line": 1, "note": "Hebrew calendar algorithm basis" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Molad accuracy (359 CE)"
+        },
+        {
+          "file": "src/systems/hebrew/hebrew.c",
+          "line": 1,
+          "note": "Hebrew calendar algorithm basis"
+        }
       ]
     },
     {
@@ -1494,12 +2464,23 @@
       "name": "Muhammad ibn Musa al-Khwarizmi",
       "born": 780,
       "died": 850,
-      "category": ["mathematician", "astronomer"],
+      "category": [
+        "mathematician",
+        "astronomer"
+      ],
       "contributions": [
-        { "work": "Zij al-Sindhind", "description": "Astronomical tables used for 400+ years. Sine tables to 4 decimal places. Algorithms so foundational the word 'algorithm' derives from his name.", "year": 820 }
+        {
+          "work": "Zij al-Sindhind",
+          "description": "Astronomical tables used for 400+ years. Sine tables to 4 decimal places. Algorithms so foundational the word 'algorithm' derives from his name.",
+          "year": 820
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Sine table accuracy (820 CE)" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Sine table accuracy (820 CE)"
+        }
       ]
     },
     {
@@ -1507,12 +2488,23 @@
       "name": "Aristarchus of Samos",
       "born": -310,
       "died": -230,
-      "category": ["astronomer", "mathematician"],
+      "category": [
+        "astronomer",
+        "mathematician"
+      ],
       "contributions": [
-        { "work": "On the Sizes and Distances of the Sun and Moon", "description": "First geometric method for measuring Earth-Sun distance. Estimated 19x lunar distance (actual ~389x). Method was correct; measurement limited by naked-eye precision.", "year": -270 }
+        {
+          "work": "On the Sizes and Distances of the Sun and Moon",
+          "description": "First geometric method for measuring Earth-Sun distance. Estimated 19x lunar distance (actual ~389x). Method was correct; measurement limited by naked-eye precision.",
+          "year": -270
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Earth-Sun distance ratio attempt (270 BCE)" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Earth-Sun distance ratio attempt (270 BCE)"
+        }
       ]
     },
     {
@@ -1520,12 +2512,23 @@
       "name": "Ulugh Beg",
       "born": 1394,
       "died": 1449,
-      "category": ["astronomer", "ruler"],
+      "category": [
+        "astronomer",
+        "ruler"
+      ],
       "contributions": [
-        { "work": "Zij-i Sultani", "description": "Sidereal year 365.25636 days — essentially exact match to modern value. Star catalog of 1018 stars. Built 40-meter sextant at Samarkand.", "year": 1437 }
+        {
+          "work": "Zij-i Sultani",
+          "description": "Sidereal year 365.25636 days — essentially exact match to modern value. Star catalog of 1018 stars. Built 40-meter sextant at Samarkand.",
+          "year": 1437
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Sidereal year measurement — essentially exact (1437 CE)" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Sidereal year measurement — essentially exact (1437 CE)"
+        }
       ]
     },
     {
@@ -1533,12 +2536,23 @@
       "name": "Su Song",
       "born": 1020,
       "died": 1101,
-      "category": ["astronomer", "engineer"],
+      "category": [
+        "astronomer",
+        "engineer"
+      ],
       "contributions": [
-        { "work": "Cosmic Engine (water-powered astronomical clock tower)", "description": "Tropical year 365.2436 days (2-min error). Built world's first astronomical clock tower with escapement mechanism.", "year": 1088 }
+        {
+          "work": "Cosmic Engine (water-powered astronomical clock tower)",
+          "description": "Tropical year 365.2436 days (2-min error). Built world's first astronomical clock tower with escapement mechanism.",
+          "year": 1088
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Tropical year measurement via clock tower (1088 CE)" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Tropical year measurement via clock tower (1088 CE)"
+        }
       ]
     },
     {
@@ -1546,12 +2560,23 @@
       "name": "Nicolaus Copernicus",
       "born": 1473,
       "died": 1543,
-      "category": ["astronomer", "mathematician"],
+      "category": [
+        "astronomer",
+        "mathematician"
+      ],
       "contributions": [
-        { "work": "De revolutionibus orbium coelestium", "description": "Heliocentric model. Sidereal year 365.25671 days. Reframed the entire solar system.", "year": 1543 }
+        {
+          "work": "De revolutionibus orbium coelestium",
+          "description": "Heliocentric model. Sidereal year 365.25671 days. Reframed the entire solar system.",
+          "year": 1543
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Sidereal year and heliocentric model (1543)" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Sidereal year and heliocentric model (1543)"
+        }
       ]
     },
     {
@@ -1559,12 +2584,22 @@
       "name": "Tycho Brahe",
       "born": 1546,
       "died": 1601,
-      "category": ["astronomer"],
+      "category": [
+        "astronomer"
+      ],
       "contributions": [
-        { "work": "Stellar and planetary observations", "description": "Star positions accurate to 1 arcminute — most accurate naked-eye observations ever recorded. Enabled Kepler's laws.", "year": 1590 }
+        {
+          "work": "Stellar and planetary observations",
+          "description": "Star positions accurate to 1 arcminute — most accurate naked-eye observations ever recorded. Enabled Kepler's laws.",
+          "year": 1590
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/achievement.c", "line": 1, "note": "Naked-eye positional accuracy (1 arcminute)" }
+        {
+          "file": "src/systems/unified/achievement.c",
+          "line": 1,
+          "note": "Naked-eye positional accuracy (1 arcminute)"
+        }
       ]
     },
     {
@@ -1572,12 +2607,22 @@
       "name": "Sosigenes of Alexandria",
       "born": -90,
       "died": -40,
-      "category": ["astronomer"],
+      "category": [
+        "astronomer"
+      ],
       "contributions": [
-        { "work": "Julian Calendar design", "description": "Advised Julius Caesar on calendar reform (46 BCE). Designed 365.25-day solar year with leap year every 4 years.", "year": -46 }
+        {
+          "work": "Julian Calendar design",
+          "description": "Advised Julius Caesar on calendar reform (46 BCE). Designed 365.25-day solar year with leap year every 4 years.",
+          "year": -46
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/calendar_reform.c", "line": 1, "note": "Julian Calendar originator" }
+        {
+          "file": "src/systems/unified/calendar_reform.c",
+          "line": 1,
+          "note": "Julian Calendar originator"
+        }
       ]
     },
     {
@@ -1585,12 +2630,22 @@
       "name": "Elisabeth Achelis",
       "born": 1880,
       "died": 1973,
-      "category": ["reformer"],
+      "category": [
+        "reformer"
+      ],
       "contributions": [
-        { "work": "The World Calendar", "description": "Proposed the World Calendar (1930): 4 identical quarters of 91 days + Worldsday. Nearly adopted by League of Nations 1937.", "year": 1930 }
+        {
+          "work": "The World Calendar",
+          "description": "Proposed the World Calendar (1930): 4 identical quarters of 91 days + Worldsday. Nearly adopted by League of Nations 1937.",
+          "year": 1930
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/calendar_reform.c", "line": 1, "note": "World Calendar proposal" }
+        {
+          "file": "src/systems/unified/calendar_reform.c",
+          "line": 1,
+          "note": "World Calendar proposal"
+        }
       ]
     },
     {
@@ -1598,12 +2653,23 @@
       "name": "Moses Bruine Cotsworth",
       "born": 1859,
       "died": 1943,
-      "category": ["statistician", "reformer"],
+      "category": [
+        "statistician",
+        "reformer"
+      ],
       "contributions": [
-        { "work": "International Fixed Calendar", "description": "Proposed 13 months of 28 days + Year Day (1902). 13th month 'Sol' between June and July. Used by Kodak internally 1928-1989.", "year": 1902 }
+        {
+          "work": "International Fixed Calendar",
+          "description": "Proposed 13 months of 28 days + Year Day (1902). 13th month 'Sol' between June and July. Used by Kodak internally 1928-1989.",
+          "year": 1902
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/calendar_reform.c", "line": 1, "note": "International Fixed Calendar proposal" }
+        {
+          "file": "src/systems/unified/calendar_reform.c",
+          "line": 1,
+          "note": "International Fixed Calendar proposal"
+        }
       ]
     },
     {
@@ -1611,12 +2677,23 @@
       "name": "Siddhartha Gautama (Buddha)",
       "born": -563,
       "died": -483,
-      "category": ["teacher", "philosopher"],
+      "category": [
+        "teacher",
+        "philosopher"
+      ],
       "contributions": [
-        { "work": "Foundational teachings of Buddhism", "description": "Four Noble Truths, Eightfold Path. Buddhist calendar and Uposatha observance days derive from his teachings.", "year": -528 }
+        {
+          "work": "Foundational teachings of Buddhism",
+          "description": "Four Noble Truths, Eightfold Path. Buddhist calendar and Uposatha observance days derive from his teachings.",
+          "year": -528
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/knowledge_graph.c", "line": 1, "note": "Buddhist system origin node in knowledge graph" }
+        {
+          "file": "src/systems/unified/knowledge_graph.c",
+          "line": 1,
+          "note": "Buddhist system origin node in knowledge graph"
+        }
       ]
     },
     {
@@ -1624,12 +2701,23 @@
       "name": "Moses de Leon",
       "born": 1250,
       "died": 1305,
-      "category": ["rabbi", "mystic"],
+      "category": [
+        "rabbi",
+        "mystic"
+      ],
       "contributions": [
-        { "work": "Sefer ha-Zohar (The Book of Splendor)", "description": "Primary text of Kabbalah. Systematized the Sefirot, paths, and Four Worlds framework.", "year": 1290 }
+        {
+          "work": "Sefer ha-Zohar (The Book of Splendor)",
+          "description": "Primary text of Kabbalah. Systematized the Sefirot, paths, and Four Worlds framework.",
+          "year": 1290
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/knowledge_graph.c", "line": 1, "note": "Kabbalah origin node — influenced Isaac Luria" }
+        {
+          "file": "src/systems/unified/knowledge_graph.c",
+          "line": 1,
+          "note": "Kabbalah origin node — influenced Isaac Luria"
+        }
       ]
     },
     {
@@ -1637,12 +2725,23 @@
       "name": "Isaac Luria",
       "born": 1534,
       "died": 1572,
-      "category": ["rabbi", "mystic"],
+      "category": [
+        "rabbi",
+        "mystic"
+      ],
       "contributions": [
-        { "work": "Lurianic Kabbalah", "description": "Developed the concepts of tzimtzum (contraction), shevirat ha-kelim (breaking of vessels), and tikkun (repair). Transformed Kabbalistic thought.", "year": 1570 }
+        {
+          "work": "Lurianic Kabbalah",
+          "description": "Developed the concepts of tzimtzum (contraction), shevirat ha-kelim (breaking of vessels), and tikkun (repair). Transformed Kabbalistic thought.",
+          "year": 1570
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/knowledge_graph.c", "line": 1, "note": "Kabbalah transmission node — influenced by Moses de Leon" }
+        {
+          "file": "src/systems/unified/knowledge_graph.c",
+          "line": 1,
+          "note": "Kabbalah transmission node — influenced by Moses de Leon"
+        }
       ]
     },
     {
@@ -1650,20 +2749,38 @@
       "name": "Pope Gregory XIII",
       "born": 1502,
       "died": 1585,
-      "category": ["pope", "reformer"],
+      "category": [
+        "pope",
+        "reformer"
+      ],
       "contributions": [
-        { "work": "Gregorian Calendar Reform", "description": "Promulgated the Gregorian calendar (1582). Deleted 10 days, adjusted leap year rules. Calendar still used worldwide.", "year": 1582 }
+        {
+          "work": "Gregorian Calendar Reform",
+          "description": "Promulgated the Gregorian calendar (1582). Deleted 10 days, adjusted leap year rules. Calendar still used worldwide.",
+          "year": 1582
+        }
       ],
       "references": [
-        { "file": "src/systems/unified/knowledge_graph.c", "line": 1, "note": "Gregorian system node in knowledge graph" },
-        { "file": "src/systems/unified/calendar_reform.c", "line": 1, "note": "Gregorian calendar reform entry" }
+        {
+          "file": "src/systems/unified/knowledge_graph.c",
+          "line": 1,
+          "note": "Gregorian system node in knowledge graph"
+        },
+        {
+          "file": "src/systems/unified/calendar_reform.c",
+          "line": 1,
+          "note": "Gregorian calendar reform entry"
+        }
       ]
     },
     {
       "id": "hans-cousto",
       "name": "Hans Cousto",
       "born": 1948,
-      "category": ["musician", "mathematician"],
+      "category": [
+        "musician",
+        "mathematician"
+      ],
       "contributions": [
         {
           "work": "The Cosmic Octave",
@@ -1672,14 +2789,21 @@
         }
       ],
       "references": [
-        { "file": "src/systems/unified/frequency.c", "line": 1, "note": "Planetary frequency mapping via octave transposition (Cosmic Octave method)" }
+        {
+          "file": "src/systems/unified/frequency.c",
+          "line": 1,
+          "note": "Planetary frequency mapping via octave transposition (Cosmic Octave method)"
+        }
       ]
     },
     {
       "id": "jacques-laskar",
       "name": "Jacques Laskar",
       "born": 1955,
-      "category": ["astronomer", "mathematician"],
+      "category": [
+        "astronomer",
+        "mathematician"
+      ],
       "contributions": [
         {
           "work": "Secular terms of classical planetary theories",
@@ -1688,7 +2812,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/029-meeus-computus-obliquity-precession-moon-phases.md", "line": 1, "note": "Laskar obliquity polynomial (formula 22.3 in Meeus)" }
+        {
+          "file": ".context/research/digested/029-meeus-computus-obliquity-precession-moon-phases.md",
+          "line": 1,
+          "note": "Laskar obliquity polynomial (formula 22.3 in Meeus)"
+        }
       ]
     },
     {
@@ -1696,7 +2824,10 @@
       "name": "Harold Spencer Jones",
       "born": 1890,
       "died": 1960,
-      "category": ["astronomer", "astronomer-royal"],
+      "category": [
+        "astronomer",
+        "astronomer-royal"
+      ],
       "contributions": [
         {
           "work": "General Astronomy",
@@ -1705,7 +2836,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/029-meeus-computus-obliquity-precession-moon-phases.md", "line": 1, "note": "Spencer Jones Computus algorithm (Meeus Ch. 8)" }
+        {
+          "file": ".context/research/digested/029-meeus-computus-obliquity-precession-moon-phases.md",
+          "line": 1,
+          "note": "Spencer Jones Computus algorithm (Meeus Ch. 8)"
+        }
       ]
     },
     {
@@ -1713,7 +2848,11 @@
       "name": "Otto Neugebauer",
       "born": 1899,
       "died": 1990,
-      "category": ["historian-of-science", "mathematician", "egyptologist"],
+      "category": [
+        "historian-of-science",
+        "mathematician",
+        "egyptologist"
+      ],
       "contributions": [
         {
           "work": "Egyptian Astronomical Texts (EAT)",
@@ -1722,7 +2861,11 @@
         }
       ],
       "references": [
-        { "file": "src/render/decan_stars.c", "line": 6, "note": "Egyptian decan names (EAT transliteration)" }
+        {
+          "file": "src/render/decan_stars.c",
+          "line": 6,
+          "note": "Egyptian decan names (EAT transliteration)"
+        }
       ]
     },
     {
@@ -1730,7 +2873,10 @@
       "name": "Richard A. Parker",
       "born": 1905,
       "died": 1993,
-      "category": ["egyptologist", "historian-of-science"],
+      "category": [
+        "egyptologist",
+        "historian-of-science"
+      ],
       "contributions": [
         {
           "work": "Egyptian Astronomical Texts (EAT)",
@@ -1739,14 +2885,21 @@
         }
       ],
       "references": [
-        { "file": "src/render/decan_stars.c", "line": 6, "note": "Egyptian decan names (EAT co-author)" }
+        {
+          "file": "src/render/decan_stars.c",
+          "line": 6,
+          "note": "Egyptian decan names (EAT co-author)"
+        }
       ]
     },
     {
       "id": "joanne-conman",
       "name": "Joanne Conman",
       "born": 0,
-      "category": ["egyptologist", "astronomer"],
+      "category": [
+        "egyptologist",
+        "astronomer"
+      ],
       "contributions": [
         {
           "work": "It's About Time: Ancient Egyptian Cosmology",
@@ -1755,14 +2908,21 @@
         }
       ],
       "references": [
-        { "file": "src/render/decan_stars.c", "line": 8, "note": "Modern star identifications for decans" }
+        {
+          "file": "src/render/decan_stars.c",
+          "line": 8,
+          "note": "Modern star identifications for decans"
+        }
       ]
     },
     {
       "id": "jose-lull-juan-belmonte",
       "name": "Jose Lull & Juan Antonio Belmonte",
       "born": 0,
-      "category": ["archaeoastronomer", "astrophysicist"],
+      "category": [
+        "archaeoastronomer",
+        "astrophysicist"
+      ],
       "contributions": [
         {
           "work": "In Search of Cosmic Order: Selected Essays on Egyptian Archaeoastronomy",
@@ -1771,14 +2931,21 @@
         }
       ],
       "references": [
-        { "file": "src/render/decan_stars.c", "line": 8, "note": "Decan-star correlation survey" }
+        {
+          "file": "src/render/decan_stars.c",
+          "line": 8,
+          "note": "Decan-star correlation survey"
+        }
       ]
     },
     {
       "id": "taqizadeh",
       "name": "Sayyid Hasan Taqizadeh",
       "born": 1878,
-      "category": ["historian", "iranologist"],
+      "category": [
+        "historian",
+        "iranologist"
+      ],
       "contributions": [
         {
           "work": "Old Iranian Calendars",
@@ -1787,14 +2954,22 @@
         }
       ],
       "references": [
-        { "file": "src/systems/zoroastrian/zoroastrian.c", "line": 1, "note": "Yazdgerdi calendar structure, epoch, month/day naming conventions" }
+        {
+          "file": "src/systems/zoroastrian/zoroastrian.c",
+          "line": 1,
+          "note": "Yazdgerdi calendar structure, epoch, month/day naming conventions"
+        }
       ]
     },
     {
       "id": "edward-tufte",
       "name": "Edward R. Tufte",
       "born": 1942,
-      "category": ["statistician", "information designer", "author"],
+      "category": [
+        "statistician",
+        "information designer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Envisioning Information",
@@ -1803,7 +2978,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/034-tufte-envisioning-information.md", "line": 1, "note": "Complete extraction: 6 chapters, layering/separation/color/small multiples principles" }
+        {
+          "file": ".context/research/digested/034-tufte-envisioning-information.md",
+          "line": 1,
+          "note": "Complete extraction: 6 chapters, layering/separation/color/small multiples principles"
+        }
       ]
     },
     {
@@ -1811,7 +2990,10 @@
       "name": "Eduard Imhof",
       "born": 1895,
       "died": 1986,
-      "category": ["cartographer", "author"],
+      "category": [
+        "cartographer",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Cartographic Relief Presentation",
@@ -1820,7 +3002,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/034-tufte-envisioning-information.md", "line": 1, "note": "Imhof's 4 rules quoted via Tufte pp. 82-83" }
+        {
+          "file": ".context/research/digested/034-tufte-envisioning-information.md",
+          "line": 1,
+          "note": "Imhof's 4 rules quoted via Tufte pp. 82-83"
+        }
       ]
     },
     {
@@ -1828,7 +3014,11 @@
       "name": "Josef Albers",
       "born": 1888,
       "died": 1976,
-      "category": ["artist", "educator", "color theorist"],
+      "category": [
+        "artist",
+        "educator",
+        "color theorist"
+      ],
       "contributions": [
         {
           "work": "Interaction of Color",
@@ -1837,7 +3027,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Full 26-chapter extraction: Q1-Q5 on contrast, relativity, temperature, quantitative rules, harmony" }
+        {
+          "file": ".context/research/digested/035-albers-interaction-of-color.md",
+          "line": 1,
+          "note": "Full 26-chapter extraction: Q1-Q5 on contrast, relativity, temperature, quantitative rules, harmony"
+        }
       ]
     },
     {
@@ -1845,7 +3039,10 @@
       "name": "Michel Eugène Chevreul",
       "born": 1786,
       "died": 1889,
-      "category": ["chemist", "color theorist"],
+      "category": [
+        "chemist",
+        "color theorist"
+      ],
       "contributions": [
         {
           "work": "The Laws of Contrast of Colour",
@@ -1854,7 +3051,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Referenced by Albers Ch XX for graduated scale method" }
+        {
+          "file": ".context/research/digested/035-albers-interaction-of-color.md",
+          "line": 1,
+          "note": "Referenced by Albers Ch XX for graduated scale method"
+        }
       ]
     },
     {
@@ -1862,7 +3063,10 @@
       "name": "Arthur Schopenhauer",
       "born": 1788,
       "died": 1860,
-      "category": ["philosopher", "color theorist"],
+      "category": [
+        "philosopher",
+        "color theorist"
+      ],
       "contributions": [
         {
           "work": "On Vision and Colours",
@@ -1871,7 +3075,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Schopenhauer area ratios quoted by Albers Ch XVI" }
+        {
+          "file": ".context/research/digested/035-albers-interaction-of-color.md",
+          "line": 1,
+          "note": "Schopenhauer area ratios quoted by Albers Ch XVI"
+        }
       ]
     },
     {
@@ -1879,7 +3087,10 @@
       "name": "Wilhelm von Bezold",
       "born": 1837,
       "died": 1907,
-      "category": ["meteorologist", "color theorist"],
+      "category": [
+        "meteorologist",
+        "color theorist"
+      ],
       "contributions": [
         {
           "work": "Bezold Effect",
@@ -1888,7 +3099,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Bezold Effect documented by Albers Ch XIII" }
+        {
+          "file": ".context/research/digested/035-albers-interaction-of-color.md",
+          "line": 1,
+          "note": "Bezold Effect documented by Albers Ch XIII"
+        }
       ]
     },
     {
@@ -1896,7 +3111,10 @@
       "name": "Ernst Heinrich Weber & Gustav Theodor Fechner",
       "born": 1795,
       "died": 1887,
-      "category": ["psychophysicist", "philosopher"],
+      "category": [
+        "psychophysicist",
+        "philosopher"
+      ],
       "contributions": [
         {
           "work": "Weber-Fechner Law",
@@ -1905,14 +3123,21 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/035-albers-interaction-of-color.md", "line": 1, "note": "Weber-Fechner Law applied to color by Albers Ch XX" }
+        {
+          "file": ".context/research/digested/035-albers-interaction-of-color.md",
+          "line": 1,
+          "note": "Weber-Fechner Law applied to color by Albers Ch XX"
+        }
       ]
     },
     {
       "id": "bill-bryson",
       "name": "Bill Bryson",
       "born": 1951,
-      "category": ["author", "science communicator"],
+      "category": [
+        "author",
+        "science communicator"
+      ],
       "contributions": [
         {
           "work": "A Short History of Nearly Everything",
@@ -1921,7 +3146,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/036-bryson-short-history.md", "line": 1, "note": "Scale comparisons, geochronology, fun facts extraction" }
+        {
+          "file": ".context/research/digested/036-bryson-short-history.md",
+          "line": 1,
+          "note": "Scale comparisons, geochronology, fun facts extraction"
+        }
       ]
     },
     {
@@ -1929,7 +3158,9 @@
       "name": "Clair Cameron Patterson",
       "born": 1922,
       "died": 1995,
-      "category": ["geochemist"],
+      "category": [
+        "geochemist"
+      ],
       "contributions": [
         {
           "work": "Age of meteorites and the Earth",
@@ -1938,7 +3169,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/036-bryson-short-history.md", "line": 1, "note": "Earth age determination, geochronology timeline" }
+        {
+          "file": ".context/research/digested/036-bryson-short-history.md",
+          "line": 1,
+          "note": "Earth age determination, geochronology timeline"
+        }
       ]
     },
     {
@@ -1946,7 +3181,9 @@
       "name": "David M. Raup",
       "born": 1933,
       "died": 2015,
-      "category": ["paleontologist"],
+      "category": [
+        "paleontologist"
+      ],
       "contributions": [
         {
           "work": "Background extinction rate calculation",
@@ -1955,7 +3192,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/036-bryson-short-history.md", "line": 1, "note": "Extinction rate data for fun_facts module" }
+        {
+          "file": ".context/research/digested/036-bryson-short-history.md",
+          "line": 1,
+          "note": "Extinction rate data for fun_facts module"
+        }
       ]
     },
     {
@@ -1963,7 +3204,10 @@
       "name": "Sayyid Hasan Taqizadeh",
       "born": 1878,
       "died": 1970,
-      "category": ["historian", "scholar"],
+      "category": [
+        "historian",
+        "scholar"
+      ],
       "contributions": [
         {
           "work": "Various Eras and Calendars Used in the Countries of Islam",
@@ -1972,14 +3216,20 @@
         }
       ],
       "references": [
-        { "file": "src/systems/zoroastrian/zoroastrian.c", "line": 7, "note": "Yazdgerdi epoch and calendar structure" }
+        {
+          "file": "src/systems/zoroastrian/zoroastrian.c",
+          "line": 7,
+          "note": "Yazdgerdi epoch and calendar structure"
+        }
       ]
     },
     {
       "id": "nicole-capitaine",
       "name": "Nicole Capitaine",
       "born": 1948,
-      "category": ["astronomer"],
+      "category": [
+        "astronomer"
+      ],
       "contributions": [
         {
           "work": "IAU 2006 precession model",
@@ -1988,7 +3238,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/astronomy/precession.c", "line": 5, "note": "IAU 2006 precession coefficients" }
+        {
+          "file": "src/systems/astronomy/precession.c",
+          "line": 5,
+          "note": "IAU 2006 precession coefficients"
+        }
       ]
     },
     {
@@ -1996,7 +3250,9 @@
       "name": "Jean Chapront",
       "born": 1937,
       "died": 2020,
-      "category": ["astronomer"],
+      "category": [
+        "astronomer"
+      ],
       "contributions": [
         {
           "work": "Lunar and planetary ephemerides",
@@ -2005,7 +3261,11 @@
         }
       ],
       "references": [
-        { "file": "src/systems/astronomy/precession.c", "line": 5, "note": "IAU 2006 precession polynomial co-author" }
+        {
+          "file": "src/systems/astronomy/precession.c",
+          "line": 5,
+          "note": "IAU 2006 precession polynomial co-author"
+        }
       ]
     },
     {
@@ -2013,7 +3273,11 @@
       "name": "Khedrup Norsang Gyatso",
       "born": 1423,
       "died": 1513,
-      "category": ["astronomer", "scholar", "author"],
+      "category": [
+        "astronomer",
+        "scholar",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Ornament of Stainless Light",
@@ -2022,13 +3286,19 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/042-kalachakra-cosmology.md", "line": 1, "note": "Digest 042: Kalachakra cosmology and astronomy" }
+        {
+          "file": ".context/research/digested/042-kalachakra-cosmology.md",
+          "line": 1,
+          "note": "Digest 042: Kalachakra cosmology and astronomy"
+        }
       ]
     },
     {
       "id": "gavin-kilty",
       "name": "Gavin Kilty",
-      "category": ["translator"],
+      "category": [
+        "translator"
+      ],
       "contributions": [
         {
           "work": "Translation of Ornament of Stainless Light",
@@ -2037,7 +3307,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/042-kalachakra-cosmology.md", "line": 1, "note": "Translator of primary source for digest 042" }
+        {
+          "file": ".context/research/digested/042-kalachakra-cosmology.md",
+          "line": 1,
+          "note": "Translator of primary source for digest 042"
+        }
       ]
     },
     {
@@ -2045,7 +3319,10 @@
       "name": "Gilbert Romme",
       "born": 1750,
       "died": 1795,
-      "category": ["politician", "calendar-designer"],
+      "category": [
+        "politician",
+        "calendar-designer"
+      ],
       "contributions": [
         {
           "work": "French Republican Calendar",
@@ -2054,14 +3331,25 @@
         }
       ],
       "references": [
-        { "file": "src/systems/french_republican/french_republican.h", "line": 13, "note": "Calendar designer, leap year proposal" },
-        { "file": "src/systems/french_republican/french_republican.c", "line": 8, "note": "Romme leap year rule implementation" }
+        {
+          "file": "src/systems/french_republican/french_republican.h",
+          "line": 13,
+          "note": "Calendar designer, leap year proposal"
+        },
+        {
+          "file": "src/systems/french_republican/french_republican.c",
+          "line": 8,
+          "note": "Romme leap year rule implementation"
+        }
       ]
     },
     {
       "id": "stefan-gustavson",
       "name": "Stefan Gustavson",
-      "category": ["computer-scientist", "graphics-researcher"],
+      "category": [
+        "computer-scientist",
+        "graphics-researcher"
+      ],
       "contributions": [
         {
           "work": "Simplex noise demystified",
@@ -2070,13 +3358,20 @@
         }
       ],
       "references": [
-        { "file": "src/render/noise_shader.c", "line": 4, "note": "Simplex noise GLSL implementation (Ashima Arts / MIT license)" }
+        {
+          "file": "src/render/noise_shader.c",
+          "line": 4,
+          "note": "Simplex noise GLSL implementation (Ashima Arts / MIT license)"
+        }
       ]
     },
     {
       "id": "ian-mcewan",
       "name": "Ian McEwan",
-      "category": ["computer-scientist", "graphics-researcher"],
+      "category": [
+        "computer-scientist",
+        "graphics-researcher"
+      ],
       "contributions": [
         {
           "work": "WebGL noise functions",
@@ -2085,13 +3380,20 @@
         }
       ],
       "references": [
-        { "file": "src/render/noise_shader.c", "line": 4, "note": "Co-author of simplex noise GLSL implementation (Ashima Arts / MIT license)" }
+        {
+          "file": "src/render/noise_shader.c",
+          "line": 4,
+          "note": "Co-author of simplex noise GLSL implementation (Ashima Arts / MIT license)"
+        }
       ]
     },
     {
       "id": "sean-oneil",
       "name": "Sean O'Neil",
-      "category": ["graphics-programmer", "researcher"],
+      "category": [
+        "graphics-programmer",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "GPU Gems 2 Ch.16: Accurate Atmospheric Scattering",
@@ -2100,13 +3402,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "GPU Gems 2 Ch.16 algorithm extraction for planet limb glow and sky rendering" }
+        {
+          "file": ".context/research/digested/shader-atmospheric-scattering.md",
+          "line": 1,
+          "note": "GPU Gems 2 Ch.16 algorithm extraction for planet limb glow and sky rendering"
+        }
       ]
     },
     {
       "id": "aj-preetham",
       "name": "A.J. Preetham",
-      "category": ["computer-scientist", "graphics-researcher"],
+      "category": [
+        "computer-scientist",
+        "graphics-researcher"
+      ],
       "contributions": [
         {
           "work": "A Practical Analytic Model for Daylight",
@@ -2115,13 +3424,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "Preetham sky model for analytical daylight rendering" }
+        {
+          "file": ".context/research/digested/shader-atmospheric-scattering.md",
+          "line": 1,
+          "note": "Preetham sky model for analytical daylight rendering"
+        }
       ]
     },
     {
       "id": "tomoyuki-nishita",
       "name": "Tomoyuki Nishita",
-      "category": ["computer-scientist", "graphics-researcher"],
+      "category": [
+        "computer-scientist",
+        "graphics-researcher"
+      ],
       "contributions": [
         {
           "work": "Display of the Earth Taking into Account Atmospheric Scattering",
@@ -2130,7 +3446,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "Original atmospheric scattering rendering algorithm" }
+        {
+          "file": ".context/research/digested/shader-atmospheric-scattering.md",
+          "line": 1,
+          "note": "Original atmospheric scattering rendering algorithm"
+        }
       ]
     },
     {
@@ -2138,7 +3458,10 @@
       "name": "Lord Rayleigh (John William Strutt)",
       "born": 1842,
       "died": 1919,
-      "category": ["physicist", "Nobel-laureate"],
+      "category": [
+        "physicist",
+        "Nobel-laureate"
+      ],
       "contributions": [
         {
           "work": "Theory of light scattering by particles small compared to wavelength",
@@ -2147,7 +3470,11 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "Rayleigh scattering physics used in atmosphere shaders" }
+        {
+          "file": ".context/research/digested/shader-atmospheric-scattering.md",
+          "line": 1,
+          "note": "Rayleigh scattering physics used in atmosphere shaders"
+        }
       ]
     },
     {
@@ -2155,7 +3482,9 @@
       "name": "Gustav Mie",
       "born": 1868,
       "died": 1957,
-      "category": ["physicist"],
+      "category": [
+        "physicist"
+      ],
       "contributions": [
         {
           "work": "Mie theory of electromagnetic scattering by spherical particles",
@@ -2164,13 +3493,19 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "Mie scattering physics used in atmosphere shaders" }
+        {
+          "file": ".context/research/digested/shader-atmospheric-scattering.md",
+          "line": 1,
+          "note": "Mie scattering physics used in atmosphere shaders"
+        }
       ]
     },
     {
       "id": "henyey-greenstein",
       "name": "Louis G. Henyey & Jesse L. Greenstein",
-      "category": ["astrophysicist"],
+      "category": [
+        "astrophysicist"
+      ],
       "contributions": [
         {
           "work": "Diffuse radiation in the galaxy",
@@ -2179,13 +3514,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "HG phase function for Mie scattering direction" }
+        {
+          "file": ".context/research/digested/shader-atmospheric-scattering.md",
+          "line": 1,
+          "note": "HG phase function for Mie scattering direction"
+        }
       ]
     },
     {
       "id": "rye-terrell",
       "name": "Rye Terrell (wwwtyro)",
-      "category": ["graphics-programmer", "open-source"],
+      "category": [
+        "graphics-programmer",
+        "open-source"
+      ],
       "contributions": [
         {
           "work": "glsl-atmosphere",
@@ -2194,13 +3536,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-atmospheric-scattering.md", "line": 1, "note": "Reference GLSL atmosphere implementation (MIT license)" }
+        {
+          "file": ".context/research/digested/shader-atmospheric-scattering.md",
+          "line": 1,
+          "note": "Reference GLSL atmosphere implementation (MIT license)"
+        }
       ]
     },
     {
       "id": "masaki-kawase",
       "name": "Masaki Kawase",
-      "category": ["graphics-programmer", "game-developer"],
+      "category": [
+        "graphics-programmer",
+        "game-developer"
+      ],
       "contributions": [
         {
           "work": "Fast blur techniques for real-time rendering",
@@ -2209,13 +3558,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "Dual Kawase blur for bloom pipeline" }
+        {
+          "file": ".context/research/digested/shader-post-processing.md",
+          "line": 1,
+          "note": "Dual Kawase blur for bloom pipeline"
+        }
       ]
     },
     {
       "id": "krzysztof-narkowicz",
       "name": "Krzysztof Narkowicz",
-      "category": ["graphics-programmer", "researcher"],
+      "category": [
+        "graphics-programmer",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "ACES Filmic Tone Mapping Curve fit",
@@ -2224,13 +3580,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "ACES filmic tone mapping curve for HDR rendering" }
+        {
+          "file": ".context/research/digested/shader-post-processing.md",
+          "line": 1,
+          "note": "ACES filmic tone mapping curve for HDR rendering"
+        }
       ]
     },
     {
       "id": "john-hable",
       "name": "John Hable",
-      "category": ["graphics-programmer", "game-developer"],
+      "category": [
+        "graphics-programmer",
+        "game-developer"
+      ],
       "contributions": [
         {
           "work": "Uncharted 2 filmic tone mapping",
@@ -2239,13 +3602,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "Uncharted 2 filmic tone mapping operator" }
+        {
+          "file": ".context/research/digested/shader-post-processing.md",
+          "line": 1,
+          "note": "Uncharted 2 filmic tone mapping operator"
+        }
       ]
     },
     {
       "id": "timothy-lottes",
       "name": "Timothy Lottes",
-      "category": ["graphics-programmer", "researcher"],
+      "category": [
+        "graphics-programmer",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "FXAA (Fast Approximate Anti-Aliasing)",
@@ -2259,13 +3629,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "FXAA anti-aliasing and Lottes tone mapping operator" }
+        {
+          "file": ".context/research/digested/shader-post-processing.md",
+          "line": 1,
+          "note": "FXAA anti-aliasing and Lottes tone mapping operator"
+        }
       ]
     },
     {
       "id": "hajime-uchimura",
       "name": "Hajime Uchimura",
-      "category": ["graphics-programmer", "game-developer"],
+      "category": [
+        "graphics-programmer",
+        "game-developer"
+      ],
       "contributions": [
         {
           "work": "HDR Theory and Practice (Gran Turismo tone mapping)",
@@ -2274,13 +3651,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "Uchimura/Gran Turismo tone mapping operator" }
+        {
+          "file": ".context/research/digested/shader-post-processing.md",
+          "line": 1,
+          "note": "Uchimura/Gran Turismo tone mapping operator"
+        }
       ]
     },
     {
       "id": "troy-sobotka",
       "name": "Troy Sobotka",
-      "category": ["color-scientist", "graphics-researcher"],
+      "category": [
+        "color-scientist",
+        "graphics-researcher"
+      ],
       "contributions": [
         {
           "work": "AgX tone mapping",
@@ -2289,13 +3673,20 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "AgX tone mapping for accurate HDR color rendering" }
+        {
+          "file": ".context/research/digested/shader-post-processing.md",
+          "line": 1,
+          "note": "AgX tone mapping for accurate HDR color rendering"
+        }
       ]
     },
     {
       "id": "joey-de-vries",
       "name": "Joey de Vries",
-      "category": ["educator", "graphics-programmer"],
+      "category": [
+        "educator",
+        "graphics-programmer"
+      ],
       "contributions": [
         {
           "work": "LearnOpenGL tutorials",
@@ -2304,13 +3695,21 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-post-processing.md", "line": 1, "note": "Bloom pipeline and HDR rendering tutorials" }
+        {
+          "file": ".context/research/digested/shader-post-processing.md",
+          "line": 1,
+          "note": "Bloom pipeline and HDR rendering tutorials"
+        }
       ]
     },
     {
       "id": "inigo-quilez",
       "name": "Inigo Quilez",
-      "category": ["graphics-programmer", "mathematician", "artist"],
+      "category": [
+        "graphics-programmer",
+        "mathematician",
+        "artist"
+      ],
       "contributions": [
         {
           "work": "Domain warping and procedural noise techniques",
@@ -2319,13 +3718,35 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-procedural-planets.md", "line": 1, "note": "Domain warping technique for gas giant cloud patterns" }
+        {
+          "file": ".context/research/digested/shader-procedural-planets.md",
+          "line": 1,
+          "note": "Domain warping technique for gas giant cloud patterns"
+        },
+        {
+          "file": ".context/research/digested/shader-milkyway-galaxy.md",
+          "line": 1,
+          "note": "Domain warping, cosine palettes, FBM for Milky Way rendering"
+        },
+        {
+          "file": ".context/research/digested/shader-noise-functions.md",
+          "line": 1,
+          "note": "Voronoise, domain warping, smooth minimum noise functions"
+        },
+        {
+          "file": ".context/research/digested/shader-procedural-sun.md",
+          "line": 1,
+          "note": "Domain warping for solar turbulence, Voronoi convection cells"
+        }
       ]
     },
     {
       "id": "ben-arnold",
       "name": "Ben Arnold (Seed of Andromeda)",
-      "category": ["game-developer", "graphics-programmer"],
+      "category": [
+        "game-developer",
+        "graphics-programmer"
+      ],
       "contributions": [
         {
           "work": "Procedural gas giant rendering with GPU noise",
@@ -2334,7 +3755,510 @@
         }
       ],
       "references": [
-        { "file": ".context/research/digested/shader-procedural-planets.md", "line": 1, "note": "Gas giant banding algorithm" }
+        {
+          "file": ".context/research/digested/shader-procedural-planets.md",
+          "line": 1,
+          "note": "Gas giant banding algorithm"
+        }
+      ]
+    },
+    {
+      "id": "ken-perlin",
+      "name": "Ken Perlin",
+      "born": 1957,
+      "category": [
+        "computer-scientist",
+        "professor"
+      ],
+      "contributions": [
+        {
+          "work": "Perlin noise (gradient noise)",
+          "description": "Invented gradient noise (1983, Academy Award 1997). Foundation of all procedural texturing in computer graphics. Simplex noise (2001) improvement with better isotropy and lower computational complexity.",
+          "year": 1983
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/shader-noise-functions.md",
+          "line": 1,
+          "note": "Gradient noise inventor, referenced by all GPU noise implementations"
+        },
+        {
+          "file": ".context/research/digested/shader-procedural-sun.md",
+          "line": 1,
+          "note": "Foundation for all procedural sun turbulence"
+        }
+      ]
+    },
+    {
+      "id": "steven-worley",
+      "name": "Steven Worley",
+      "category": [
+        "computer-scientist",
+        "researcher"
+      ],
+      "contributions": [
+        {
+          "work": "Worley noise (cellular noise)",
+          "description": "Voronoi-based cellular noise function (SIGGRAPH 1996). Produces organic cell patterns, cracked surfaces, and biological textures. F1/F2 distance metrics enable diverse visual effects.",
+          "year": 1996
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/shader-noise-functions.md",
+          "line": 1,
+          "note": "Cellular/Worley noise inventor — convection cells, terrain"
+        }
+      ]
+    },
+    {
+      "id": "dave-hoskins",
+      "name": "Dave Hoskins",
+      "category": [
+        "graphics-programmer",
+        "shadertoy-artist"
+      ],
+      "contributions": [
+        {
+          "work": "Hash Without Sine",
+          "description": "Platform-stable GPU hash functions that avoid sin(), which produces different results across GPU vendors. Polynomial dot-product hashing for cross-platform deterministic noise.",
+          "year": 2014
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/shader-noise-functions.md",
+          "line": 1,
+          "note": "Hash Without Sine — cross-platform GPU random number generation"
+        }
+      ]
+    },
+    {
+      "id": "brian-sharpe",
+      "name": "Brian Sharpe",
+      "category": [
+        "graphics-programmer"
+      ],
+      "contributions": [
+        {
+          "work": "GPU-Noise-Lib",
+          "description": "Optimized GPU noise library with Value, Perlin, Cellular, and Simplex noise in 2D/3D/4D. Multiple hash backends for quality/performance tradeoffs.",
+          "year": 2012
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/shader-noise-functions.md",
+          "line": 1,
+          "note": "GPU-Noise-Lib optimized implementations"
+        }
+      ]
+    },
+    {
+      "id": "amit-patel",
+      "name": "Amit Patel",
+      "category": [
+        "educator",
+        "game-developer"
+      ],
+      "contributions": [
+        {
+          "work": "Red Blob Games — noise and terrain tutorials",
+          "description": "Interactive visual tutorials on noise combination strategies, ridge noise, power curves, octave independence. Landmark pedagogy for procedural generation.",
+          "year": 2015
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/shader-milkyway-galaxy.md",
+          "line": 1,
+          "note": "Noise combination pedagogy for terrain/galaxy textures"
+        }
+      ]
+    },
+    {
+      "id": "ben-podgursky",
+      "name": "Ben Podgursky",
+      "category": [
+        "graphics-programmer"
+      ],
+      "contributions": [
+        {
+          "work": "Procedural star rendering with WebGL",
+          "description": "Temperature-to-color mapping for stars, corona fragment shader with noise-driven rays. Three.js implementation of procedural star with blackbody color.",
+          "year": 2017
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/shader-procedural-sun.md",
+          "line": 1,
+          "note": "Temperature-based corona color, star rendering architecture"
+        }
+      ]
+    },
+    {
+      "id": "sang-il-lee",
+      "name": "Sang-il Lee",
+      "category": [
+        "graphics-programmer"
+      ],
+      "contributions": [
+        {
+          "work": "Realistic Sun with Shaders tutorial",
+          "description": "3D FBM surface technique for sun rendering with Fresnel glow. Step-by-step shader tutorial for realistic solar surface.",
+          "year": 2024
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/shader-procedural-sun.md",
+          "line": 1,
+          "note": "3D FBM sun surface technique, Fresnel edge glow"
+        }
+      ]
+    },
+    {
+      "id": "robert-bridson",
+      "name": "Robert Bridson",
+      "category": [
+        "computer-scientist",
+        "professor"
+      ],
+      "contributions": [
+        {
+          "work": "Curl noise for procedural fluid motion",
+          "description": "Divergence-free noise field via curl operator. Produces fluid-like, incompressible flow patterns. Foundation for procedural fluid simulation in graphics.",
+          "year": 2007
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/shader-noise-functions.md",
+          "line": 1,
+          "note": "Curl noise algorithm for fluid-like procedural motion"
+        },
+        {
+          "file": ".context/research/digested/shader-procedural-sun.md",
+          "line": 1,
+          "note": "Curl noise for solar flow fields"
+        }
+      ]
+    },
+    {
+      "id": "robert-hodgin",
+      "name": "Robert Hodgin (flight404)",
+      "category": [
+        "artist",
+        "creative-coder"
+      ],
+      "contributions": [
+        {
+          "work": "Main Sequence Star shader (Shadertoy)",
+          "description": "Influential procedural sun/star shader with FBM turbulence, corona rays, and temperature-based coloring. Widely forked reference implementation.",
+          "year": 2013
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/shader-procedural-sun.md",
+          "line": 1,
+          "note": "Main Sequence Star — reference sun shader implementation"
+        }
+      ]
+    },
+    {
+      "id": "ben-golus",
+      "name": "Ben Golus",
+      "category": [
+        "graphics-programmer",
+        "technical-artist"
+      ],
+      "contributions": [
+        {
+          "work": "Sphere-on-quad impostor technique",
+          "description": "Billboard rendering of perfect spheres using ray-sphere intersection in the fragment shader. Single quad renders a pixel-perfect sphere.",
+          "year": 2018
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/shader-procedural-sun.md",
+          "line": 1,
+          "note": "Sphere impostor rendering for efficient sun billboard"
+        }
+      ]
+    },
+    {
+      "id": "sonia-keys",
+      "name": "Sonia Keys",
+      "category": [
+        "programmer",
+        "astronomer"
+      ],
+      "contributions": [
+        {
+          "work": "Go implementation of Meeus algorithms",
+          "description": "Authoritative Go implementation of Jean Meeus's Astronomical Algorithms, including Jewish and Moslem calendar routines (Chapter 9).",
+          "year": 2013
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/043-meeus-jewish-moslem-calendars.md",
+          "line": 1,
+          "note": "Reference source for Meeus Ch9 algorithm verification"
+        }
+      ]
+    },
+    {
+      "id": "john-walker",
+      "name": "John Walker",
+      "category": [
+        "programmer",
+        "entrepreneur"
+      ],
+      "contributions": [
+        {
+          "work": "Fourmilab Calendar Converter",
+          "description": "Comprehensive web-based calendar converter implementing multiple calendar algorithms. Reference implementation for calendar cross-validation.",
+          "year": 1999
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/043-meeus-jewish-moslem-calendars.md",
+          "line": 1,
+          "note": "Calendar converter reference for Jewish/Islamic algorithm validation"
+        }
+      ]
+    },
+    {
+      "id": "al-battani",
+      "name": "al-Battani",
+      "born": 858,
+      "category": [
+        "astronomer",
+        "mathematician"
+      ],
+      "contributions": [
+        {
+          "work": "Islamic astronomical tables and intercalary schemes",
+          "description": "9th-century Islamic astronomer. Refined Ptolemaic parameters. Contributed to intercalary cycle schemes used in the Islamic tabular calendar.",
+          "year": 900
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/043-meeus-jewish-moslem-calendars.md",
+          "line": 1,
+          "note": "Intercalary Scheme II for Islamic calendar"
+        }
+      ]
+    },
+    {
+      "id": "brent-berlin",
+      "name": "Brent Berlin",
+      "category": [
+        "anthropologist",
+        "linguist"
+      ],
+      "contributions": [
+        {
+          "work": "Basic Color Terms: Their Universality and Evolution",
+          "description": "Landmark study identifying 11 universal basic color categories across 98 languages. Established evolutionary ordering of color term acquisition.",
+          "year": 1969
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/044-color-imaging-fundamentals.md",
+          "line": 1,
+          "note": "11 universal basic color terms — cross-cultural color categories"
+        }
+      ]
+    },
+    {
+      "id": "paul-kay",
+      "name": "Paul Kay",
+      "category": [
+        "linguist",
+        "cognitive-scientist"
+      ],
+      "contributions": [
+        {
+          "work": "Basic Color Terms: Their Universality and Evolution (co-author with Berlin)",
+          "description": "Co-established the universal color categories theory. Later expanded to 16 categories with the World Color Survey.",
+          "year": 1969
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/044-color-imaging-fundamentals.md",
+          "line": 1,
+          "note": "Universal color categories co-author"
+        }
+      ]
+    },
+    {
+      "id": "ewald-hering",
+      "name": "Ewald Hering",
+      "born": 1834,
+      "category": [
+        "physiologist",
+        "scientist"
+      ],
+      "contributions": [
+        {
+          "work": "Opponent-process theory of color vision",
+          "description": "Proposed red-green, blue-yellow, black-white opponent channels in color perception. Physiological basis for Berlin & Kay color universals.",
+          "year": 1878
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/044-color-imaging-fundamentals.md",
+          "line": 1,
+          "note": "Opponent-process theory — physiological basis of color perception"
+        }
+      ]
+    },
+    {
+      "id": "jan-morovic",
+      "name": "Jan Morovic",
+      "category": [
+        "color-scientist",
+        "researcher"
+      ],
+      "contributions": [
+        {
+          "work": "Color Gamut Mapping",
+          "description": "Definitive reference on gamut mapping algorithms: clipping, compression, directional strategies for handling out-of-gamut colors.",
+          "year": 2008
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/044-color-imaging-fundamentals.md",
+          "line": 1,
+          "note": "Gamut mapping algorithms and strategies"
+        }
+      ]
+    },
+    {
+      "id": "shafica-karagulla",
+      "name": "Shafica Karagulla",
+      "born": 1914,
+      "category": [
+        "neuropsychiatrist",
+        "researcher"
+      ],
+      "contributions": [
+        {
+          "work": "The Chakras and the Human Energy Fields (co-author)",
+          "description": "Neuropsychiatric perspective on chakra system. Clinical observations of energy field structure, endocrine gland correspondences, five energy body layers.",
+          "year": 1989
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/045-chakras-energy-fields.md",
+          "line": 1,
+          "note": "7 chakra data table, endocrine mappings, 5 energy body layers"
+        }
+      ]
+    },
+    {
+      "id": "dora-van-gelder-kunz",
+      "name": "Dora van Gelder Kunz",
+      "born": 1904,
+      "category": [
+        "healer",
+        "researcher"
+      ],
+      "contributions": [
+        {
+          "work": "The Chakras and the Human Energy Fields (co-author)",
+          "description": "Detailed observational descriptions of chakra colors, rotation patterns, and energy field layers. Co-founded Therapeutic Touch modality.",
+          "year": 1989
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/045-chakras-energy-fields.md",
+          "line": 1,
+          "note": "Chakra observation data, energy body layer properties"
+        }
+      ]
+    },
+    {
+      "id": "ernest-brown",
+      "name": "Ernest William Brown",
+      "born": 1866,
+      "died": 1938,
+      "category": [
+        "astronomer",
+        "mathematician"
+      ],
+      "contributions": [
+        {
+          "work": "Brown Lunation Number system",
+          "description": "Developed lunar theory and the lunation numbering system (Brown Lunation Number) starting from the first new moon of 1923. Standard reference for counting synodic months.",
+          "year": 1923
+        }
+      ],
+      "references": [
+        {
+          "file": "src/systems/unified/lunar_harmonics.c",
+          "line": 16,
+          "note": "Brown Lunation Number epoch and calculation"
+        }
+      ]
+    },
+    {
+      "id": "sun-xiaochun",
+      "name": "Sun Xiaochun",
+      "category": [
+        "historian",
+        "astronomer"
+      ],
+      "contributions": [
+        {
+          "work": "The Chinese Sky During the Han (with Jacob Kistemaker)",
+          "description": "Definitive scholarly reconstruction of Chinese 28 Xiu (lunar lodges) with historical determinative star positions and unequal lodge widths.",
+          "year": 1997
+        }
+      ],
+      "references": [
+        {
+          "file": "src/systems/unified/lunar_harmonics.c",
+          "line": 23,
+          "note": "Chinese Xiu (28 lodges) ecliptic positions and spans"
+        }
+      ]
+    },
+    {
+      "id": "abd-al-rahman-al-sufi",
+      "name": "Abd al-Rahman al-Sufi",
+      "born": 903,
+      "died": 986,
+      "category": [
+        "astronomer"
+      ],
+      "contributions": [
+        {
+          "work": "Kitab suwar al-kawakib (Book of Fixed Stars)",
+          "description": "Comprehensive star catalog that formalized Arabic lunar mansions (Manzil). First recorded observation of the Andromeda Galaxy and the Large Magellanic Cloud.",
+          "year": 964
+        }
+      ],
+      "references": [
+        {
+          "file": "src/systems/unified/lunar_harmonics.c",
+          "line": 73,
+          "note": "Arabic Manzil (28 lunar mansions) names and tradition"
+        }
       ]
     }
   ]
