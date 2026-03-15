@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-14",
-    "total_contributors": 165
+    "total_contributors": 170
   },
   "contributors": [
     {
@@ -4258,6 +4258,116 @@
           "file": "src/systems/unified/lunar_harmonics.c",
           "line": 73,
           "note": "Arabic Manzil (28 lunar mansions) names and tradition"
+        }
+      ]
+    },
+    {
+      "id": "ben-shneiderman",
+      "name": "Ben Shneiderman",
+      "born": 1947,
+      "category": [
+        "computer scientist",
+        "information designer"
+      ],
+      "contributions": [
+        {
+          "work": "Visual Information Seeking Mantra",
+          "description": "Overview first, zoom and filter, then details-on-demand. Foundational principle for interactive information visualization and Time's progressive disclosure UI.",
+          "year": 1996
+        }
+      ],
+      "references": [
+        {
+          "file": "docs/UI_ARCHITECTURE.md",
+          "line": 6,
+          "note": "Overview first, zoom and filter — governs UI progressive disclosure"
+        }
+      ]
+    },
+    {
+      "id": "alan-cooper",
+      "name": "Alan Cooper",
+      "born": 1952,
+      "category": [
+        "software designer",
+        "interaction designer"
+      ],
+      "contributions": [
+        {
+          "work": "About Face: The Essentials of Interaction Design",
+          "description": "Sovereign posture application design, modeless feedback, elimination of navigational excise. Informs Time's full-screen artwork-first interaction pattern.",
+          "year": 1995
+        }
+      ],
+      "references": [
+        {
+          "file": "docs/UI_ARCHITECTURE.md",
+          "line": 6,
+          "note": "Sovereign posture — Time is a full-screen artwork, not a dashboard"
+        }
+      ]
+    },
+    {
+      "id": "adam-wathan",
+      "name": "Adam Wathan",
+      "category": [
+        "designer",
+        "developer",
+        "author"
+      ],
+      "contributions": [
+        {
+          "work": "Refactoring UI",
+          "description": "Visual hierarchy (3-color text, weight>size), spacing system (16px base, 25% minimum gap), color palette (9-shade HSL), depth/shadow patterns",
+          "year": 2018
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/053-refactoring-ui.md",
+          "note": "All chapters extracted"
+        }
+      ]
+    },
+    {
+      "id": "steve-schoger",
+      "name": "Steve Schoger",
+      "category": [
+        "designer",
+        "author"
+      ],
+      "contributions": [
+        {
+          "work": "Refactoring UI",
+          "description": "Button depth (two-part shadows), elevation system (5 levels), perceived brightness, dark theme patterns",
+          "year": 2018
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/053-refactoring-ui.md",
+          "note": "Depth + Color chapters"
+        }
+      ]
+    },
+    {
+      "id": "steve-krug",
+      "name": "Steve Krug",
+      "category": [
+        "usability consultant",
+        "author"
+      ],
+      "contributions": [
+        {
+          "work": "Don't Make Me Think, Revisited",
+          "description": "Trunk test (6 navigation questions), self-evidence continuum, three facts of web use (scan/satisfice/muddle), reservoir of goodwill (diminishers/increasers), billboard design principle",
+          "year": 2014
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/054-dont-make-me-think.md",
+          "note": "Ch.1/2/6/7/11 extracted"
         }
       ]
     }

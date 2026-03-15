@@ -8,7 +8,116 @@
 </head>
 <body>
     <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
-    <div id="time-hud"></div>
+
+    <div id="ui-overlay">
+        <div id="time-hud"></div>
+        <div id="help-btn" class="corner-btn" title="Keyboard shortcuts (?)">?</div>
+
+        <div id="help-panel" class="panel frosted centered hidden" role="dialog" aria-label="Keyboard shortcuts">
+            <div class="panel-header">
+                <span class="text-accent">Keyboard Shortcuts</span>
+                <span class="panel-close" role="button" aria-label="Close">&times;</span>
+            </div>
+            <div class="panel-body" id="help-content"></div>
+        </div>
+
+        <div id="cmd-palette" class="panel frosted centered hidden" role="dialog" aria-label="Command palette">
+            <div class="panel-header">
+                <input type="text" id="cmd-search" class="cmd-input" placeholder="Type a command..." autocomplete="off" spellcheck="false">
+            </div>
+            <div class="panel-body" id="cmd-results"></div>
+        </div>
+
+        <div id="layer-panel" class="panel frosted edge-left hidden" role="complementary" aria-label="Layer toggles">
+            <div class="panel-header"><span class="text-accent">Layers</span></div>
+            <div class="panel-body" id="layer-content"></div>
+        </div>
+
+        <div id="time-bar" class="toolbar edge-bottom">
+            <div id="time-bar-inner">
+                <button id="tb-pause" class="tb-btn" title="Pause/Resume (Space)">&#9654;</button>
+                <span id="tb-speed" class="text-secondary">1x</span>
+                <span id="tb-date" class="text-primary"></span>
+                <button id="tb-now" class="tb-btn text-accent" title="Jump to Now (N)">Now</button>
+            </div>
+        </div>
+
+        <div id="toast-area"></div>
+        <div id="first-hint" class="hint">Press <kbd>?</kbd> for controls</div>
+    </div>
+
+    <script>
+    (function() {
+        'use strict';
+        var BOTTOM_ZONE = 60, LEFT_ZONE = 40;
+
+        document.addEventListener('mousemove', function(e) {
+            var h = window.innerHeight;
+            var timeBar = document.getElementById('time-bar');
+            var layerPanel = document.getElementById('layer-panel');
+            if (timeBar) {
+                if (h - e.clientY < BOTTOM_ZONE) timeBar.classList.add('visible');
+                else if (!timeBar.classList.contains('pinned')) timeBar.classList.remove('visible');
+            }
+            if (layerPanel && !layerPanel.classList.contains('mode-open')) {
+                if (e.clientX < LEFT_ZONE) layerPanel.classList.add('proximity');
+                else layerPanel.classList.remove('proximity');
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.target.id === 'cmd-search') {
+                if (e.key === 'Escape' && Module && Module._ui_close_panels) {
+                    Module._ui_close_panels();
+                    e.target.blur();
+                }
+                return;
+            }
+            switch(e.key) {
+                case '?': if (Module && Module._ui_toggle_help) Module._ui_toggle_help(); break;
+                case '/':
+                    e.preventDefault();
+                    if (Module && Module._ui_toggle_command_palette) {
+                        Module._ui_toggle_command_palette();
+                        setTimeout(function() {
+                            var input = document.getElementById('cmd-search');
+                            if (input) { input.value = ''; input.focus(); }
+                        }, 50);
+                    }
+                    break;
+                case 'Escape': if (Module && Module._ui_close_panels) Module._ui_close_panels(); break;
+            }
+        });
+
+        var helpBtn = document.getElementById('help-btn');
+        if (helpBtn) helpBtn.addEventListener('click', function() {
+            if (Module && Module._ui_toggle_help) Module._ui_toggle_help();
+        });
+        document.querySelectorAll('.panel-close').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                if (Module && Module._ui_close_panels) Module._ui_close_panels();
+            });
+        });
+        var tbPause = document.getElementById('tb-pause');
+        if (tbPause) tbPause.addEventListener('click', function() {
+            if (Module && Module._ui_toggle_pause) Module._ui_toggle_pause();
+        });
+        var tbNow = document.getElementById('tb-now');
+        if (tbNow) tbNow.addEventListener('click', function() {
+            if (Module && Module._ui_jump_to_now) Module._ui_jump_to_now();
+        });
+
+        var hint = document.getElementById('first-hint');
+        if (hint && !localStorage.getItem('time_hint_shown')) {
+            hint.classList.add('visible');
+            setTimeout(function() {
+                hint.classList.remove('visible');
+                localStorage.setItem('time_hint_shown', '1');
+            }, 5000);
+        }
+    })();
+    </script>
+
     {{{ SCRIPT }}}
 </body>
 </html>
