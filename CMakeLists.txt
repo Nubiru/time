@@ -240,6 +240,7 @@ set(SYSTEMS_SOURCES
     src/systems/unified/sacred_numbers.c
     src/systems/unified/time_philosophy.c
     src/systems/unified/calendar_convert.c
+    src/systems/unified/lunar_harmonics.c
     # Celtic
     src/systems/celtic/wheel_of_year.c
     # Chakra
@@ -294,6 +295,7 @@ set(UI_SOURCES
     src/ui/lunar_display.c
     src/ui/rtl_layout.c
     src/ui/scroll_layers.c
+    src/ui/help_overlay.c
 )
 
 set(ALL_SOURCES
@@ -586,6 +588,7 @@ else()
     add_library(time_lunar_display   OBJECT src/ui/lunar_display.c)
     add_library(time_rtl_layout      OBJECT src/ui/rtl_layout.c)
     add_library(time_scroll_layers   OBJECT src/ui/scroll_layers.c)
+    add_library(time_help_overlay   OBJECT src/ui/help_overlay.c)
 
     # ---------------------------------------------------------------
     # Tests — 116 suites, Unity framework, per-test dependencies
@@ -830,6 +833,7 @@ else()
     time_add_test(NAME test_lunar_display  TEST tests/ui/test_lunar_display.c   DEPS lunar_display lunar julian zodiac)
     time_add_test(NAME test_rtl_layout     TEST tests/ui/test_rtl_layout.c      DEPS rtl_layout)
     time_add_test(NAME test_scroll_layers  TEST tests/ui/test_scroll_layers.c   DEPS scroll_layers)
+    time_add_test(NAME test_help_overlay  TEST tests/ui/test_help_overlay.c   DEPS help_overlay)
 
     # Cross-system validation test
     time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validation.c
