@@ -1,36 +1,37 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-15 (OMEGA sweep #11)
+**Last refreshed**: 2026-03-15 (OMEGA sweep #12)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 230 |
-| Header files (.h) | 230 |
-| Lines of code (src/) | 71,706 |
-| Lines of tests | 103,304 |
-| Test files | 208 |
+| Source files (.c) | 231 |
+| Header files (.h) | 231 |
+| Lines of code (src/) | 72,058 |
+| Lines of tests | 103,782 |
+| Test files | 209 |
 | Render pass files | 16 |
-| Contributors | 175 |
+| Contributors | 170 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 207 |
-| Test functions (RUN_TEST) | 9,935 |
-| Test assertions (TEST_ASSERT) | 15,748 |
+| Test suites (CTest) | 208 |
+| Test functions (RUN_TEST) | 9,974 |
+| Test assertions (TEST_ASSERT) | 15,802 |
 | Failures | 0 |
-| CTest time | 1.02s |
+| CTest time | 0.89s |
 
 ## Build
 
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (207/207) |
+| CTest -j12 | PASS (208/208) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
+| Build system | Per-directory CMakeLists.txt (refactored 2026-03-15) |
 
 ## Render Pipeline (16 passes)
 
@@ -69,7 +70,7 @@
 | Domain | Modules | Tests |
 |--------|---------|-------|
 | math | 13 | 13 |
-| render | 56 pure + 19 stateful | 50 |
+| render | 57 pure + 19 stateful | 51 |
 | astrology | 7 | 7 |
 | astronomy | 10 | 10 |
 | aztec | 1 | 1 |
@@ -103,21 +104,19 @@
 | tzolkin | 6 | 6 |
 | unified | 27 | 27 |
 | zoroastrian | 2 | 2 |
-| ui | 31 | 31 |
+| ui | 32 | 32 |
 | core | 5 | 1 |
 
-## Health (OMEGA sweep #11)
+## Health (OMEGA sweep #12)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | WARN (shared_uniforms.c not in CMakeLists — untracked WIP) |
-| Purity audit | 0 NEW (4 P5 known near-pure, unchanged) |
-| Dead code | 0 (new modules time_control, toast_message, command_palette — CLEAN) |
+| Build system sync | OK (per-directory CMakeLists.txt, all registered) |
+| Purity audit | CLEAN (P1-P4 all zones, 4 P5 known) |
+| Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Missing attribution | 1 (E.G. Richards — celtic_tree.c) |
 | Render pipeline | COMPLETE (16/16 passes wired) |
-| Style compliance | 153+ hardcoded visual constants (policy pending) |
-| Test coverage | 90% file coverage (208/230) |
-| Refactor candidates | earth_pass.c (init 140L, draw 121L), srp_pack 118L, wov_arrow_glyph 104L |
-| Orphaned files | shared_uniforms.c/.h + test, ui_html.h (all untracked — MEGA WIP) |
+| Refactor candidates | earth_pass.c (init 140L, draw 121L), srp_pack 118L |
+| ui_html.c | Tracked but intentionally excluded from build (BETA WIP) |

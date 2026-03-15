@@ -35,13 +35,13 @@ This document tracks what is **pure** (stateless) and what is **stateful** in th
 
 ---
 
-## Pure Modules by Domain (207 total)
+## Pure Modules by Domain (209 total)
 
 ### Math (13 modules)
 vec3, mat4, julian, kepler, sidereal, ecliptic, easing, arc_geometry, bezier, color, projection, sacred_geometry, wheel_layout
 
-### Render (56 pure + 19 stateful)
-Pure: aspect_lines, atmo_ring, billboard, billboard_shader, bodygraph_pack, camera, camera_scale, card_pack, catalog_ingest, click_target, color_palette, color_theory, constellation, constellation_bounds, cusp_lines, decan_stars, deep_sky, deep_sky_pack, diffraction, earth_atmosphere, earth_globe, earth_pack, eclipse_geometry, font_atlas, galaxy_geometry, glyph_batch, hexagram_geometry, horizon_geometry, lens_flare, megalithic, mesh_shader, milkyway_pack, moon_pack, noise_shader, orbit_trail_pack, planet_pack, planet_surface_pack, post_process, render_frame (header-only), render_layers, ring_data, ring_geometry, saturn_ring_pack, seasonal_lighting, shader_builder, shader_constants, star_catalog, star_catalog_ext, star_colors, star_field, sun_shader, tarot_visual, text_render, tree_pack, weather_overlay, zodiac_pack
+### Render (57 pure + 19 stateful)
+Pure: aspect_lines, atmo_ring, billboard, billboard_shader, bodygraph_pack, camera, camera_scale, card_pack, catalog_ingest, click_target, color_palette, color_theory, constellation, constellation_bounds, cusp_lines, decan_stars, deep_sky, deep_sky_pack, diffraction, earth_atmosphere, earth_globe, earth_pack, eclipse_geometry, font_atlas, galaxy_geometry, glyph_batch, hexagram_geometry, horizon_geometry, lens_flare, megalithic, mesh_shader, milkyway_pack, moon_pack, noise_shader, orbit_trail_pack, planet_pack, planet_surface_pack, post_process, render_frame (header-only), render_layers, ring_data, ring_geometry, saturn_ring_pack, seasonal_lighting, shader_builder, shader_constants, shared_uniforms, star_catalog, star_catalog_ext, star_colors, star_field, sun_shader, tarot_visual, text_render, tree_pack, weather_overlay, zodiac_pack
 Stateful infra: gl_init, shader, mesh (3) + 16 render passes
 
 ### Astronomy (10)
@@ -62,8 +62,8 @@ cycle_analysis, structural_map, convergence, convergence_detect, frequency, phas
 ### Calendars (43)
 aztec, bahai, gregorian, tzolkin, haab, cr_cycle, tzolkin_board, dreamspell, kin_social, iching, chinese, human_design, bodygraph, hebrew, sabbatical, hijri, prayer_times, buddhist, kalpa, coptic, ethiopian, egyptian, french_republican, numerology, panchanga, nakshatra, yuga, wheel_of_year, celtic_tree, chakra, sefirot, four_worlds, tree_geometry, myanmar, thai_calendar, cosmic_duality, zoroastrian, japanese, persian, tarot, tamil_calendar, korean_calendar, pawukon
 
-### UI (31)
-time_hud, fmt, card_data, card_layout, astro_fmt, astro_summary, zodiac_glyphs, hexagram_visual, glyph_layout, scale_hud, system_scale_map, time_format, animation, command_palette, layer_panel, location_presets, hd_card, help_overlay, iching_card, chinese_fmt, lunar_display, time_control, toast_message, tzolkin_card, ui_state, accessibility, rtl_layout, i18n, scroll_layers, golden_layout, theme
+### UI (32)
+time_hud, fmt, card_data, card_layout, astro_fmt, astro_summary, zodiac_glyphs, hexagram_visual, glyph_layout, scale_hud, system_scale_map, time_format, animation, command_palette, layer_panel, location_presets, hd_card, help_overlay, iching_card, chinese_fmt, lunar_display, time_control, toast_message, tzolkin_card, ui_html, ui_state, accessibility, rtl_layout, i18n, scroll_layers, golden_layout, theme
 
 ---
 
