@@ -6,8 +6,8 @@
  * implementing gas giant banding, rocky noise surfaces, day/night
  * terminator, and Fresnel atmosphere limb glow.
  *
- * Pure module: no GL calls, no malloc, no globals, no side effects.
- * Exception: static char buffer for shader source concatenation
+ * Near-pure module: no GL calls, no malloc, no globals.
+ * Uses mutable static buffers for lazy shader string concatenation
  * (accepted pattern, same as sun_shader.c).
  *
  * Data sources:
@@ -19,6 +19,7 @@
 
 #include "planet_surface_pack.h"
 #include "noise_shader.h"
+#include "shader_builder.h"
 
 #include "../systems/astronomy/orbit.h"
 #include "../systems/astronomy/planet_data.h"
@@ -546,28 +547,19 @@ static const char *s_frag_body =
     "}\n";
 
 /* Concatenated fragment shader: preamble + noise lib + body */
-static char s_full_frag[16384];
+static shader_src_t s_frag_src;
 static int s_frag_built = 0;
 
 static const char *build_frag_source(void)
 {
     if (!s_frag_built) {
-        char *dst = s_full_frag;
-        const char *parts[] = {
-            s_frag_preamble,
-            noise_shader_source(),
-            s_frag_body
-        };
-        for (int i = 0; i < 3; i++) {
-            const char *src = parts[i];
-            while (*src && (dst - s_full_frag) < 16382) {
-                *dst++ = *src++;
-            }
-        }
-        *dst = '\0';
+        shader_src_init(&s_frag_src);
+        shader_src_append(&s_frag_src, s_frag_preamble);
+        shader_src_append(&s_frag_src, noise_shader_source());
+        shader_src_append(&s_frag_src, s_frag_body);
         s_frag_built = 1;
     }
-    return s_full_frag;
+    return shader_src_get(&s_frag_src);
 }
 
 const char *psp_vert_source(void) { return s_vert_source; }

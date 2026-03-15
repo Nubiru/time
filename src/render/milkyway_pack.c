@@ -9,12 +9,13 @@
  *
  * Fragment shader uses noise_shader.h fbm2 for procedural cloud texture.
  *
- * Pure module: no GL calls, no malloc, no globals, no side effects.
- * EXCEPTION: static buffer for shader string concatenation (sun_shader.c pattern).
+ * Near-pure module: no GL calls, no malloc, no globals.
+ * Uses mutable static buffers for lazy shader string concatenation (sun_shader.c pattern).
  */
 
 #include "milkyway_pack.h"
 #include "noise_shader.h"
+#include "shader_builder.h"
 
 #include <math.h>
 
@@ -419,25 +420,19 @@ static const char *s_frag_body =
     "}\n";
 
 /* Concatenated fragment source: preamble + noise lib + body */
-static char s_full_frag[8192];
+static shader_src_t s_frag_src;
 static int s_frag_built = 0;
 
 static const char *build_frag_source(void)
 {
     if (!s_frag_built) {
-        /* Manual string concatenation — no snprintf dependency */
-        char *dst = s_full_frag;
-        const char *parts[] = { s_frag_preamble, noise_shader_source(), s_frag_body };
-        for (int i = 0; i < 3; i++) {
-            const char *src = parts[i];
-            while (*src && (dst - s_full_frag) < 8190) {
-                *dst++ = *src++;
-            }
-        }
-        *dst = '\0';
+        shader_src_init(&s_frag_src);
+        shader_src_append(&s_frag_src, s_frag_preamble);
+        shader_src_append(&s_frag_src, noise_shader_source());
+        shader_src_append(&s_frag_src, s_frag_body);
         s_frag_built = 1;
     }
-    return s_full_frag;
+    return shader_src_get(&s_frag_src);
 }
 
 const char *mw_vert_source(void) { return s_vert_source; }

@@ -1,36 +1,36 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-14 (OMEGA sweep #8)
+**Last refreshed**: 2026-03-14 (OMEGA sweep #9)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 214 |
-| Header files (.h) | 214 |
-| Lines of code (src/) | 65,788 |
-| Lines of tests | 93,703 |
-| Test files | 191 |
+| Source files (.c) | 222 |
+| Header files (.h) | 222 |
+| Lines of code (src/) | 68,721 |
+| Lines of tests | 98,515 |
+| Test files | 197 |
 | Render pass files | 16 |
-| Contributors | 143 |
+| Contributors | 162 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 189 |
-| Test functions (RUN_TEST) | 9,122 |
-| Test assertions (TEST_ASSERT) | 15,158 |
+| Test suites (CTest) | 197 |
+| Test functions (RUN_TEST) | 9,553 |
+| Test assertions (TEST_ASSERT) | 15,184 |
 | Failures | 0 |
-| CTest time | 0.90s |
+| CTest time | 0.72s |
 
 ## Build
 
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (189/189) |
-| TODOs in code | 0 |
+| CTest -j12 | PASS (197/197) |
+| TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 
 ## Render Pipeline (16 passes)
 
@@ -61,23 +61,26 @@
 | P2 violations (malloc in pure zones) | 0 |
 | P3 violations (I/O in pure zones) | 0 |
 | P4 violations (globals in pure zones) | 0 |
-| Stateful modules | 22 (gl_init, shader, mesh, main, app_state, hud, input, 16 passes) |
+| P5 violations (mutable statics) | 4 (2 files — lazy shader string init, low severity) |
+| Stateful modules | 23 (gl_init, shader, mesh, main, app_state, hud, input, 16 passes) |
 
 ## System Domains
 
 | Domain | Modules | Tests |
 |--------|---------|-------|
-| math | 15 | 14 |
-| render | 50 | 43 |
+| math | 13 | 13 |
+| render | 53 pure + 19 stateful | 43 |
 | astrology | 7 | 7 |
 | astronomy | 10 | 10 |
 | aztec | 1 | 1 |
+| bahai | 1 | 1 |
+| balinese | 1 | 1 |
 | buddhist | 2 | 2 |
 | celtic | 2 | 2 |
 | chakra | 1 | 1 |
 | chinese | 1 | 1 |
 | coptic | 1 | 1 |
-| earth | 11 | 11 |
+| earth | 13 | 13 |
 | egyptian | 1 | 1 |
 | ethiopian | 1 | 1 |
 | french_republican | 1 | 1 |
@@ -94,22 +97,26 @@
 | myanmar | 1 | 1 |
 | numerology | 1 | 1 |
 | persian | 1 | 1 |
-| bahai | 1 | 1 |
 | tamil | 1 | 1 |
+| tarot | 1 | 1 |
 | thai | 1 | 1 |
 | tzolkin | 6 | 6 |
-| unified | 26 | 26 |
+| unified | 27 | 27 |
 | zoroastrian | 2 | 2 |
-| ui | 25 | 25 |
-| core | 3 | 1 |
+| ui | 26 | 26 |
+| core | 5 | 1 |
 
-## Health (OMEGA sweep #8)
+## Health (OMEGA sweep #9)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Purity audit | CLEAN (0 violations P1-P5) |
-| Dead code | 0 (cleanup completed sweep #5) |
-| Naked TODOs | 0 |
-| Missing attribution | 0 |
+| Build system sync | OK (222 files, all registered) |
+| Purity audit | 4 P5 (milkyway_pack, planet_surface_pack — lazy init) |
+| Dead code | 0 (Section 12.1 fully cleared) |
+| Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
+| Missing attribution | 1 (E.G. Richards — celtic_tree.c algorithm) |
 | Render pipeline | COMPLETE (16/16 passes wired) |
+| Style compliance | 153+ hardcoded visual constants across 14 files |
+| Test coverage | 98.5% (3 shader string modules missing tests) |
+| Refactor candidates | 2 HIGH, 5 MEDIUM, 5 LOW |
