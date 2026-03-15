@@ -1,7 +1,7 @@
-# cmake/testing.cmake — Unity test framework integration
+# cmake/testing.cmake — Unity test framework integration + test registrations
 #
 # Provides time_add_test() for registering test executables
-# with per-test link dependencies.
+# with per-test link dependencies, plus all test registrations.
 
 # Unity test framework (vendored)
 add_library(unity STATIC tests/unity/unity.c)
@@ -30,3 +30,267 @@ function(time_add_test)
     target_include_directories(${T_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
     add_test(NAME ${T_NAME} COMMAND ${T_NAME})
 endfunction()
+
+# ===========================================================================
+# Test registrations — 208 tests
+# ===========================================================================
+
+# Math tests
+time_add_test(NAME test_vec3            TEST tests/math/test_vec3.c            DEPS vec3)
+time_add_test(NAME test_mat4            TEST tests/math/test_mat4.c            DEPS mat4 vec3)
+time_add_test(NAME test_julian          TEST tests/math/test_julian.c          DEPS julian)
+time_add_test(NAME test_kepler          TEST tests/math/test_kepler.c          DEPS kepler)
+time_add_test(NAME test_sidereal        TEST tests/math/test_sidereal.c        DEPS sidereal)
+time_add_test(NAME test_ecliptic        TEST tests/math/test_ecliptic.c        DEPS ecliptic)
+time_add_test(NAME test_easing          TEST tests/math/test_easing.c          DEPS easing)
+time_add_test(NAME test_arc_geometry    TEST tests/math/test_arc_geometry.c    DEPS arc_geometry)
+time_add_test(NAME test_color           TEST tests/math/test_color.c           DEPS color)
+time_add_test(NAME test_bezier          TEST tests/math/test_bezier.c          DEPS bezier vec3)
+time_add_test(NAME test_sacred_geometry TEST tests/math/test_sacred_geometry.c DEPS sacred_geometry vec3)
+time_add_test(NAME test_wheel_layout    TEST tests/math/test_wheel_layout.c    DEPS wheel_layout)
+time_add_test(NAME test_projection      TEST tests/math/test_projection.c      DEPS projection mat4 vec3)
+
+# Render tests
+time_add_test(NAME test_camera          TEST tests/render/test_camera.c          DEPS camera vec3 mat4)
+time_add_test(NAME test_camera_scale    TEST tests/render/test_camera_scale.c    DEPS camera_scale easing)
+time_add_test(NAME test_render_layers   TEST tests/render/test_render_layers.c   DEPS render_layers camera_scale easing golden_layout)
+time_add_test(NAME test_font_atlas      TEST tests/render/test_font_atlas.c      DEPS font_atlas)
+time_add_test(NAME test_color_palette   TEST tests/render/test_color_palette.c   DEPS color_palette color_theory color)
+time_add_test(NAME test_ring_geometry   TEST tests/render/test_ring_geometry.c   DEPS ring_geometry)
+time_add_test(NAME test_aspect_lines    TEST tests/render/test_aspect_lines.c    DEPS aspect_lines color_palette color_theory color)
+time_add_test(NAME test_cusp_lines      TEST tests/render/test_cusp_lines.c      DEPS cusp_lines)
+time_add_test(NAME test_galaxy_geometry TEST tests/render/test_galaxy_geometry.c  DEPS galaxy_geometry)
+time_add_test(NAME test_billboard       TEST tests/render/test_billboard.c       DEPS billboard mat4 vec3)
+time_add_test(NAME test_ring_data       TEST tests/render/test_ring_data.c       DEPS ring_data ring_geometry)
+time_add_test(NAME test_star_catalog    TEST tests/render/test_star_catalog.c    DEPS star_catalog)
+time_add_test(NAME test_constellation   TEST tests/render/test_constellation.c   DEPS constellation star_catalog)
+time_add_test(NAME test_atmo_ring       TEST tests/render/test_atmo_ring.c       DEPS atmo_ring)
+time_add_test(NAME test_star_colors     TEST tests/render/test_star_colors.c     DEPS star_colors)
+time_add_test(NAME test_deep_sky        TEST tests/render/test_deep_sky.c        DEPS deep_sky)
+time_add_test(NAME test_deep_sky_pack  TEST tests/render/test_deep_sky_pack.c  DEPS deep_sky_pack deep_sky)
+time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack noise_shader shader_builder)
+time_add_test(NAME test_bodygraph_pack TEST tests/render/test_bodygraph_pack.c DEPS bodygraph_pack bodygraph)
+time_add_test(NAME test_earth_pack    TEST tests/render/test_earth_pack.c    DEPS earth_pack earth_globe earth_atmosphere)
+time_add_test(NAME test_tree_pack    TEST tests/render/test_tree_pack.c    DEPS tree_pack tree_geometry sefirot)
+time_add_test(NAME test_eclipse_geometry TEST tests/render/test_eclipse_geometry.c DEPS eclipse_geometry lunar solar_events)
+time_add_test(NAME test_glyph_batch     TEST tests/render/test_glyph_batch.c     DEPS glyph_batch vec3)
+time_add_test(NAME test_color_theory    TEST tests/render/test_color_theory.c    DEPS color_theory color)
+time_add_test(NAME test_star_catalog_ext TEST tests/render/test_star_catalog_ext.c DEPS star_catalog_ext)
+time_add_test(NAME test_decan_stars     TEST tests/render/test_decan_stars.c     DEPS decan_stars)
+time_add_test(NAME test_megalithic      TEST tests/render/test_megalithic.c      DEPS megalithic solar_events)
+time_add_test(NAME test_tarot_visual    TEST tests/render/test_tarot_visual.c    DEPS tarot_visual color_theory color tree_geometry sefirot)
+time_add_test(NAME test_moon_data       TEST tests/systems/test_moon_data.c      DEPS moon_data kepler)
+time_add_test(NAME test_card_pack      TEST tests/render/test_card_pack.c       DEPS card_pack card_layout)
+time_add_test(NAME test_catalog_ingest TEST tests/render/test_catalog_ingest.c  DEPS catalog_ingest)
+time_add_test(NAME test_diffraction    TEST tests/render/test_diffraction.c     DEPS diffraction)
+time_add_test(NAME test_earth_atmosphere TEST tests/render/test_earth_atmosphere.c DEPS earth_atmosphere)
+time_add_test(NAME test_earth_globe    TEST tests/render/test_earth_globe.c     DEPS earth_globe)
+time_add_test(NAME test_hexagram_geometry TEST tests/render/test_hexagram_geometry.c DEPS hexagram_geometry iching color_theory color)
+time_add_test(NAME test_moon_pack      TEST tests/render/test_moon_pack.c       DEPS moon_pack moon_data kepler planets orbit)
+time_add_test(NAME test_orbit_trail_pack TEST tests/render/test_orbit_trail_pack.c DEPS orbit_trail_pack orbit kepler planet_data)
+time_add_test(NAME test_planet_pack    TEST tests/render/test_planet_pack.c     DEPS planet_pack planets orbit kepler planet_data atmo_ring)
+time_add_test(NAME test_planet_surface_pack TEST tests/render/test_planet_surface_pack.c DEPS planet_surface_pack orbit kepler planet_data noise_shader shader_builder)
+time_add_test(NAME test_saturn_ring_pack TEST tests/render/test_saturn_ring_pack.c DEPS saturn_ring_pack)
+time_add_test(NAME test_star_field     TEST tests/render/test_star_field.c      DEPS star_field star_catalog star_catalog_ext constellation star_colors)
+time_add_test(NAME test_text_render    TEST tests/render/test_text_render.c     DEPS text_render)
+time_add_test(NAME test_zodiac_pack    TEST tests/render/test_zodiac_pack.c     DEPS zodiac_pack ring_geometry cusp_lines aspect_lines billboard color_palette color_theory color vec3 mat4)
+time_add_test(NAME test_constellation_bounds TEST tests/render/test_constellation_bounds.c DEPS constellation_bounds)
+time_add_test(NAME test_horizon_geometry TEST tests/render/test_horizon_geometry.c DEPS horizon_geometry)
+time_add_test(NAME test_weather_overlay TEST tests/render/test_weather_overlay.c DEPS weather_overlay wind_patterns storm_data)
+time_add_test(NAME test_post_process TEST tests/render/test_post_process.c DEPS post_process noise_shader)
+time_add_test(NAME test_shared_uniforms TEST tests/render/test_shared_uniforms.c DEPS shared_uniforms)
+time_add_test(NAME test_seasonal_lighting TEST tests/render/test_seasonal_lighting.c DEPS seasonal_lighting)
+time_add_test(NAME test_shader_builder TEST tests/render/test_shader_builder.c DEPS shader_builder)
+time_add_test(NAME test_mesh_shader TEST tests/render/test_mesh_shader.c DEPS mesh_shader)
+time_add_test(NAME test_noise_shader TEST tests/render/test_noise_shader.c DEPS noise_shader)
+time_add_test(NAME test_sun_shader TEST tests/render/test_sun_shader.c DEPS sun_shader noise_shader shader_builder)
+time_add_test(NAME test_billboard_shader TEST tests/render/test_billboard_shader.c DEPS billboard_shader)
+time_add_test(NAME test_shader_constants TEST tests/render/test_shader_constants.c DEPS shader_constants)
+time_add_test(NAME test_lens_flare TEST tests/render/test_lens_flare.c DEPS lens_flare)
+time_add_test(NAME test_click_target TEST tests/render/test_click_target.c DEPS click_target)
+
+# Core tests
+time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
+
+# Astronomy tests
+time_add_test(NAME test_orbit           TEST tests/systems/test_orbit.c          DEPS orbit kepler)
+time_add_test(NAME test_planets         TEST tests/systems/test_planets.c        DEPS planets orbit kepler)
+time_add_test(NAME test_lunar           TEST tests/systems/test_lunar.c          DEPS lunar julian)
+time_add_test(NAME test_precession      TEST tests/systems/test_precession.c     DEPS precession)
+time_add_test(NAME test_solar_events    TEST tests/systems/test_solar_events.c   DEPS solar_events)
+time_add_test(NAME test_cosmic_time     TEST tests/systems/test_cosmic_time.c    DEPS cosmic_time)
+time_add_test(NAME test_planet_data     TEST tests/systems/test_planet_data.c    DEPS planet_data)
+time_add_test(NAME test_moon_nodes      TEST tests/systems/test_moon_nodes.c     DEPS moon_nodes)
+time_add_test(NAME test_retrograde      TEST tests/systems/test_retrograde.c     DEPS retrograde planets orbit kepler)
+
+# Astrology tests
+time_add_test(NAME test_zodiac          TEST tests/systems/test_zodiac.c         DEPS zodiac)
+time_add_test(NAME test_aspects         TEST tests/systems/test_aspects.c        DEPS aspects)
+time_add_test(NAME test_observer        TEST tests/systems/test_observer.c       DEPS observer)
+time_add_test(NAME test_houses          TEST tests/systems/test_houses.c         DEPS houses zodiac)
+time_add_test(NAME test_dignity         TEST tests/systems/test_dignity.c        DEPS dignity)
+time_add_test(NAME test_planetary_hours TEST tests/systems/test_planetary_hours.c DEPS planetary_hours)
+time_add_test(NAME test_astro_wheel     TEST tests/systems/test_wheel_layout.c   DEPS astro_wheel vec3)
+
+# Calendar tests
+time_add_test(NAME test_gregorian       TEST tests/systems/test_gregorian.c      DEPS gregorian julian)
+time_add_test(NAME test_tzolkin         TEST tests/systems/test_tzolkin.c        DEPS tzolkin julian)
+time_add_test(NAME test_haab            TEST tests/systems/test_haab.c           DEPS haab tzolkin julian)
+time_add_test(NAME test_chinese         TEST tests/systems/test_chinese.c        DEPS chinese julian)
+time_add_test(NAME test_iching          TEST tests/systems/test_iching.c         DEPS iching)
+time_add_test(NAME test_numerology      TEST tests/systems/test_numerology.c     DEPS numerology)
+time_add_test(NAME test_human_design    TEST tests/systems/test_human_design.c   DEPS human_design)
+time_add_test(NAME test_bodygraph       TEST tests/systems/test_bodygraph.c      DEPS bodygraph)
+time_add_test(NAME test_hebrew          TEST tests/systems/hebrew/test_hebrew.c  DEPS hebrew)
+time_add_test(NAME test_hijri           TEST tests/systems/islamic/test_hijri.c  DEPS hijri)
+time_add_test(NAME test_prayer_times    TEST tests/systems/islamic/test_prayer_times.c DEPS prayer_times solar_events julian)
+time_add_test(NAME test_buddhist        TEST tests/systems/buddhist/test_buddhist.c    DEPS buddhist lunar)
+time_add_test(NAME test_kalpa           TEST tests/systems/buddhist/test_kalpa.c       DEPS kalpa)
+time_add_test(NAME test_nakshatra       TEST tests/systems/test_nakshatra.c     DEPS nakshatra)
+time_add_test(NAME test_panchanga       TEST tests/systems/hindu/test_panchanga.c DEPS panchanga nakshatra)
+time_add_test(NAME test_yuga            TEST tests/systems/hindu/test_yuga.c     DEPS yuga)
+time_add_test(NAME test_sefirot         TEST tests/systems/kabbalah/test_sefirot.c      DEPS sefirot)
+time_add_test(NAME test_four_worlds     TEST tests/systems/kabbalah/test_four_worlds.c  DEPS four_worlds)
+time_add_test(NAME test_tree_geometry   TEST tests/systems/kabbalah/test_tree_geometry.c DEPS tree_geometry sefirot)
+time_add_test(NAME test_sabbatical     TEST tests/systems/hebrew/test_sabbatical.c    DEPS sabbatical hebrew)
+time_add_test(NAME test_dreamspell     TEST tests/systems/tzolkin/test_dreamspell.c   DEPS dreamspell)
+time_add_test(NAME test_tzolkin_board  TEST tests/systems/tzolkin/test_tzolkin_board.c DEPS tzolkin_board)
+time_add_test(NAME test_kin_social    TEST tests/systems/tzolkin/test_kin_social.c   DEPS kin_social dreamspell)
+time_add_test(NAME test_coptic         TEST tests/systems/coptic/test_coptic.c        DEPS coptic)
+time_add_test(NAME test_egyptian       TEST tests/systems/egyptian/test_egyptian.c    DEPS egyptian)
+time_add_test(NAME test_ethiopian      TEST tests/systems/ethiopian/test_ethiopian.c  DEPS ethiopian)
+time_add_test(NAME test_wheel_of_year  TEST tests/systems/celtic/test_wheel_of_year.c DEPS wheel_of_year)
+time_add_test(NAME test_chakra         TEST tests/systems/chakra/test_chakra.c        DEPS chakra)
+time_add_test(NAME test_myanmar        TEST tests/systems/myanmar/test_myanmar.c      DEPS myanmar)
+time_add_test(NAME test_thai_calendar  TEST tests/systems/thai/test_thai_calendar.c   DEPS thai_calendar)
+time_add_test(NAME test_cosmic_duality TEST tests/systems/zoroastrian/test_cosmic_duality.c DEPS cosmic_duality)
+time_add_test(NAME test_zoroastrian    TEST tests/systems/zoroastrian/test_zoroastrian.c   DEPS zoroastrian)
+
+# Tarot tests
+time_add_test(NAME test_tarot           TEST tests/systems/tarot/test_tarot.c   DEPS tarot)
+
+# Persian tests
+time_add_test(NAME test_persian         TEST tests/systems/persian/test_persian.c DEPS persian)
+
+# Baha'i tests
+time_add_test(NAME test_bahai           TEST tests/systems/bahai/test_bahai.c     DEPS bahai)
+
+# Japanese tests
+time_add_test(NAME test_japanese        TEST tests/systems/japanese/test_japanese.c DEPS japanese)
+
+# Aztec tests
+time_add_test(NAME test_aztec           TEST tests/systems/aztec/test_aztec.c      DEPS aztec)
+
+# Tamil tests
+time_add_test(NAME test_tamil_calendar  TEST tests/systems/tamil/test_tamil_calendar.c DEPS tamil_calendar)
+
+# Celtic Tree tests
+time_add_test(NAME test_celtic_tree     TEST tests/systems/celtic/test_celtic_tree.c   DEPS celtic_tree)
+
+# Korean tests
+time_add_test(NAME test_korean_calendar TEST tests/systems/korean/test_korean_calendar.c DEPS korean_calendar)
+
+# Balinese tests
+time_add_test(NAME test_pawukon         TEST tests/systems/balinese/test_pawukon.c       DEPS pawukon)
+
+# French Republican tests
+time_add_test(NAME test_french_republican TEST tests/systems/french_republican/test_french_republican.c DEPS french_republican)
+
+# Geology tests
+time_add_test(NAME test_geo_time        TEST tests/systems/test_geo_time.c              DEPS geo_time)
+time_add_test(NAME test_climate_history TEST tests/systems/geology/test_climate_history.c DEPS climate_history)
+time_add_test(NAME test_fossil_milestones TEST tests/systems/geology/test_fossil_milestones.c DEPS fossil_milestones)
+time_add_test(NAME test_tectonic        TEST tests/systems/geology/test_tectonic.c      DEPS tectonic)
+time_add_test(NAME test_radiometric    TEST tests/systems/geology/test_radiometric.c   DEPS radiometric)
+time_add_test(NAME test_thermo         TEST tests/systems/geology/test_thermo.c        DEPS thermo)
+
+# Earth tests
+time_add_test(NAME test_biorhythm       TEST tests/systems/earth/test_biorhythm.c       DEPS biorhythm)
+time_add_test(NAME test_daylight        TEST tests/systems/earth/test_daylight.c        DEPS daylight solar_events)
+time_add_test(NAME test_seasons         TEST tests/systems/earth/test_seasons.c         DEPS seasons)
+time_add_test(NAME test_ski_resorts     TEST tests/systems/earth/test_ski_resorts.c     DEPS ski_resorts)
+time_add_test(NAME test_snow_season     TEST tests/systems/earth/test_snow_season.c     DEPS snow_season)
+time_add_test(NAME test_solar_radiation TEST tests/systems/earth/test_solar_radiation.c DEPS solar_radiation)
+time_add_test(NAME test_storm_data      TEST tests/systems/earth/test_storm_data.c      DEPS storm_data)
+time_add_test(NAME test_surf_spots      TEST tests/systems/earth/test_surf_spots.c      DEPS surf_spots)
+time_add_test(NAME test_interest_profile TEST tests/systems/earth/test_interest_profile.c DEPS interest_profile)
+time_add_test(NAME test_tidal           TEST tests/systems/earth/test_tidal.c           DEPS tidal)
+time_add_test(NAME test_wind_patterns   TEST tests/systems/earth/test_wind_patterns.c   DEPS wind_patterns)
+time_add_test(NAME test_tide_predict    TEST tests/systems/earth/test_tide_predict.c    DEPS tide_predict tidal surf_spots lunar julian)
+time_add_test(NAME test_location_alerts TEST tests/systems/earth/test_location_alerts.c DEPS location_alerts tide_predict tidal surf_spots ski_resorts snow_season daylight solar_events solar_radiation prayer_times storm_data convergence_detect julian lunar tzolkin tzolkin_board iching chinese hebrew hijri)
+
+# Tzolkin extended tests
+time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
+
+# Unified tests
+time_add_test(NAME test_structural_map  TEST tests/systems/unified/test_structural_map.c  DEPS structural_map)
+time_add_test(NAME test_cycle_analysis  TEST tests/systems/test_cycle_analysis.c          DEPS cycle_analysis)
+time_add_test(NAME test_calendar_epoch  TEST tests/systems/unified/test_calendar_epoch.c  DEPS calendar_epoch)
+time_add_test(NAME test_calendar_politics TEST tests/systems/unified/test_calendar_politics.c DEPS calendar_politics)
+time_add_test(NAME test_convergence     TEST tests/systems/unified/test_convergence.c     DEPS convergence)
+time_add_test(NAME test_convergence_detect TEST tests/systems/unified/test_convergence_detect.c DEPS convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri)
+time_add_test(NAME test_earth_drama     TEST tests/systems/unified/test_earth_drama.c     DEPS earth_drama climate_history fossil_milestones geo_time)
+time_add_test(NAME test_frequency       TEST tests/systems/unified/test_frequency.c       DEPS frequency)
+time_add_test(NAME test_precession_detect TEST tests/systems/unified/test_precession_detect.c DEPS precession_detect)
+time_add_test(NAME test_wisdom          TEST tests/systems/unified/test_wisdom.c          DEPS wisdom)
+time_add_test(NAME test_wisdom_engine   TEST tests/systems/unified/test_wisdom_engine.c   DEPS wisdom_engine wisdom)
+time_add_test(NAME test_fun_facts       TEST tests/systems/unified/test_fun_facts.c       DEPS fun_facts)
+time_add_test(NAME test_achievement    TEST tests/systems/unified/test_achievement.c    DEPS achievement)
+time_add_test(NAME test_audio_data     TEST tests/systems/unified/test_audio_data.c     DEPS audio_data frequency)
+time_add_test(NAME test_calendar_reform TEST tests/systems/unified/test_calendar_reform.c DEPS calendar_reform)
+time_add_test(NAME test_codon_hexagram TEST tests/systems/unified/test_codon_hexagram.c DEPS codon_hexagram)
+time_add_test(NAME test_cultural_stories TEST tests/systems/unified/test_cultural_stories.c DEPS cultural_stories)
+time_add_test(NAME test_knowledge_graph TEST tests/systems/unified/test_knowledge_graph.c DEPS knowledge_graph)
+time_add_test(NAME test_number_scanner TEST tests/systems/unified/test_number_scanner.c DEPS number_scanner)
+time_add_test(NAME test_phase_space    TEST tests/systems/unified/test_phase_space.c    DEPS phase_space)
+time_add_test(NAME test_ratio_analysis TEST tests/systems/unified/test_ratio_analysis.c DEPS ratio_analysis)
+time_add_test(NAME test_sacred_numbers TEST tests/systems/unified/test_sacred_numbers.c DEPS sacred_numbers)
+time_add_test(NAME test_time_philosophy TEST tests/systems/unified/test_time_philosophy.c DEPS time_philosophy)
+time_add_test(NAME test_birth_profile TEST tests/systems/unified/test_birth_profile.c
+    DEPS birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
+time_add_test(NAME test_festival_detector TEST tests/systems/unified/test_festival_detector.c
+    DEPS festival_detector korean_calendar hebrew sabbatical hijri buddhist lunar wheel_of_year thai_calendar tamil_calendar myanmar persian zoroastrian)
+time_add_test(NAME test_calendar_convert TEST tests/systems/unified/test_calendar_convert.c
+    DEPS calendar_convert julian tzolkin haab cr_cycle chinese iching hebrew hijri persian coptic ethiopian egyptian french_republican japanese bahai korean_calendar thai_calendar tamil_calendar myanmar zoroastrian celtic_tree)
+time_add_test(NAME test_lunar_harmonics TEST tests/systems/unified/test_lunar_harmonics.c
+    DEPS lunar_harmonics lunar julian)
+
+# UI tests
+time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
+    DEPS time_hud gregorian julian sidereal tzolkin zodiac planets orbit kepler)
+time_add_test(NAME test_fmt             TEST tests/ui/test_fmt.c              DEPS fmt)
+time_add_test(NAME test_animation       TEST tests/ui/test_animation.c        DEPS animation easing)
+time_add_test(NAME test_glyph_layout    TEST tests/ui/test_glyph_layout.c    DEPS glyph_layout)
+time_add_test(NAME test_card_data       TEST tests/ui/test_card_data.c        DEPS card_data)
+time_add_test(NAME test_zodiac_glyphs   TEST tests/ui/test_zodiac_glyphs.c   DEPS zodiac_glyphs)
+time_add_test(NAME test_hexagram_visual TEST tests/ui/test_hexagram_visual.c  DEPS hexagram_visual iching)
+time_add_test(NAME test_location_presets TEST tests/ui/test_location_presets.c DEPS location_presets)
+time_add_test(NAME test_scale_hud       TEST tests/ui/test_scale_hud.c       DEPS scale_hud)
+time_add_test(NAME test_system_scale_map TEST tests/ui/test_system_scale_map.c DEPS system_scale_map)
+time_add_test(NAME test_time_format     TEST tests/ui/test_time_format.c      DEPS time_format)
+time_add_test(NAME test_card_layout     TEST tests/ui/test_card_layout.c      DEPS card_layout)
+time_add_test(NAME test_tzolkin_card    TEST tests/ui/test_tzolkin_card.c     DEPS tzolkin_card tzolkin julian)
+time_add_test(NAME test_astro_summary   TEST tests/ui/test_astro_summary.c
+    DEPS astro_summary astro_fmt zodiac dignity aspects planets orbit kepler)
+time_add_test(NAME test_golden_layout   TEST tests/ui/test_golden_layout.c   DEPS golden_layout)
+time_add_test(NAME test_theme           TEST tests/ui/test_theme.c           DEPS theme golden_layout color_theory color)
+time_add_test(NAME test_accessibility  TEST tests/ui/test_accessibility.c   DEPS accessibility)
+time_add_test(NAME test_astro_fmt      TEST tests/ui/test_astro_fmt.c       DEPS astro_fmt)
+time_add_test(NAME test_chinese_fmt    TEST tests/ui/test_chinese_fmt.c     DEPS chinese_fmt chinese julian)
+time_add_test(NAME test_hd_card        TEST tests/ui/test_hd_card.c         DEPS hd_card human_design)
+time_add_test(NAME test_i18n           TEST tests/ui/test_i18n.c            DEPS i18n)
+time_add_test(NAME test_iching_card    TEST tests/ui/test_iching_card.c     DEPS iching_card hexagram_visual iching)
+time_add_test(NAME test_lunar_display  TEST tests/ui/test_lunar_display.c   DEPS lunar_display lunar julian zodiac)
+time_add_test(NAME test_rtl_layout     TEST tests/ui/test_rtl_layout.c      DEPS rtl_layout)
+time_add_test(NAME test_scroll_layers  TEST tests/ui/test_scroll_layers.c   DEPS scroll_layers)
+time_add_test(NAME test_help_overlay  TEST tests/ui/test_help_overlay.c   DEPS help_overlay)
+time_add_test(NAME test_ui_state     TEST tests/ui/test_ui_state.c       DEPS ui_state)
+time_add_test(NAME test_layer_panel TEST tests/ui/test_layer_panel.c   DEPS layer_panel)
+time_add_test(NAME test_command_palette TEST tests/ui/test_command_palette.c DEPS command_palette)
+time_add_test(NAME test_time_control   TEST tests/ui/test_time_control.c   DEPS time_control)
+time_add_test(NAME test_toast_message TEST tests/ui/test_toast_message.c  DEPS toast_message)
+# test_ui_html removed — source not committed (BETA WIP)
+
+# Cross-system validation test
+time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validation.c
+    DEPS julian sidereal ecliptic kepler orbit planets gregorian zodiac aspects observer houses tzolkin chinese)

@@ -1,0 +1,73 @@
+# src/systems/CMakeLists.txt — All knowledge system subdirectories
+
+add_subdirectory(astronomy)
+add_subdirectory(astrology)
+add_subdirectory(gregorian)
+add_subdirectory(tzolkin)
+add_subdirectory(iching)
+add_subdirectory(chinese)
+add_subdirectory(numerology)
+add_subdirectory(human_design)
+add_subdirectory(hebrew)
+add_subdirectory(islamic)
+add_subdirectory(buddhist)
+add_subdirectory(hindu)
+add_subdirectory(kabbalah)
+add_subdirectory(tarot)
+add_subdirectory(persian)
+add_subdirectory(bahai)
+add_subdirectory(japanese)
+add_subdirectory(aztec)
+add_subdirectory(french_republican)
+add_subdirectory(geology)
+add_subdirectory(earth)
+add_subdirectory(unified)
+add_subdirectory(celtic)
+add_subdirectory(chakra)
+add_subdirectory(coptic)
+add_subdirectory(korean)
+add_subdirectory(balinese)
+add_subdirectory(tamil)
+add_subdirectory(egyptian)
+add_subdirectory(ethiopian)
+add_subdirectory(myanmar)
+add_subdirectory(thai)
+add_subdirectory(zoroastrian)
+
+# Collect all system sources for parent scope (WASM build)
+set(SYSTEMS_SOURCES
+    ${ASTRONOMY_SOURCES}
+    ${ASTROLOGY_SOURCES}
+    ${GREGORIAN_SOURCES}
+    ${TZOLKIN_SOURCES}
+    ${ICHING_SOURCES}
+    ${CHINESE_SOURCES}
+    ${NUMEROLOGY_SOURCES}
+    ${HUMAN_DESIGN_SOURCES}
+    ${HEBREW_SOURCES}
+    ${ISLAMIC_SOURCES}
+    ${BUDDHIST_SOURCES}
+    ${HINDU_SOURCES}
+    ${KABBALAH_SOURCES}
+    ${TAROT_SOURCES}
+    ${PERSIAN_SOURCES}
+    ${BAHAI_SOURCES}
+    ${JAPANESE_SOURCES}
+    ${AZTEC_SOURCES}
+    ${FRENCH_REPUBLICAN_SOURCES}
+    ${GEOLOGY_SOURCES}
+    ${EARTH_SOURCES}
+    ${UNIFIED_SOURCES}
+    ${CELTIC_SOURCES}
+    ${CHAKRA_SOURCES}
+    ${COPTIC_SOURCES}
+    ${KOREAN_SOURCES}
+    ${BALINESE_SOURCES}
+    ${TAMIL_SOURCES}
+    ${EGYPTIAN_SOURCES}
+    ${ETHIOPIAN_SOURCES}
+    ${MYANMAR_SOURCES}
+    ${THAI_SOURCES}
+    ${ZOROASTRIAN_SOURCES}
+    PARENT_SCOPE
+)
