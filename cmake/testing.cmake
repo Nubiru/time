@@ -222,6 +222,7 @@ time_add_test(NAME test_tide_predict    TEST tests/systems/earth/test_tide_predi
 time_add_test(NAME test_location_alerts TEST tests/systems/earth/test_location_alerts.c DEPS location_alerts tide_predict tidal surf_spots ski_resorts snow_season daylight solar_events solar_radiation prayer_times storm_data convergence_detect julian lunar tzolkin tzolkin_board iching chinese hebrew hijri buddhist persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian)
 time_add_test(NAME test_privacy_framework TEST tests/systems/earth/test_privacy_framework.c DEPS privacy_framework)
 time_add_test(NAME test_user_prefs      TEST tests/systems/earth/test_user_prefs.c      DEPS user_prefs interest_profile privacy_framework theme golden_layout color_theory color)
+time_add_test(NAME test_local_events   TEST tests/systems/earth/test_local_events.c   DEPS local_events interest_profile solar_events)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
@@ -301,3 +302,15 @@ time_add_test(NAME test_ui_html      TEST tests/ui/test_ui_html.c       DEPS ui_
 # Cross-system validation test
 time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validation.c
     DEPS julian sidereal ecliptic kepler orbit planets gregorian zodiac aspects observer houses tzolkin chinese)
+
+# ===== Contract Tests =====
+time_add_test(NAME test_contract_julian    TEST tests/contracts/test_contract_julian.c    DEPS julian)
+time_add_test(NAME test_contract_zodiac    TEST tests/contracts/test_contract_zodiac.c    DEPS zodiac)
+time_add_test(NAME test_contract_orbit     TEST tests/contracts/test_contract_orbit.c     DEPS orbit kepler)
+time_add_test(NAME test_contract_planets   TEST tests/contracts/test_contract_planets.c   DEPS planets orbit kepler)
+time_add_test(NAME test_contract_gregorian TEST tests/contracts/test_contract_gregorian.c DEPS gregorian julian)
+time_add_test(NAME test_contract_tzolkin   TEST tests/contracts/test_contract_tzolkin.c   DEPS tzolkin julian)
+time_add_test(NAME test_contract_chinese   TEST tests/contracts/test_contract_chinese.c   DEPS chinese julian)
+time_add_test(NAME test_contract_hebrew    TEST tests/contracts/test_contract_hebrew.c    DEPS hebrew julian)
+time_add_test(NAME test_contract_hijri     TEST tests/contracts/test_contract_hijri.c     DEPS hijri julian)
+time_add_test(NAME test_contract_camera    TEST tests/contracts/test_contract_camera.c    DEPS camera vec3 mat4)
