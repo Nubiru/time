@@ -1,137 +1,44 @@
 #include "../unity/unity.h"
 #include "../../src/math/vec3.h"
 #include <math.h>
-
 #define FLOAT_EPSILON 1e-6f
-
 void setUp(void) { }
 void tearDown(void) { }
-
-/* --- vec3_create --- */
-
-void test_vec3_create(void) {
-    vec3_t v = vec3_create(1.0f, 2.0f, 3.0f);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, v.x);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 2.0f, v.y);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 3.0f, v.z);
-}
-
-/* --- vec3_add --- */
-
-void test_vec3_add(void) {
-    vec3_t a = vec3_create(1.0f, 2.0f, 3.0f);
-    vec3_t b = vec3_create(4.0f, 5.0f, 6.0f);
-    vec3_t r = vec3_add(a, b);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 5.0f, r.x);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 7.0f, r.y);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 9.0f, r.z);
-}
-
-/* --- vec3_sub --- */
-
-void test_vec3_sub(void) {
-    vec3_t a = vec3_create(5.0f, 7.0f, 9.0f);
-    vec3_t b = vec3_create(1.0f, 2.0f, 3.0f);
-    vec3_t r = vec3_sub(a, b);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 4.0f, r.x);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 5.0f, r.y);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 6.0f, r.z);
-}
-
-/* --- vec3_scale --- */
-
-void test_vec3_scale(void) {
-    vec3_t v = vec3_create(1.0f, 2.0f, 3.0f);
-    vec3_t r = vec3_scale(v, 2.0f);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 2.0f, r.x);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 4.0f, r.y);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 6.0f, r.z);
-}
-
-/* --- vec3_dot --- */
-
-void test_vec3_dot(void) {
-    vec3_t a = vec3_create(1.0f, 2.0f, 3.0f);
-    vec3_t b = vec3_create(4.0f, 5.0f, 6.0f);
-    /* 1*4 + 2*5 + 3*6 = 32 */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 32.0f, vec3_dot(a, b));
-}
-
-void test_vec3_dot_perpendicular(void) {
-    vec3_t x = vec3_create(1.0f, 0.0f, 0.0f);
-    vec3_t y = vec3_create(0.0f, 1.0f, 0.0f);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, vec3_dot(x, y));
-}
-
-/* --- vec3_cross --- */
-
-void test_vec3_cross_xy(void) {
-    vec3_t x = vec3_create(1.0f, 0.0f, 0.0f);
-    vec3_t y = vec3_create(0.0f, 1.0f, 0.0f);
-    vec3_t r = vec3_cross(x, y);
-    /* x cross y = z */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.x);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.y);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, r.z);
-}
-
-void test_vec3_cross_anticommutative(void) {
-    vec3_t a = vec3_create(1.0f, 2.0f, 3.0f);
-    vec3_t b = vec3_create(4.0f, 5.0f, 6.0f);
-    vec3_t ab = vec3_cross(a, b);
-    vec3_t ba = vec3_cross(b, a);
-    /* a x b = -(b x a) */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -ba.x, ab.x);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -ba.y, ab.y);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -ba.z, ab.z);
-}
-
-/* --- vec3_length --- */
-
-void test_vec3_length(void) {
-    vec3_t v = vec3_create(3.0f, 4.0f, 0.0f);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 5.0f, vec3_length(v));
-}
-
-void test_vec3_length_unit(void) {
-    vec3_t v = vec3_create(1.0f, 0.0f, 0.0f);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, vec3_length(v));
-}
-
-/* --- vec3_normalize --- */
-
-void test_vec3_normalize(void) {
-    vec3_t v = vec3_create(3.0f, 4.0f, 0.0f);
-    vec3_t n = vec3_normalize(v);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.6f, n.x);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.8f, n.y);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, n.z);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, vec3_length(n));
-}
-
-void test_vec3_normalize_zero(void) {
-    vec3_t v = vec3_create(0.0f, 0.0f, 0.0f);
-    vec3_t n = vec3_normalize(v);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, n.x);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, n.y);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, n.z);
-}
-
-/* --- Runner --- */
-
+void test_vec3_create(void) { vec3_t v = vec3_create(1.0f, 2.0f, 3.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, v.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 2.0f, v.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 3.0f, v.z); }
+void test_vec3_add(void) { vec3_t a = vec3_create(1.0f, 2.0f, 3.0f); vec3_t b = vec3_create(4.0f, 5.0f, 6.0f); vec3_t r = vec3_add(a, b); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 5.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 7.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 9.0f, r.z); }
+void test_vec3_sub(void) { vec3_t a = vec3_create(5.0f, 7.0f, 9.0f); vec3_t b = vec3_create(1.0f, 2.0f, 3.0f); vec3_t r = vec3_sub(a, b); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 4.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 5.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 6.0f, r.z); }
+void test_vec3_scale(void) { vec3_t v = vec3_create(1.0f, 2.0f, 3.0f); vec3_t r = vec3_scale(v, 2.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 2.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 4.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 6.0f, r.z); }
+void test_vec3_dot(void) { vec3_t a = vec3_create(1.0f, 2.0f, 3.0f); vec3_t b = vec3_create(4.0f, 5.0f, 6.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 32.0f, vec3_dot(a, b)); }
+void test_vec3_dot_perpendicular(void) { vec3_t x = vec3_create(1.0f, 0.0f, 0.0f); vec3_t y = vec3_create(0.0f, 1.0f, 0.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, vec3_dot(x, y)); }
+void test_vec3_cross_xy(void) { vec3_t x = vec3_create(1.0f, 0.0f, 0.0f); vec3_t y = vec3_create(0.0f, 1.0f, 0.0f); vec3_t r = vec3_cross(x, y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, r.z); }
+void test_vec3_cross_anticommutative(void) { vec3_t a = vec3_create(1.0f, 2.0f, 3.0f); vec3_t b = vec3_create(4.0f, 5.0f, 6.0f); vec3_t ab = vec3_cross(a, b); vec3_t ba = vec3_cross(b, a); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -ba.x, ab.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -ba.y, ab.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -ba.z, ab.z); }
+void test_vec3_length(void) { vec3_t v = vec3_create(3.0f, 4.0f, 0.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 5.0f, vec3_length(v)); }
+void test_vec3_length_unit(void) { vec3_t v = vec3_create(1.0f, 0.0f, 0.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, vec3_length(v)); }
+void test_vec3_normalize(void) { vec3_t v = vec3_create(3.0f, 4.0f, 0.0f); vec3_t n = vec3_normalize(v); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.6f, n.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.8f, n.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, n.z); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, vec3_length(n)); }
+void test_vec3_normalize_zero(void) { vec3_t v = vec3_create(0.0f, 0.0f, 0.0f); vec3_t n = vec3_normalize(v); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, n.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, n.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, n.z); }
+void test_vec3_create_zero(void) { vec3_t v = vec3_create(0.0f, 0.0f, 0.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, v.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, v.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, v.z); }
+void test_vec3_create_negative(void) { vec3_t v = vec3_create(-1.0f, -2.0f, -3.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, v.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -2.0f, v.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -3.0f, v.z); }
+void test_vec3_add_commutative(void) { vec3_t a = vec3_create(1.0f, 2.0f, 3.0f); vec3_t b = vec3_create(4.0f, 5.0f, 6.0f); vec3_t ab = vec3_add(a, b); vec3_t ba = vec3_add(b, a); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, ab.x, ba.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, ab.y, ba.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, ab.z, ba.z); }
+void test_vec3_add_zero_identity(void) { vec3_t a = vec3_create(7.0f, 8.0f, 9.0f); vec3_t z = vec3_create(0.0f, 0.0f, 0.0f); vec3_t r = vec3_add(a, z); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 7.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 8.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 9.0f, r.z); }
+void test_vec3_sub_self_is_zero(void) { vec3_t a = vec3_create(3.0f, 5.0f, 7.0f); vec3_t r = vec3_sub(a, a); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.z); }
+void test_vec3_scale_zero(void) { vec3_t v = vec3_create(5.0f, 10.0f, 15.0f); vec3_t r = vec3_scale(v, 0.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.z); }
+void test_vec3_scale_negative(void) { vec3_t v = vec3_create(1.0f, 2.0f, 3.0f); vec3_t r = vec3_scale(v, -1.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -2.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -3.0f, r.z); }
+void test_vec3_scale_one(void) { vec3_t v = vec3_create(4.0f, 5.0f, 6.0f); vec3_t r = vec3_scale(v, 1.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 4.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 5.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 6.0f, r.z); }
+void test_vec3_dot_self_equals_length_squared(void) { vec3_t v = vec3_create(2.0f, 3.0f, 4.0f); float dot = vec3_dot(v, v); float len = vec3_length(v); TEST_ASSERT_FLOAT_WITHIN(1e-4f, len * len, dot); }
+void test_vec3_dot_scaled(void) { vec3_t a = vec3_create(1.0f, 2.0f, 3.0f); vec3_t b = vec3_create(4.0f, 5.0f, 6.0f); float k = 3.0f; vec3_t kb = vec3_scale(b, k); TEST_ASSERT_FLOAT_WITHIN(1e-4f, k * vec3_dot(a, b), vec3_dot(a, kb)); }
+void test_vec3_cross_self_is_zero(void) { vec3_t a = vec3_create(1.0f, 2.0f, 3.0f); vec3_t r = vec3_cross(a, a); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.z); }
+void test_vec3_cross_yz(void) { vec3_t y = vec3_create(0.0f, 1.0f, 0.0f); vec3_t z = vec3_create(0.0f, 0.0f, 1.0f); vec3_t r = vec3_cross(y, z); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.z); }
+void test_vec3_cross_zx(void) { vec3_t z = vec3_create(0.0f, 0.0f, 1.0f); vec3_t x = vec3_create(1.0f, 0.0f, 0.0f); vec3_t r = vec3_cross(z, x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, r.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.z); }
+void test_vec3_cross_perpendicular_to_inputs(void) { vec3_t a = vec3_create(1.0f, 2.0f, 3.0f); vec3_t b = vec3_create(4.0f, 5.0f, 6.0f); vec3_t c = vec3_cross(a, b); TEST_ASSERT_FLOAT_WITHIN(1e-4f, 0.0f, vec3_dot(a, c)); TEST_ASSERT_FLOAT_WITHIN(1e-4f, 0.0f, vec3_dot(b, c)); }
+void test_vec3_length_zero(void) { vec3_t v = vec3_create(0.0f, 0.0f, 0.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, vec3_length(v)); }
+void test_vec3_length_3d(void) { vec3_t v = vec3_create(1.0f, 1.0f, 1.0f); TEST_ASSERT_FLOAT_WITHIN(1e-5f, sqrtf(3.0f), vec3_length(v)); }
+void test_vec3_normalize_unit_x(void) { vec3_t v = vec3_create(1.0f, 0.0f, 0.0f); vec3_t n = vec3_normalize(v); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, n.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, n.y); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, n.z); }
+void test_vec3_normalize_large(void) { vec3_t v = vec3_create(1000.0f, 2000.0f, 3000.0f); vec3_t n = vec3_normalize(v); TEST_ASSERT_FLOAT_WITHIN(1e-5f, 1.0f, vec3_length(n)); }
+void test_vec3_normalize_negative(void) { vec3_t v = vec3_create(-3.0f, -4.0f, 0.0f); vec3_t n = vec3_normalize(v); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -0.6f, n.x); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -0.8f, n.y); TEST_ASSERT_FLOAT_WITHIN(1e-5f, 1.0f, vec3_length(n)); }
+void test_vec3_add_is_pure(void) { vec3_t a = vec3_create(1.0f, 2.0f, 3.0f); vec3_t b = vec3_create(4.0f, 5.0f, 6.0f); vec3_t r1 = vec3_add(a, b); vec3_t r2 = vec3_add(a, b); TEST_ASSERT_EQUAL_FLOAT(r1.x, r2.x); TEST_ASSERT_EQUAL_FLOAT(r1.y, r2.y); TEST_ASSERT_EQUAL_FLOAT(r1.z, r2.z); }
 int main(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_vec3_create);
-    RUN_TEST(test_vec3_add);
-    RUN_TEST(test_vec3_sub);
-    RUN_TEST(test_vec3_scale);
-    RUN_TEST(test_vec3_dot);
-    RUN_TEST(test_vec3_dot_perpendicular);
-    RUN_TEST(test_vec3_cross_xy);
-    RUN_TEST(test_vec3_cross_anticommutative);
-    RUN_TEST(test_vec3_length);
-    RUN_TEST(test_vec3_length_unit);
-    RUN_TEST(test_vec3_normalize);
-    RUN_TEST(test_vec3_normalize_zero);
+    RUN_TEST(test_vec3_create); RUN_TEST(test_vec3_add); RUN_TEST(test_vec3_sub); RUN_TEST(test_vec3_scale); RUN_TEST(test_vec3_dot); RUN_TEST(test_vec3_dot_perpendicular); RUN_TEST(test_vec3_cross_xy); RUN_TEST(test_vec3_cross_anticommutative); RUN_TEST(test_vec3_length); RUN_TEST(test_vec3_length_unit); RUN_TEST(test_vec3_normalize); RUN_TEST(test_vec3_normalize_zero);
+    RUN_TEST(test_vec3_create_zero); RUN_TEST(test_vec3_create_negative); RUN_TEST(test_vec3_add_commutative); RUN_TEST(test_vec3_add_zero_identity); RUN_TEST(test_vec3_sub_self_is_zero); RUN_TEST(test_vec3_scale_zero); RUN_TEST(test_vec3_scale_negative); RUN_TEST(test_vec3_scale_one); RUN_TEST(test_vec3_dot_self_equals_length_squared); RUN_TEST(test_vec3_dot_scaled); RUN_TEST(test_vec3_cross_self_is_zero); RUN_TEST(test_vec3_cross_yz); RUN_TEST(test_vec3_cross_zx); RUN_TEST(test_vec3_cross_perpendicular_to_inputs); RUN_TEST(test_vec3_length_zero); RUN_TEST(test_vec3_length_3d); RUN_TEST(test_vec3_normalize_unit_x); RUN_TEST(test_vec3_normalize_large); RUN_TEST(test_vec3_normalize_negative); RUN_TEST(test_vec3_add_is_pure);
     return UNITY_END();
 }

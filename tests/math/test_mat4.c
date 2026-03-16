@@ -2,143 +2,45 @@
 #include "../../src/math/mat4.h"
 #include "../../src/math/vec3.h"
 #include <math.h>
-
 #define FLOAT_EPSILON 1e-5f
 #define PI 3.14159265358979323846f
-
 void setUp(void) { }
 void tearDown(void) { }
-
-/* --- mat4_identity --- */
-
-void test_mat4_identity(void) {
-    mat4_t m = mat4_identity();
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, m.m[0]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, m.m[1]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, m.m[4]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, m.m[5]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, m.m[10]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, m.m[15]);
-}
-
-/* --- mat4_multiply --- */
-
-void test_mat4_multiply_identity(void) {
-    mat4_t a = mat4_translate(3.0f, 4.0f, 5.0f);
-    mat4_t i = mat4_identity();
-    mat4_t r = mat4_multiply(a, i);
-    for (int j = 0; j < 16; j++) {
-        TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, a.m[j], r.m[j]);
-    }
-}
-
-void test_mat4_multiply_translate(void) {
-    /* Translating (1,0,0) by T(3,4,5) = (4,4,5) via matrix * vec */
-    mat4_t t = mat4_translate(3.0f, 4.0f, 5.0f);
-    /* Manually check column 3 (translation column) */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 3.0f, t.m[12]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 4.0f, t.m[13]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 5.0f, t.m[14]);
-}
-
-/* --- mat4_scale --- */
-
-void test_mat4_scale(void) {
-    mat4_t s = mat4_scale(2.0f, 3.0f, 4.0f);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 2.0f, s.m[0]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 3.0f, s.m[5]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 4.0f, s.m[10]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, s.m[15]);
-}
-
-/* --- rotations --- */
-
-void test_mat4_rotate_z_90(void) {
-    /* 90° around Z: x-axis maps to y-axis */
-    mat4_t r = mat4_rotate_z(PI / 2.0f);
-    /* Column 0 (where x-axis goes): should be (0, 1, 0) */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.m[0]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, r.m[1]);
-    /* Column 1 (where y-axis goes): should be (-1, 0, 0) */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, r.m[4]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON,  0.0f, r.m[5]);
-}
-
-void test_mat4_rotate_x_90(void) {
-    /* 90° around X: y-axis maps to z-axis */
-    mat4_t r = mat4_rotate_x(PI / 2.0f);
-    /* Column 1 (where y-axis goes): should be (0, 0, 1) */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.m[5]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, r.m[6]);
-}
-
-void test_mat4_rotate_y_90(void) {
-    /* 90° around Y: z-axis maps to x-axis */
-    mat4_t r = mat4_rotate_y(PI / 2.0f);
-    /* Column 2 (where z-axis goes): should be (1, 0, 0) */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, r.m[8]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.m[10]);
-}
-
-/* --- mat4_perspective --- */
-
-void test_mat4_perspective(void) {
-    mat4_t p = mat4_perspective(PI / 4.0f, 16.0f / 9.0f, 0.1f, 100.0f);
-    /* m[11] should be -1 (perspective divide) */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, p.m[11]);
-    /* m[15] should be 0 (not affine) */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, p.m[15]);
-    /* m[0] and m[5] should be positive (field of view scaling) */
-    TEST_ASSERT_TRUE(p.m[0] > 0.0f);
-    TEST_ASSERT_TRUE(p.m[5] > 0.0f);
-}
-
-/* --- mat4_look_at --- */
-
-void test_mat4_look_at_origin(void) {
-    /* Camera at (0,0,5) looking at origin, up is Y */
-    vec3_t eye    = vec3_create(0.0f, 0.0f, 5.0f);
-    vec3_t center = vec3_create(0.0f, 0.0f, 0.0f);
-    vec3_t up     = vec3_create(0.0f, 1.0f, 0.0f);
-    mat4_t v = mat4_look_at(eye, center, up);
-
-    /* Forward is -Z, so camera looking down -Z from z=5.
-     * The view matrix should translate z by -5 */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -5.0f, v.m[14]);
-    /* X and Y axes should be unchanged (identity-like for top-left 2x2) */
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, v.m[0]);
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, v.m[5]);
-}
-
-/* --- composition --- */
-
-void test_mat4_compose_translate_scale(void) {
-    /* Scale by 2, then translate by (10,0,0).
-     * In column-major: result = T * S
-     * Point (1,0,0) -> scale -> (2,0,0) -> translate -> (12,0,0) */
-    mat4_t s = mat4_scale(2.0f, 2.0f, 2.0f);
-    mat4_t t = mat4_translate(10.0f, 0.0f, 0.0f);
-    mat4_t ts = mat4_multiply(t, s);
-
-    /* Apply to point (1,0,0,1): result = ts * (1,0,0,1)
-     * Col0*1 + Col3*1 = (2,0,0,0) + (10,0,0,1) = (12,0,0,1) */
-    float x = ts.m[0] * 1.0f + ts.m[12] * 1.0f;
-    TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 12.0f, x);
-}
-
-/* --- Runner --- */
-
+void test_mat4_identity(void) { mat4_t m = mat4_identity(); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, m.m[0]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, m.m[1]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, m.m[4]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, m.m[5]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, m.m[10]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, m.m[15]); }
+void test_mat4_multiply_identity(void) { mat4_t a = mat4_translate(3.0f, 4.0f, 5.0f); mat4_t i = mat4_identity(); mat4_t r = mat4_multiply(a, i); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, a.m[j], r.m[j]); } }
+void test_mat4_multiply_translate(void) { mat4_t t = mat4_translate(3.0f, 4.0f, 5.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 3.0f, t.m[12]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 4.0f, t.m[13]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 5.0f, t.m[14]); }
+void test_mat4_scale(void) { mat4_t s = mat4_scale(2.0f, 3.0f, 4.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 2.0f, s.m[0]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 3.0f, s.m[5]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 4.0f, s.m[10]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, s.m[15]); }
+void test_mat4_rotate_z_90(void) { mat4_t r = mat4_rotate_z(PI / 2.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.m[0]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, r.m[1]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, r.m[4]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.m[5]); }
+void test_mat4_rotate_x_90(void) { mat4_t r = mat4_rotate_x(PI / 2.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.m[5]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, r.m[6]); }
+void test_mat4_rotate_y_90(void) { mat4_t r = mat4_rotate_y(PI / 2.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, r.m[8]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, r.m[10]); }
+void test_mat4_perspective(void) { mat4_t p = mat4_perspective(PI / 4.0f, 16.0f / 9.0f, 0.1f, 100.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, p.m[11]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, p.m[15]); TEST_ASSERT_TRUE(p.m[0] > 0.0f); TEST_ASSERT_TRUE(p.m[5] > 0.0f); }
+void test_mat4_look_at_origin(void) { vec3_t eye = vec3_create(0.0f, 0.0f, 5.0f); vec3_t center = vec3_create(0.0f, 0.0f, 0.0f); vec3_t up = vec3_create(0.0f, 1.0f, 0.0f); mat4_t v = mat4_look_at(eye, center, up); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -5.0f, v.m[14]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, v.m[0]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, v.m[5]); }
+void test_mat4_compose_translate_scale(void) { mat4_t s = mat4_scale(2.0f, 2.0f, 2.0f); mat4_t t = mat4_translate(10.0f, 0.0f, 0.0f); mat4_t ts = mat4_multiply(t, s); float x = ts.m[0] * 1.0f + ts.m[12] * 1.0f; TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 12.0f, x); }
+void test_mat4_identity_all_elements(void) { mat4_t m = mat4_identity(); for (int i = 0; i < 16; i++) { float expected = (i % 5 == 0) ? 1.0f : 0.0f; TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, expected, m.m[i]); } }
+void test_mat4_multiply_identity_left(void) { mat4_t a = mat4_translate(7.0f, 8.0f, 9.0f); mat4_t i = mat4_identity(); mat4_t r = mat4_multiply(i, a); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, a.m[j], r.m[j]); } }
+void test_mat4_multiply_associative(void) { mat4_t a = mat4_translate(1.0f, 2.0f, 3.0f); mat4_t b = mat4_scale(2.0f, 2.0f, 2.0f); mat4_t c = mat4_rotate_z(PI / 4.0f); mat4_t ab = mat4_multiply(a, b); mat4_t abc1 = mat4_multiply(ab, c); mat4_t bc = mat4_multiply(b, c); mat4_t abc2 = mat4_multiply(a, bc); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(1e-3f, abc1.m[j], abc2.m[j]); } }
+void test_mat4_rotate_z_zero(void) { mat4_t r = mat4_rotate_z(0.0f); mat4_t id = mat4_identity(); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, id.m[j], r.m[j]); } }
+void test_mat4_rotate_x_zero(void) { mat4_t r = mat4_rotate_x(0.0f); mat4_t id = mat4_identity(); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, id.m[j], r.m[j]); } }
+void test_mat4_rotate_y_zero(void) { mat4_t r = mat4_rotate_y(0.0f); mat4_t id = mat4_identity(); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, id.m[j], r.m[j]); } }
+void test_mat4_rotate_z_360(void) { mat4_t r = mat4_rotate_z(2.0f * PI); mat4_t id = mat4_identity(); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(1e-4f, id.m[j], r.m[j]); } }
+void test_mat4_rotate_x_360(void) { mat4_t r = mat4_rotate_x(2.0f * PI); mat4_t id = mat4_identity(); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(1e-4f, id.m[j], r.m[j]); } }
+void test_mat4_rotate_y_360(void) { mat4_t r = mat4_rotate_y(2.0f * PI); mat4_t id = mat4_identity(); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(1e-4f, id.m[j], r.m[j]); } }
+void test_mat4_rotate_z_180(void) { mat4_t r = mat4_rotate_z(PI); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, r.m[0]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, r.m[5]); }
+void test_mat4_rotate_double_90_equals_180(void) { mat4_t r90 = mat4_rotate_z(PI / 2.0f); mat4_t r180c = mat4_multiply(r90, r90); mat4_t r180d = mat4_rotate_z(PI); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(1e-4f, r180d.m[j], r180c.m[j]); } }
+void test_mat4_scale_zero(void) { mat4_t s = mat4_scale(0.0f, 0.0f, 0.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, s.m[0]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, s.m[5]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 0.0f, s.m[10]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 1.0f, s.m[15]); }
+void test_mat4_scale_one(void) { mat4_t s = mat4_scale(1.0f, 1.0f, 1.0f); mat4_t id = mat4_identity(); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, id.m[j], s.m[j]); } }
+void test_mat4_scale_negative(void) { mat4_t s = mat4_scale(-1.0f, -1.0f, -1.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, s.m[0]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, s.m[5]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, -1.0f, s.m[10]); }
+void test_mat4_translate_zero(void) { mat4_t t = mat4_translate(0.0f, 0.0f, 0.0f); mat4_t id = mat4_identity(); for (int j = 0; j < 16; j++) { TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, id.m[j], t.m[j]); } }
+void test_mat4_translate_compose(void) { mat4_t t1 = mat4_translate(3.0f, 4.0f, 5.0f); mat4_t t2 = mat4_translate(1.0f, 2.0f, 3.0f); mat4_t composed = mat4_multiply(t1, t2); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 4.0f, composed.m[12]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 6.0f, composed.m[13]); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, 8.0f, composed.m[14]); }
+void test_mat4_perspective_square_aspect(void) { mat4_t p = mat4_perspective(PI / 4.0f, 1.0f, 0.1f, 100.0f); TEST_ASSERT_FLOAT_WITHIN(FLOAT_EPSILON, p.m[5], p.m[0]); }
+void test_mat4_perspective_wide_vs_narrow(void) { mat4_t pw = mat4_perspective(PI / 4.0f, 2.0f, 0.1f, 100.0f); mat4_t pn = mat4_perspective(PI / 4.0f, 0.5f, 0.1f, 100.0f); TEST_ASSERT_TRUE(pw.m[0] < pn.m[0]); }
+void test_mat4_perspective_near_far_encoding(void) { mat4_t p = mat4_perspective(PI / 3.0f, 1.5f, 1.0f, 1000.0f); float e10 = (1.0f + 1000.0f) / (1.0f - 1000.0f); TEST_ASSERT_FLOAT_WITHIN(0.001f, e10, p.m[10]); float e14 = 2.0f * 1.0f * 1000.0f / (1.0f - 1000.0f); TEST_ASSERT_FLOAT_WITHIN(0.01f, e14, p.m[14]); }
+void test_mat4_look_at_along_x(void) { vec3_t eye = vec3_create(5.0f, 0.0f, 0.0f); vec3_t center = vec3_create(0.0f, 0.0f, 0.0f); vec3_t up = vec3_create(0.0f, 1.0f, 0.0f); mat4_t v = mat4_look_at(eye, center, up); mat4_t id = mat4_identity(); int differs = 0; for (int i = 0; i < 16; i++) { if (fabsf(v.m[i] - id.m[i]) > 0.001f) differs = 1; } TEST_ASSERT_TRUE(differs); }
+void test_mat4_look_at_along_y(void) { vec3_t eye = vec3_create(0.0f, 10.0f, 0.0f); vec3_t center = vec3_create(0.0f, 0.0f, 0.0f); vec3_t up = vec3_create(0.0f, 0.0f, -1.0f); mat4_t v = mat4_look_at(eye, center, up); mat4_t id = mat4_identity(); int differs = 0; for (int i = 0; i < 16; i++) { if (fabsf(v.m[i] - id.m[i]) > 0.001f) differs = 1; } TEST_ASSERT_TRUE(differs); }
+void test_mat4_multiply_is_pure(void) { mat4_t a = mat4_translate(1.0f, 2.0f, 3.0f); mat4_t b = mat4_rotate_z(0.5f); mat4_t r1 = mat4_multiply(a, b); mat4_t r2 = mat4_multiply(a, b); for (int j = 0; j < 16; j++) { TEST_ASSERT_EQUAL_FLOAT(r1.m[j], r2.m[j]); } }
 int main(void) {
     UNITY_BEGIN();
-    RUN_TEST(test_mat4_identity);
-    RUN_TEST(test_mat4_multiply_identity);
-    RUN_TEST(test_mat4_multiply_translate);
-    RUN_TEST(test_mat4_scale);
-    RUN_TEST(test_mat4_rotate_z_90);
-    RUN_TEST(test_mat4_rotate_x_90);
-    RUN_TEST(test_mat4_rotate_y_90);
-    RUN_TEST(test_mat4_perspective);
-    RUN_TEST(test_mat4_look_at_origin);
-    RUN_TEST(test_mat4_compose_translate_scale);
+    RUN_TEST(test_mat4_identity); RUN_TEST(test_mat4_multiply_identity); RUN_TEST(test_mat4_multiply_translate); RUN_TEST(test_mat4_scale); RUN_TEST(test_mat4_rotate_z_90); RUN_TEST(test_mat4_rotate_x_90); RUN_TEST(test_mat4_rotate_y_90); RUN_TEST(test_mat4_perspective); RUN_TEST(test_mat4_look_at_origin); RUN_TEST(test_mat4_compose_translate_scale);
+    RUN_TEST(test_mat4_identity_all_elements); RUN_TEST(test_mat4_multiply_identity_left); RUN_TEST(test_mat4_multiply_associative); RUN_TEST(test_mat4_rotate_z_zero); RUN_TEST(test_mat4_rotate_x_zero); RUN_TEST(test_mat4_rotate_y_zero); RUN_TEST(test_mat4_rotate_z_360); RUN_TEST(test_mat4_rotate_x_360); RUN_TEST(test_mat4_rotate_y_360); RUN_TEST(test_mat4_rotate_z_180); RUN_TEST(test_mat4_rotate_double_90_equals_180); RUN_TEST(test_mat4_scale_zero); RUN_TEST(test_mat4_scale_one); RUN_TEST(test_mat4_scale_negative); RUN_TEST(test_mat4_translate_zero); RUN_TEST(test_mat4_translate_compose); RUN_TEST(test_mat4_perspective_square_aspect); RUN_TEST(test_mat4_perspective_wide_vs_narrow); RUN_TEST(test_mat4_perspective_near_far_encoding); RUN_TEST(test_mat4_look_at_along_x); RUN_TEST(test_mat4_look_at_along_y); RUN_TEST(test_mat4_multiply_is_pure);
     return UNITY_END();
 }
