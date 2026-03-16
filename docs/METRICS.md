@@ -1,35 +1,38 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-16 (OMEGA sweep #13)
+**Last refreshed**: 2026-03-16 (OMEGA sweep #14)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 233 |
-| Header files (.h) | 233 |
-| Lines of code (src/) | 72,886 |
-| Lines of tests | 107,322 |
-| Test files | 213 |
+| Source files (.c) | 235 |
+| Header files (.h) | 235 |
+| Lines of code (src/) | 74,115 |
+| Lines of tests | 106,709 |
+| Test files | 215 |
 | Render pass files | 16 |
-| Contributors | 179 |
+| Contributors | 185 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 210 |
-| Test functions (RUN_TEST) | 10,108 |
-| Test assertions (TEST_ASSERT) | 15,995 |
+| Test suites (CTest) | 212 |
+| Test functions (RUN_TEST) | 10,213 |
+| Test assertions (TEST_ASSERT) | 16,181 |
 | Failures | 0 |
-| CTest time | 0.95s |
+| CTest time | 1.08s |
+| ASan/UBSan | PASS (212/212, 0 findings) |
 
 ## Build
 
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (210/210) |
+| CTest -j12 | PASS (212/212) |
+| Sanitizer build | PASS (ASan + UBSan, 0 findings) |
+| Coverage build | BLOCKED (lcov not installed — `sudo apt install lcov`) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt (refactored 2026-03-15) |
 
@@ -63,14 +66,14 @@
 | P3 violations (I/O in pure zones) | 0 |
 | P4 violations (globals in pure zones) | 0 |
 | P5 violations (mutable statics) | 4 (2 files — lazy shader string init, low severity) |
-| Stateful modules | 23 (gl_init, shader, mesh, main, app_state, hud, input, 16 passes) |
+| Stateful modules | 24 (gl_init, shader, mesh, main, app_state, hud, input, ui_bridge, 16 passes) |
 
 ## System Domains
 
 | Domain | Modules | Tests |
 |--------|---------|-------|
 | math | 13 | 13 |
-| render | 57 pure + 19 stateful | 51 |
+| render | 57 pure + 20 stateful | 51 |
 | astrology | 7 | 7 |
 | astronomy | 10 | 10 |
 | aztec | 1 | 1 |
@@ -81,7 +84,7 @@
 | chakra | 1 | 1 |
 | chinese | 1 | 1 |
 | coptic | 1 | 1 |
-| earth | 14 | 14 |
+| earth | 15 | 15 |
 | egyptian | 1 | 1 |
 | ethiopian | 1 | 1 |
 | french_republican | 1 | 1 |
@@ -104,19 +107,20 @@
 | tzolkin | 6 | 6 |
 | unified | 28 | 28 |
 | zoroastrian | 2 | 2 |
-| ui | 32 | 32 |
+| ui | 33 | 33 |
 | core | 5 | 1 |
 
-## Health (OMEGA sweep #13)
+## Health (OMEGA sweep #14)
 
 | Check | Status |
 |-------|--------|
-| Git integrity | OK (dangling commits from rebases — normal) |
-| Build system sync | OK (per-directory CMakeLists.txt, all 233 registered) |
+| Git integrity | OK |
+| Build system sync | OK (235 .c files, all registered) |
 | Purity audit | CLEAN (P1-P4 all zones, 4 P5 known) |
+| ASan/UBSan | PASS (0 memory errors, 0 undefined behavior) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
-| Missing attribution | 0 (E.G. Richards added this sweep) |
+| Missing attribution | 0 |
 | Render pipeline | COMPLETE (16/16 passes wired) |
-| Refactor candidates | zodiac_pass.c (639L), earth_pass.c (init 140L, draw 121L) |
-| Style debt | 153+ hardcoded visual constants (policy pending) |
+| Refactor candidates | earth_pass.c decomposed (sweep #13 task) |
+| Style debt | Policy documented in CONVENTIONS.md (domain colors exempt) |

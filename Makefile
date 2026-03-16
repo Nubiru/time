@@ -1,7 +1,7 @@
 # Makefile — Convenience wrapper around CMake
 # Usage: make build, make test, make wasm, make serve, make clean
 
-.PHONY: build test wasm serve clean rebuild check smoke lint
+.PHONY: build test wasm serve clean rebuild check smoke lint coverage sanitize
 
 # Native build (gcc)
 build:
@@ -24,7 +24,7 @@ serve: wasm
 
 # Remove all build artifacts
 clean:
-	@rm -rf build-native build-wasm
+	@rm -rf build-native build-wasm build-coverage build-sanitize coverage.info coverage-report
 
 # Clean + rebuild
 rebuild: clean build
@@ -43,3 +43,19 @@ smoke: wasm
 lint:
 	@bash scripts/run_cppcheck.sh
 	@echo "Lint: PASS"
+
+# Code coverage report (requires lcov: sudo apt install lcov)
+coverage:
+	@cmake -B build-coverage -DCMAKE_BUILD_TYPE=Coverage 2>/dev/null | tail -1
+	@cmake --build build-coverage -j$$(nproc)
+	@ctest --test-dir build-coverage -j$$(nproc) --output-on-failure
+	@lcov --capture --directory build-coverage --output-file coverage.info --ignore-errors mismatch
+	@lcov --remove coverage.info '*/tests/*' '*/unity/*' --output-file coverage.info --ignore-errors unused
+	@genhtml coverage.info --output-directory coverage-report
+	@echo "Coverage report: coverage-report/index.html"
+
+# Address + undefined behavior sanitizers
+sanitize:
+	@cmake -B build-sanitize -DCMAKE_BUILD_TYPE=Sanitize 2>/dev/null | tail -1
+	@cmake --build build-sanitize -j$$(nproc)
+	@ctest --test-dir build-sanitize -j$$(nproc) --output-on-failure

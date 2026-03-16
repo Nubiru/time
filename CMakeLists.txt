@@ -24,6 +24,18 @@ else()
     add_compile_options(-pedantic -Wmissing-prototypes -Wmissing-declarations)
 endif()
 
+# Coverage build: cmake -B build-coverage -DCMAKE_BUILD_TYPE=Coverage
+if(NOT EMSCRIPTEN AND CMAKE_BUILD_TYPE STREQUAL "Coverage")
+    add_compile_options(--coverage -fprofile-arcs -ftest-coverage)
+    add_link_options(--coverage)
+endif()
+
+# Sanitizer build: cmake -B build-sanitize -DCMAKE_BUILD_TYPE=Sanitize
+if(NOT EMSCRIPTEN AND CMAKE_BUILD_TYPE STREQUAL "Sanitize")
+    add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer -g)
+    add_link_options(-fsanitize=address,undefined)
+endif()
+
 # ===========================================================================
 # Source tree — per-directory CMakeLists define sources + OBJECT libraries
 # ===========================================================================
