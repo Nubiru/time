@@ -350,3 +350,9 @@ time_add_test(NAME test_calendar_pipeline TEST tests/integration/test_calendar_p
 time_add_test(NAME test_astronomy_pipeline TEST tests/integration/test_astronomy_pipeline.c
     DEPS julian kepler ecliptic sidereal orbit planets lunar solar_events
          zodiac aspects observer houses)
+time_add_test(NAME test_calendar_roundtrip TEST tests/integration/test_calendar_roundtrip.c
+    DEPS julian zoroastrian hijri ethiopian coptic thai_calendar egyptian
+         tamil_calendar persian bahai hebrew myanmar french_republican japanese
+         korean_calendar celtic_tree chinese tzolkin iching haab pawukon)
+time_add_test(NAME test_property_based TEST tests/integration/test_property_based.c
+    DEPS easing vec3 mat4)
