@@ -1,6 +1,6 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-16 (OMEGA sweep #18)
+**Last refreshed**: 2026-03-16 (OMEGA sweep #19)
 
 ## Codebase
 
@@ -160,7 +160,7 @@
 | Gzipped | 84,713 bytes (83 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 
-## Health (OMEGA sweep #18)
+## Health (OMEGA sweep #19)
 
 | Check | Status |
 |-------|--------|
@@ -169,9 +169,9 @@
 | Purity audit | CLEAN (P1-P6 all zones) |
 | Native build | PASS (233/233 tests) |
 | WASM build | PASS (209 KB) |
-| CI/CD | GREEN |
+| CI/CD | GREEN (in_progress on latest push) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Missing attribution | 0 |
 | Render pipeline | COMPLETE (16/16 passes wired) |
-| fun_facts.c | NO refactor needed — 437L data catalog, longest function 44L |
+| Refactor audit | ALL CLOSED — convergence.c already dispatched (50L max), knowledge_graph.c BFS already decomposed (37L max) |
