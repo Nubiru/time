@@ -176,4 +176,53 @@ void ct_phi_saturations(float base_sat, int n, float *out);
  * out: array of N floats. */
 void ct_phi_lightness(float base_light, int n, float *out);
 
+/* =====================================================================
+ *  Itten Color System
+ *  Natural luminosity, extension ratios, simultaneous contrast, 7 contrasts
+ *  Source: Johannes Itten, The Art of Color (1961)
+ * ===================================================================== */
+
+/* Itten's 7 color contrasts. */
+typedef enum {
+    CT_CONTRAST_HUE = 0,          /* Different hues at full saturation */
+    CT_CONTRAST_LIGHT_DARK,       /* White vs black poles */
+    CT_CONTRAST_COLD_WARM,        /* Blue-green <-> red-orange axis */
+    CT_CONTRAST_COMPLEMENTARY,    /* 180 deg opposites on color wheel */
+    CT_CONTRAST_SIMULTANEOUS,     /* Eye-generated complement effect */
+    CT_CONTRAST_SATURATION,       /* Pure vs diluted */
+    CT_CONTRAST_EXTENSION,        /* Relative area proportions */
+    CT_CONTRAST_COUNT
+} ct_contrast_t;
+
+/* Natural luminosity of a hue (Goethe/Itten scale, 0.0-1.0).
+ * Interpolates between 12 reference hues on the Itten circle.
+ * Input: standard HSL hue degrees (0=red, 60=yellow, 120=green, etc.).
+ * Yellow(60)=0.90 (brightest), Violet(270)=0.30 (darkest). */
+float ct_hue_natural_lightness(float hue_degrees);
+
+/* Extension ratio for balanced area between two hues.
+ * Returns the fraction of total area that hue_a should occupy (0.0-1.0).
+ * Brighter hues need less area for perceptual balance.
+ * ct_extension_ratio(60, 270) ~ 0.25 (yellow needs 25% of area). */
+float ct_extension_ratio(float hue_a_deg, float hue_b_deg);
+
+/* Simultaneous contrast hue shift.
+ * Returns the hue (degrees) that the eye generates on neutral gray
+ * when viewed against a background of bg_hue_deg.
+ * This is approximately the complement (bg_hue + 180). */
+float ct_simultaneous_shift(float bg_hue_deg);
+
+/* Classify the dominant contrast between two colors (Itten's 7 contrasts).
+ * Inputs are linear RGB [0.0-1.0]. */
+ct_contrast_t ct_dominant_contrast(float r1, float g1, float b1,
+                                    float r2, float g2, float b2);
+
+/* Get contrast type name as string. */
+const char *ct_contrast_name(ct_contrast_t contrast);
+
+/* Get the Itten cold-warm value for a hue.
+ * -1.0 = coldest (blue-green, ~195 deg), +1.0 = warmest (red-orange, ~15 deg).
+ * Linear interpolation around the circle. */
+float ct_hue_temperature(float hue_degrees);
+
 #endif /* TIME_COLOR_THEORY_H */

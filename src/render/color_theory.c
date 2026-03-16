@@ -411,3 +411,160 @@ void ct_phi_lightness(float base_light, int n, float *out)
         if (out[i] < 0.0f) out[i] = 0.0f;
     }
 }
+
+/* =====================================================================
+ *  Itten Color System
+ *  Source: Johannes Itten, The Art of Color (1961)
+ * ===================================================================== */
+
+/* Itten's 12-hue circle mapped to standard HSL hue degrees.
+ * 12 entries at 30-degree intervals: index 0 = 0 deg (Red), index 1 = 30 deg, etc.
+ * Natural luminosity values from Goethe/Itten scale, normalized 0.0-1.0. */
+static const float ITTEN_NATURAL_LIGHTNESS[12] = {
+    0.60f,   /* red (0 deg) */
+    0.70f,   /* red-orange (30 deg) */
+    0.80f,   /* orange (60 deg) — Itten has yellow here but HSL 60=yellow */
+    0.75f,   /* yellow-green (90 deg) */
+    0.60f,   /* green (120 deg) */
+    0.55f,   /* blue-green light (150 deg) */
+    0.50f,   /* blue-green / cyan (180 deg) */
+    0.42f,   /* blue (210 deg) — interpolated between blue-green and blue */
+    0.40f,   /* blue deep (240 deg) */
+    0.30f,   /* violet (270 deg) */
+    0.45f,   /* red-violet / magenta (300 deg) */
+    0.52f    /* cool red (330 deg) — interpolated red-violet to red */
+};
+
+/* Normalize hue to [0, 360). */
+static float normalize_hue(float h)
+{
+    h = fmodf(h, 360.0f);
+    if (h < 0.0f) h += 360.0f;
+    return h;
+}
+
+float ct_hue_natural_lightness(float hue_degrees)
+{
+    float h = normalize_hue(hue_degrees);
+
+    /* Find the two bracketing entries in the 12-step table (30 deg steps). */
+    float idx_f = h / 30.0f;
+    int idx_lo = (int)idx_f % 12;
+    int idx_hi = (idx_lo + 1) % 12;
+    float t = idx_f - (float)(int)idx_f;
+
+    float lo = ITTEN_NATURAL_LIGHTNESS[idx_lo];
+    float hi = ITTEN_NATURAL_LIGHTNESS[idx_hi];
+    return lo + (hi - lo) * t;
+}
+
+float ct_extension_ratio(float hue_a_deg, float hue_b_deg)
+{
+    float la = ct_hue_natural_lightness(hue_a_deg);
+    float lb = ct_hue_natural_lightness(hue_b_deg);
+    float sum = la + lb;
+    if (sum < 0.001f) return 0.5f;
+    /* Brighter hues need LESS area. Area_a proportional to 1/la.
+     * ratio_a = (1/la) / (1/la + 1/lb) = lb / (la + lb). */
+    return lb / sum;
+}
+
+float ct_simultaneous_shift(float bg_hue_deg)
+{
+    return normalize_hue(bg_hue_deg + 180.0f);
+}
+
+/* Helper: check if hue is in a warm zone (red-orange side). */
+static int hue_is_warm(float h)
+{
+    h = normalize_hue(h);
+    /* Warm: 0-60 (red through yellow) or 300-360 (magenta through red) */
+    return (h <= 60.0f) || (h >= 300.0f);
+}
+
+/* Helper: check if hue is in a cold zone (blue-green side). */
+static int hue_is_cold(float h)
+{
+    h = normalize_hue(h);
+    /* Cold: 150-270 (cyan through blue through violet) */
+    return (h >= 150.0f) && (h <= 270.0f);
+}
+
+ct_contrast_t ct_dominant_contrast(float r1, float g1, float b1,
+                                    float r2, float g2, float b2)
+{
+    color_rgb_t c1 = {r1, g1, b1};
+    color_rgb_t c2 = {r2, g2, b2};
+    color_hsl_t h1 = color_rgb_to_hsl(c1);
+    color_hsl_t h2 = color_rgb_to_hsl(c2);
+
+    float hue1 = normalize_hue(h1.h);
+    float hue2 = normalize_hue(h2.h);
+
+    /* Hue difference (shortest arc). */
+    float hue_diff = fabsf(hue1 - hue2);
+    if (hue_diff > 180.0f) hue_diff = 360.0f - hue_diff;
+
+    float light_diff = fabsf(h1.l - h2.l);
+    float sat_diff = fabsf(h1.s - h2.s);
+
+    /* Check lightness first — strongest visual impact. */
+    if (light_diff > 0.5f)
+        return CT_CONTRAST_LIGHT_DARK;
+
+    /* Complementary: hue difference near 180 deg (within 30 deg). */
+    if (hue_diff >= 150.0f && h1.s > 0.2f && h2.s > 0.2f)
+        return CT_CONTRAST_COMPLEMENTARY;
+
+    /* Cold-warm: one warm, one cold, both saturated. */
+    if (h1.s > 0.2f && h2.s > 0.2f) {
+        int w1 = hue_is_warm(hue1);
+        int w2 = hue_is_warm(hue2);
+        int c1_cold = hue_is_cold(hue1);
+        int c2_cold = hue_is_cold(hue2);
+        if ((w1 && c2_cold) || (w2 && c1_cold))
+            return CT_CONTRAST_COLD_WARM;
+    }
+
+    /* Saturation contrast. */
+    if (sat_diff > 0.4f)
+        return CT_CONTRAST_SATURATION;
+
+    /* Hue contrast: large hue difference, both saturated. */
+    if (hue_diff > 90.0f && h1.s > 0.3f && h2.s > 0.3f)
+        return CT_CONTRAST_HUE;
+
+    /* Default: simultaneous (always present). */
+    return CT_CONTRAST_SIMULTANEOUS;
+}
+
+static const char *CONTRAST_NAMES[CT_CONTRAST_COUNT] = {
+    "Hue",
+    "Light-Dark",
+    "Cold-Warm",
+    "Complementary",
+    "Simultaneous",
+    "Saturation",
+    "Extension"
+};
+
+const char *ct_contrast_name(ct_contrast_t contrast)
+{
+    if (contrast < 0 || contrast >= CT_CONTRAST_COUNT) return "?";
+    return CONTRAST_NAMES[contrast];
+}
+
+float ct_hue_temperature(float hue_degrees)
+{
+    float h = normalize_hue(hue_degrees);
+
+    /* Warmest at red-orange ~15 deg = +1.0
+     * Coldest at blue-green ~195 deg = -1.0
+     * These are 180 deg apart. Cosine curve centered on the warm-cold axis. */
+    float warm_center = 15.0f;
+    float angle_from_warm = h - warm_center;
+    /* Convert to radians. */
+    float rad = angle_from_warm * (float)(PI / 180.0);
+    /* Cosine gives +1 at warm center, -1 at 180 deg away (cold center). */
+    return cosf(rad);
+}

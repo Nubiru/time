@@ -308,6 +308,324 @@ void test_purity_no_side_effects(void) {
     TEST_ASSERT_FLOAT_WITHIN(EPSILON, a.b, b.b);
 }
 
+/* =====================================================================
+ *  Itten Color System Tests
+ *  Source: Johannes Itten, The Art of Color (1961)
+ * ===================================================================== */
+
+/* --- Natural Luminosity --- */
+
+void test_itten_yellow_brightest(void) {
+    /* Yellow (60 deg in HSL) should be near 0.80-0.90 (brightest hue). */
+    float lum = ct_hue_natural_lightness(60.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, 0.80f, lum);
+}
+
+void test_itten_violet_darkest(void) {
+    /* Violet (270 deg) should be near 0.30 (darkest). */
+    float lum = ct_hue_natural_lightness(270.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, 0.30f, lum);
+}
+
+void test_itten_red_luminosity(void) {
+    /* Red (0 deg) = 0.60. */
+    float lum = ct_hue_natural_lightness(0.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, 0.60f, lum);
+}
+
+void test_itten_blue_luminosity(void) {
+    /* Blue (240 deg) = 0.40. */
+    float lum = ct_hue_natural_lightness(240.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, 0.40f, lum);
+}
+
+void test_itten_green_luminosity(void) {
+    /* Green (120 deg) = 0.60. */
+    float lum = ct_hue_natural_lightness(120.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, 0.60f, lum);
+}
+
+void test_itten_luminosity_yellow_brighter_than_violet(void) {
+    float y = ct_hue_natural_lightness(60.0f);
+    float v = ct_hue_natural_lightness(270.0f);
+    TEST_ASSERT_TRUE(y > v);
+    TEST_ASSERT_TRUE((y / v) > 2.0f); /* Yellow ~3x brighter than violet. */
+}
+
+void test_itten_luminosity_interpolation_smooth(void) {
+    /* Between red (0, lum=0.60) and red-orange (30, lum=0.70),
+     * midpoint (15 deg) should be ~0.65. */
+    float mid = ct_hue_natural_lightness(15.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, 0.65f, mid);
+}
+
+void test_itten_luminosity_always_in_range(void) {
+    /* Check many hue values: result always [0.0, 1.0]. */
+    for (int i = 0; i < 360; i += 5) {
+        float lum = ct_hue_natural_lightness((float)i);
+        TEST_ASSERT_TRUE(lum >= 0.0f);
+        TEST_ASSERT_TRUE(lum <= 1.0f);
+    }
+}
+
+void test_itten_luminosity_wrapping_720(void) {
+    /* 720 deg should equal 0 deg. */
+    float a = ct_hue_natural_lightness(0.0f);
+    float b = ct_hue_natural_lightness(720.0f);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, a, b);
+}
+
+void test_itten_luminosity_negative_hue(void) {
+    /* -60 deg should equal 300 deg. */
+    float a = ct_hue_natural_lightness(-60.0f);
+    float b = ct_hue_natural_lightness(300.0f);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, a, b);
+}
+
+void test_itten_luminosity_cyan(void) {
+    /* Cyan/blue-green (180 deg) = 0.50. */
+    float lum = ct_hue_natural_lightness(180.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, 0.50f, lum);
+}
+
+void test_itten_luminosity_red_orange(void) {
+    /* Red-orange (30 deg) = 0.70. */
+    float lum = ct_hue_natural_lightness(30.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, 0.70f, lum);
+}
+
+/* --- Extension Ratio --- */
+
+void test_extension_yellow_vs_violet(void) {
+    /* Yellow (60) vs Violet (270): yellow ~0.80, violet ~0.30.
+     * ratio_yellow = 0.30 / (0.80 + 0.30) ~ 0.27. */
+    float ratio = ct_extension_ratio(60.0f, 270.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.08f, 0.27f, ratio);
+}
+
+void test_extension_orange_vs_blue(void) {
+    /* Orange (60) vs Blue (240): orange ~0.80, blue ~0.40.
+     * ratio_orange = 0.40 / (0.80 + 0.40) ~ 0.33. */
+    float ratio = ct_extension_ratio(60.0f, 240.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.08f, 0.33f, ratio);
+}
+
+void test_extension_red_vs_green(void) {
+    /* Red (0) vs Green (120): both ~0.60.
+     * ratio = 0.60 / (0.60 + 0.60) = 0.50. */
+    float ratio = ct_extension_ratio(0.0f, 120.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, 0.50f, ratio);
+}
+
+void test_extension_always_in_range(void) {
+    for (int a = 0; a < 360; a += 30) {
+        for (int b = 0; b < 360; b += 30) {
+            float ratio = ct_extension_ratio((float)a, (float)b);
+            TEST_ASSERT_TRUE(ratio > 0.0f);
+            TEST_ASSERT_TRUE(ratio < 1.0f);
+        }
+    }
+}
+
+void test_extension_symmetric(void) {
+    /* ratio(a,b) + ratio(b,a) should equal 1.0. */
+    float ra = ct_extension_ratio(60.0f, 270.0f);
+    float rb = ct_extension_ratio(270.0f, 60.0f);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, 1.0f, ra + rb);
+}
+
+void test_extension_same_hue_is_half(void) {
+    float ratio = ct_extension_ratio(90.0f, 90.0f);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, 0.5f, ratio);
+}
+
+void test_extension_brighter_needs_less_area(void) {
+    /* Yellow (bright) needs less area than violet (dark). */
+    float yellow_ratio = ct_extension_ratio(60.0f, 270.0f);
+    TEST_ASSERT_TRUE(yellow_ratio < 0.5f);
+}
+
+void test_extension_symmetric_multiple_pairs(void) {
+    float pairs[][2] = {{0, 180}, {30, 210}, {90, 270}, {120, 300}};
+    for (int i = 0; i < 4; i++) {
+        float ra = ct_extension_ratio(pairs[i][0], pairs[i][1]);
+        float rb = ct_extension_ratio(pairs[i][1], pairs[i][0]);
+        TEST_ASSERT_FLOAT_WITHIN(EPSILON, 1.0f, ra + rb);
+    }
+}
+
+/* --- Simultaneous Contrast --- */
+
+void test_simultaneous_blue_shifts_orange(void) {
+    /* Blue (240) background -> shift to orange (~60 deg). */
+    float shift = ct_simultaneous_shift(240.0f);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, 60.0f, shift);
+}
+
+void test_simultaneous_red_shifts_cyan(void) {
+    /* Red (0) background -> shift to cyan (~180 deg). */
+    float shift = ct_simultaneous_shift(0.0f);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, 180.0f, shift);
+}
+
+void test_simultaneous_yellow_shifts_violet(void) {
+    /* Yellow (60) background -> shift to blue-violet (~240 deg). */
+    float shift = ct_simultaneous_shift(60.0f);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, 240.0f, shift);
+}
+
+void test_simultaneous_always_valid_range(void) {
+    for (int i = 0; i < 360; i += 10) {
+        float shift = ct_simultaneous_shift((float)i);
+        TEST_ASSERT_TRUE(shift >= 0.0f);
+        TEST_ASSERT_TRUE(shift < 360.0f);
+    }
+}
+
+void test_simultaneous_green_shifts_magenta(void) {
+    /* Green (120) -> magenta (~300 deg). */
+    float shift = ct_simultaneous_shift(120.0f);
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, 300.0f, shift);
+}
+
+void test_simultaneous_is_complement(void) {
+    /* The shift should always be 180 deg from the input. */
+    float bg = 73.0f;
+    float shift = ct_simultaneous_shift(bg);
+    float diff = fabsf(shift - bg);
+    if (diff > 180.0f) diff = 360.0f - diff;
+    TEST_ASSERT_FLOAT_WITHIN(1.0f, 180.0f, diff);
+}
+
+/* --- 7-Contrast Classifier --- */
+
+void test_contrast_white_vs_black_is_light_dark(void) {
+    ct_contrast_t c = ct_dominant_contrast(1, 1, 1, 0, 0, 0);
+    TEST_ASSERT_EQUAL_INT(CT_CONTRAST_LIGHT_DARK, c);
+}
+
+void test_contrast_red_vs_cyan_is_complementary(void) {
+    /* Pure red (1,0,0) vs pure cyan (0,1,1): 180 deg apart. */
+    ct_contrast_t c = ct_dominant_contrast(1, 0, 0, 0, 1, 1);
+    TEST_ASSERT_EQUAL_INT(CT_CONTRAST_COMPLEMENTARY, c);
+}
+
+void test_contrast_yellow_vs_blue_is_complementary(void) {
+    /* Pure yellow (1,1,0) vs pure blue (0,0,1): 180 deg apart. */
+    ct_contrast_t c = ct_dominant_contrast(1, 1, 0, 0, 0, 1);
+    TEST_ASSERT_EQUAL_INT(CT_CONTRAST_COMPLEMENTARY, c);
+}
+
+void test_contrast_red_vs_blue_is_cold_warm(void) {
+    /* Red is warm, blue is cold. Similar lightness. */
+    ct_contrast_t c = ct_dominant_contrast(0.8f, 0.1f, 0.1f, 0.1f, 0.1f, 0.8f);
+    TEST_ASSERT_EQUAL_INT(CT_CONTRAST_COLD_WARM, c);
+}
+
+void test_contrast_pure_vs_gray_is_saturation(void) {
+    /* Pure red vs desaturated red (grayish). */
+    ct_contrast_t c = ct_dominant_contrast(0.8f, 0.2f, 0.2f, 0.5f, 0.4f, 0.4f);
+    TEST_ASSERT_EQUAL_INT(CT_CONTRAST_SATURATION, c);
+}
+
+void test_contrast_names_non_null(void) {
+    for (int i = 0; i < CT_CONTRAST_COUNT; i++) {
+        const char *name = ct_contrast_name((ct_contrast_t)i);
+        TEST_ASSERT_NOT_NULL(name);
+        TEST_ASSERT_TRUE(name[0] != '?');
+    }
+}
+
+void test_contrast_invalid_returns_question(void) {
+    const char *name = ct_contrast_name((ct_contrast_t)-1);
+    TEST_ASSERT_EQUAL_STRING("?", name);
+}
+
+void test_contrast_name_hue(void) {
+    TEST_ASSERT_EQUAL_STRING("Hue", ct_contrast_name(CT_CONTRAST_HUE));
+}
+
+void test_contrast_name_light_dark(void) {
+    TEST_ASSERT_EQUAL_STRING("Light-Dark", ct_contrast_name(CT_CONTRAST_LIGHT_DARK));
+}
+
+void test_contrast_name_complementary(void) {
+    TEST_ASSERT_EQUAL_STRING("Complementary", ct_contrast_name(CT_CONTRAST_COMPLEMENTARY));
+}
+
+void test_contrast_gray_vs_gray_is_simultaneous(void) {
+    /* Two similar grays: default is simultaneous. */
+    ct_contrast_t c = ct_dominant_contrast(0.5f, 0.5f, 0.5f, 0.45f, 0.45f, 0.45f);
+    TEST_ASSERT_EQUAL_INT(CT_CONTRAST_SIMULTANEOUS, c);
+}
+
+/* --- Hue Temperature --- */
+
+void test_hue_temp_red_orange_warmest(void) {
+    /* Red-orange (~15 deg) should be near +1.0. */
+    float temp = ct_hue_temperature(15.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, 1.0f, temp);
+}
+
+void test_hue_temp_blue_green_coldest(void) {
+    /* Blue-green (~195 deg) should be near -1.0. */
+    float temp = ct_hue_temperature(195.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, -1.0f, temp);
+}
+
+void test_hue_temp_yellow_is_warm(void) {
+    /* Yellow (~60 deg) should be positive (warm). */
+    float temp = ct_hue_temperature(60.0f);
+    TEST_ASSERT_TRUE(temp > 0.0f);
+}
+
+void test_hue_temp_blue_is_cold(void) {
+    /* Blue (~240 deg) should be negative (cold). */
+    float temp = ct_hue_temperature(240.0f);
+    TEST_ASSERT_TRUE(temp < 0.0f);
+}
+
+void test_hue_temp_always_in_range(void) {
+    for (int i = 0; i < 360; i += 5) {
+        float temp = ct_hue_temperature((float)i);
+        TEST_ASSERT_TRUE(temp >= -1.01f);
+        TEST_ASSERT_TRUE(temp <= 1.01f);
+    }
+}
+
+void test_hue_temp_green_near_zero(void) {
+    /* Green (120 deg) is roughly neutral — between warm and cold. */
+    float temp = ct_hue_temperature(120.0f);
+    TEST_ASSERT_TRUE(fabsf(temp) < 0.6f);
+}
+
+void test_hue_temp_wrapping(void) {
+    /* 375 deg should equal 15 deg. */
+    float a = ct_hue_temperature(15.0f);
+    float b = ct_hue_temperature(375.0f);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, a, b);
+}
+
+/* --- Itten Purity: no side effects --- */
+
+void test_itten_purity_lightness_no_side_effects(void) {
+    float a = ct_hue_natural_lightness(60.0f);
+    float b = ct_hue_natural_lightness(60.0f);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, a, b);
+}
+
+void test_itten_purity_extension_no_side_effects(void) {
+    float a = ct_extension_ratio(60.0f, 270.0f);
+    float b = ct_extension_ratio(60.0f, 270.0f);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, a, b);
+}
+
+void test_itten_purity_temperature_no_side_effects(void) {
+    float a = ct_hue_temperature(15.0f);
+    float b = ct_hue_temperature(15.0f);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, a, b);
+}
+
 int main(void) {
     UNITY_BEGIN();
 
@@ -368,6 +686,65 @@ int main(void) {
 
     /* Purity */
     RUN_TEST(test_purity_no_side_effects);
+
+    /* Itten: Natural Luminosity */
+    RUN_TEST(test_itten_yellow_brightest);
+    RUN_TEST(test_itten_violet_darkest);
+    RUN_TEST(test_itten_red_luminosity);
+    RUN_TEST(test_itten_blue_luminosity);
+    RUN_TEST(test_itten_green_luminosity);
+    RUN_TEST(test_itten_luminosity_yellow_brighter_than_violet);
+    RUN_TEST(test_itten_luminosity_interpolation_smooth);
+    RUN_TEST(test_itten_luminosity_always_in_range);
+    RUN_TEST(test_itten_luminosity_wrapping_720);
+    RUN_TEST(test_itten_luminosity_negative_hue);
+    RUN_TEST(test_itten_luminosity_cyan);
+    RUN_TEST(test_itten_luminosity_red_orange);
+
+    /* Itten: Extension Ratio */
+    RUN_TEST(test_extension_yellow_vs_violet);
+    RUN_TEST(test_extension_orange_vs_blue);
+    RUN_TEST(test_extension_red_vs_green);
+    RUN_TEST(test_extension_always_in_range);
+    RUN_TEST(test_extension_symmetric);
+    RUN_TEST(test_extension_same_hue_is_half);
+    RUN_TEST(test_extension_brighter_needs_less_area);
+    RUN_TEST(test_extension_symmetric_multiple_pairs);
+
+    /* Itten: Simultaneous Contrast */
+    RUN_TEST(test_simultaneous_blue_shifts_orange);
+    RUN_TEST(test_simultaneous_red_shifts_cyan);
+    RUN_TEST(test_simultaneous_yellow_shifts_violet);
+    RUN_TEST(test_simultaneous_always_valid_range);
+    RUN_TEST(test_simultaneous_green_shifts_magenta);
+    RUN_TEST(test_simultaneous_is_complement);
+
+    /* Itten: 7-Contrast Classifier */
+    RUN_TEST(test_contrast_white_vs_black_is_light_dark);
+    RUN_TEST(test_contrast_red_vs_cyan_is_complementary);
+    RUN_TEST(test_contrast_yellow_vs_blue_is_complementary);
+    RUN_TEST(test_contrast_red_vs_blue_is_cold_warm);
+    RUN_TEST(test_contrast_pure_vs_gray_is_saturation);
+    RUN_TEST(test_contrast_names_non_null);
+    RUN_TEST(test_contrast_invalid_returns_question);
+    RUN_TEST(test_contrast_name_hue);
+    RUN_TEST(test_contrast_name_light_dark);
+    RUN_TEST(test_contrast_name_complementary);
+    RUN_TEST(test_contrast_gray_vs_gray_is_simultaneous);
+
+    /* Itten: Hue Temperature */
+    RUN_TEST(test_hue_temp_red_orange_warmest);
+    RUN_TEST(test_hue_temp_blue_green_coldest);
+    RUN_TEST(test_hue_temp_yellow_is_warm);
+    RUN_TEST(test_hue_temp_blue_is_cold);
+    RUN_TEST(test_hue_temp_always_in_range);
+    RUN_TEST(test_hue_temp_green_near_zero);
+    RUN_TEST(test_hue_temp_wrapping);
+
+    /* Itten: Purity */
+    RUN_TEST(test_itten_purity_lightness_no_side_effects);
+    RUN_TEST(test_itten_purity_extension_no_side_effects);
+    RUN_TEST(test_itten_purity_temperature_no_side_effects);
 
     return UNITY_END();
 }
