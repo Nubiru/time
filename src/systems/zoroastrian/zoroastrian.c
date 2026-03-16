@@ -7,6 +7,7 @@
  * Countries of Islam" (BSOAS, 1937-1940). */
 
 #include "zoroastrian.h"
+#include "../unified/calendar_fixed.h"
 #include <math.h>
 
 #define ZORO_EPOCH_JD 1952063.5
@@ -52,52 +53,17 @@ static const char *FESTIVAL_NAMES[] = {
 zoro_date_t zoro_from_jd(double jd)
 {
     zoro_date_t result;
-    int days_since = (int)floor(jd - ZORO_EPOCH_JD);
-
-    /* Integer division that floors for negative values */
-    int year;
-    int day_of_year;
-
-    if (days_since >= 0) {
-        year = days_since / ZORO_YEAR_DAYS + 1;
-        day_of_year = days_since % ZORO_YEAR_DAYS + 1;
-    } else {
-        /* For negative days_since, C integer division truncates toward zero.
-         * We need floor division. */
-        year = (days_since + 1) / ZORO_YEAR_DAYS;
-        day_of_year = days_since - (year - 1) * ZORO_YEAR_DAYS + 1;
-        /* Adjust if day_of_year ended up <= 0 */
-        if (day_of_year <= 0) {
-            year--;
-            day_of_year += ZORO_YEAR_DAYS;
-        }
-    }
-
-    result.year = year;
-
-    if (day_of_year <= ZORO_REGULAR_TOTAL) {
-        result.month = (day_of_year - 1) / ZORO_MONTH_DAYS_REGULAR + 1;
-        result.day = (day_of_year - 1) % ZORO_MONTH_DAYS_REGULAR + 1;
-    } else {
-        result.month = 13;
-        result.day = day_of_year - ZORO_REGULAR_TOTAL;
-    }
-
+    cf_date_t cf = cf_fixed_from_jd(jd, ZORO_EPOCH_JD);
+    result.year = cf.year;
+    result.month = cf.month;
+    result.day = cf.day;
     return result;
 }
 
 double zoro_to_jd(zoro_date_t date)
 {
-    int day_of_year;
-
-    if (date.month <= ZORO_MONTHS_REGULAR) {
-        day_of_year = (date.month - 1) * ZORO_MONTH_DAYS_REGULAR + date.day;
-    } else {
-        day_of_year = ZORO_REGULAR_TOTAL + date.day;
-    }
-
-    return ZORO_EPOCH_JD + (double)(date.year - 1) * ZORO_YEAR_DAYS
-           + (double)(day_of_year - 1);
+    cf_date_t cf = { date.year, date.month, date.day };
+    return cf_fixed_to_jd(cf, ZORO_EPOCH_JD);
 }
 
 const char *zoro_month_name(int month)
@@ -209,8 +175,5 @@ bool zoro_is_gatha(zoro_date_t date)
 
 int zoro_day_of_year(zoro_date_t date)
 {
-    if (date.month <= ZORO_MONTHS_REGULAR) {
-        return (date.month - 1) * ZORO_MONTH_DAYS_REGULAR + date.day;
-    }
-    return ZORO_REGULAR_TOTAL + date.day;
+    return cf_day_of_year(date.month, date.day);
 }

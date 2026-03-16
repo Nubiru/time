@@ -11,6 +11,7 @@
  * Sources: Dershowitz & Reingold, "Calendrical Calculations" (2018). */
 
 #include "ethiopian.h"
+#include "../unified/calendar_fixed.h"
 #include <math.h>
 
 #define ETHIOPIAN_EPOCH_JD      1724220.5
@@ -36,40 +37,22 @@ static const char *FEAST_NAMES[] = {
 
 bool ethiopian_is_leap(int year)
 {
-    return (year % 4) == 3;
+    return cf_is_leap4(year) != 0;
 }
 
 double ethiopian_to_jd(ethiopian_date_t date)
 {
-    /* Leap years are Y%4==3 (years 3,7,11...).
-     * Leap days before year Y = Y/4 (integer division). */
-    return ETHIOPIAN_EPOCH_JD
-           + 365 * (date.year - 1)
-           + date.year / 4
-           + 30 * (date.month - 1)
-           + date.day - 1;
+    cf_date_t cf = { date.year, date.month, date.day };
+    return cf_leap4_to_jd(cf, ETHIOPIAN_EPOCH_JD);
 }
 
 ethiopian_date_t ethiopian_from_jd(double jd)
 {
     ethiopian_date_t result;
-    int days = (int)floor(jd - ETHIOPIAN_EPOCH_JD);
-
-    /* Year approximation accounting for leap pattern offset.
-     * Leap years at Y%4==3, so use +1463 constant (Reingold/Dershowitz). */
-    int year = (4 * days + 1463) / ETHIOPIAN_CYCLE_DAYS;
-
-    int day_in_year = days - (365 * (year - 1) + year / 4) + 1;
-
-    if (day_in_year <= ETHIOPIAN_REGULAR_TOTAL) {
-        result.month = (day_in_year - 1) / ETHIOPIAN_REGULAR_DAYS + 1;
-        result.day = day_in_year - (result.month - 1) * ETHIOPIAN_REGULAR_DAYS;
-    } else {
-        result.month = 13;
-        result.day = day_in_year - ETHIOPIAN_REGULAR_TOTAL;
-    }
-
-    result.year = year;
+    cf_date_t cf = cf_leap4_from_jd(jd, ETHIOPIAN_EPOCH_JD);
+    result.year = cf.year;
+    result.month = cf.month;
+    result.day = cf.day;
     return result;
 }
 
@@ -83,18 +66,12 @@ const char *ethiopian_month_name(int month)
 
 int ethiopian_month_days(int year, int month)
 {
-    if (month >= 1 && month <= ETHIOPIAN_MONTHS) {
-        return ETHIOPIAN_REGULAR_DAYS;
-    }
-    if (month == 13) {
-        return ethiopian_is_leap(year) ? 6 : 5;
-    }
-    return 0;
+    return cf_month_days(year, month, 1);
 }
 
 int ethiopian_year_days(int year)
 {
-    return ethiopian_is_leap(year) ? 366 : 365;
+    return cf_year_days_leap4(year);
 }
 
 int ethiopian_year(double jd)
@@ -143,8 +120,5 @@ const char *ethiopian_feast_name(ethiopian_feast_t feast)
 
 int ethiopian_day_of_year(ethiopian_date_t date)
 {
-    if (date.month <= ETHIOPIAN_MONTHS) {
-        return (date.month - 1) * ETHIOPIAN_REGULAR_DAYS + date.day;
-    }
-    return ETHIOPIAN_REGULAR_TOTAL + date.day;
+    return cf_day_of_year(date.month, date.day);
 }

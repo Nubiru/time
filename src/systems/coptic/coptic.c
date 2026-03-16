@@ -9,6 +9,7 @@
  *          O.F.A. Meinardus, "Two Thousand Years of Coptic Christianity" (1999). */
 
 #include "coptic.h"
+#include "../unified/calendar_fixed.h"
 #include <math.h>
 
 #define COPTIC_EPOCH_JD      1825029.5
@@ -35,40 +36,22 @@ static const char *FEAST_NAMES[] = {
 
 bool coptic_is_leap(int year)
 {
-    return (year % 4) == 3;
+    return cf_is_leap4(year) != 0;
 }
 
 double coptic_to_jd(coptic_date_t date)
 {
-    /* Leap years are Y%4==3 (years 3,7,11...).
-     * Leap days before year Y = Y/4 (integer division). */
-    return COPTIC_EPOCH_JD
-           + 365 * (date.year - 1)
-           + date.year / 4
-           + 30 * (date.month - 1)
-           + date.day - 1;
+    cf_date_t cf = { date.year, date.month, date.day };
+    return cf_leap4_to_jd(cf, COPTIC_EPOCH_JD);
 }
 
 coptic_date_t coptic_from_jd(double jd)
 {
     coptic_date_t result;
-    int days = (int)floor(jd - COPTIC_EPOCH_JD);
-
-    /* Year approximation accounting for leap pattern offset.
-     * Leap years at Y%4==3, so use +1463 constant (Reingold/Dershowitz). */
-    int year = (4 * days + 1463) / COPTIC_CYCLE_DAYS;
-
-    int day_in_year = days - (365 * (year - 1) + year / 4) + 1;
-
-    if (day_in_year <= COPTIC_REGULAR_TOTAL) {
-        result.month = (day_in_year - 1) / COPTIC_REGULAR_DAYS + 1;
-        result.day = day_in_year - (result.month - 1) * COPTIC_REGULAR_DAYS;
-    } else {
-        result.month = 13;
-        result.day = day_in_year - COPTIC_REGULAR_TOTAL;
-    }
-
-    result.year = year;
+    cf_date_t cf = cf_leap4_from_jd(jd, COPTIC_EPOCH_JD);
+    result.year = cf.year;
+    result.month = cf.month;
+    result.day = cf.day;
     return result;
 }
 
@@ -82,18 +65,12 @@ const char *coptic_month_name(int month)
 
 int coptic_month_days(int year, int month)
 {
-    if (month >= 1 && month <= COPTIC_MONTHS) {
-        return COPTIC_REGULAR_DAYS;
-    }
-    if (month == 13) {
-        return coptic_is_leap(year) ? 6 : 5;
-    }
-    return 0;
+    return cf_month_days(year, month, 1);
 }
 
 int coptic_year_days(int year)
 {
-    return coptic_is_leap(year) ? 366 : 365;
+    return cf_year_days_leap4(year);
 }
 
 int coptic_year(double jd)
@@ -147,8 +124,5 @@ const char *coptic_feast_name(coptic_feast_t feast)
 
 int coptic_day_of_year(coptic_date_t date)
 {
-    if (date.month <= COPTIC_MONTHS) {
-        return (date.month - 1) * COPTIC_REGULAR_DAYS + date.day;
-    }
-    return COPTIC_REGULAR_TOTAL + date.day;
+    return cf_day_of_year(date.month, date.day);
 }

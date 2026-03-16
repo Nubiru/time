@@ -7,6 +7,7 @@
  * "Calendrical Calculations" (4th ed., ch. 1). */
 
 #include "egyptian.h"
+#include "../unified/calendar_fixed.h"
 #include <math.h>
 
 #define EGYPT_EPOCH_JD      1448638.0
@@ -35,50 +36,17 @@ static const char *SEASON_NAMES[] = {
 egypt_date_t egypt_from_jd(double jd)
 {
     egypt_date_t result;
-    int days_since = (int)floor(jd - EGYPT_EPOCH_JD);
-
-    int year;
-    int day_of_year;
-
-    if (days_since >= 0) {
-        year = days_since / EGYPT_YEAR_DAYS + 1;
-        day_of_year = days_since % EGYPT_YEAR_DAYS + 1;
-    } else {
-        /* For negative days_since, C integer division truncates toward zero.
-         * We need floor division. */
-        year = (days_since + 1) / EGYPT_YEAR_DAYS;
-        day_of_year = days_since - (year - 1) * EGYPT_YEAR_DAYS + 1;
-        if (day_of_year <= 0) {
-            year--;
-            day_of_year += EGYPT_YEAR_DAYS;
-        }
-    }
-
-    result.year = year;
-
-    if (day_of_year <= EGYPT_REGULAR_TOTAL) {
-        result.month = (day_of_year - 1) / EGYPT_MONTH_DAYS_REGULAR + 1;
-        result.day = (day_of_year - 1) % EGYPT_MONTH_DAYS_REGULAR + 1;
-    } else {
-        result.month = 13;
-        result.day = day_of_year - EGYPT_REGULAR_TOTAL;
-    }
-
+    cf_date_t cf = cf_fixed_from_jd(jd, EGYPT_EPOCH_JD);
+    result.year = cf.year;
+    result.month = cf.month;
+    result.day = cf.day;
     return result;
 }
 
 double egypt_to_jd(egypt_date_t date)
 {
-    int day_of_year;
-
-    if (date.month <= EGYPT_MONTHS_REGULAR) {
-        day_of_year = (date.month - 1) * EGYPT_MONTH_DAYS_REGULAR + date.day;
-    } else {
-        day_of_year = EGYPT_REGULAR_TOTAL + date.day;
-    }
-
-    return EGYPT_EPOCH_JD + (double)(date.year - 1) * EGYPT_YEAR_DAYS
-           + (double)(day_of_year - 1);
+    cf_date_t cf = { date.year, date.month, date.day };
+    return cf_fixed_to_jd(cf, EGYPT_EPOCH_JD);
 }
 
 const char *egypt_month_name(int month)
@@ -127,10 +95,7 @@ int egypt_month_days(int month)
 
 int egypt_day_of_year(egypt_date_t date)
 {
-    if (date.month <= EGYPT_MONTHS_REGULAR) {
-        return (date.month - 1) * EGYPT_MONTH_DAYS_REGULAR + date.day;
-    }
-    return EGYPT_REGULAR_TOTAL + date.day;
+    return cf_day_of_year(date.month, date.day);
 }
 
 bool egypt_is_epagomenal(egypt_date_t date)
