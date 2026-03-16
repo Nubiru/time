@@ -25,6 +25,46 @@
 | CTest time | 1.08s |
 | ASan/UBSan | PASS (212/212, 0 findings) |
 
+## Code Coverage (baseline — 2026-03-16)
+
+| Metric | Value |
+|--------|-------|
+| **Overall line coverage** | **96.5%** (18,325 / 18,986 lines) |
+| **Overall function coverage** | **100.0%** (2,364 / 2,364 functions) |
+
+### Foundational Math Modules
+
+| Module | Coverage | Lines |
+|--------|----------|-------|
+| julian.c | 100.0% | 40/40 |
+| kepler.c | 100.0% | 19/19 |
+| mat4.c | 100.0% | 87/87 |
+| vec3.c | 100.0% | 22/22 |
+| sidereal.c | 100.0% | 49/49 |
+| ecliptic.c | 100.0% | 21/21 |
+| arc_geometry.c | 100.0% | 104/104 |
+| wheel_layout.c | 100.0% | 43/43 |
+| color.c | 97.0% | 96/99 |
+| projection.c | 95.6% | 109/114 |
+| easing.c | 93.6% | 73/78 |
+| sacred_geometry.c | 91.1% | 82/90 |
+| bezier.c | 83.2% | 89/107 |
+
+### Bottom 10 Modules (blind spots)
+
+| Module | Coverage | Lines | Notes |
+|--------|----------|-------|-------|
+| bezier.c | 83.2% | 89/107 | Uncovered: edge cases, degenerate inputs |
+| planetary_hours.c | 84.6% | 22/26 | 4 uncovered lines |
+| tzolkin_board.c | 87.0% | 60/69 | 9 uncovered lines |
+| megalithic.c | 87.0% | 87/100 | 13 uncovered lines |
+| numerology.c | 87.3% | 69/79 | 10 uncovered lines |
+| rtl_layout.c | 88.0% | 132/150 | 18 uncovered lines |
+| fun_facts.c | 88.5% | 100/113 | 13 uncovered lines |
+| star_catalog.c | 88.5% | 54/61 | 7 uncovered lines |
+| earth_atmosphere.c | 88.7% | 133/150 | 17 uncovered lines |
+| seasons.c | 88.8% | 127/143 | 16 uncovered lines |
+
 ## Build
 
 | Target | Status |
@@ -32,7 +72,7 @@
 | CMake native | PASS (zero warnings) |
 | CTest -j12 | PASS (212/212) |
 | Sanitizer build | PASS (ASan + UBSan, 0 findings) |
-| Coverage build | BLOCKED (lcov not installed — `sudo apt install lcov`) |
+| Coverage build | PASS (96.5% line, 100% function — `make coverage`) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt (refactored 2026-03-15) |
 
