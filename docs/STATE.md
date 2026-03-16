@@ -1,6 +1,6 @@
 # Time — State Inventory
 
-**Last Updated**: 2026-03-14 (OMEGA sweep #9)
+**Last Updated**: 2026-03-16 (OMEGA sweep #13)
 
 This document tracks what is **pure** (stateless) and what is **stateful** in the codebase. The goal: maximize pure code, minimize and isolate mutable state.
 

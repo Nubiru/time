@@ -1,8 +1,8 @@
 {
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
-    "last_updated": "2026-03-14",
-    "total_contributors": 170
+    "last_updated": "2026-03-15",
+    "total_contributors": 179
   },
   "contributors": [
     {
@@ -722,6 +722,11 @@
           "work": "Photographic Tone Reproduction for Digital Images",
           "description": "Reinhard tone mapping operator: color / (color + 1.0), simple global operator for HDR to LDR conversion",
           "year": 2002
+        },
+        {
+          "work": "Color Imaging: Fundamentals and Applications",
+          "description": "sRGB/XYZ matrices, CIE L*a*b*/L*u*v* formulas, CIEDE2000 color difference, CMC/CIE94 metrics, gamut mapping strategies, Berlin & Kay color universals, IPT color space, gamma encoding",
+          "year": 2008
         }
       ],
       "references": [
@@ -729,6 +734,10 @@
           "file": "src/render/post_process.c",
           "line": 1,
           "note": "Reinhard tone mapping in composite fragment shader"
+        },
+        {
+          "file": ".context/research/digested/058-color-imaging-fundamentals.md",
+          "note": "CIE color spaces, perceptual uniformity, gamut mapping extracted"
         }
       ]
     },
@@ -2069,6 +2078,11 @@
           "work": "Empire of Time / Stairways to the Stars / Between the Lines",
           "description": "Cross-cultural history of timekeeping and archaeoastronomy",
           "year": 1989
+        },
+        {
+          "work": "Skywatchers of Ancient Mexico",
+          "description": "Foundational Mesoamerican archaeoastronomy: 260-day Tzolkin astronomical basis (Mars/Venus/eclipse correlations), Dresden Codex Venus tables (584-day cycle, 2hr/481yr accuracy), Teotihuacan/Uaxactun/Monte Alban alignments",
+          "year": 1980
         }
       ],
       "references": [
@@ -2086,6 +2100,10 @@
           "file": "src/systems/tzolkin/tzolkin.h",
           "line": 4,
           "note": "Aveni confirms Tzolkin 260 = body + sky + number commensuration"
+        },
+        {
+          "file": ".context/research/digested/057-aveni-skywatchers-ancient-mexico.md",
+          "note": "Skywatchers: 260-day astronomical basis, Venus tables, Mesoamerican alignments"
         }
       ]
     },
@@ -2276,7 +2294,7 @@
         {
           "file": "src/systems/unified/codon_hexagram.c",
           "line": 1,
-          "note": "Schonberger binary mapping: RNA bases to yin/yang lines (U=00, C=01, A=10, G=11)"
+          "note": "Schonberger binary mapping: RNA bases to yin/yang lines (U=00, C=01, G=10, A=11). Note: A and G swapped vs our enum order."
         }
       ]
     },
@@ -4368,6 +4386,186 @@
         {
           "file": ".context/research/digested/054-dont-make-me-think.md",
           "note": "Ch.1/2/6/7/11 extracted"
+        }
+      ]
+    },
+    {
+      "id": "erum-arif-khan",
+      "name": "Erum Arif Khan",
+      "category": [
+        "computer-scientist",
+        "researcher"
+      ],
+      "contributions": [
+        {
+          "work": "Color Imaging: Fundamentals and Applications (co-author with Reinhard)",
+          "description": "CIE color space formulas, color difference metrics, gamut mapping algorithms",
+          "year": 2008
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/058-color-imaging-fundamentals.md",
+          "note": "Co-author, color imaging textbook"
+        }
+      ]
+    },
+    {
+      "id": "ahmet-oguz-akyuz",
+      "name": "Ahmet Oguz Akyuz",
+      "category": [
+        "computer-scientist",
+        "researcher"
+      ],
+      "contributions": [
+        {
+          "work": "Color Imaging: Fundamentals and Applications (co-author with Reinhard)",
+          "description": "CIE color space formulas, color difference metrics, gamut mapping algorithms",
+          "year": 2008
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/058-color-imaging-fundamentals.md",
+          "note": "Co-author, color imaging textbook"
+        }
+      ]
+    },
+    {
+      "id": "garrett-johnson",
+      "name": "Garrett Johnson",
+      "category": [
+        "computer-scientist",
+        "researcher"
+      ],
+      "contributions": [
+        {
+          "work": "Color Imaging: Fundamentals and Applications (co-author with Reinhard)",
+          "description": "CIE color space formulas, color difference metrics, gamut mapping algorithms",
+          "year": 2008
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/058-color-imaging-fundamentals.md",
+          "note": "Co-author, color imaging textbook"
+        }
+      ]
+    },
+    {
+      "id": "gunther-stent",
+      "name": "Gunther S. Stent",
+      "born": 1924,
+      "died": 2008,
+      "category": ["molecular-biologist", "philosopher"],
+      "contributions": [
+        {
+          "work": "The Coming of the Golden Age",
+          "description": "Independently proposed I Ching / DNA parallel in 1969. UC Berkeley molecular biologist who recognized binary isomorphism between 64 codons and 64 hexagrams.",
+          "year": 1969
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/056-schonberger-iching-genetic-code.md",
+          "note": "Independent parallel discovery cited in Schonberger epilogue"
+        }
+      ]
+    },
+    {
+      "id": "frank-fiedeler",
+      "name": "Frank Fiedeler",
+      "category": ["sinologist", "author"],
+      "contributions": [
+        {
+          "work": "Epilogue to The I Ching and the Genetic Code",
+          "description": "Sinological analysis resolving Stent vs Schonberger apparent discrepancy as printing error.",
+          "year": 1992
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/056-schonberger-iching-genetic-code.md",
+          "note": "Epilogue reconciling Stent and Schonberger mappings"
+        }
+      ]
+    },
+    {
+      "id": "lama-anagarika-govinda",
+      "name": "Lama Anagarika Govinda",
+      "born": 1898,
+      "died": 1985,
+      "category": ["buddhist-scholar", "philosopher"],
+      "contributions": [
+        {
+          "work": "Introduction to The I Ching and the Genetic Code",
+          "description": "Connected I Ching, DNA, and Tantric Buddhist philosophy.",
+          "year": 1973
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/056-schonberger-iching-genetic-code.md",
+          "note": "Introduction connecting I Ching / DNA / Buddhist philosophy"
+        }
+      ]
+    },
+    {
+      "id": "gottfried-leibniz",
+      "name": "Gottfried Wilhelm Leibniz",
+      "born": 1646,
+      "died": 1716,
+      "category": ["mathematician", "philosopher"],
+      "contributions": [
+        {
+          "work": "Two Letters on the Binary Number System and Chinese Philosophy",
+          "description": "Identified binary number system / I Ching hexagram parallel in 1713. Recognized Fu Hsi sequence as binary counting 0-63.",
+          "year": 1713
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/056-schonberger-iching-genetic-code.md",
+          "note": "Binary number system / I Ching parallel (1713)"
+        }
+      ]
+    },
+    {
+      "id": "fritz-albert-popp",
+      "name": "Fritz-Albert Popp",
+      "born": 1938,
+      "died": 2018,
+      "category": ["biophysicist", "researcher"],
+      "contributions": [
+        {
+          "work": "Biophoton emissions from DNA",
+          "description": "Discovered biophoton emissions from DNA. Wave-system research confirmed vibrational/informational aspect of genetic code.",
+          "year": 1976
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/056-schonberger-iching-genetic-code.md",
+          "note": "Biophoton research confirming DNA informational properties"
+        }
+      ]
+    },
+    {
+      "id": "eg-richards",
+      "name": "E.G. Richards",
+      "category": ["historian", "scientist", "author"],
+      "contributions": [
+        {
+          "work": "Mapping Time: The Calendar and its History",
+          "description": "Comprehensive calendar algorithms, Julian Day to Gregorian conversion algorithm used in celtic_tree and other calendar modules",
+          "year": 2000
+        }
+      ],
+      "references": [
+        {
+          "file": "src/systems/celtic/celtic_tree.c",
+          "line": 54,
+          "note": "Richards algorithm for JD to Gregorian conversion"
         }
       ]
     }
