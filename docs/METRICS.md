@@ -1,26 +1,26 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-16 (OMEGA sweep #16)
+**Last refreshed**: 2026-03-16 (OMEGA sweep #17)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 240 |
-| Header files (.h) | 240 |
-| Lines of code (src/) | 76,425 |
+| Source files (.c) | 241 |
+| Header files (.h) | 241 |
+| Lines of code (src/) | 77,014 |
 | Lines of tests | 112,199 |
 | Test files | 230 |
 | Render pass files | 16 |
-| Contributors | 186 |
+| Contributors | 189 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 230 |
-| Test functions (RUN_TEST) | 10,697 |
-| Test assertions (TEST_ASSERT) | 17,277 |
+| Test suites (CTest) | 231 |
+| Test functions (RUN_TEST) | 10,735 |
+| Test assertions (TEST_ASSERT) | 17,370 |
 | Failures | 0 |
 | CTest time | 0.85s |
 | ASan/UBSan | PASS (230/230, 0 findings) |
@@ -70,7 +70,7 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (230/230) |
+| CTest -j12 | PASS (231/231) |
 | Sanitizer build | PASS (ASan + UBSan, 0 findings) |
 | Coverage build | PASS (96.5% line, 100% function — `make coverage`) |
 | WASM build | PASS (209 KB raw, 83 KB gzipped) |
@@ -160,19 +160,19 @@
 | Gzipped | 84,713 bytes (83 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 
-## Health (OMEGA sweep #16)
+## Health (OMEGA sweep #17)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (240 .c files, all registered) |
+| Build system sync | OK (241 .c files, all registered) |
 | Purity audit | CLEAN (P1-P6 all zones, 4 P5 known) |
-| ASan/UBSan | PASS (0 memory errors, 0 undefined behavior) |
-| Native build | PASS (230/230 tests) |
+| Native build | PASS (231/231 tests) |
 | WASM build | PASS (209 KB) |
-| CI/CD | GREEN (2/3 runs success — initial failure fixed) |
+| CI/CD | GREEN (latest run: success) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Missing attribution | 0 |
 | Render pipeline | COMPLETE (16/16 passes wired) |
-| Refactor candidates | user_prefs.c (742L), fun_facts.c (671L), convergence.c (646L) |
+| Refactors done | user_prefs.c decomposed (up_deserialize 97→20L, up_merge 64→8L) |
+| Remaining candidates | convergence.c (646L), knowledge_graph.c (608L) — needs MEGA approval |

@@ -458,6 +458,75 @@ static int parse_int_list(const char *val, int *out, int max) {
     return count;
 }
 
+/* --- Per-section deserialize helpers --- */
+
+static int deser_visual(up_visual_t *v, const char *key, const char *val) {
+    if (strcmp(key, "visual.theme") == 0) {
+        v->theme = (theme_id_t)atoi(val); return 1;
+    } else if (strcmp(key, "visual.font_scale") == 0) {
+        v->font_scale = (float)atof(val); return 1;
+    } else if (strcmp(key, "visual.opacity_scale") == 0) {
+        v->opacity_scale = (float)atof(val); return 1;
+    } else if (strcmp(key, "visual.anim_speed") == 0) {
+        v->animation_speed = (float)atof(val); return 1;
+    } else if (strcmp(key, "visual.layers") == 0) {
+        v->layers_visible = atoi(val); return 1;
+    } else if (strcmp(key, "visual.scale_level") == 0) {
+        v->default_scale_level = atoi(val); return 1;
+    }
+    return 0;
+}
+
+static int deser_temporal(up_temporal_t *t, const char *key, const char *val) {
+    if (strcmp(key, "temporal.tz_offset") == 0) {
+        t->home_timezone_offset_min = atoi(val); return 1;
+    } else if (strcmp(key, "temporal.cal_count") == 0) {
+        t->preferred_calendar_count = atoi(val); return 1;
+    } else if (strcmp(key, "temporal.calendars") == 0) {
+        int ids[UP_MAX_CALENDAR_SYSTEMS];
+        int n = parse_int_list(val, ids, UP_MAX_CALENDAR_SYSTEMS);
+        for (int i = 0; i < n && i < UP_MAX_CALENDAR_SYSTEMS; i++)
+            t->preferred_calendars[i] = ids[i];
+        if (n < UP_MAX_CALENDAR_SYSTEMS) t->preferred_calendars[n] = -1;
+        return 1;
+    } else if (strcmp(key, "temporal.use_24h") == 0) {
+        t->use_24h_time = atoi(val); return 1;
+    } else if (strcmp(key, "temporal.week_start") == 0) {
+        t->week_start_day = atoi(val); return 1;
+    }
+    return 0;
+}
+
+static int deser_social(up_social_t *s, const char *key, const char *val) {
+    if (strcmp(key, "social.activity") == 0) {
+        s->activity_level = (ip_activity_t)atoi(val); return 1;
+    } else if (strcmp(key, "social.visibility") == 0) {
+        s->visibility = (ip_visibility_t)atoi(val); return 1;
+    } else if (strcmp(key, "social.notif_freq") == 0) {
+        s->notification_frequency = atoi(val); return 1;
+    } else if (strcmp(key, "social.roulette") == 0) {
+        s->roulette_opt_in = atoi(val); return 1;
+    } else if (strcmp(key, "social.consent") == 0) {
+        s->consent = (pf_consent_t)atoi(val); return 1;
+    } else if (strcmp(key, "social.retention") == 0) {
+        s->retention = (pf_retention_t)atoi(val); return 1;
+    }
+    return 0;
+}
+
+static int deser_location(up_location_t *l, const char *key, const char *val) {
+    if (strcmp(key, "location.lat") == 0) {
+        l->home_lat = atof(val); return 1;
+    } else if (strcmp(key, "location.lon") == 0) {
+        l->home_lon = atof(val); return 1;
+    } else if (strcmp(key, "location.radius") == 0) {
+        l->exploration_radius_km = atof(val); return 1;
+    } else if (strcmp(key, "location.set") == 0) {
+        l->location_set = atoi(val); return 1;
+    }
+    return 0;
+}
+
 up_prefs_t up_deserialize(const char *buf, int buf_len) {
     up_prefs_t p = up_default();
 
@@ -472,86 +541,14 @@ up_prefs_t up_deserialize(const char *buf, int buf_len) {
 
         if (kv.key[0] == '\0') continue;
 
-        /* Version */
         if (strcmp(kv.key, "version") == 0) {
             p.version = atoi(kv.val);
+        } else if (!deser_visual(&p.visual, kv.key, kv.val) &&
+                   !deser_temporal(&p.temporal, kv.key, kv.val) &&
+                   !deser_social(&p.social, kv.key, kv.val) &&
+                   !deser_location(&p.location, kv.key, kv.val)) {
+            /* Unknown keys silently ignored (forward-compat) */
         }
-        /* Visual */
-        else if (strcmp(kv.key, "visual.theme") == 0) {
-            p.visual.theme = (theme_id_t)atoi(kv.val);
-        }
-        else if (strcmp(kv.key, "visual.font_scale") == 0) {
-            p.visual.font_scale = (float)atof(kv.val);
-        }
-        else if (strcmp(kv.key, "visual.opacity_scale") == 0) {
-            p.visual.opacity_scale = (float)atof(kv.val);
-        }
-        else if (strcmp(kv.key, "visual.anim_speed") == 0) {
-            p.visual.animation_speed = (float)atof(kv.val);
-        }
-        else if (strcmp(kv.key, "visual.layers") == 0) {
-            p.visual.layers_visible = atoi(kv.val);
-        }
-        else if (strcmp(kv.key, "visual.scale_level") == 0) {
-            p.visual.default_scale_level = atoi(kv.val);
-        }
-        /* Temporal */
-        else if (strcmp(kv.key, "temporal.tz_offset") == 0) {
-            p.temporal.home_timezone_offset_min = atoi(kv.val);
-        }
-        else if (strcmp(kv.key, "temporal.cal_count") == 0) {
-            p.temporal.preferred_calendar_count = atoi(kv.val);
-        }
-        else if (strcmp(kv.key, "temporal.calendars") == 0) {
-            int ids[UP_MAX_CALENDAR_SYSTEMS];
-            int n = parse_int_list(kv.val, ids, UP_MAX_CALENDAR_SYSTEMS);
-            for (int i = 0; i < n && i < UP_MAX_CALENDAR_SYSTEMS; i++) {
-                p.temporal.preferred_calendars[i] = ids[i];
-            }
-            /* Terminate */
-            if (n < UP_MAX_CALENDAR_SYSTEMS) {
-                p.temporal.preferred_calendars[n] = -1;
-            }
-        }
-        else if (strcmp(kv.key, "temporal.use_24h") == 0) {
-            p.temporal.use_24h_time = atoi(kv.val);
-        }
-        else if (strcmp(kv.key, "temporal.week_start") == 0) {
-            p.temporal.week_start_day = atoi(kv.val);
-        }
-        /* Social */
-        else if (strcmp(kv.key, "social.activity") == 0) {
-            p.social.activity_level = (ip_activity_t)atoi(kv.val);
-        }
-        else if (strcmp(kv.key, "social.visibility") == 0) {
-            p.social.visibility = (ip_visibility_t)atoi(kv.val);
-        }
-        else if (strcmp(kv.key, "social.notif_freq") == 0) {
-            p.social.notification_frequency = atoi(kv.val);
-        }
-        else if (strcmp(kv.key, "social.roulette") == 0) {
-            p.social.roulette_opt_in = atoi(kv.val);
-        }
-        else if (strcmp(kv.key, "social.consent") == 0) {
-            p.social.consent = (pf_consent_t)atoi(kv.val);
-        }
-        else if (strcmp(kv.key, "social.retention") == 0) {
-            p.social.retention = (pf_retention_t)atoi(kv.val);
-        }
-        /* Location */
-        else if (strcmp(kv.key, "location.lat") == 0) {
-            p.location.home_lat = atof(kv.val);
-        }
-        else if (strcmp(kv.key, "location.lon") == 0) {
-            p.location.home_lon = atof(kv.val);
-        }
-        else if (strcmp(kv.key, "location.radius") == 0) {
-            p.location.exploration_radius_km = atof(kv.val);
-        }
-        else if (strcmp(kv.key, "location.set") == 0) {
-            p.location.location_set = atoi(kv.val);
-        }
-        /* Unknown keys are silently ignored (forward-compat) */
     }
 
     return p;
@@ -559,69 +556,73 @@ up_prefs_t up_deserialize(const char *buf, int buf_len) {
 
 /* --- up_merge --- */
 
+/* --- Per-section merge helpers (override only if patch differs from default) --- */
+
+static void merge_visual(up_visual_t *out, const up_visual_t *patch,
+                         const up_visual_t *def) {
+    if ((int)patch->theme != (int)def->theme) out->theme = patch->theme;
+    if (fabsf(patch->font_scale - def->font_scale) > 0.001f)
+        out->font_scale = patch->font_scale;
+    if (fabsf(patch->opacity_scale - def->opacity_scale) > 0.001f)
+        out->opacity_scale = patch->opacity_scale;
+    if (fabsf(patch->animation_speed - def->animation_speed) > 0.001f)
+        out->animation_speed = patch->animation_speed;
+    if (patch->layers_visible != def->layers_visible)
+        out->layers_visible = patch->layers_visible;
+    if (patch->default_scale_level != def->default_scale_level)
+        out->default_scale_level = patch->default_scale_level;
+}
+
+static void merge_temporal(up_temporal_t *out, const up_temporal_t *patch,
+                           const up_temporal_t *def) {
+    if (patch->home_timezone_offset_min != def->home_timezone_offset_min)
+        out->home_timezone_offset_min = patch->home_timezone_offset_min;
+    if (patch->preferred_calendar_count != def->preferred_calendar_count) {
+        out->preferred_calendar_count = patch->preferred_calendar_count;
+        memcpy(out->preferred_calendars, patch->preferred_calendars,
+               sizeof(patch->preferred_calendars));
+    }
+    if (patch->use_24h_time != def->use_24h_time)
+        out->use_24h_time = patch->use_24h_time;
+    if (patch->week_start_day != def->week_start_day)
+        out->week_start_day = patch->week_start_day;
+}
+
+static void merge_social(up_social_t *out, const up_social_t *patch,
+                         const up_social_t *def) {
+    if ((int)patch->activity_level != (int)def->activity_level)
+        out->activity_level = patch->activity_level;
+    if ((int)patch->visibility != (int)def->visibility)
+        out->visibility = patch->visibility;
+    if (patch->notification_frequency != def->notification_frequency)
+        out->notification_frequency = patch->notification_frequency;
+    if (patch->roulette_opt_in != def->roulette_opt_in)
+        out->roulette_opt_in = patch->roulette_opt_in;
+    if ((int)patch->consent != (int)def->consent)
+        out->consent = patch->consent;
+    if ((int)patch->retention != (int)def->retention)
+        out->retention = patch->retention;
+}
+
+static void merge_location(up_location_t *out, const up_location_t *patch,
+                           const up_location_t *def) {
+    if (fabs(patch->home_lat - def->home_lat) > 0.0001)
+        out->home_lat = patch->home_lat;
+    if (fabs(patch->home_lon - def->home_lon) > 0.0001)
+        out->home_lon = patch->home_lon;
+    if (fabs(patch->exploration_radius_km - def->exploration_radius_km) > 0.001)
+        out->exploration_radius_km = patch->exploration_radius_km;
+    if (patch->location_set != def->location_set)
+        out->location_set = patch->location_set;
+}
+
 up_prefs_t up_merge(up_prefs_t base, up_prefs_t patch) {
     up_prefs_t def = up_default();
     up_prefs_t out = base;
-
-    /* Visual: override only if patch differs from default */
-    if ((int)patch.visual.theme != (int)def.visual.theme)
-        out.visual.theme = patch.visual.theme;
-    if (fabsf(patch.visual.font_scale - def.visual.font_scale) > 0.001f)
-        out.visual.font_scale = patch.visual.font_scale;
-    if (fabsf(patch.visual.opacity_scale - def.visual.opacity_scale) > 0.001f)
-        out.visual.opacity_scale = patch.visual.opacity_scale;
-    if (fabsf(patch.visual.animation_speed - def.visual.animation_speed) > 0.001f)
-        out.visual.animation_speed = patch.visual.animation_speed;
-    if (patch.visual.layers_visible != def.visual.layers_visible)
-        out.visual.layers_visible = patch.visual.layers_visible;
-    if (patch.visual.default_scale_level != def.visual.default_scale_level)
-        out.visual.default_scale_level = patch.visual.default_scale_level;
-
-    /* Temporal */
-    if (patch.temporal.home_timezone_offset_min !=
-        def.temporal.home_timezone_offset_min)
-        out.temporal.home_timezone_offset_min =
-            patch.temporal.home_timezone_offset_min;
-    if (patch.temporal.preferred_calendar_count !=
-        def.temporal.preferred_calendar_count) {
-        out.temporal.preferred_calendar_count =
-            patch.temporal.preferred_calendar_count;
-        memcpy(out.temporal.preferred_calendars,
-               patch.temporal.preferred_calendars,
-               sizeof(patch.temporal.preferred_calendars));
-    }
-    if (patch.temporal.use_24h_time != def.temporal.use_24h_time)
-        out.temporal.use_24h_time = patch.temporal.use_24h_time;
-    if (patch.temporal.week_start_day != def.temporal.week_start_day)
-        out.temporal.week_start_day = patch.temporal.week_start_day;
-
-    /* Social */
-    if ((int)patch.social.activity_level != (int)def.social.activity_level)
-        out.social.activity_level = patch.social.activity_level;
-    if ((int)patch.social.visibility != (int)def.social.visibility)
-        out.social.visibility = patch.social.visibility;
-    if (patch.social.notification_frequency !=
-        def.social.notification_frequency)
-        out.social.notification_frequency = patch.social.notification_frequency;
-    if (patch.social.roulette_opt_in != def.social.roulette_opt_in)
-        out.social.roulette_opt_in = patch.social.roulette_opt_in;
-    if ((int)patch.social.consent != (int)def.social.consent)
-        out.social.consent = patch.social.consent;
-    if ((int)patch.social.retention != (int)def.social.retention)
-        out.social.retention = patch.social.retention;
-
-    /* Location */
-    if (fabs(patch.location.home_lat - def.location.home_lat) > 0.0001)
-        out.location.home_lat = patch.location.home_lat;
-    if (fabs(patch.location.home_lon - def.location.home_lon) > 0.0001)
-        out.location.home_lon = patch.location.home_lon;
-    if (fabs(patch.location.exploration_radius_km -
-             def.location.exploration_radius_km) > 0.001)
-        out.location.exploration_radius_km =
-            patch.location.exploration_radius_km;
-    if (patch.location.location_set != def.location.location_set)
-        out.location.location_set = patch.location.location_set;
-
+    merge_visual(&out.visual, &patch.visual, &def.visual);
+    merge_temporal(&out.temporal, &patch.temporal, &def.temporal);
+    merge_social(&out.social, &patch.social, &def.social);
+    merge_location(&out.location, &patch.location, &def.location);
     return out;
 }
 
