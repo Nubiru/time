@@ -216,29 +216,29 @@ void test_moon_card_has_cool_color(void) {
 
 void test_card_frame_height_is_phi_times_width(void) {
     tv_card_frame_t frame = tv_card_frame(100.0f);
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, 100.0f * (float)GL_PHI, frame.height);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 100.0f * (float)PHI_RATIO, frame.height);
 }
 
 void test_card_frame_border_uses_phi(void) {
     tv_card_frame_t frame = tv_card_frame(100.0f);
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, 100.0f * (float)GL_PHI_INV5, frame.border);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 100.0f * (float)PHI_INV5, frame.border);
 }
 
 void test_card_frame_symbol_radius_uses_phi(void) {
     tv_card_frame_t frame = tv_card_frame(100.0f);
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, 100.0f * (float)GL_PHI_INV2, frame.symbol_radius);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 100.0f * (float)PHI_INV2, frame.symbol_radius);
 }
 
 void test_card_frame_title_y_at_golden_section(void) {
     tv_card_frame_t frame = tv_card_frame(100.0f);
-    float expected_height = 100.0f * (float)GL_PHI;
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, expected_height * (float)GL_PHI_INV, frame.title_y);
+    float expected_height = 100.0f * (float)PHI_RATIO;
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, expected_height * (float)PHI_INV, frame.title_y);
 }
 
 void test_card_frame_number_y_uses_phi(void) {
     tv_card_frame_t frame = tv_card_frame(100.0f);
-    float expected_height = 100.0f * (float)GL_PHI;
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, expected_height * (float)GL_PHI_INV4, frame.number_y);
+    float expected_height = 100.0f * (float)PHI_RATIO;
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, expected_height * (float)PHI_INV4, frame.number_y);
 }
 
 void test_card_frame_width_preserved(void) {

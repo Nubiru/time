@@ -28,6 +28,8 @@ function(time_add_test)
     add_executable(${T_NAME} ${T_TEST})
     target_link_libraries(${T_NAME} PRIVATE unity ${_link_targets} m)
     target_include_directories(${T_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/src)
+    # Unity test functions (void test_xxx) lack prototypes by design
+    target_compile_options(${T_NAME} PRIVATE -Wno-missing-prototypes -Wno-missing-declarations)
     add_test(NAME ${T_NAME} COMMAND ${T_NAME})
 endfunction()
 

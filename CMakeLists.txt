@@ -21,7 +21,7 @@ if(EMSCRIPTEN)
     set(CMAKE_C_EXTENSIONS ON)
 else()
     set(CMAKE_C_EXTENSIONS OFF)
-    add_compile_options(-pedantic)
+    add_compile_options(-pedantic -Wmissing-prototypes -Wmissing-declarations)
 endif()
 
 # ===========================================================================
@@ -55,6 +55,7 @@ if(EMSCRIPTEN)
         -sWASM=1
         -sSTACK_SIZE=524288
         -sALLOW_MEMORY_GROWTH=1
+        "-sEXPORTED_RUNTIME_METHODS=['stringToUTF8']"
         -Os
         "SHELL:--shell-file ${CMAKE_SOURCE_DIR}/web/index.html"
     )

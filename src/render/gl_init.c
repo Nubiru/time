@@ -30,8 +30,8 @@ int gl_init(void) {
     emscripten_set_canvas_element_size("#canvas", (int)css_w, (int)css_h);
     glViewport(0, 0, (int)css_w, (int)css_h);
 
-    /* Background: #080808 */
-    glClearColor(0.031f, 0.031f, 0.031f, 1.0f);
+    /* Background: space-black #060709 — blue-tinted, alive (color_theory.h) */
+    glClearColor(0.024f, 0.027f, 0.036f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
     printf("WebGL2 context created: %dx%d\n", (int)css_w, (int)css_h);

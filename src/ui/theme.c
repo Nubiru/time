@@ -41,10 +41,10 @@ static void theme_fill_layout(theme_t *t, float base_font)
     t->opacity = gl_opacity_cascade();
 
     /* Derived metrics from phi proportions */
-    t->corner_radius = THEME_BASE_SPACE * (float)GL_PHI_INV2;
+    t->corner_radius = THEME_BASE_SPACE * (float)PHI_INV2;
     t->border_width = 1.0f;
-    t->shadow_blur = THEME_BASE_SPACE * (float)GL_PHI;
-    t->icon_size = t->typography.sizes[3] * (float)GL_PHI;
+    t->shadow_blur = THEME_BASE_SPACE * (float)PHI_RATIO;
+    t->icon_size = t->typography.sizes[3] * (float)PHI_RATIO;
 }
 
 /* --- Cosmos Theme (Dark) --- */
@@ -65,9 +65,9 @@ static theme_t theme_build_cosmos(void)
     /* Text: warm off-white, cascading alpha for hierarchy */
     t.text_primary = color_rgba(0.90f, 0.90f, 0.92f, 1.0f);
     t.text_secondary = color_rgba(0.90f, 0.90f, 0.92f,
-                                  (float)GL_PHI_INV);
+                                  (float)PHI_INV);
     t.text_muted = color_rgba(0.90f, 0.90f, 0.92f,
-                              (float)GL_PHI_INV2);
+                              (float)PHI_INV2);
 
     /* Brand: solar gold + celestial teal */
     t.brand_primary = color_rgba(1.0f, 0.85f, 0.55f, 1.0f);
@@ -111,9 +111,9 @@ static theme_t theme_build_dawn(void)
     /* Text: dark charcoal, cascading alpha */
     t.text_primary = color_rgba(0.12f, 0.12f, 0.14f, 1.0f);
     t.text_secondary = color_rgba(0.12f, 0.12f, 0.14f,
-                                  (float)GL_PHI_INV);
+                                  (float)PHI_INV);
     t.text_muted = color_rgba(0.12f, 0.12f, 0.14f,
-                              (float)GL_PHI_INV2);
+                              (float)PHI_INV2);
 
     /* Brand: same solar gold + celestial teal */
     t.brand_primary = color_rgba(1.0f, 0.85f, 0.55f, 1.0f);
@@ -187,10 +187,10 @@ theme_t theme_apply_prefs(theme_t base, theme_prefs_t prefs)
     /* Font scale: recompute typography with scaled base */
     float scaled_font = THEME_BASE_FONT * prefs.font_scale;
     base.typography = gl_type_scale(scaled_font);
-    base.icon_size = base.typography.sizes[3] * (float)GL_PHI;
+    base.icon_size = base.typography.sizes[3] * (float)PHI_RATIO;
 
     /* Opacity scale: multiply each level */
-    for (int i = 0; i < GL_OPACITY_LEVELS; i++) {
+    for (int i = 0; i < PHI_OPACITY_LEVELS; i++) {
         base.opacity.values[i] *= prefs.opacity_scale;
         if (base.opacity.values[i] > 1.0f)
             base.opacity.values[i] = 1.0f;

@@ -147,7 +147,7 @@ void test_typography_populated(void) {
 void test_spacing_populated(void) {
     theme_t t = theme_get(THEME_COSMOS);
     /* Spacing values should be positive */
-    for (int i = 0; i < GL_SPACE_LEVELS; i++) {
+    for (int i = 0; i < PHI_SPACE_LEVELS; i++) {
         TEST_ASSERT_TRUE(t.spacing.values[i] > 0.0f);
     }
 }

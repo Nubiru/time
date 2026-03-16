@@ -82,11 +82,9 @@ static float        s_erp_atmo_verts[ERP_MAX_ATMO_VERTS * 7]; /* pos3+normal3+op
 static unsigned int s_erp_atmo_indices[ERP_MAX_ATMO_INDICES];
 static float        s_erp_term_verts[ERP_TERMINATOR_POINTS * ERP_LINE_VERTEX_FLOATS];
 
-int earth_pass_init(void) {
-    s_erp_config = erp_default_config();
-    erp_info_t info = erp_info(&s_erp_config);
+/* --- Init helpers --- */
 
-    /* --- Globe shader --- */
+static int init_globe(const erp_info_t *info) {
     s_globe_program = shader_create_program(
         erp_globe_vert_source(), erp_globe_frag_source());
     if (s_globe_program == 0) {
@@ -97,10 +95,8 @@ int earth_pass_init(void) {
     s_globe_loc_model   = glGetUniformLocation(s_globe_program, "u_model");
     s_globe_loc_sun_dir = glGetUniformLocation(s_globe_program, "u_sun_dir");
 
-    /* Pack globe mesh (static) */
     erp_pack_globe(&s_erp_config, s_erp_globe_verts, s_erp_globe_indices);
-
-    s_globe_index_count = info.globe_indices;
+    s_globe_index_count = info->globe_indices;
 
     glGenVertexArrays(1, &s_globe_vao);
     glBindVertexArray(s_globe_vao);
@@ -108,13 +104,13 @@ int earth_pass_init(void) {
     glGenBuffers(1, &s_globe_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, s_globe_vbo);
     glBufferData(GL_ARRAY_BUFFER,
-                 (GLsizeiptr)(info.globe_verts * ERP_GLOBE_VERTEX_STRIDE),
+                 (GLsizeiptr)(info->globe_verts * ERP_GLOBE_VERTEX_STRIDE),
                  s_erp_globe_verts, GL_STATIC_DRAW);
 
     glGenBuffers(1, &s_globe_ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_globe_ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 (GLsizeiptr)(info.globe_indices * (int)sizeof(unsigned int)),
+                 (GLsizeiptr)(info->globe_indices * (int)sizeof(unsigned int)),
                  s_erp_globe_indices, GL_STATIC_DRAW);
 
     /* pos(3) + normal(3) + uv(2) = 8 floats = 32 bytes */
@@ -126,8 +122,10 @@ int earth_pass_init(void) {
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, ERP_GLOBE_VERTEX_STRIDE, (void*)24);
 
     glBindVertexArray(0);
+    return 0;
+}
 
-    /* --- Line shader (coastlines + terminator) --- */
+static int init_lines(void) {
     s_line_program = shader_create_program(
         erp_line_vert_source(), erp_line_frag_source());
     if (s_line_program == 0) {
@@ -171,8 +169,10 @@ int earth_pass_init(void) {
     glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, ERP_LINE_VERTEX_STRIDE, (void*)12);
 
     glBindVertexArray(0);
+    return 0;
+}
 
-    /* --- Atmosphere shader --- */
+static int init_atmosphere(const erp_info_t *info) {
     s_atmo_program = shader_create_program(
         erp_atmo_vert_source(), erp_atmo_frag_source());
     if (s_atmo_program == 0) {
@@ -183,10 +183,8 @@ int earth_pass_init(void) {
     s_atmo_loc_model      = glGetUniformLocation(s_atmo_program, "u_model");
     s_atmo_loc_camera_pos = glGetUniformLocation(s_atmo_program, "u_camera_pos");
 
-    /* Pack atmosphere shell (static) */
     erp_pack_atmosphere(&s_erp_config, s_erp_atmo_verts, s_erp_atmo_indices);
-
-    s_atmo_index_count = info.atmo_indices;
+    s_atmo_index_count = info->atmo_indices;
 
     glGenVertexArrays(1, &s_atmo_vao);
     glBindVertexArray(s_atmo_vao);
@@ -194,13 +192,13 @@ int earth_pass_init(void) {
     glGenBuffers(1, &s_atmo_vbo);
     glBindBuffer(GL_ARRAY_BUFFER, s_atmo_vbo);
     glBufferData(GL_ARRAY_BUFFER,
-                 (GLsizeiptr)(info.atmo_verts * 7 * (int)sizeof(float)),
+                 (GLsizeiptr)(info->atmo_verts * 7 * (int)sizeof(float)),
                  s_erp_atmo_verts, GL_STATIC_DRAW);
 
     glGenBuffers(1, &s_atmo_ebo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_atmo_ebo);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 (GLsizeiptr)(info.atmo_indices * (int)sizeof(unsigned int)),
+                 (GLsizeiptr)(info->atmo_indices * (int)sizeof(unsigned int)),
                  s_erp_atmo_indices, GL_STATIC_DRAW);
 
     /* pos(3)+normal(3)+opacity(1) = 7 floats = 28 bytes */
@@ -212,11 +210,105 @@ int earth_pass_init(void) {
     glVertexAttribPointer(2, 1, GL_FLOAT, GL_FALSE, 28, (void*)24);
 
     glBindVertexArray(0);
+    return 0;
+}
 
+int earth_pass_init(void) {
+    s_erp_config = erp_default_config();
+    erp_info_t info = erp_info(&s_erp_config);
+    if (init_globe(&info) != 0) return 1;
+    if (init_lines() != 0) return 1;
+    if (init_atmosphere(&info) != 0) return 1;
     printf("Earth: globe(%d verts, %d tris), %d coastline verts, atmo(%d verts), shaders compiled\n",
            info.globe_verts, info.globe_indices / 3,
            s_coast_vertex_count, info.atmo_verts);
     return 0;
+}
+
+/* --- Draw helpers --- */
+
+static void draw_globe(const mat4_t *mvp, const mat4_t *model,
+                       float sun_dx, float sun_dy, float sun_dz) {
+    glUseProgram(s_globe_program);
+    glUniformMatrix4fv(s_globe_loc_mvp, 1, GL_FALSE, mvp->m);
+    glUniformMatrix4fv(s_globe_loc_model, 1, GL_FALSE, model->m);
+    glUniform3f(s_globe_loc_sun_dir, sun_dx, sun_dy, sun_dz);
+
+    glEnable(GL_DEPTH_TEST);
+    glBindVertexArray(s_globe_vao);
+    glDrawElements(GL_TRIANGLES, s_globe_index_count, GL_UNSIGNED_INT, (void*)0);
+    glBindVertexArray(0);
+}
+
+static void draw_coastlines(const mat4_t *mvp) {
+    if (s_coast_vertex_count <= 0) return;
+
+    glUseProgram(s_line_program);
+    glUniformMatrix4fv(s_line_loc_mvp, 1, GL_FALSE, mvp->m);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glBindVertexArray(s_coast_vao);
+    glDrawArrays(GL_LINES, 0, s_coast_vertex_count);
+    glBindVertexArray(0);
+
+    glDisable(GL_BLEND);
+}
+
+static void draw_terminator(const mat4_t *mvp, const render_frame_t *frame,
+                            double earth_lon) {
+    double sun_geo_lon = fmod(earth_lon + 180.0, 360.0);
+    double obliquity = mean_obliquity(frame->simulation_jd);
+    double solar_dec = asin(sin(sun_geo_lon * DEG_TO_RAD) *
+                            sin(obliquity * DEG_TO_RAD)) / DEG_TO_RAD;
+    double solar_ra = sun_geo_lon / 15.0;
+
+    int term_count = erp_pack_terminator(
+        solar_dec, solar_ra, &s_erp_config, s_erp_term_verts);
+
+    if (term_count <= 0) return;
+
+    glUseProgram(s_line_program);
+    glUniformMatrix4fv(s_line_loc_mvp, 1, GL_FALSE, mvp->m);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glBindVertexArray(s_term_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, s_term_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0,
+                    (GLsizeiptr)(term_count * ERP_LINE_VERTEX_STRIDE),
+                    s_erp_term_verts);
+    glDrawArrays(GL_LINE_STRIP, 0, term_count);
+    glBindVertexArray(0);
+
+    glDisable(GL_BLEND);
+}
+
+static void draw_atmo_shell(const mat4_t *mvp, const mat4_t *model,
+                            const render_frame_t *frame) {
+    if (s_atmo_index_count <= 0) return;
+
+    glUseProgram(s_atmo_program);
+    glUniformMatrix4fv(s_atmo_loc_mvp, 1, GL_FALSE, mvp->m);
+    glUniformMatrix4fv(s_atmo_loc_model, 1, GL_FALSE, model->m);
+
+    glUniform3f(s_atmo_loc_camera_pos, 0.0f, 0.0f,
+                frame->view.m[14] != 0.0f ? -frame->view.m[14] : 10.0f);
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+    glDepthMask(GL_FALSE);
+    glDisable(GL_CULL_FACE);
+
+    glBindVertexArray(s_atmo_vao);
+    glDrawElements(GL_TRIANGLES, s_atmo_index_count,
+                    GL_UNSIGNED_INT, (void*)0);
+    glBindVertexArray(0);
+
+    glDepthMask(GL_TRUE);
+    glDisable(GL_BLEND);
 }
 
 void earth_pass_draw(const render_frame_t *frame) {
@@ -259,86 +351,10 @@ void earth_pass_draw(const render_frame_t *frame) {
         sun_dx /= sun_len; sun_dy /= sun_len; sun_dz /= sun_len;
     }
 
-    /* --- Draw globe --- */
-    glUseProgram(s_globe_program);
-    glUniformMatrix4fv(s_globe_loc_mvp, 1, GL_FALSE, mvp.m);
-    glUniformMatrix4fv(s_globe_loc_model, 1, GL_FALSE, model.m);
-    glUniform3f(s_globe_loc_sun_dir, sun_dx, sun_dy, sun_dz);
-
-    glEnable(GL_DEPTH_TEST);
-    glBindVertexArray(s_globe_vao);
-    glDrawElements(GL_TRIANGLES, s_globe_index_count, GL_UNSIGNED_INT, (void*)0);
-    glBindVertexArray(0);
-
-    /* --- Draw coastlines --- */
-    if (s_coast_vertex_count > 0) {
-        glUseProgram(s_line_program);
-        glUniformMatrix4fv(s_line_loc_mvp, 1, GL_FALSE, mvp.m);
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-        glBindVertexArray(s_coast_vao);
-        glDrawArrays(GL_LINES, 0, s_coast_vertex_count);
-        glBindVertexArray(0);
-
-        glDisable(GL_BLEND);
-    }
-
-    /* --- Draw terminator (dynamic) --- */
-    {
-        /* Compute solar declination and RA for terminator position */
-        double sun_geo_lon = fmod(earth_lon + 180.0, 360.0);
-        double obliquity = mean_obliquity(frame->simulation_jd);
-        double solar_dec = asin(sin(sun_geo_lon * DEG_TO_RAD) *
-                                sin(obliquity * DEG_TO_RAD)) / DEG_TO_RAD;
-        double solar_ra = sun_geo_lon / 15.0; /* approximate RA in hours */
-
-        int term_count = erp_pack_terminator(
-            solar_dec, solar_ra, &s_erp_config, s_erp_term_verts);
-
-        if (term_count > 0) {
-            glUseProgram(s_line_program);
-            glUniformMatrix4fv(s_line_loc_mvp, 1, GL_FALSE, mvp.m);
-
-            glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-            glBindVertexArray(s_term_vao);
-            glBindBuffer(GL_ARRAY_BUFFER, s_term_vbo);
-            glBufferSubData(GL_ARRAY_BUFFER, 0,
-                            (GLsizeiptr)(term_count * ERP_LINE_VERTEX_STRIDE),
-                            s_erp_term_verts);
-            glDrawArrays(GL_LINE_STRIP, 0, term_count);
-            glBindVertexArray(0);
-
-            glDisable(GL_BLEND);
-        }
-    }
-
-    /* --- Draw atmosphere shell --- */
-    if (s_atmo_index_count > 0) {
-        glUseProgram(s_atmo_program);
-        glUniformMatrix4fv(s_atmo_loc_mvp, 1, GL_FALSE, mvp.m);
-        glUniformMatrix4fv(s_atmo_loc_model, 1, GL_FALSE, model.m);
-
-        /* Camera position in world space (approximate from view matrix inverse) */
-        glUniform3f(s_atmo_loc_camera_pos, 0.0f, 0.0f,
-                    frame->view.m[14] != 0.0f ? -frame->view.m[14] : 10.0f);
-
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-        glDepthMask(GL_FALSE);
-        glDisable(GL_CULL_FACE);
-
-        glBindVertexArray(s_atmo_vao);
-        glDrawElements(GL_TRIANGLES, s_atmo_index_count,
-                        GL_UNSIGNED_INT, (void*)0);
-        glBindVertexArray(0);
-
-        glDepthMask(GL_TRUE);
-        glDisable(GL_BLEND);
-    }
+    draw_globe(&mvp, &model, sun_dx, sun_dy, sun_dz);
+    draw_coastlines(&mvp);
+    draw_terminator(&mvp, frame, earth_lon);
+    draw_atmo_shell(&mvp, &model, frame);
 }
 
 void earth_pass_destroy(void) {

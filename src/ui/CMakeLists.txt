@@ -32,6 +32,8 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/command_palette.c
     ${CMAKE_CURRENT_SOURCE_DIR}/time_control.c
     ${CMAKE_CURRENT_SOURCE_DIR}/toast_message.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/ui_html.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/ui_bridge.c
     PARENT_SCOPE
 )
 
@@ -67,5 +69,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_command_palette  OBJECT command_palette.c)
     add_library(time_time_control    OBJECT time_control.c)
     add_library(time_toast_message   OBJECT toast_message.c)
-    # time_ui_html removed — files not committed (BETA WIP)
+    add_library(time_ui_html         OBJECT ui_html.c)
+    # ui_bridge.c is Emscripten-only (S1) — no native OBJECT lib
 endif()

@@ -8,9 +8,9 @@
  *   The mood base color is taken from ct_mood_color().
  *   Four scales are derived by adjusting saturation and lightness:
  *     King (Atziluth):    base mood as-is (brightest, purest)
- *     Queen (Briah):      l *= (GL_PHI_INV + GL_PHI_INV4), s *= (1 - GL_PHI_INV5)
- *     Prince (Yetzirah):  l *= GL_PHI_INV, s *= (GL_PHI_INV + GL_PHI_INV5)
- *     Princess (Assiah):  l *= GL_PHI_INV2, s *= (GL_PHI_INV2 + GL_PHI_INV5)
+ *     Queen (Briah):      l *= (PHI_INV + PHI_INV4), s *= (1 - PHI_INV5)
+ *     Prince (Yetzirah):  l *= PHI_INV, s *= (PHI_INV + PHI_INV5)
+ *     Princess (Assiah):  l *= PHI_INV2, s *= (PHI_INV2 + PHI_INV5)
  *
  * Crowley swaps implemented:
  *   - Card 8 (Adjustment/Libra) sits on path 11 (Lamed)
@@ -62,9 +62,9 @@ static const ct_mood_t CARD_MOODS[TV_MAJOR_COUNT] = {
 
 /* Compute the 4 color scales for a card from its mood.
  * King:     base mood color (brightest)
- * Queen:    lightness *= (GL_PHI_INV + GL_PHI_INV4), saturation *= (1 - GL_PHI_INV5)
- * Prince:   lightness *= GL_PHI_INV, saturation *= (GL_PHI_INV + GL_PHI_INV5)
- * Princess: lightness *= GL_PHI_INV2, saturation *= (GL_PHI_INV2 + GL_PHI_INV5) */
+ * Queen:    lightness *= (PHI_INV + PHI_INV4), saturation *= (1 - PHI_INV5)
+ * Prince:   lightness *= PHI_INV, saturation *= (PHI_INV + PHI_INV5)
+ * Princess: lightness *= PHI_INV2, saturation *= (PHI_INV2 + PHI_INV5) */
 static void compute_color_scales(ct_mood_t mood, color_rgb_t out[TV_COLOR_SCALES])
 {
     color_hsl_t base = ct_mood_color(mood);
@@ -73,22 +73,22 @@ static void compute_color_scales(ct_mood_t mood, color_rgb_t out[TV_COLOR_SCALES
     /* King: base as-is */
     out[TV_SCALE_KING] = color_hsl_to_rgb(base);
 
-    /* Queen: rich, deep — GL_PHI_INV applied to lightness with offset */
+    /* Queen: rich, deep — PHI_INV applied to lightness with offset */
     color_hsl_t queen = base;
-    queen.l = base.l * (float)(GL_PHI_INV + GL_PHI_INV4);
-    queen.s = base.s * (float)(1.0 - GL_PHI_INV5);
+    queen.l = base.l * (float)(PHI_INV + PHI_INV4);
+    queen.s = base.s * (float)(1.0 - PHI_INV5);
     out[TV_SCALE_QUEEN] = color_hsl_to_rgb(queen);
 
-    /* Prince: muted — GL_PHI_INV applied to lightness */
+    /* Prince: muted — PHI_INV applied to lightness */
     color_hsl_t prince = base;
-    prince.l = base.l * (float)GL_PHI_INV;
-    prince.s = base.s * (float)(GL_PHI_INV + GL_PHI_INV5);
+    prince.l = base.l * (float)PHI_INV;
+    prince.s = base.s * (float)(PHI_INV + PHI_INV5);
     out[TV_SCALE_PRINCE] = color_hsl_to_rgb(prince);
 
-    /* Princess: dark — GL_PHI_INV2 applied to lightness */
+    /* Princess: dark — PHI_INV2 applied to lightness */
     color_hsl_t princess = base;
-    princess.l = base.l * (float)GL_PHI_INV2;
-    princess.s = base.s * (float)(GL_PHI_INV2 + GL_PHI_INV5);
+    princess.l = base.l * (float)PHI_INV2;
+    princess.s = base.s * (float)(PHI_INV2 + PHI_INV5);
     out[TV_SCALE_PRINCESS] = color_hsl_to_rgb(princess);
 }
 
@@ -357,11 +357,11 @@ tv_card_frame_t tv_card_frame(float width)
 {
     tv_card_frame_t frame;
     frame.width = width;
-    frame.height = width * (float)GL_PHI;
-    frame.border = width * (float)GL_PHI_INV5;
-    frame.symbol_radius = width * (float)GL_PHI_INV2;
-    frame.title_y = frame.height * (float)GL_PHI_INV;
-    frame.number_y = frame.height * (float)GL_PHI_INV4;
+    frame.height = width * (float)PHI_RATIO;
+    frame.border = width * (float)PHI_INV5;
+    frame.symbol_radius = width * (float)PHI_INV2;
+    frame.title_y = frame.height * (float)PHI_INV;
+    frame.number_y = frame.height * (float)PHI_INV4;
     return frame;
 }
 

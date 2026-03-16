@@ -27,6 +27,7 @@
 #include "../render/passes/orbit_trail_pass.h"
 #include "../render/passes/card_pass.h"
 #include "../render/passes/post_pass.h"
+#include "../ui/ui_bridge.h"
 #endif
 
 #ifdef __EMSCRIPTEN__
@@ -99,6 +100,9 @@ void main_loop(void) {
         hud_update(g_state.simulation_jd, g_state.time_speed,
                    g_state.observer_lat, g_state.observer_lon,
                    g_state.camera.log_zoom);
+
+    /* --- Update time bar display --- */
+    ui_bridge_update_time(g_state.simulation_jd, g_state.time_speed);
 #endif
 }
 
@@ -140,10 +144,76 @@ int main(void) {
     /* Register input handlers */
     input_register(&g_state);
 
+    /* Initialize UI bridge — populate panels with data from pure modules */
+    ui_bridge_init();
+
     printf("Controls: Space=pause, 1-5=speed, -=reverse, T=trails, H=hud, Shift+0-6=scale\n");
+
+    /* Show init success in HUD */
+    EM_ASM({
+        var hud = document.getElementById('time-hud');
+        if (hud) hud.innerHTML = 'Time initialized — starting render loop...';
+    });
 
     emscripten_set_main_loop(main_loop, 0, 1);
 #endif
 
     return 0;
 }
+
+/* =========================================================================
+ * UI Bridge — EMSCRIPTEN_KEEPALIVE functions for DOM UI interaction
+ * Called from JavaScript (web/index.html) via Module._ui_*()
+ * ========================================================================= */
+#ifdef __EMSCRIPTEN__
+
+#include <emscripten.h>
+
+static double s_prev_speed = 1.0;
+
+EMSCRIPTEN_KEEPALIVE void ui_toggle_pause(void) {
+    if (g_state.time_speed == 0.0)
+        g_state.time_speed = s_prev_speed;
+    else {
+        s_prev_speed = g_state.time_speed;
+        g_state.time_speed = 0.0;
+    }
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_set_speed(double speed) {
+    g_state.time_speed = speed;
+}
+
+EMSCRIPTEN_KEEPALIVE double ui_get_speed(void) {
+    return g_state.time_speed;
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_jump_to_now(void) {
+    /* Reset to current real time */
+    g_state.simulation_jd = 2460000.5 + (emscripten_get_now() / 86400000.0);
+    g_state.time_speed = 1.0;
+}
+
+EMSCRIPTEN_KEEPALIVE double ui_get_jd(void) {
+    return g_state.simulation_jd;
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_toggle_trails(void) {
+    g_state.show_trails = !g_state.show_trails;
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_toggle_hud(void) {
+    g_state.show_hud = !g_state.show_hud;
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_set_scale(int level) {
+    if (level < 0 || level > 6) return;
+    g_state.scale_transition = scale_transition_create(
+        g_state.camera.log_zoom, (scale_id_t)level, 1.2f);
+}
+
+EMSCRIPTEN_KEEPALIVE float ui_get_log_zoom(void) {
+    return g_state.camera.log_zoom;
+}
+
+#endif /* __EMSCRIPTEN__ */

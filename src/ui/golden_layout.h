@@ -12,22 +12,22 @@
 #define TIME_GOLDEN_LAYOUT_H
 
 /* phi and its powers — the proportion vocabulary */
-#define GL_PHI       1.6180339887498948482
-#define GL_PHI_INV   0.6180339887498948482  /* 1/phi = phi - 1 */
-#define GL_PHI_SQ    2.6180339887498948482  /* phi^2 = phi + 1 */
-#define GL_PHI_CU    4.2360679774997896964  /* phi^3 */
-#define GL_PHI_INV2  0.3819660112501051518  /* 1/phi^2 */
-#define GL_PHI_INV3  0.2360679774997896964  /* 1/phi^3 */
-#define GL_PHI_INV4  0.1458980337503154554  /* 1/phi^4 */
-#define GL_PHI_INV5  0.0901699437494742410  /* 1/phi^5 */
+#define PHI_RATIO       1.6180339887498948482
+#define PHI_INV   0.6180339887498948482  /* 1/phi = phi - 1 */
+#define PHI_SQ    2.6180339887498948482  /* phi^2 = phi + 1 */
+#define PHI_CU    4.2360679774997896964  /* phi^3 */
+#define PHI_INV2  0.3819660112501051518  /* 1/phi^2 */
+#define PHI_INV3  0.2360679774997896964  /* 1/phi^3 */
+#define PHI_INV4  0.1458980337503154554  /* 1/phi^4 */
+#define PHI_INV5  0.0901699437494742410  /* 1/phi^5 */
 
 /* --- Typography Scale ---
  * Each level = previous * phi^-1.
  * Base size is level 0 (body text). */
-#define GL_TYPE_LEVELS 8
+#define PHI_TYPE_LEVELS 8
 
 typedef struct {
-    float sizes[GL_TYPE_LEVELS];  /* font sizes: [0]=display .. [7]=micro */
+    float sizes[PHI_TYPE_LEVELS];  /* font sizes: [0]=display .. [7]=micro */
     float line_height;            /* phi = 1.618 */
     float paragraph_spacing;      /* line_height * phi */
 } gl_type_scale_t;
@@ -43,10 +43,10 @@ float gl_font_size(gl_type_scale_t scale, int level);
 /* --- Spacing Scale ---
  * A series of spacing values, each phi times the previous.
  * Used for padding, margins, gaps, offsets. */
-#define GL_SPACE_LEVELS 10
+#define PHI_SPACE_LEVELS 10
 
 typedef struct {
-    float values[GL_SPACE_LEVELS]; /* [0]=smallest .. [9]=largest */
+    float values[PHI_SPACE_LEVELS]; /* [0]=smallest .. [9]=largest */
 } gl_spacing_t;
 
 /* Compute spacing scale from a base unit (pixels).
@@ -128,10 +128,10 @@ float gl_stagger_delay(gl_timing_t timing, int index, int total);
 /* --- Opacity Cascade ---
  * Layer opacities descending by phi powers. */
 
-#define GL_OPACITY_LEVELS 8
+#define PHI_OPACITY_LEVELS 8
 
 typedef struct {
-    float values[GL_OPACITY_LEVELS]; /* [0]=1.0, [1]=phi^-1, [2]=phi^-2... */
+    float values[PHI_OPACITY_LEVELS]; /* [0]=1.0, [1]=phi^-1, [2]=phi^-2... */
 } gl_opacity_t;
 
 /* Compute opacity cascade. Level 0 = full, each step *= phi^-1. */

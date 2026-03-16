@@ -39,7 +39,7 @@ void test_type_scale_small_is_body_times_phi_inv(void) {
 
 void test_type_scale_decreasing(void) {
     gl_type_scale_t s = gl_type_scale(16.0f);
-    for (int i = 0; i < GL_TYPE_LEVELS - 1; i++) {
+    for (int i = 0; i < PHI_TYPE_LEVELS - 1; i++) {
         TEST_ASSERT_TRUE(s.sizes[i] > s.sizes[i + 1]);
     }
 }
@@ -79,7 +79,7 @@ void test_spacing_level_3_is_base_times_phi_inv(void) {
 
 void test_spacing_monotonic_increasing(void) {
     gl_spacing_t s = gl_spacing_scale(8.0f);
-    for (int i = 0; i < GL_SPACE_LEVELS - 1; i++) {
+    for (int i = 0; i < PHI_SPACE_LEVELS - 1; i++) {
         TEST_ASSERT_TRUE(s.values[i] < s.values[i + 1]);
     }
 }
@@ -217,14 +217,14 @@ void test_opacity_level_1_is_phi_inv(void) {
 
 void test_opacity_decreasing(void) {
     gl_opacity_t o = gl_opacity_cascade();
-    for (int i = 0; i < GL_OPACITY_LEVELS - 1; i++) {
+    for (int i = 0; i < PHI_OPACITY_LEVELS - 1; i++) {
         TEST_ASSERT_TRUE(o.values[i] > o.values[i + 1]);
     }
 }
 
 void test_opacity_at_matches_cascade(void) {
     gl_opacity_t o = gl_opacity_cascade();
-    for (int i = 0; i < GL_OPACITY_LEVELS; i++) {
+    for (int i = 0; i < PHI_OPACITY_LEVELS; i++) {
         TEST_ASSERT_FLOAT_WITHIN(0.001f, o.values[i], gl_opacity_at(i));
     }
 }
