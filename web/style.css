@@ -28,6 +28,10 @@
     --corner-radius: 5px;
     --panel-width: 320px;
     --panel-max-height: 70vh;
+    /* Glow elevation for dark theme (digest 053) */
+    --glow-sm: 0 1px 3px hsla(42, 90%, 55%, 0.1);
+    --glow-md: 0 2px 8px hsla(42, 90%, 55%, 0.15);
+    --glow-lg: 0 4px 16px hsla(42, 90%, 55%, 0.2);
 }
 
 body {
@@ -74,7 +78,9 @@ canvas { width: 100vw; height: 100vh; display: block; }
     cursor: pointer; transition: background var(--t-fast) ease-out;
     z-index: 200;
 }
-.corner-btn:hover { background: rgba(var(--bg-elevated), 0.9); }
+.corner-btn:hover { background: rgba(var(--bg-elevated), 0.9); box-shadow: var(--glow-sm); }
+.corner-btn:active { transform: scale(0.95); }
+.corner-btn:focus-visible { outline: 2px solid rgba(var(--brand-primary), 0.6); outline-offset: 2px; }
 
 .frosted {
     background: var(--glass-bg);
@@ -101,6 +107,7 @@ canvas { width: 100vw; height: 100vh; display: block; }
     transition: color var(--t-fast) ease;
 }
 .panel-close:hover { color: rgb(var(--text-primary)); }
+.panel-close:focus-visible { outline: 2px solid rgba(var(--brand-primary), 0.6); outline-offset: 2px; border-radius: var(--sp-1); }
 
 .panel-body {
     padding: var(--sp-3) var(--sp-4);
@@ -152,7 +159,9 @@ canvas { width: 100vw; height: 100vh; display: block; }
     border-radius: var(--corner-radius); cursor: pointer;
     transition: background var(--t-fast) ease;
 }
-.tb-btn:hover { background: rgba(var(--brand-primary), 0.15); color: rgb(var(--brand-primary)); }
+.tb-btn:hover { background: rgba(var(--brand-primary), 0.15); color: rgb(var(--brand-primary)); box-shadow: var(--glow-sm); }
+.tb-btn:active { background: rgba(var(--brand-primary), 0.25); transform: translateY(1px); }
+.tb-btn:focus-visible { outline: 2px solid rgba(var(--brand-primary), 0.6); outline-offset: 2px; }
 
 .cmd-input {
     width: 100%; background: rgba(var(--bg-space), 0.6);
@@ -161,7 +170,7 @@ canvas { width: 100vw; height: 100vh; display: block; }
     font-size: var(--font-size-base); padding: var(--sp-3); outline: none;
     transition: border-color var(--t-fast) ease;
 }
-.cmd-input:focus { border-color: rgba(var(--brand-primary), 0.5); }
+.cmd-input:focus { border-color: rgba(var(--brand-primary), 0.5); box-shadow: 0 0 0 2px rgba(var(--brand-primary), 0.15); }
 .cmd-input::placeholder { color: rgb(var(--text-muted)); }
 
 kbd, .kbd {
@@ -186,19 +195,20 @@ kbd, .kbd {
 .toast-warning { background: rgba(var(--brand-primary), 0.15); color: rgb(var(--brand-primary)); border: 1px solid rgba(var(--brand-primary), 0.3); }
 
 .help-group { margin-bottom: var(--sp-4); }
-.help-group-title { color: rgb(var(--brand-primary)); margin-bottom: var(--sp-2); padding-bottom: var(--sp-1); border-bottom: 1px solid rgba(var(--border), 0.3); }
+.help-group-title { color: rgb(var(--brand-primary)); font-weight: 700; font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--sp-2); padding-bottom: var(--sp-1); border-bottom: 1px solid rgba(var(--border), 0.3); }
 .help-entry { display: flex; justify-content: space-between; align-items: center; padding: var(--sp-1) 0; color: rgb(var(--text-secondary)); }
 .help-entry .help-key { flex-shrink: 0; margin-right: var(--sp-4); }
 
 .layer-group { margin-bottom: var(--sp-4); }
-.layer-group-title { color: rgb(var(--brand-secondary)); margin-bottom: var(--sp-2); }
+.layer-group-title { color: rgb(var(--brand-secondary)); font-weight: 700; font-size: var(--font-size-sm); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--sp-2); }
 .layer-item { display: flex; align-items: center; gap: var(--sp-3); padding: var(--sp-1) 0; cursor: pointer; color: rgb(var(--text-secondary)); transition: color var(--t-fast) ease; }
 .layer-item:hover { color: rgb(var(--text-primary)); }
 .layer-dot { width: var(--sp-3); height: var(--sp-3); border-radius: 50%; background: rgb(var(--brand-secondary)); opacity: 0.236; transition: opacity var(--t-fast) ease; }
 .layer-dot.active { opacity: 1; }
 
 .cmd-item { display: flex; justify-content: space-between; align-items: center; padding: var(--sp-2) var(--sp-3); border-radius: var(--corner-radius); cursor: pointer; color: rgb(var(--text-secondary)); transition: background var(--t-fast) ease; }
-.cmd-item:hover { background: rgba(var(--brand-primary), 0.1); color: rgb(var(--text-primary)); }
+.cmd-item:hover, .cmd-item:focus-visible { background: rgba(var(--brand-primary), 0.1); color: rgb(var(--text-primary)); outline: none; }
+.cmd-item:active { background: rgba(var(--brand-primary), 0.2); }
 
 .hint {
     position: fixed; bottom: var(--sp-7); left: 50%; transform: translateX(-50%);
