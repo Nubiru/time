@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  native:
+    name: Native Build + Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake gcc lcov
+
+      - name: Configure
+        run: cmake -B build-native
+
+      - name: Build
+        run: cmake --build build-native -j$(nproc)
+
+      - name: Test
+        run: ctest --test-dir build-native -j$(nproc) --output-on-failure
+
+      - name: Sanitizer build
+        run: |
+          cmake -B build-sanitize -DCMAKE_BUILD_TYPE=Sanitize
+          cmake --build build-sanitize -j$(nproc)
+          ctest --test-dir build-sanitize -j$(nproc) --output-on-failure
+
+  wasm:
+    name: WASM Build + Size Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: '3.1.51'
+
+      - name: Build WASM (development)
+        run: |
+          emcmake cmake -B build-wasm
+          cmake --build build-wasm -j$(nproc)
+
+      - name: Binary size check
+        run: |
+          echo "=== WASM Binary Sizes ==="
+          ls -la build-wasm/index.wasm
+          RAW=$(stat -c%s build-wasm/index.wasm)
+          GZIP=$(gzip -c build-wasm/index.wasm | wc -c)
+          echo "Raw:    ${RAW} bytes ($(( RAW / 1024 )) KB)"
+          echo "Gzipped: ${GZIP} bytes ($(( GZIP / 1024 )) KB)"

@@ -56,6 +56,10 @@ set(ALL_SOURCES
 # WASM BUILD (emcmake cmake -B build-wasm)
 # ===========================================================================
 if(EMSCRIPTEN)
+    # Environment configuration: -DPRODUCTION=ON or -DSTAGING=ON
+    option(PRODUCTION "Production build — optimized, no debug" OFF)
+    option(STAGING "Staging build — optimized with debug info" OFF)
+
     add_executable(time_app ${ALL_SOURCES})
     set_target_properties(time_app PROPERTIES
         OUTPUT_NAME "index"
@@ -68,9 +72,22 @@ if(EMSCRIPTEN)
         -sSTACK_SIZE=524288
         -sALLOW_MEMORY_GROWTH=1
         "-sEXPORTED_RUNTIME_METHODS=['stringToUTF8']"
-        -Os
         "SHELL:--shell-file ${CMAKE_SOURCE_DIR}/web/index.html"
     )
+
+    # Per-environment optimization and defines
+    if(PRODUCTION)
+        target_compile_definitions(time_app PRIVATE PRODUCTION=1)
+        target_link_options(time_app PRIVATE -O3 --closure 1 -flto -sASSERTIONS=0)
+    elseif(STAGING)
+        target_compile_definitions(time_app PRIVATE STAGING=1)
+        target_link_options(time_app PRIVATE -O2 -g2 -sASSERTIONS=1)
+    else()
+        # Development: debug info, assertions, moderate optimization
+        target_compile_definitions(time_app PRIVATE DEVELOPMENT=1)
+        target_link_options(time_app PRIVATE -Os -sASSERTIONS=2)
+    endif()
+
     # Copy style.css to build dir
     add_custom_command(TARGET time_app POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy

@@ -1,29 +1,29 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-16 (OMEGA sweep #14)
+**Last refreshed**: 2026-03-16 (OMEGA sweep #15)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 235 |
-| Header files (.h) | 235 |
-| Lines of code (src/) | 74,115 |
-| Lines of tests | 106,709 |
-| Test files | 215 |
+| Source files (.c) | 237 |
+| Header files (.h) | 237 |
+| Lines of code (src/) | 75,005 |
+| Lines of tests | 109,365 |
+| Test files | 227 |
 | Render pass files | 16 |
-| Contributors | 185 |
+| Contributors | 184 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 212 |
-| Test functions (RUN_TEST) | 10,213 |
-| Test assertions (TEST_ASSERT) | 16,181 |
+| Test suites (CTest) | 224 |
+| Test functions (RUN_TEST) | 10,493 |
+| Test assertions (TEST_ASSERT) | 16,723 |
 | Failures | 0 |
-| CTest time | 1.08s |
-| ASan/UBSan | PASS (212/212, 0 findings) |
+| CTest time | 0.93s |
+| ASan/UBSan | PASS (224/224, 0 findings) |
 
 ## Code Coverage (baseline — 2026-03-16)
 
@@ -70,11 +70,13 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (212/212) |
+| CTest -j12 | PASS (224/224) |
 | Sanitizer build | PASS (ASan + UBSan, 0 findings) |
 | Coverage build | PASS (96.5% line, 100% function — `make coverage`) |
+| WASM build | PASS (209 KB raw, 83 KB gzipped) |
+| CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
-| Build system | Per-directory CMakeLists.txt (refactored 2026-03-15) |
+| Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
 
 ## Render Pipeline (16 passes)
 
@@ -150,17 +152,26 @@
 | ui | 33 | 33 |
 | core | 5 | 1 |
 
-## Health (OMEGA sweep #14)
+## WASM Binary Size
+
+| Metric | Value |
+|--------|-------|
+| Raw .wasm | 214,492 bytes (209 KB) |
+| Gzipped | 84,713 bytes (83 KB) |
+| Build mode | Development (-Os, ASSERTIONS=2) |
+
+## Health (OMEGA sweep #15)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (235 .c files, all registered) |
+| Build system sync | OK (237 .c files, all registered) |
 | Purity audit | CLEAN (P1-P4 all zones, 4 P5 known) |
 | ASan/UBSan | PASS (0 memory errors, 0 undefined behavior) |
+| Native build | PASS (224/224 tests) |
+| WASM build | PASS (209 KB) |
+| CI/CD | .github/workflows/ci.yml created |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Missing attribution | 0 |
 | Render pipeline | COMPLETE (16/16 passes wired) |
-| Refactor candidates | earth_pass.c decomposed (sweep #13 task) |
-| Style debt | Policy documented in CONVENTIONS.md (domain colors exempt) |
