@@ -1,6 +1,6 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-16 (OMEGA sweep #17)
+**Last refreshed**: 2026-03-16 (OMEGA sweep #18)
 
 ## Codebase
 
@@ -18,12 +18,12 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 231 |
-| Test functions (RUN_TEST) | 10,735 |
-| Test assertions (TEST_ASSERT) | 17,370 |
+| Test suites (CTest) | 233 |
+| Test functions (RUN_TEST) | 10,775 |
+| Test assertions (TEST_ASSERT) | 17,420 |
 | Failures | 0 |
-| CTest time | 0.85s |
-| ASan/UBSan | PASS (230/230, 0 findings) |
+| CTest time | 0.88s |
+| ASan/UBSan | PASS (233/233, 0 findings) |
 
 ## Code Coverage (baseline — 2026-03-16)
 
@@ -70,7 +70,7 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (231/231) |
+| CTest -j12 | PASS (233/233) |
 | Sanitizer build | PASS (ASan + UBSan, 0 findings) |
 | Coverage build | PASS (96.5% line, 100% function — `make coverage`) |
 | WASM build | PASS (209 KB raw, 83 KB gzipped) |
@@ -160,19 +160,18 @@
 | Gzipped | 84,713 bytes (83 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 
-## Health (OMEGA sweep #17)
+## Health (OMEGA sweep #18)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
 | Build system sync | OK (241 .c files, all registered) |
-| Purity audit | CLEAN (P1-P6 all zones, 4 P5 known) |
-| Native build | PASS (231/231 tests) |
+| Purity audit | CLEAN (P1-P6 all zones) |
+| Native build | PASS (233/233 tests) |
 | WASM build | PASS (209 KB) |
-| CI/CD | GREEN (latest run: success) |
+| CI/CD | GREEN |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Missing attribution | 0 |
 | Render pipeline | COMPLETE (16/16 passes wired) |
-| Refactors done | user_prefs.c decomposed (up_deserialize 97→20L, up_merge 64→8L) |
-| Remaining candidates | convergence.c (646L), knowledge_graph.c (608L) — needs MEGA approval |
+| fun_facts.c | NO refactor needed — 437L data catalog, longest function 44L |
