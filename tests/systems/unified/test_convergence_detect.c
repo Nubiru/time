@@ -18,6 +18,14 @@
 #include "../../../src/systems/coptic/coptic.h"
 #include "../../../src/systems/celtic/wheel_of_year.h"
 #include "../../../src/systems/bahai/bahai.h"
+#include "../../../src/systems/japanese/japanese.h"
+#include "../../../src/systems/egyptian/egyptian.h"
+#include "../../../src/systems/french_republican/french_republican.h"
+#include "../../../src/systems/korean/korean_calendar.h"
+#include "../../../src/systems/thai/thai_calendar.h"
+#include "../../../src/systems/tamil/tamil_calendar.h"
+#include "../../../src/systems/myanmar/myanmar.h"
+#include "../../../src/systems/zoroastrian/zoroastrian.h"
 #include <math.h>
 #include <string.h>
 
@@ -858,12 +866,12 @@ void test_cd_max_convergences(void)
 
 void test_cd_max_systems(void)
 {
-    TEST_ASSERT_EQUAL_INT(16, CD_MAX_SYSTEMS);
+    TEST_ASSERT_EQUAL_INT(24, CD_MAX_SYSTEMS);
 }
 
 void test_cd_sys_count_value(void)
 {
-    TEST_ASSERT_EQUAL_INT(13, CD_SYS_COUNT);
+    TEST_ASSERT_EQUAL_INT(21, CD_SYS_COUNT);
 }
 
 void test_cd_sys_enum_order(void)
@@ -881,6 +889,14 @@ void test_cd_sys_enum_order(void)
     TEST_ASSERT_EQUAL_INT(10, CD_SYS_COPTIC);
     TEST_ASSERT_EQUAL_INT(11, CD_SYS_CELTIC);
     TEST_ASSERT_EQUAL_INT(12, CD_SYS_BAHAI);
+    TEST_ASSERT_EQUAL_INT(13, CD_SYS_JAPANESE);
+    TEST_ASSERT_EQUAL_INT(14, CD_SYS_EGYPTIAN);
+    TEST_ASSERT_EQUAL_INT(15, CD_SYS_FRENCH);
+    TEST_ASSERT_EQUAL_INT(16, CD_SYS_KOREAN);
+    TEST_ASSERT_EQUAL_INT(17, CD_SYS_THAI);
+    TEST_ASSERT_EQUAL_INT(18, CD_SYS_TAMIL);
+    TEST_ASSERT_EQUAL_INT(19, CD_SYS_MYANMAR);
+    TEST_ASSERT_EQUAL_INT(20, CD_SYS_ZOROASTRIAN);
 }
 
 /* ===================================================================
@@ -1414,8 +1430,614 @@ void test_convergence_scan_includes_new_systems(void)
 
 void test_new_systems_all_enum_pairs_valid(void)
 {
-    /* Verify all 13 systems can be called in pairs without crash */
+    /* Verify all 21 systems can be called in pairs without crash */
     double jd = jd_from(2024, 6, 15);
+    for (int a = 0; a < CD_SYS_COUNT; a++) {
+        for (int b = a; b < CD_SYS_COUNT; b++) {
+            int r = cd_check_pair((cd_system_t)a, (cd_system_t)b, jd);
+            TEST_ASSERT_TRUE(r == 0 || r == 1);
+        }
+    }
+}
+
+/* ===================================================================
+ * Japanese significance tests
+ * =================================================================== */
+
+void test_system_name_japanese(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Japanese", cd_system_name(CD_SYS_JAPANESE));
+}
+
+void test_japanese_taian_significant(void)
+{
+    /* Find a Taian day (most auspicious rokuyo) within 7 days */
+    double jd = jd_from(2024, 1, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 7; i++) {
+        jp_rokuyo_t r = japanese_rokuyo(jd + i);
+        if (r == JP_ROKUYO_TAIAN) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    double s = cd_significance(test_jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+void test_japanese_not_significant(void)
+{
+    /* Find a day that is NOT Taian, NOT near sekki boundary, NOT era year 1.
+     * We look for a non-Taian day far from any 15-degree solar boundary
+     * in a non-gannen year (e.g. 2024 is Reiwa 6, not year 1). */
+    double jd = jd_from(2024, 5, 15);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 10; i++) {
+        jp_rokuyo_t r = japanese_rokuyo(jd + i);
+        if (r != JP_ROKUYO_TAIAN) {
+            /* Check sekki: sun_lon mod 15 should be > 1 */
+            double sun_lon = fmod((jd + i - 2451545.0) / 365.25 * 360.0 + 280.46, 360.0);
+            if (sun_lon < 0.0) sun_lon += 360.0;
+            double within_sekki = fmod(sun_lon, 15.0);
+            if (within_sekki < 0.0) within_sekki += 15.0;
+            if (within_sekki >= 1.0) {
+                test_jd = jd + i;
+                found = 1;
+                break;
+            }
+        }
+    }
+    if (found) {
+        int r = cd_check_pair(CD_SYS_JAPANESE, CD_SYS_JAPANESE, test_jd);
+        TEST_ASSERT_EQUAL_INT(0, r);
+    }
+}
+
+void test_japanese_era_gannen_significant(void)
+{
+    /* Reiwa 1 started May 1, 2019. era_year == 1 should be significant. */
+    double jd = jd_from(2019, 5, 1);
+    japanese_date_t jp = japanese_from_jd(jd);
+    TEST_ASSERT_EQUAL_INT(1, jp.era_year);
+    TEST_ASSERT_TRUE(jp.era_index >= 0);
+
+    double s = cd_significance(jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+/* ===================================================================
+ * Egyptian significance tests
+ * =================================================================== */
+
+void test_system_name_egyptian(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Egyptian", cd_system_name(CD_SYS_EGYPTIAN));
+}
+
+void test_egyptian_month_boundary_significant(void)
+{
+    /* Find an Egyptian day 1 (month boundary) */
+    double jd = jd_from(2024, 1, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 35; i++) {
+        egypt_date_t ed = egypt_from_jd(jd + i);
+        if (ed.day == 1) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    double s = cd_significance(test_jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+void test_egyptian_epagomenal_significant(void)
+{
+    /* Find an epagomenal day (month 13) */
+    double jd = jd_from(2024, 1, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 370; i++) {
+        egypt_date_t ed = egypt_from_jd(jd + i);
+        if (egypt_is_epagomenal(ed)) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    double s = cd_significance(test_jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+void test_egyptian_not_significant(void)
+{
+    /* Find a mid-month day that is not epagomenal */
+    double jd = jd_from(2024, 2, 10);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 30; i++) {
+        egypt_date_t ed = egypt_from_jd(jd + i);
+        if (ed.day != 1 && !egypt_is_epagomenal(ed)) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    int r = cd_check_pair(CD_SYS_EGYPTIAN, CD_SYS_EGYPTIAN, test_jd);
+    TEST_ASSERT_EQUAL_INT(0, r);
+}
+
+/* ===================================================================
+ * French Republican significance tests
+ * =================================================================== */
+
+void test_system_name_french(void)
+{
+    TEST_ASSERT_EQUAL_STRING("French Republican", cd_system_name(CD_SYS_FRENCH));
+}
+
+void test_french_month_boundary_significant(void)
+{
+    /* Find a French Republican day 1 (month boundary) */
+    double jd = jd_from(2024, 1, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 35; i++) {
+        fr_date_t fd = fr_from_jd(jd + i);
+        if (fd.month >= 1 && fd.day == 1) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    double s = cd_significance(test_jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+void test_french_sansculottide_significant(void)
+{
+    /* Sansculottides occur near Sep 17-21 Gregorian (end of Republican year) */
+    double jd = jd_from(2024, 9, 15);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 15; i++) {
+        fr_date_t fd = fr_from_jd(jd + i);
+        if (fr_is_sansculottide(fd)) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    double s = cd_significance(test_jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+void test_french_decadi_significant(void)
+{
+    /* Find a Decadi (10th day of decade) */
+    double jd = jd_from(2024, 1, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 15; i++) {
+        fr_date_t fd = fr_from_jd(jd + i);
+        if (fr_decade_day(fd) == 10) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    double s = cd_significance(test_jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+void test_french_not_significant(void)
+{
+    /* Find a mid-month, non-Decadi, non-Sansculottide day */
+    double jd = jd_from(2024, 2, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 30; i++) {
+        fr_date_t fd = fr_from_jd(jd + i);
+        if (fd.month >= 1 && fd.day != 1 &&
+            !fr_is_sansculottide(fd) && fr_decade_day(fd) != 10) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    int r = cd_check_pair(CD_SYS_FRENCH, CD_SYS_FRENCH, test_jd);
+    TEST_ASSERT_EQUAL_INT(0, r);
+}
+
+/* ===================================================================
+ * Korean significance tests
+ * =================================================================== */
+
+void test_system_name_korean(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Korean", cd_system_name(CD_SYS_KOREAN));
+}
+
+void test_korean_seollal_significant(void)
+{
+    /* Seollal (Lunar New Year) = lunar month 1, day 1.
+     * korean_festival should return non-NULL for (1, 1). */
+    const korean_festival_t *fest = korean_festival(1, 1);
+    TEST_ASSERT_NOT_NULL(fest);
+
+    /* Find an actual lunar 1/1 date */
+    double jd = jd_from(2024, 2, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 30; i++) {
+        korean_date_t kd = korean_from_jd(jd + i);
+        if (kd.lunar_month == 1 && kd.lunar_day == 1) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    if (found) {
+        double s = cd_significance(test_jd);
+        TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+    }
+}
+
+void test_korean_not_significant(void)
+{
+    /* Find a date that is not a festival and not cycle_year 1 */
+    double jd = jd_from(2024, 6, 15);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 30; i++) {
+        korean_date_t kd = korean_from_jd(jd + i);
+        const korean_festival_t *fest = korean_festival(kd.lunar_month,
+                                                        kd.lunar_day);
+        if (fest == NULL && kd.cycle_year != 1) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    int r = cd_check_pair(CD_SYS_KOREAN, CD_SYS_KOREAN, test_jd);
+    TEST_ASSERT_EQUAL_INT(0, r);
+}
+
+void test_korean_cycle_year_1_significant(void)
+{
+    /* Sexagenary cycle year 1: (year - 4) % 60 == 0 -> year 1984, 2044 */
+    double jd = jd_from(1984, 6, 15);
+    korean_date_t kd = korean_from_jd(jd);
+    TEST_ASSERT_EQUAL_INT(1, kd.cycle_year);
+
+    double s = cd_significance(jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+/* ===================================================================
+ * Thai significance tests
+ * =================================================================== */
+
+void test_system_name_thai(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Thai", cd_system_name(CD_SYS_THAI));
+}
+
+void test_thai_songkran_significant(void)
+{
+    /* Songkran: April 13-15 */
+    double jd = jd_from(2024, 4, 14);
+    thai_date_t td = thai_from_jd(jd);
+    TEST_ASSERT_TRUE(thai_is_songkran(td));
+
+    double s = cd_significance(jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+void test_thai_not_significant(void)
+{
+    /* A date with no Thai festival */
+    double jd = jd_from(2024, 7, 15);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 10; i++) {
+        thai_date_t td = thai_from_jd(jd + i);
+        if (!thai_is_songkran(td) && thai_festival(td) == THAI_FEST_NONE) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    int r = cd_check_pair(CD_SYS_THAI, CD_SYS_THAI, test_jd);
+    TEST_ASSERT_EQUAL_INT(0, r);
+}
+
+void test_thai_chakri_day_significant(void)
+{
+    /* Chakri Memorial Day: April 6 */
+    double jd = jd_from(2024, 4, 6);
+    thai_date_t td = thai_from_jd(jd);
+    TEST_ASSERT_TRUE(thai_festival(td) != THAI_FEST_NONE);
+
+    double s = cd_significance(jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+/* ===================================================================
+ * Tamil significance tests
+ * =================================================================== */
+
+void test_system_name_tamil(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Tamil", cd_system_name(CD_SYS_TAMIL));
+}
+
+void test_tamil_puthandu_significant(void)
+{
+    /* Puthandu (Tamil New Year): Sun enters sidereal Aries, ~April 14 */
+    double jd = jd_from(2024, 4, 13);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 5; i++) {
+        tamil_date_t td = tamil_from_jd(jd + i);
+        if (tamil_festival(td) == TAMIL_FEST_PUTHANDU) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    if (found) {
+        double s = cd_significance(test_jd);
+        TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+    }
+}
+
+void test_tamil_not_significant(void)
+{
+    /* Find a date with no Tamil festival and jovian != 1 */
+    double jd = jd_from(2024, 7, 15);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 30; i++) {
+        tamil_date_t td = tamil_from_jd(jd + i);
+        if (tamil_festival(td) == TAMIL_FEST_NONE && td.jovian != 1) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    int r = cd_check_pair(CD_SYS_TAMIL, CD_SYS_TAMIL, test_jd);
+    TEST_ASSERT_EQUAL_INT(0, r);
+}
+
+void test_tamil_pongal_significant(void)
+{
+    /* Thai Pongal: Sun enters sidereal Capricorn, ~Jan 14 */
+    double jd = jd_from(2024, 1, 13);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 5; i++) {
+        tamil_date_t td = tamil_from_jd(jd + i);
+        if (tamil_festival(td) == TAMIL_FEST_PONGAL) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    if (found) {
+        double s = cd_significance(test_jd);
+        TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+    }
+}
+
+/* ===================================================================
+ * Myanmar significance tests
+ * =================================================================== */
+
+void test_system_name_myanmar(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Myanmar", cd_system_name(CD_SYS_MYANMAR));
+}
+
+void test_myanmar_month_boundary_significant(void)
+{
+    /* Find a Myanmar day 1 */
+    double jd = jd_from(2024, 1, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 35; i++) {
+        myanmar_date_t md = myanmar_from_jd(jd + i);
+        if (md.day == 1) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    double s = cd_significance(test_jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+void test_myanmar_not_significant(void)
+{
+    /* Find a Myanmar mid-month day in a non-watat year */
+    double jd = jd_from(2024, 6, 15);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 30; i++) {
+        myanmar_date_t md = myanmar_from_jd(jd + i);
+        if (md.day != 1) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    int r = cd_check_pair(CD_SYS_MYANMAR, CD_SYS_MYANMAR, test_jd);
+    TEST_ASSERT_EQUAL_INT(0, r);
+}
+
+void test_myanmar_tagu_day1_significant(void)
+{
+    /* Find Tagu (month 0) day 1 — Myanmar New Year.
+     * Tagu typically starts around April. */
+    double jd = jd_from(2024, 4, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 40; i++) {
+        myanmar_date_t md = myanmar_from_jd(jd + i);
+        if (md.month == MY_TAGU && md.day == 1) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    if (found) {
+        double s = cd_significance(test_jd);
+        TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+    }
+}
+
+/* ===================================================================
+ * Zoroastrian significance tests
+ * =================================================================== */
+
+void test_system_name_zoroastrian(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Zoroastrian", cd_system_name(CD_SYS_ZOROASTRIAN));
+}
+
+void test_zoroastrian_nowruz_significant(void)
+{
+    /* Zoroastrian Nowruz = 1 Farvardin (month 1, day 1) */
+    double jd = jd_from(2024, 1, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 370; i++) {
+        zoro_date_t zd = zoro_from_jd(jd + i);
+        if (zd.month == 1 && zd.day == 1) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    double s = cd_significance(test_jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+void test_zoroastrian_gatha_significant(void)
+{
+    /* Find a Gatha epagomenal day (month 13) */
+    double jd = jd_from(2024, 1, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 370; i++) {
+        zoro_date_t zd = zoro_from_jd(jd + i);
+        if (zoro_is_gatha(zd)) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    double s = cd_significance(test_jd);
+    TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+}
+
+void test_zoroastrian_not_significant(void)
+{
+    /* Find a mid-month day with no festival and no Gatha */
+    double jd = jd_from(2024, 3, 10);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 30; i++) {
+        zoro_date_t zd = zoro_from_jd(jd + i);
+        if (!zoro_is_gatha(zd) && zoro_festival(zd) == ZORO_FEST_NONE) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+
+    int r = cd_check_pair(CD_SYS_ZOROASTRIAN, CD_SYS_ZOROASTRIAN, test_jd);
+    TEST_ASSERT_EQUAL_INT(0, r);
+}
+
+void test_zoroastrian_festival_significant(void)
+{
+    /* Find any Zoroastrian festival day */
+    double jd = jd_from(2024, 1, 1);
+    int found = 0;
+    double test_jd = jd;
+    for (int i = 0; i < 370; i++) {
+        zoro_date_t zd = zoro_from_jd(jd + i);
+        if (zoro_festival(zd) != ZORO_FEST_NONE) {
+            test_jd = jd + i;
+            found = 1;
+            break;
+        }
+    }
+    if (found) {
+        double s = cd_significance(test_jd);
+        TEST_ASSERT_TRUE(s >= 1.0 / (double)CD_SYS_COUNT - 0.001);
+    }
+}
+
+/* ===================================================================
+ * Cross-system convergence with expansion systems
+ * =================================================================== */
+
+void test_convergence_scan_includes_21_systems(void)
+{
+    /* Scan a date and verify all 21 system enum values are valid */
+    double jd = jd_from(2024, 3, 20);
+    cd_result_t r = cd_scan(jd);
+    TEST_ASSERT_TRUE(r.count >= 0);
+    TEST_ASSERT_TRUE(r.count <= CD_MAX_CONVERGENCES);
+    for (int i = 0; i < r.count; i++) {
+        for (int j = 0; j < r.events[i].system_count; j++) {
+            TEST_ASSERT_TRUE(r.events[i].systems[j] >= 0);
+            TEST_ASSERT_TRUE(r.events[i].systems[j] < CD_SYS_COUNT);
+        }
+    }
+}
+
+void test_all_21_enum_pairs_valid(void)
+{
+    /* Verify all 21 systems can be called in pairs without crash */
+    double jd = jd_from(2024, 8, 10);
     for (int a = 0; a < CD_SYS_COUNT; a++) {
         for (int b = a; b < CD_SYS_COUNT; b++) {
             int r = cd_check_pair((cd_system_t)a, (cd_system_t)b, jd);
@@ -1599,6 +2221,60 @@ int main(void)
     RUN_TEST(test_convergence_persian_celtic_equinox);
     RUN_TEST(test_convergence_scan_includes_new_systems);
     RUN_TEST(test_new_systems_all_enum_pairs_valid);
+
+    /* Japanese significance */
+    RUN_TEST(test_system_name_japanese);
+    RUN_TEST(test_japanese_taian_significant);
+    RUN_TEST(test_japanese_not_significant);
+    RUN_TEST(test_japanese_era_gannen_significant);
+
+    /* Egyptian significance */
+    RUN_TEST(test_system_name_egyptian);
+    RUN_TEST(test_egyptian_month_boundary_significant);
+    RUN_TEST(test_egyptian_epagomenal_significant);
+    RUN_TEST(test_egyptian_not_significant);
+
+    /* French Republican significance */
+    RUN_TEST(test_system_name_french);
+    RUN_TEST(test_french_month_boundary_significant);
+    RUN_TEST(test_french_sansculottide_significant);
+    RUN_TEST(test_french_decadi_significant);
+    RUN_TEST(test_french_not_significant);
+
+    /* Korean significance */
+    RUN_TEST(test_system_name_korean);
+    RUN_TEST(test_korean_seollal_significant);
+    RUN_TEST(test_korean_not_significant);
+    RUN_TEST(test_korean_cycle_year_1_significant);
+
+    /* Thai significance */
+    RUN_TEST(test_system_name_thai);
+    RUN_TEST(test_thai_songkran_significant);
+    RUN_TEST(test_thai_not_significant);
+    RUN_TEST(test_thai_chakri_day_significant);
+
+    /* Tamil significance */
+    RUN_TEST(test_system_name_tamil);
+    RUN_TEST(test_tamil_puthandu_significant);
+    RUN_TEST(test_tamil_not_significant);
+    RUN_TEST(test_tamil_pongal_significant);
+
+    /* Myanmar significance */
+    RUN_TEST(test_system_name_myanmar);
+    RUN_TEST(test_myanmar_month_boundary_significant);
+    RUN_TEST(test_myanmar_not_significant);
+    RUN_TEST(test_myanmar_tagu_day1_significant);
+
+    /* Zoroastrian significance */
+    RUN_TEST(test_system_name_zoroastrian);
+    RUN_TEST(test_zoroastrian_nowruz_significant);
+    RUN_TEST(test_zoroastrian_gatha_significant);
+    RUN_TEST(test_zoroastrian_not_significant);
+    RUN_TEST(test_zoroastrian_festival_significant);
+
+    /* Cross-system convergence with 21 systems */
+    RUN_TEST(test_convergence_scan_includes_21_systems);
+    RUN_TEST(test_all_21_enum_pairs_valid);
 
     return UNITY_END();
 }

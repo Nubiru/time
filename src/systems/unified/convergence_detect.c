@@ -18,6 +18,14 @@
 #include "../coptic/coptic.h"
 #include "../celtic/wheel_of_year.h"
 #include "../bahai/bahai.h"
+#include "../japanese/japanese.h"
+#include "../egyptian/egyptian.h"
+#include "../french_republican/french_republican.h"
+#include "../korean/korean_calendar.h"
+#include "../thai/thai_calendar.h"
+#include "../tamil/tamil_calendar.h"
+#include "../myanmar/myanmar.h"
+#include "../zoroastrian/zoroastrian.h"
 #include <math.h>
 #include <stdlib.h>
 
@@ -217,6 +225,88 @@ static int cd_is_significant(cd_system_t sys, double jd)
         return 0;
     }
 
+    case CD_SYS_JAPANESE: {
+        /* Taian = most auspicious rokuyo day */
+        jp_rokuyo_t r = japanese_rokuyo(jd);
+        if (r == JP_ROKUYO_TAIAN) return 1;
+        /* Sekki transition: within 1 degree of 15-degree boundary */
+        double sun_lon = approx_sun_longitude(jd);
+        double within_sekki = fmod(sun_lon, 15.0);
+        if (within_sekki < 0.0) within_sekki += 15.0;
+        if (within_sekki < 1.0) return 1;
+        /* Era gannen (year 1) */
+        japanese_date_t jd_jp = japanese_from_jd(jd);
+        if (jd_jp.era_year == 1 && jd_jp.era_index >= 0) return 1;
+        return 0;
+    }
+
+    case CD_SYS_EGYPTIAN: {
+        egypt_date_t ed = egypt_from_jd(jd);
+        /* Month boundary */
+        if (ed.day == 1) return 1;
+        /* Epagomenal days */
+        if (egypt_is_epagomenal(ed)) return 1;
+        return 0;
+    }
+
+    case CD_SYS_FRENCH: {
+        fr_date_t fd = fr_from_jd(jd);
+        /* Month boundary (day 1 of any month) */
+        if (fd.month >= 1 && fd.day == 1) return 1;
+        /* Sansculottide days */
+        if (fr_is_sansculottide(fd)) return 1;
+        /* Decadi (rest day, 10th day of decade) */
+        if (fr_decade_day(fd) == 10) return 1;
+        return 0;
+    }
+
+    case CD_SYS_KOREAN: {
+        korean_date_t kd = korean_from_jd(jd);
+        /* Festival match */
+        const korean_festival_t *fest = korean_festival(kd.lunar_month,
+                                                        kd.lunar_day);
+        if (fest != NULL) return 1;
+        /* Sexagenary cycle year 1 */
+        if (kd.cycle_year == 1) return 1;
+        return 0;
+    }
+
+    case CD_SYS_THAI: {
+        thai_date_t td = thai_from_jd(jd);
+        /* Songkran */
+        if (thai_is_songkran(td)) return 1;
+        /* Any festival */
+        if (thai_festival(td) != THAI_FEST_NONE) return 1;
+        return 0;
+    }
+
+    case CD_SYS_TAMIL: {
+        tamil_date_t td_tm = tamil_from_jd(jd);
+        /* Festival match */
+        if (tamil_festival(td_tm) != TAMIL_FEST_NONE) return 1;
+        /* Jovian cycle year 1 */
+        if (td_tm.jovian == 1) return 1;
+        return 0;
+    }
+
+    case CD_SYS_MYANMAR: {
+        myanmar_date_t md = myanmar_from_jd(jd);
+        /* Month boundary */
+        if (md.day == 1) return 1;
+        /* Watat year new year: Tagu day 1 in a watat year */
+        if (md.is_watat_year && md.month == MY_TAGU && md.day == 1) return 1;
+        return 0;
+    }
+
+    case CD_SYS_ZOROASTRIAN: {
+        zoro_date_t zd = zoro_from_jd(jd);
+        /* Festival match */
+        if (zoro_festival(zd) != ZORO_FEST_NONE) return 1;
+        /* Gatha epagomenal days */
+        if (zoro_is_gatha(zd)) return 1;
+        return 0;
+    }
+
     default:
         return 0;
     }
@@ -241,8 +331,16 @@ const char *cd_system_name(cd_system_t sys)
     case CD_SYS_PERSIAN:   return "Persian";
     case CD_SYS_COPTIC:    return "Coptic";
     case CD_SYS_CELTIC:    return "Celtic";
-    case CD_SYS_BAHAI:     return "Bahai";
-    default:               return "?";
+    case CD_SYS_BAHAI:      return "Bahai";
+    case CD_SYS_JAPANESE:   return "Japanese";
+    case CD_SYS_EGYPTIAN:   return "Egyptian";
+    case CD_SYS_FRENCH:     return "French Republican";
+    case CD_SYS_KOREAN:     return "Korean";
+    case CD_SYS_THAI:       return "Thai";
+    case CD_SYS_TAMIL:      return "Tamil";
+    case CD_SYS_MYANMAR:    return "Myanmar";
+    case CD_SYS_ZOROASTRIAN: return "Zoroastrian";
+    default:                return "?";
     }
 }
 

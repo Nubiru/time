@@ -13,7 +13,7 @@
 #define TIME_CONVERGENCE_DETECT_H
 
 #define CD_MAX_CONVERGENCES 32
-#define CD_MAX_SYSTEMS 16
+#define CD_MAX_SYSTEMS 24
 
 typedef enum {
     CD_SYS_ASTRONOMY = 0,   /* lunar phases, solstice/equinox */
@@ -29,6 +29,14 @@ typedef enum {
     CD_SYS_COPTIC,          /* Coptic new year, month boundaries */
     CD_SYS_CELTIC,          /* 8 Sabbats (solstice/equinox/cross-quarter) */
     CD_SYS_BAHAI,           /* Naw-Ruz, 19-day Feast boundaries */
+    CD_SYS_JAPANESE,        /* Taian (lucky rokuyo), sekki transition, era gannen */
+    CD_SYS_EGYPTIAN,        /* Month boundary, epagomenal days */
+    CD_SYS_FRENCH,          /* Month boundary, Sansculottide, Decadi */
+    CD_SYS_KOREAN,          /* Festivals, sexagenary cycle year 1 */
+    CD_SYS_THAI,            /* Songkran, festivals */
+    CD_SYS_TAMIL,           /* Festivals, Jovian cycle year 1 */
+    CD_SYS_MYANMAR,         /* Month boundary, Thingyan, watat year */
+    CD_SYS_ZOROASTRIAN,     /* Festivals, Gatha days */
     CD_SYS_COUNT
 } cd_system_t;
 

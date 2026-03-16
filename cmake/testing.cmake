@@ -293,7 +293,8 @@ time_add_test(NAME test_layer_panel TEST tests/ui/test_layer_panel.c   DEPS laye
 time_add_test(NAME test_command_palette TEST tests/ui/test_command_palette.c DEPS command_palette)
 time_add_test(NAME test_time_control   TEST tests/ui/test_time_control.c   DEPS time_control)
 time_add_test(NAME test_toast_message TEST tests/ui/test_toast_message.c  DEPS toast_message)
-# test_ui_html removed — source not committed (BETA WIP)
+time_add_test(NAME test_ui_html      TEST tests/ui/test_ui_html.c       DEPS ui_html help_overlay command_palette layer_panel toast_message)
+# ui_bridge is Emscripten-only (S1) — no native test target
 
 # Cross-system validation test
 time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validation.c
