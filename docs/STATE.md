@@ -1,6 +1,6 @@
 # Time — State Inventory
 
-**Last Updated**: 2026-03-16 (BETA local_events maintainer audit)
+**Last Updated**: 2026-03-16 (BETA event_filter checker+maintainer audit)
 
 This document tracks what is **pure** (stateless) and what is **stateful** in the codebase. The goal: maximize pure code, minimize and isolate mutable state.
 
@@ -50,8 +50,8 @@ orbit, planets, lunar, precession, solar_events, cosmic_time, moon_data, moon_no
 ### Astrology (7)
 zodiac, aspects, observer, houses, dignity, planetary_hours, wheel_layout
 
-### Earth (16)
-tidal, tide_predict, surf_spots, daylight, seasons, snow_season, ski_resorts, solar_radiation, storm_data, wind_patterns, biorhythm, interest_profile, location_alerts, local_events, privacy_framework, user_prefs
+### Earth (17)
+tidal, tide_predict, surf_spots, daylight, seasons, snow_season, ski_resorts, solar_radiation, storm_data, wind_patterns, biorhythm, interest_profile, location_alerts, local_events, privacy_framework, user_prefs, event_filter
 
 ### Geology (6)
 geo_time, radiometric, thermo, climate_history, fossil_milestones, tectonic

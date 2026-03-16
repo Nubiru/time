@@ -15,6 +15,7 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/privacy_framework.c
     ${CMAKE_CURRENT_SOURCE_DIR}/user_prefs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/local_events.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/event_filter.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -34,4 +35,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_privacy_framework  OBJECT privacy_framework.c)
     add_library(time_user_prefs         OBJECT user_prefs.c)
     add_library(time_local_events       OBJECT local_events.c)
+    add_library(time_event_filter       OBJECT event_filter.c)
 endif()

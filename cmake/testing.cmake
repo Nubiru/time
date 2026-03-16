@@ -223,6 +223,7 @@ time_add_test(NAME test_location_alerts TEST tests/systems/earth/test_location_a
 time_add_test(NAME test_privacy_framework TEST tests/systems/earth/test_privacy_framework.c DEPS privacy_framework)
 time_add_test(NAME test_user_prefs      TEST tests/systems/earth/test_user_prefs.c      DEPS user_prefs interest_profile privacy_framework theme golden_layout color_theory color)
 time_add_test(NAME test_local_events   TEST tests/systems/earth/test_local_events.c   DEPS local_events interest_profile solar_events)
+time_add_test(NAME test_event_filter  TEST tests/systems/earth/test_event_filter.c  DEPS event_filter local_events interest_profile solar_events)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
