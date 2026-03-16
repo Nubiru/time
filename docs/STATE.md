@@ -1,6 +1,6 @@
 # Time — State Inventory
 
-**Last Updated**: 2026-03-16 (BETA neighbor_roulette checker+maintainer audit)
+**Last Updated**: 2026-03-16 (BETA personal_space checker+maintainer audit)
 
 This document tracks what is **pure** (stateless) and what is **stateful** in the codebase. The goal: maximize pure code, minimize and isolate mutable state.
 
@@ -16,7 +16,7 @@ This document tracks what is **pure** (stateless) and what is **stateful** in th
  Fully testable                 Tested visually / integration
  ─────────────────────          ───────────────────────────
  src/math/* (13 modules)        src/core/main.c (orchestrator)
- src/systems/* (107 modules)    src/core/app_state.c (init)
+ src/systems/* (108 modules)    src/core/app_state.c (init)
  src/render/* (most, 53)        src/core/hud.c (DOM overlay)
  src/ui/* (26 modules)          src/core/input.c (callbacks)
                                 src/render/gl_init.c
@@ -35,7 +35,7 @@ This document tracks what is **pure** (stateless) and what is **stateful** in th
 
 ---
 
-## Pure Modules by Domain (214 total)
+## Pure Modules by Domain (215 total)
 
 ### Math (13 modules)
 vec3, mat4, julian, kepler, sidereal, ecliptic, easing, arc_geometry, bezier, color, projection, sacred_geometry, wheel_layout
@@ -50,8 +50,8 @@ orbit, planets, lunar, precession, solar_events, cosmic_time, moon_data, moon_no
 ### Astrology (7)
 zodiac, aspects, observer, houses, dignity, planetary_hours, wheel_layout
 
-### Earth (18)
-tidal, tide_predict, surf_spots, daylight, seasons, snow_season, ski_resorts, solar_radiation, storm_data, wind_patterns, biorhythm, interest_profile, location_alerts, local_events, privacy_framework, user_prefs, event_filter, neighbor_roulette
+### Earth (19)
+tidal, tide_predict, surf_spots, daylight, seasons, snow_season, ski_resorts, solar_radiation, storm_data, wind_patterns, biorhythm, interest_profile, location_alerts, local_events, privacy_framework, user_prefs, event_filter, neighbor_roulette, personal_space
 
 ### Geology (6)
 geo_time, radiometric, thermo, climate_history, fossil_milestones, tectonic

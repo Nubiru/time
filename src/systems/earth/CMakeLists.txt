@@ -17,6 +17,7 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/local_events.c
     ${CMAKE_CURRENT_SOURCE_DIR}/event_filter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/neighbor_roulette.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/personal_space.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -38,4 +39,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_local_events       OBJECT local_events.c)
     add_library(time_event_filter       OBJECT event_filter.c)
     add_library(time_neighbor_roulette  OBJECT neighbor_roulette.c)
+    add_library(time_personal_space    OBJECT personal_space.c)
 endif()

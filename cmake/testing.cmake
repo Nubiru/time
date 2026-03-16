@@ -225,6 +225,7 @@ time_add_test(NAME test_user_prefs      TEST tests/systems/earth/test_user_prefs
 time_add_test(NAME test_local_events   TEST tests/systems/earth/test_local_events.c   DEPS local_events interest_profile solar_events)
 time_add_test(NAME test_event_filter  TEST tests/systems/earth/test_event_filter.c  DEPS event_filter local_events interest_profile solar_events)
 time_add_test(NAME test_neighbor_roulette TEST tests/systems/earth/test_neighbor_roulette.c DEPS neighbor_roulette interest_profile privacy_framework dreamspell tzolkin julian zodiac)
+time_add_test(NAME test_personal_space TEST tests/systems/earth/test_personal_space.c DEPS personal_space)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
@@ -316,3 +317,34 @@ time_add_test(NAME test_contract_chinese   TEST tests/contracts/test_contract_ch
 time_add_test(NAME test_contract_hebrew    TEST tests/contracts/test_contract_hebrew.c    DEPS hebrew julian)
 time_add_test(NAME test_contract_hijri     TEST tests/contracts/test_contract_hijri.c     DEPS hijri julian)
 time_add_test(NAME test_contract_camera    TEST tests/contracts/test_contract_camera.c    DEPS camera vec3 mat4)
+
+# ===== Integration Tests =====
+time_add_test(NAME test_render_pipeline TEST tests/integration/test_render_pipeline.c
+    DEPS camera vec3 mat4 camera_scale easing golden_layout render_layers
+         star_field star_catalog star_catalog_ext constellation star_colors
+         planet_pack planets orbit kepler planet_data atmo_ring
+         zodiac_pack ring_geometry cusp_lines aspect_lines billboard color_palette color_theory color
+         moon_pack moon_data
+         orbit_trail_pack
+         earth_pack earth_globe earth_atmosphere
+         bodygraph_pack bodygraph
+         milkyway_pack noise_shader shader_builder
+         deep_sky_pack deep_sky
+         card_pack card_layout
+         tree_pack tree_geometry sefirot
+         saturn_ring_pack
+         planet_surface_pack
+         lens_flare
+         post_process
+         weather_overlay wind_patterns storm_data)
+time_add_test(NAME test_calendar_pipeline TEST tests/integration/test_calendar_pipeline.c
+    DEPS julian gregorian tzolkin chinese hebrew hijri buddhist lunar
+         persian coptic ethiopian egyptian japanese
+         korean_calendar thai_calendar tamil_calendar myanmar zoroastrian
+         bahai french_republican celtic_tree
+         calendar_convert haab cr_cycle iching
+         convergence_detect tzolkin_board
+         wheel_of_year)
+time_add_test(NAME test_astronomy_pipeline TEST tests/integration/test_astronomy_pipeline.c
+    DEPS julian kepler ecliptic sidereal orbit planets lunar solar_events
+         zodiac aspects observer houses)
