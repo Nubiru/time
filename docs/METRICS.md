@@ -1,29 +1,29 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-16 (OMEGA sweep #15)
+**Last refreshed**: 2026-03-16 (OMEGA sweep #16)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 237 |
-| Header files (.h) | 237 |
-| Lines of code (src/) | 75,005 |
-| Lines of tests | 109,365 |
-| Test files | 227 |
+| Source files (.c) | 240 |
+| Header files (.h) | 240 |
+| Lines of code (src/) | 76,425 |
+| Lines of tests | 112,199 |
+| Test files | 230 |
 | Render pass files | 16 |
-| Contributors | 184 |
+| Contributors | 186 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 224 |
-| Test functions (RUN_TEST) | 10,493 |
-| Test assertions (TEST_ASSERT) | 16,723 |
+| Test suites (CTest) | 230 |
+| Test functions (RUN_TEST) | 10,697 |
+| Test assertions (TEST_ASSERT) | 17,277 |
 | Failures | 0 |
-| CTest time | 0.93s |
-| ASan/UBSan | PASS (224/224, 0 findings) |
+| CTest time | 0.85s |
+| ASan/UBSan | PASS (230/230, 0 findings) |
 
 ## Code Coverage (baseline — 2026-03-16)
 
@@ -70,7 +70,7 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (224/224) |
+| CTest -j12 | PASS (230/230) |
 | Sanitizer build | PASS (ASan + UBSan, 0 findings) |
 | Coverage build | PASS (96.5% line, 100% function — `make coverage`) |
 | WASM build | PASS (209 KB raw, 83 KB gzipped) |
@@ -160,18 +160,19 @@
 | Gzipped | 84,713 bytes (83 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 
-## Health (OMEGA sweep #15)
+## Health (OMEGA sweep #16)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (237 .c files, all registered) |
-| Purity audit | CLEAN (P1-P4 all zones, 4 P5 known) |
+| Build system sync | OK (240 .c files, all registered) |
+| Purity audit | CLEAN (P1-P6 all zones, 4 P5 known) |
 | ASan/UBSan | PASS (0 memory errors, 0 undefined behavior) |
-| Native build | PASS (224/224 tests) |
+| Native build | PASS (230/230 tests) |
 | WASM build | PASS (209 KB) |
-| CI/CD | .github/workflows/ci.yml created |
+| CI/CD | GREEN (2/3 runs success — initial failure fixed) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Missing attribution | 0 |
 | Render pipeline | COMPLETE (16/16 passes wired) |
+| Refactor candidates | user_prefs.c (742L), fun_facts.c (671L), convergence.c (646L) |
