@@ -34,6 +34,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/toast_message.c
     ${CMAKE_CURRENT_SOURCE_DIR}/ui_html.c
     ${CMAKE_CURRENT_SOURCE_DIR}/ui_bridge.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/timeline_data.c
     PARENT_SCOPE
 )
 
@@ -70,5 +71,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_time_control    OBJECT time_control.c)
     add_library(time_toast_message   OBJECT toast_message.c)
     add_library(time_ui_html         OBJECT ui_html.c)
+    add_library(time_timeline_data   OBJECT timeline_data.c)
     # ui_bridge.c is Emscripten-only (S1) — no native OBJECT lib
 endif()
