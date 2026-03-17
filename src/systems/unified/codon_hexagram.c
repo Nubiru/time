@@ -16,77 +16,80 @@ static const char BASE_LETTERS[RNA_BASE_COUNT] = {
     'U', 'C', 'A', 'G'
 };
 
-/* ===== Binary to King Wen lookup =====
- * Index = 6-bit binary value (upper_trigram * 8 + lower_trigram).
+/* ===== Binary to King Wen lookup (Schonberger/Leibniz convention) =====
+ * Index = 6-bit binary value where bit 0 = line 1 (bottom), bit 5 = line 6 (top).
+ * Lower trigram = bits 0-2, upper trigram = bits 3-5.
  * Value = King Wen hexagram number (1-64).
- * Trigram encoding: Earth=0, Mountain=1, Water=2, Wind=3,
- *                   Thunder=4, Fire=5, Lake=6, Heaven=7. */
+ * Trigram encoding (natural binary, bottom-to-top):
+ *   Earth=0, Thunder=1, Water=2, Lake=3,
+ *   Mountain=4, Fire=5, Wind=6, Heaven=7.
+ * Derived from verified codon-to-hexagram correspondences (Schonberger pp. 63-67, 142). */
 
 static const int BINARY_TO_KING_WEN[64] = {
-    /*  0 Earth/Earth   */  2,
-    /*  1 Earth/Mountain*/  23,
-    /*  2 Earth/Water   */  8,
-    /*  3 Earth/Wind    */  20,
-    /*  4 Earth/Thunder */  16,
-    /*  5 Earth/Fire    */  35,
-    /*  6 Earth/Lake    */  45,
-    /*  7 Earth/Heaven  */  12,
-    /*  8 Mtn/Earth     */  15,
-    /*  9 Mtn/Mountain  */  52,
-    /* 10 Mtn/Water     */  39,
-    /* 11 Mtn/Wind      */  53,
-    /* 12 Mtn/Thunder   */  62,
-    /* 13 Mtn/Fire      */  56,
-    /* 14 Mtn/Lake      */  31,
-    /* 15 Mtn/Heaven    */  33,
-    /* 16 Water/Earth   */  7,
-    /* 17 Water/Mountain*/  4,
-    /* 18 Water/Water   */  29,
-    /* 19 Water/Wind    */  59,
-    /* 20 Water/Thunder */  40,
-    /* 21 Water/Fire    */  64,
-    /* 22 Water/Lake    */  47,
-    /* 23 Water/Heaven  */  6,
-    /* 24 Wind/Earth    */  46,
-    /* 25 Wind/Mountain */  18,
-    /* 26 Wind/Water    */  48,
-    /* 27 Wind/Wind     */  57,
-    /* 28 Wind/Thunder  */  32,
-    /* 29 Wind/Fire     */  50,
-    /* 30 Wind/Lake     */  28,
-    /* 31 Wind/Heaven   */  44,
-    /* 32 Thunder/Earth */  24,
-    /* 33 Thunder/Mtn   */  27,
-    /* 34 Thunder/Water */  3,
-    /* 35 Thunder/Wind  */  42,
-    /* 36 Thunder/Thunder*/ 51,
-    /* 37 Thunder/Fire  */  21,
-    /* 38 Thunder/Lake  */  17,
-    /* 39 Thunder/Heaven*/  25,
-    /* 40 Fire/Earth    */  36,
-    /* 41 Fire/Mountain */  22,
-    /* 42 Fire/Water    */  63,
-    /* 43 Fire/Wind     */  37,
-    /* 44 Fire/Thunder  */  55,
-    /* 45 Fire/Fire     */  30,
-    /* 46 Fire/Lake     */  49,
-    /* 47 Fire/Heaven   */  13,
-    /* 48 Lake/Earth    */  19,
-    /* 49 Lake/Mountain */  41,
-    /* 50 Lake/Water    */  60,
-    /* 51 Lake/Wind     */  61,
-    /* 52 Lake/Thunder  */  54,
-    /* 53 Lake/Fire     */  38,
-    /* 54 Lake/Lake     */  58,
-    /* 55 Lake/Heaven   */  10,
-    /* 56 Heaven/Earth  */  11,
-    /* 57 Heaven/Mtn    */  26,
-    /* 58 Heaven/Water  */  5,
-    /* 59 Heaven/Wind   */  9,
-    /* 60 Heaven/Thunder*/  34,
-    /* 61 Heaven/Fire   */  14,
-    /* 62 Heaven/Lake   */  43,
-    /* 63 Heaven/Heaven */  1
+    /*  0  000000  Earth/Earth     */  2,
+    /*  1  000001  Earth/Thunder   */ 24,
+    /*  2  000010  Earth/Water     */  7,
+    /*  3  000011  Earth/Lake      */ 19,
+    /*  4  000100  Earth/Mountain  */ 15,
+    /*  5  000101  Earth/Fire      */ 36,
+    /*  6  000110  Earth/Wind      */ 46,
+    /*  7  000111  Earth/Heaven    */ 11,
+    /*  8  001000  Thunder/Earth   */ 16,
+    /*  9  001001  Thunder/Thunder */ 51,
+    /* 10  001010  Thunder/Water   */ 40,
+    /* 11  001011  Thunder/Lake    */ 54,
+    /* 12  001100  Thunder/Mountain*/ 62,
+    /* 13  001101  Thunder/Fire    */ 55,
+    /* 14  001110  Thunder/Wind    */ 32,
+    /* 15  001111  Thunder/Heaven  */ 34,
+    /* 16  010000  Water/Earth     */  8,
+    /* 17  010001  Water/Thunder   */  3,
+    /* 18  010010  Water/Water     */ 29,
+    /* 19  010011  Water/Lake      */ 60,
+    /* 20  010100  Water/Mountain  */ 39,
+    /* 21  010101  Water/Fire      */ 63,
+    /* 22  010110  Water/Wind      */ 48,
+    /* 23  010111  Water/Heaven    */  5,
+    /* 24  011000  Lake/Earth      */ 45,
+    /* 25  011001  Lake/Thunder    */ 17,
+    /* 26  011010  Lake/Water      */ 47,
+    /* 27  011011  Lake/Lake       */ 58,
+    /* 28  011100  Lake/Mountain   */ 31,
+    /* 29  011101  Lake/Fire       */ 49,
+    /* 30  011110  Lake/Wind       */ 28,
+    /* 31  011111  Lake/Heaven     */ 43,
+    /* 32  100000  Mountain/Earth  */ 23,
+    /* 33  100001  Mountain/Thunder*/ 27,
+    /* 34  100010  Mountain/Water  */  4,
+    /* 35  100011  Mountain/Lake   */ 41,
+    /* 36  100100  Mountain/Mountain*/ 52,
+    /* 37  100101  Mountain/Fire   */ 22,
+    /* 38  100110  Mountain/Wind   */ 18,
+    /* 39  100111  Mountain/Heaven */ 26,
+    /* 40  101000  Fire/Earth      */ 35,
+    /* 41  101001  Fire/Thunder    */ 21,
+    /* 42  101010  Fire/Water      */ 64,
+    /* 43  101011  Fire/Lake       */ 38,
+    /* 44  101100  Fire/Mountain   */ 56,
+    /* 45  101101  Fire/Fire       */ 30,
+    /* 46  101110  Fire/Wind       */ 50,
+    /* 47  101111  Fire/Heaven     */ 14,
+    /* 48  110000  Wind/Earth      */ 20,
+    /* 49  110001  Wind/Thunder    */ 42,
+    /* 50  110010  Wind/Water      */ 59,
+    /* 51  110011  Wind/Lake       */ 61,
+    /* 52  110100  Wind/Mountain   */ 53,
+    /* 53  110101  Wind/Fire       */ 37,
+    /* 54  110110  Wind/Wind       */ 57,
+    /* 55  110111  Wind/Heaven     */  9,
+    /* 56  111000  Heaven/Earth    */ 12,
+    /* 57  111001  Heaven/Thunder  */ 25,
+    /* 58  111010  Heaven/Water    */  6,
+    /* 59  111011  Heaven/Lake     */ 10,
+    /* 60  111100  Heaven/Mountain */ 33,
+    /* 61  111101  Heaven/Fire     */ 13,
+    /* 62  111110  Heaven/Wind     */ 44,
+    /* 63  111111  Heaven/Heaven   */  1
 };
 
 /* ===== Codon data table =====
@@ -176,11 +179,20 @@ static const codon_data_t CODON_TABLE[64] = {
     /* 63 */ { "GGG", "Glycine",        "Gly",  'G', 0, 0 }
 };
 
-/* ===== Helper: compute binary value from three bases ===== */
+/* ===== Helper: compute Schonberger binary value from three bases =====
+ * Maps our enum (U=0,C=1,A=2,G=3) to Schonberger's binary (U=00,C=01,G=10,A=11).
+ * Bit order: base3 is most significant (top of hexagram), base1 is least significant.
+ * Source: Schonberger pp. 70-72. */
 
 static int bases_to_binary(rna_base_t b1, rna_base_t b2, rna_base_t b3)
 {
-    return ((int)b1 << 4) | ((int)b2 << 2) | (int)b3;
+    /* Our enum -> Schonberger binary: U=0, C=1, A=3, G=2 (swap A<->G) */
+    static const int SCHON[4] = {0, 1, 3, 2};
+    int sb1 = SCHON[(int)b1];
+    int sb2 = SCHON[(int)b2];
+    int sb3 = SCHON[(int)b3];
+    /* base3 = most significant bits (top of hexagram) */
+    return (sb3 << 4) | (sb2 << 2) | sb1;
 }
 
 /* ===== Helper: extract three bases from codon index ===== */
@@ -306,10 +318,16 @@ int binary_to_codon(int binary_value)
     if (binary_value < 0 || binary_value > 63) return -1;
 
     /* Reverse the Schonberger mapping:
-     * binary = (b1 << 4) | (b2 << 2) | b3
-     * codon_index = b1*16 + b2*4 + b3
-     * These are identical, so binary_value == codon_index */
-    return binary_value;
+     * binary = (SCHON[b3] << 4) | (SCHON[b2] << 2) | SCHON[b1]
+     * Extract Schonberger values from bits, then map back to our enum */
+    static const int REVERSE[4] = {0, 1, 3, 2}; /* Schon->enum: 0->U, 1->C, 2->G, 3->A */
+    int sb1 = binary_value & 3;
+    int sb2 = (binary_value >> 2) & 3;
+    int sb3 = (binary_value >> 4) & 3;
+    int b1 = REVERSE[sb1];
+    int b2 = REVERSE[sb2];
+    int b3 = REVERSE[sb3];
+    return b1 * 16 + b2 * 4 + b3;
 }
 
 int codon_count(void)
