@@ -18,6 +18,8 @@
 #include "ui_state.h"
 #include "command_palette.h"
 #include "time_control.h"
+#include "theme.h"
+#include "theme_css.h"
 #include "../systems/gregorian/gregorian.h"
 
 /* ------------------------------------------------------------------ */
@@ -26,14 +28,36 @@
 
 static ui_state_t s_ui_state;
 static char s_search_buf[256];
+static int s_current_theme; /* 0 = Cosmos (dark), 1 = Dawn (light) */
 
 /* ------------------------------------------------------------------ */
 /* ui_bridge_init                                                      */
 /* ------------------------------------------------------------------ */
 
+/* Inject theme CSS custom properties into :root */
+static void inject_theme_css(void) {
+    theme_t theme = theme_get((s_current_theme == 0) ? THEME_COSMOS : THEME_DAWN);
+    char css_buf[2048];
+    theme_css_vars(&theme, css_buf, (int)sizeof(css_buf));
+    EM_ASM({
+        var id = 'time-theme-vars';
+        var el = document.getElementById(id);
+        if (!el) {
+            el = document.createElement('style');
+            el.id = id;
+            document.head.appendChild(el);
+        }
+        el.textContent = ':root {\n' + UTF8ToString($0) + '}';
+    }, css_buf);
+}
+
 void ui_bridge_init(void) {
     s_ui_state = ui_state_init();
     s_search_buf[0] = '\0';
+    s_current_theme = 0; /* Cosmos (dark) */
+
+    /* --- Theme CSS: inject custom properties from C theme system --- */
+    inject_theme_css();
 
     /* --- Help panel: generate HTML from help_overlay data --- */
     char help_buf[UI_HTML_BUF_SIZE];
@@ -161,6 +185,11 @@ EMSCRIPTEN_KEEPALIVE void ui_toggle_layer_panel(void) {
         if (help) help.classList.add('hidden');
         if (cmd)  cmd.classList.add('hidden');
     }, show);
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_toggle_theme(void) {
+    s_current_theme = (s_current_theme == 0) ? 1 : 0;
+    inject_theme_css();
 }
 
 EMSCRIPTEN_KEEPALIVE void ui_close_panels(void) {

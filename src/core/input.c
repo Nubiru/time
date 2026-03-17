@@ -85,7 +85,7 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         return EM_TRUE;
     }
 
-    if ((e->key[0] == 't' || e->key[0] == 'T') && e->key[1] == '\0') {
+    if (e->key[0] == 't' && e->key[1] == '\0' && !e->shiftKey) {
         g_input_state->show_trails = !g_input_state->show_trails;
         return EM_TRUE;
     }
@@ -96,6 +96,12 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
             var hud = document.getElementById('time-hud');
             if (hud) hud.style.display = $0 ? 'block' : 'none';
         }, g_input_state->show_hud);
+        return EM_TRUE;
+    }
+
+    /* Shift + T: toggle theme (Cosmos / Dawn) */
+    if (e->shiftKey && e->key[0] == 'T' && e->key[1] == '\0') {
+        EM_ASM({ if (Module._ui_toggle_theme) Module._ui_toggle_theme(); });
         return EM_TRUE;
     }
 

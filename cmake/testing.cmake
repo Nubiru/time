@@ -306,6 +306,7 @@ time_add_test(NAME test_time_control   TEST tests/ui/test_time_control.c   DEPS 
 time_add_test(NAME test_toast_message TEST tests/ui/test_toast_message.c  DEPS toast_message)
 time_add_test(NAME test_ui_html      TEST tests/ui/test_ui_html.c       DEPS ui_html help_overlay command_palette layer_panel toast_message)
 time_add_test(NAME test_timeline_data TEST tests/ui/test_timeline_data.c DEPS timeline_data gregorian julian)
+time_add_test(NAME test_theme_css    TEST tests/ui/test_theme_css.c    DEPS theme_css theme golden_layout color_theory color)
 # ui_bridge is Emscripten-only (S1) — no native test target
 
 # Cross-system validation test
