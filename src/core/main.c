@@ -138,8 +138,12 @@ int main(void) {
     if (card_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
 
-    /* Initialize timing */
+    /* Initialize timing — start at the actual current date/time */
     g_state.prev_time_ms = emscripten_get_now();
+    {
+        double ms_since_epoch = emscripten_date_now();
+        g_state.simulation_jd = 2440587.5 + (ms_since_epoch / 86400000.0);
+    }
 
     /* Register input handlers */
     input_register(&g_state);
@@ -169,13 +173,11 @@ int main(void) {
 
 #include <emscripten.h>
 
-static double s_prev_speed = 1.0;
-
 EMSCRIPTEN_KEEPALIVE void ui_toggle_pause(void) {
     if (g_state.time_speed == 0.0)
-        g_state.time_speed = s_prev_speed;
+        g_state.time_speed = g_state.prev_speed;
     else {
-        s_prev_speed = g_state.time_speed;
+        g_state.prev_speed = g_state.time_speed;
         g_state.time_speed = 0.0;
     }
 }
@@ -189,8 +191,11 @@ EMSCRIPTEN_KEEPALIVE double ui_get_speed(void) {
 }
 
 EMSCRIPTEN_KEEPALIVE void ui_jump_to_now(void) {
-    /* Reset to current real time */
-    g_state.simulation_jd = 2460000.5 + (emscripten_get_now() / 86400000.0);
+    /* Reset to current real time.
+     * emscripten_date_now() = ms since Unix epoch (1970-01-01 00:00 UTC).
+     * Unix epoch in JD = 2440587.5 */
+    double ms_since_epoch = emscripten_date_now();
+    g_state.simulation_jd = 2440587.5 + (ms_since_epoch / 86400000.0);
     g_state.time_speed = 1.0;
 }
 

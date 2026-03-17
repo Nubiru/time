@@ -16,7 +16,8 @@
 typedef struct {
     /* Time */
     double simulation_jd;    /* current Julian Day in simulation */
-    double time_speed;       /* days per real second (1.0 = real-time) */
+    double time_speed;       /* days per real second */
+    double prev_speed;       /* speed before last pause (for resume) */
 
     /* Camera */
     camera_t camera;

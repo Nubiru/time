@@ -4,9 +4,10 @@
 app_state_t app_state_create(float aspect_ratio) {
     app_state_t state = {0};
 
-    /* Start at current date (2026 March 6, noon) */
-    state.simulation_jd = gregorian_to_jd(2026, 3, 6.5);
-    state.time_speed = 1.0; /* real-time: 1 day per day */
+    /* Fallback date — overridden by main.c with emscripten_date_now() */
+    state.simulation_jd = gregorian_to_jd(2026, 3, 16.5);
+    state.time_speed = 1.0;  /* 1 day per real second */
+    state.prev_speed = 1.0;
 
     /* Camera: 25 units away, 45° FOV — sees full solar system (sqrt scale) */
     state.camera = camera_create(25.0f, 0.785f, aspect_ratio);

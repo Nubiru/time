@@ -65,9 +65,11 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
 
     if (e->key[0] == ' ' && e->key[1] == '\0') {
         if (g_input_state->time_speed == 0.0)
-            g_input_state->time_speed = 1.0;
-        else
+            g_input_state->time_speed = g_input_state->prev_speed;
+        else {
+            g_input_state->prev_speed = g_input_state->time_speed;
             g_input_state->time_speed = 0.0;
+        }
         return EM_TRUE;
     }
 
