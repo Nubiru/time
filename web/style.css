@@ -223,3 +223,38 @@ kbd, .kbd {
     pointer-events: none; z-index: 500;
 }
 .hint.visible { opacity: 1; }
+
+/* Enter Time — threshold screen (first contact) */
+#enter-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgb(var(--bg-space));
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: opacity var(--t-dramatic) ease-out;
+}
+#enter-screen.hidden { opacity: 0; pointer-events: none; }
+
+#enter-sun {
+    width: var(--sp-3); height: var(--sp-3);
+    border-radius: 50%;
+    background: rgb(var(--brand-primary));
+    box-shadow:
+        0 0 var(--sp-5) var(--sp-3) rgba(var(--brand-primary), 0.4),
+        0 0 var(--sp-7) var(--sp-5) rgba(var(--brand-primary), 0.15);
+    animation: enter-pulse 3s ease-in-out infinite;
+}
+
+@keyframes enter-pulse {
+    0%, 100% { transform: scale(1); opacity: 0.8; }
+    50% { transform: scale(1.3); opacity: 1; }
+}
+
+#enter-text {
+    margin-top: var(--sp-6);
+    font-family: var(--font-mono);
+    font-size: var(--font-size-lg);
+    color: rgba(var(--brand-primary), 0.618);
+    letter-spacing: var(--sp-3);
+    text-transform: uppercase;
+}

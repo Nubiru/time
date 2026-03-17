@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="enter-screen">
+        <div id="enter-sun"></div>
+        <div id="enter-text">Enter Time</div>
+    </div>
+
     <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
 
     <div id="ui-overlay">
@@ -49,6 +54,20 @@
     <script>
     (function() {
         'use strict';
+
+        /* Enter Time threshold — first-contact experience */
+        var enterScreen = document.getElementById('enter-screen');
+        if (enterScreen) {
+            if (localStorage.getItem('time_entered')) {
+                enterScreen.classList.add('hidden');
+            } else {
+                enterScreen.addEventListener('click', function() {
+                    enterScreen.classList.add('hidden');
+                    localStorage.setItem('time_entered', '1');
+                });
+            }
+        }
+
         var BOTTOM_ZONE = 60, LEFT_ZONE = 40;
 
         document.addEventListener('mousemove', function(e) {
