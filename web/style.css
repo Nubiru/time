@@ -18,7 +18,7 @@
     --sp-1: 3px; --sp-2: 5px; --sp-3: 8px; --sp-4: 13px;
     --sp-5: 21px; --sp-6: 34px; --sp-7: 55px;
     --font-mono: 'Courier New', 'Consolas', monospace;
-    --font-size-sm: 8px; --font-size-base: 13px; --font-size-lg: 21px;
+    --font-size-sm: 8px; --font-size-compact: 11px; --font-size-base: 13px; --font-size-lg: 21px;
     --line-height: 1.618;
     --t-fast: 146ms; --t-normal: 236ms; --t-medium: 382ms;
     --t-slow: 618ms; --t-dramatic: 1618ms;
@@ -257,4 +257,169 @@ kbd, .kbd {
     color: rgba(var(--brand-primary), 0.618);
     letter-spacing: var(--sp-3);
     text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Responsive Design Foundation
+   Breakpoints: Desktop (default), Tablet (<=1024), Phone-landscape (<=767),
+   Phone-portrait (<=480). All values from phi/fibonacci design tokens.
+   ========================================================================== */
+
+/* --- Phase 3: Touch Target Sizing (pointer: coarse) --- */
+@media (pointer: coarse) {
+    .corner-btn {
+        width: 44px; height: 44px;
+        font-size: var(--font-size-lg);
+    }
+    .tb-btn { min-height: 44px; min-width: 44px; }
+    .layer-item { min-height: 44px; }
+    .cmd-item { min-height: 44px; }
+    .help-entry { min-height: 44px; }
+    .panel-close { min-width: 44px; min-height: 44px; display: flex; align-items: center; justify-content: center; }
+}
+
+/* --- Tablet: 768px - 1024px --- */
+@media (max-width: 1024px) {
+    /* Panel widths tighten */
+    :root { --panel-width: 280px; }
+
+    /* Help + cmd palette: 90vw */
+    .panel.centered {
+        width: min(90vw, 480px);
+    }
+
+    /* Corner ? button: 44px touch target on tablet */
+    .corner-btn {
+        width: 44px; height: 44px;
+    }
+
+    /* Toast: center-top on tablet */
+    #toast-area {
+        top: var(--sp-4);
+        right: auto; left: 50%; transform: translateX(-50%);
+        align-items: center;
+    }
+    .toast { text-align: center; }
+}
+
+/* --- Phone landscape: 481px - 767px --- */
+@media (max-width: 767px) {
+    /* HUD: smaller text */
+    #time-hud {
+        font-size: var(--font-size-compact);
+        top: var(--sp-2); left: var(--sp-2);
+    }
+
+    /* Help panel: full-width bottom sheet */
+    #help-panel.panel.centered,
+    #help-panel.panel.centered:not(.hidden) {
+        top: auto; bottom: 0; left: 0; right: 0;
+        width: 100%; max-width: 100%;
+        transform: translateY(0);
+        border-radius: var(--sp-3) var(--sp-3) 0 0;
+        max-height: 70vh;
+    }
+    #help-panel.panel.centered.hidden {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    /* Command palette: full-width top sheet */
+    #cmd-palette.panel.centered,
+    #cmd-palette.panel.centered:not(.hidden) {
+        top: 0; bottom: auto; left: 0; right: 0;
+        width: 100%; max-width: 100%;
+        transform: translateY(0);
+        border-radius: 0 0 var(--sp-3) var(--sp-3);
+    }
+    #cmd-palette.panel.centered.hidden {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    /* Layer panel: full-width bottom sheet */
+    .panel.edge-left {
+        top: auto; bottom: 0; left: 0; right: 0;
+        width: 100%; height: auto;
+        max-height: 60vh;
+        border-radius: var(--sp-3) var(--sp-3) 0 0;
+        transform: translateY(100%);
+    }
+    .panel.edge-left.hidden {
+        transform: translateY(100%);
+    }
+    .panel.edge-left.proximity,
+    .panel.edge-left.mode-open {
+        transform: translateY(0);
+    }
+
+    /* Time bar: always visible, full width (Phase 4) */
+    .toolbar.edge-bottom {
+        transform: none !important;
+    }
+    .toolbar.edge-bottom.visible {
+        transform: none;
+    }
+    #time-bar-inner {
+        width: 100%;
+        justify-content: space-between;
+        padding: var(--sp-2) var(--sp-4);
+        border-radius: 0;
+        border-left: none; border-right: none; border-bottom: none;
+    }
+    .tb-btn {
+        padding: var(--sp-2) var(--sp-4);
+    }
+
+    /* Corner btn: 44px on phone */
+    .corner-btn {
+        width: 44px; height: 44px;
+    }
+
+    /* Toast: center-top, full width */
+    #toast-area {
+        top: var(--sp-4);
+        right: auto; left: 50%; transform: translateX(-50%);
+        width: calc(100% - var(--sp-4) * 2);
+        align-items: stretch;
+    }
+    .toast { white-space: normal; text-align: center; }
+
+    /* Hint: above time bar */
+    .hint {
+        bottom: calc(var(--sp-7) + var(--sp-4));
+    }
+}
+
+/* --- Phone portrait: up to 480px --- */
+@media (max-width: 480px) {
+    /* HUD: condensed */
+    #time-hud {
+        font-size: var(--font-size-compact);
+        top: var(--sp-1); left: var(--sp-2);
+        max-width: 60vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Enter screen: smaller letter-spacing */
+    #enter-text {
+        letter-spacing: var(--sp-2);
+        font-size: var(--font-size-base);
+    }
+
+    /* Panels: remove max-width constraint */
+    .panel.centered {
+        max-width: 100%;
+    }
+
+    /* Time bar inner: tighter padding */
+    #time-bar-inner {
+        padding: var(--sp-2) var(--sp-3);
+        gap: var(--sp-3);
+    }
+
+    /* Speed + date text: smaller */
+    #tb-speed { font-size: var(--font-size-compact); }
+    #tb-date { font-size: var(--font-size-compact); }
 }
