@@ -36,6 +36,8 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/ui_bridge.c
     ${CMAKE_CURRENT_SOURCE_DIR}/timeline_data.c
     ${CMAKE_CURRENT_SOURCE_DIR}/theme_css.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/touch_gestures.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/view_registry.c
     PARENT_SCOPE
 )
 
@@ -74,5 +76,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_ui_html         OBJECT ui_html.c)
     add_library(time_timeline_data   OBJECT timeline_data.c)
     add_library(time_theme_css      OBJECT theme_css.c)
+    add_library(time_touch_gestures  OBJECT touch_gestures.c)
+    add_library(time_view_registry   OBJECT view_registry.c)
     # ui_bridge.c is Emscripten-only (S1) — no native OBJECT lib
 endif()
