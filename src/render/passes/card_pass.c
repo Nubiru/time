@@ -104,12 +104,18 @@ void card_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
 
+    /* Query actual viewport dimensions from GL */
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    float vw = (float)viewport[2];
+    float vh = (float)viewport[3];
+    if (vw < 1.0f) vw = 1920.0f;  /* fallback */
+    if (vh < 1.0f) vh = 1080.0f;
+
     /* Get card layout (defaults to no visible cards if none toggled) */
-    card_layout_t layout = card_layout_compute(card_default_mask(), 1920.0f / 1080.0f);
+    card_layout_t layout = card_layout_compute(card_default_mask(), vw / vh);
     int visible = cp_visible_count(&layout);
     if (visible == 0) return;
-
-    float vw = 1920.0f, vh = 1080.0f; /* default viewport */
 
     /* Pack card background quads */
     cp_quad_data_t qdata = cp_pack_quads(&layout, vw, vh,

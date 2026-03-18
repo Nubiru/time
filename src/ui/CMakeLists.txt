@@ -38,6 +38,9 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/theme_css.c
     ${CMAKE_CURRENT_SOURCE_DIR}/touch_gestures.c
     ${CMAKE_CURRENT_SOURCE_DIR}/view_registry.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/audio_score.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/share_moment.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/view_adapt.c
     PARENT_SCOPE
 )
 
@@ -78,5 +81,8 @@ if(NOT EMSCRIPTEN)
     add_library(time_theme_css      OBJECT theme_css.c)
     add_library(time_touch_gestures  OBJECT touch_gestures.c)
     add_library(time_view_registry   OBJECT view_registry.c)
+    add_library(time_audio_score    OBJECT audio_score.c)
+    add_library(time_share_moment   OBJECT share_moment.c)
+    add_library(time_view_adapt    OBJECT view_adapt.c)
     # ui_bridge.c is Emscripten-only (S1) — no native OBJECT lib
 endif()
