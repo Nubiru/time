@@ -54,7 +54,12 @@ static void inject_theme_css(void) {
 void ui_bridge_init(void) {
     s_ui_state = ui_state_init();
     s_search_buf[0] = '\0';
-    s_current_theme = 0; /* Cosmos (dark) */
+    /* Read saved theme preference from localStorage (default: Cosmos) */
+    s_current_theme = EM_ASM_INT({
+        var saved = localStorage.getItem("time_theme");
+        return (saved !== null) ? parseInt(saved, 10) : 0;
+    });
+    if (s_current_theme < 0 || s_current_theme > 1) s_current_theme = 0;
 
     /* --- Theme CSS: inject custom properties from C theme system --- */
     inject_theme_css();
@@ -190,6 +195,9 @@ EMSCRIPTEN_KEEPALIVE void ui_toggle_layer_panel(void) {
 EMSCRIPTEN_KEEPALIVE void ui_toggle_theme(void) {
     s_current_theme = (s_current_theme == 0) ? 1 : 0;
     inject_theme_css();
+    EM_ASM({
+        localStorage.setItem("time_theme", $0.toString());
+    }, s_current_theme);
 }
 
 EMSCRIPTEN_KEEPALIVE void ui_close_panels(void) {

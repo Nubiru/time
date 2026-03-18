@@ -151,7 +151,7 @@ int main(void) {
     /* Initialize UI bridge — populate panels with data from pure modules */
     ui_bridge_init();
 
-    printf("Controls: Space=pause, 1-5=speed, -=reverse, T=trails, H=hud, Shift+0-6=scale\n");
+    printf("Controls: Space=pause, 1-5=speed, -=reverse, T=trails, H=hud, Shift+T=theme, Shift+0-6=scale\n");
 
     /* Show init success in HUD */
     EM_ASM({
