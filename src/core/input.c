@@ -12,10 +12,19 @@
 #include <emscripten/html5.h>
 #include "../render/camera.h"
 #include "../render/camera_scale.h"
+#include "../ui/touch_gestures.h"
+#include <math.h>
 
 /* Module-level pointer to the single app state.
  * Set once by input_register(), used by all callbacks. */
 static app_state_t *g_input_state = 0;
+
+/* Touch gesture state */
+static tg_state_t s_touch;
+static float s_prev_touch_x;
+static float s_prev_touch_y;
+static float s_prev_pinch_dist;
+static int s_touch_drag_active;
 
 /* Time speed presets (days per real second) */
 static const double TIME_SPEEDS[] = {
@@ -123,6 +132,145 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
     return EM_FALSE;
 }
 
+/* --- Touch helpers --- */
+
+static float touch_pinch_distance(const EmscriptenTouchEvent *e) {
+    if (e->numTouches < 2) return 0.0f;
+    /* Find first two active touches */
+    int found = 0;
+    float x0 = 0, y0 = 0, x1 = 0, y1 = 0;
+    for (int i = 0; i < e->numTouches && found < 2; i++) {
+        if (found == 0) { x0 = (float)e->touches[i].clientX; y0 = (float)e->touches[i].clientY; }
+        else { x1 = (float)e->touches[i].clientX; y1 = (float)e->touches[i].clientY; }
+        found++;
+    }
+    float dx = x1 - x0;
+    float dy = y1 - y0;
+    return sqrtf(dx * dx + dy * dy);
+}
+
+/* --- Touch callbacks --- */
+
+static EM_BOOL on_touchstart(int type, const EmscriptenTouchEvent *e, void *data) {
+    (void)type; (void)data;
+    double now = emscripten_get_now();
+
+    for (int i = 0; i < e->numTouches; i++) {
+        if (e->touches[i].isChanged) {
+            float nx = (float)e->touches[i].clientX;
+            float ny = (float)e->touches[i].clientY;
+            s_touch = tg_touch_start(s_touch, e->touches[i].identifier, nx, ny, now);
+        }
+    }
+
+    /* For single-finger: start camera drag tracking */
+    if (s_touch.active_count == 1) {
+        for (int i = 0; i < TG_MAX_TOUCH_POINTS; i++) {
+            if (s_touch.points[i].active) {
+                s_prev_touch_x = s_touch.points[i].current_x;
+                s_prev_touch_y = s_touch.points[i].current_y;
+                s_touch_drag_active = 1;
+                break;
+            }
+        }
+    }
+
+    /* For two-finger: initialize pinch distance */
+    if (e->numTouches >= 2) {
+        s_prev_pinch_dist = touch_pinch_distance(e);
+        s_touch_drag_active = 0; /* cancel single-finger drag */
+    }
+
+    return EM_TRUE;
+}
+
+static EM_BOOL on_touchmove(int type, const EmscriptenTouchEvent *e, void *data) {
+    (void)type; (void)data;
+    double now = emscripten_get_now();
+
+    /* Feed all moves to gesture recognizer */
+    for (int i = 0; i < e->numTouches; i++) {
+        if (e->touches[i].isChanged) {
+            float nx = (float)e->touches[i].clientX;
+            float ny = (float)e->touches[i].clientY;
+            s_touch = tg_touch_move(s_touch, e->touches[i].identifier, nx, ny, now);
+        }
+    }
+
+    /* Single-finger continuous camera orbit */
+    if (s_touch.active_count == 1 && s_touch_drag_active) {
+        for (int i = 0; i < TG_MAX_TOUCH_POINTS; i++) {
+            if (s_touch.points[i].active) {
+                float dx = s_touch.points[i].current_x - s_prev_touch_x;
+                float dy = s_touch.points[i].current_y - s_prev_touch_y;
+                s_prev_touch_x = s_touch.points[i].current_x;
+                s_prev_touch_y = s_touch.points[i].current_y;
+                /* Scale: touch coords are pixels, similar sensitivity to mouse */
+                camera_rotate(&g_input_state->camera, -dx * 0.005f, -dy * 0.005f);
+                break;
+            }
+        }
+    }
+
+    /* Two-finger continuous pinch zoom */
+    if (e->numTouches >= 2) {
+        float dist = touch_pinch_distance(e);
+        if (s_prev_pinch_dist > 1.0f && dist > 1.0f) {
+            float delta = (s_prev_pinch_dist - dist) * 0.005f;
+            camera_zoom(&g_input_state->camera, delta);
+        }
+        s_prev_pinch_dist = dist;
+    }
+
+    return EM_TRUE;
+}
+
+static EM_BOOL on_touchend(int type, const EmscriptenTouchEvent *e, void *data) {
+    (void)type; (void)data;
+    double now = emscripten_get_now();
+
+    for (int i = 0; i < e->numTouches; i++) {
+        if (e->touches[i].isChanged) {
+            float nx = (float)e->touches[i].clientX;
+            float ny = (float)e->touches[i].clientY;
+            tg_gesture_data_t gdata;
+            tg_gesture_t gesture = tg_touch_end(
+                &s_touch, e->touches[i].identifier, nx, ny, now, &gdata);
+
+            /* Handle discrete gestures */
+            switch (gesture) {
+                case TG_DOUBLE_TAP:
+                    /* Toggle pause */
+                    if (g_input_state->time_speed == 0.0) {
+                        g_input_state->time_speed = g_input_state->prev_speed;
+                        if (g_input_state->time_speed == 0.0)
+                            g_input_state->time_speed = 1.0; /* default to real-time */
+                    } else {
+                        g_input_state->prev_speed = g_input_state->time_speed;
+                        g_input_state->time_speed = 0.0;
+                    }
+                    break;
+
+                case TG_TAP:
+                case TG_LONG_PRESS:
+                case TG_THREE_FINGER_TAP:
+                    /* Future: tap->select, long-press->context, 3-finger->help */
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+
+    /* Reset drag state when no fingers remain */
+    if (s_touch.active_count == 0) {
+        s_touch_drag_active = 0;
+    }
+
+    return EM_TRUE;
+}
+
 void input_register(app_state_t *state) {
     g_input_state = state;
     emscripten_set_mousedown_callback("#canvas", NULL, EM_TRUE, on_mouse_down);
@@ -130,6 +278,12 @@ void input_register(app_state_t *state) {
     emscripten_set_mousemove_callback("#canvas", NULL, EM_TRUE, on_mouse_move);
     emscripten_set_wheel_callback("#canvas", NULL, EM_TRUE, on_wheel);
     emscripten_set_keydown_callback(EMSCRIPTEN_EVENT_TARGET_DOCUMENT, NULL, EM_TRUE, on_key_down);
+
+    /* Touch gesture callbacks */
+    s_touch = tg_init();
+    emscripten_set_touchstart_callback("#canvas", NULL, EM_TRUE, on_touchstart);
+    emscripten_set_touchmove_callback("#canvas", NULL, EM_TRUE, on_touchmove);
+    emscripten_set_touchend_callback("#canvas", NULL, EM_TRUE, on_touchend);
 }
 
 #endif /* __EMSCRIPTEN__ */
