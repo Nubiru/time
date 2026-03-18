@@ -95,6 +95,13 @@ if(EMSCRIPTEN)
             ${CMAKE_BINARY_DIR}/style.css
     )
 
+    # Copy service-worker.js to build dir (offline PWA support)
+    add_custom_command(TARGET time_app POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy
+            ${CMAKE_SOURCE_DIR}/web/service-worker.js
+            ${CMAKE_BINARY_DIR}/service-worker.js
+    )
+
 # ===========================================================================
 # NATIVE BUILD — tests (cmake -B build)
 # ===========================================================================
