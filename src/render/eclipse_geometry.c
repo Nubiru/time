@@ -168,6 +168,70 @@ double ecl_sun_moon_separation(double jd)
 }
 
 /* ======================================================================
+ * Internal: solar eclipse classification
+ * ====================================================================== */
+
+static void classify_solar(ecl_condition_t *result, double moon_lat,
+                           double half_sum)
+{
+    double sep = result->sun_moon_sep_deg;
+    if (sep >= SOLAR_ECLIPSE_LIMIT_DEG) return;
+
+    result->gamma = moon_lat / half_sum;
+
+    /* Magnitude: how much of the Sun's disk is covered */
+    double sun_r = result->sun_apparent_deg / 2.0;
+    double moon_r = result->moon_apparent_deg / 2.0;
+    result->magnitude = (sun_r + moon_r - sep) / (2.0 * sun_r);
+    if (result->magnitude < 0.0) result->magnitude = 0.0;
+
+    /* Classify solar eclipse type */
+    double abs_gamma = fabs(result->gamma);
+    if (abs_gamma > 1.0) {
+        result->type = ECL_SOLAR_PARTIAL;
+    } else if (result->moon_apparent_deg >= result->sun_apparent_deg) {
+        result->type = ECL_SOLAR_TOTAL;
+    } else {
+        result->type = ECL_SOLAR_ANNULAR;
+    }
+}
+
+/* ======================================================================
+ * Internal: lunar eclipse classification
+ * ====================================================================== */
+
+static void classify_lunar(ecl_condition_t *result, double moon_lat,
+                           double half_sum)
+{
+    double dev_from_opposition = fabs(result->sun_moon_sep_deg - 180.0);
+    if (dev_from_opposition >= LUNAR_ECLIPSE_LIMIT_DEG) return;
+
+    result->gamma = moon_lat / half_sum;
+
+    double moon_r = result->moon_apparent_deg / 2.0;
+    /* Earth's shadow angular radius at Moon's distance ~1.3 degrees
+     * (umbra ~0.7 deg, penumbra ~1.3 deg) */
+    double umbra_angular_r = 0.7;
+    double penumbra_angular_r = 1.3;
+    double abs_lat = fabs(moon_lat);
+
+    if (abs_lat < umbra_angular_r - moon_r) {
+        result->type = ECL_LUNAR_TOTAL;
+        result->magnitude = (umbra_angular_r + moon_r - abs_lat)
+                           / (2.0 * moon_r);
+    } else if (abs_lat < umbra_angular_r + moon_r) {
+        result->type = ECL_LUNAR_PARTIAL;
+        result->magnitude = (umbra_angular_r + moon_r - abs_lat)
+                           / (2.0 * moon_r);
+    } else if (abs_lat < penumbra_angular_r + moon_r) {
+        result->type = ECL_LUNAR_PENUMBRAL;
+        result->magnitude = (penumbra_angular_r + moon_r - abs_lat)
+                           / (2.0 * moon_r);
+    }
+    if (result->magnitude < 0.0) result->magnitude = 0.0;
+}
+
+/* ======================================================================
  * Public API: ecl_check — eclipse detection
  * ====================================================================== */
 
@@ -197,71 +261,15 @@ ecl_condition_t ecl_check(double jd)
     if (dist_to_node > 180.0) dist_to_node = 360.0 - dist_to_node;
     result.is_ascending_node = (dist_to_node < 90.0) ? 1 : 0;
 
-    /* Approximate gamma from Moon's ecliptic latitude.
-     * gamma = moon_lat / (sun_radius + moon_radius) in appropriate units.
-     * We use the ratio: Moon's lat offset / eclipse limit as a proxy. */
+    /* Shared geometry */
     double moon_lat = moon_ecliptic_latitude(jd);
     double half_sum = (result.sun_apparent_deg + result.moon_apparent_deg) / 2.0;
 
-    /* Check for solar eclipse (near new moon) */
+    /* Classify by phase */
     if (phase_frac < 0.06 || phase_frac > 0.94) {
-        double sep = result.sun_moon_sep_deg;
-        if (sep < SOLAR_ECLIPSE_LIMIT_DEG) {
-            /* gamma: ratio of shadow offset to Earth radius (~angular) */
-            result.gamma = moon_lat / half_sum;
-
-            /* Magnitude: how much of the Sun's disk is covered */
-            double sun_r = result.sun_apparent_deg / 2.0;
-            double moon_r = result.moon_apparent_deg / 2.0;
-            result.magnitude = (sun_r + moon_r - sep) / (2.0 * sun_r);
-            if (result.magnitude < 0.0) result.magnitude = 0.0;
-
-            /* Classify solar eclipse type */
-            double abs_gamma = fabs(result.gamma);
-            if (abs_gamma > 1.0) {
-                /* Partial: shadow axis misses Earth center significantly */
-                result.type = ECL_SOLAR_PARTIAL;
-            } else if (result.moon_apparent_deg >= result.sun_apparent_deg) {
-                result.type = ECL_SOLAR_TOTAL;
-            } else {
-                result.type = ECL_SOLAR_ANNULAR;
-            }
-        }
-    }
-    /* Check for lunar eclipse (near full moon) */
-    else if (phase_frac > 0.44 && phase_frac < 0.56) {
-        /* At full moon, Sun and Moon are ~180 apart.
-         * Deviation from exact opposition determines eclipse possibility. */
-        double dev_from_opposition = fabs(result.sun_moon_sep_deg - 180.0);
-        if (dev_from_opposition < LUNAR_ECLIPSE_LIMIT_DEG) {
-            result.gamma = moon_lat / half_sum;
-
-            /* Magnitude for lunar eclipse */
-            double sun_r = result.sun_apparent_deg / 2.0;
-            double moon_r = result.moon_apparent_deg / 2.0;
-            /* Earth's shadow angular radius at Moon's distance ~1.3 degrees
-             * (umbra ~0.7 deg, penumbra ~1.3 deg) */
-            double umbra_angular_r = 0.7;
-            double penumbra_angular_r = 1.3;
-            double abs_lat = fabs(moon_lat);
-
-            if (abs_lat < umbra_angular_r - moon_r) {
-                result.type = ECL_LUNAR_TOTAL;
-                result.magnitude = (umbra_angular_r + moon_r - abs_lat)
-                                 / (2.0 * moon_r);
-            } else if (abs_lat < umbra_angular_r + moon_r) {
-                result.type = ECL_LUNAR_PARTIAL;
-                result.magnitude = (umbra_angular_r + moon_r - abs_lat)
-                                 / (2.0 * moon_r);
-            } else if (abs_lat < penumbra_angular_r + moon_r) {
-                result.type = ECL_LUNAR_PENUMBRAL;
-                result.magnitude = (penumbra_angular_r + moon_r - abs_lat)
-                                 / (2.0 * moon_r);
-            }
-            if (result.magnitude < 0.0) result.magnitude = 0.0;
-
-            (void)sun_r;
-        }
+        classify_solar(&result, moon_lat, half_sum);
+    } else if (phase_frac > 0.44 && phase_frac < 0.56) {
+        classify_lunar(&result, moon_lat, half_sum);
     }
 
     return result;
