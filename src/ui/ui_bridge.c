@@ -20,6 +20,7 @@
 #include "time_control.h"
 #include "theme.h"
 #include "theme_css.h"
+#include "i18n.h"
 #include "../systems/gregorian/gregorian.h"
 
 /* ------------------------------------------------------------------ */
@@ -29,6 +30,7 @@
 static ui_state_t s_ui_state;
 static char s_search_buf[256];
 static int s_current_theme; /* 0 = Cosmos (dark), 1 = Dawn (light) */
+static i18n_locale_t s_locale; /* detected from browser */
 
 /* ------------------------------------------------------------------ */
 /* ui_bridge_init                                                      */
@@ -63,6 +65,21 @@ void ui_bridge_init(void) {
 
     /* --- Theme CSS: inject custom properties from C theme system --- */
     inject_theme_css();
+
+    /* --- Locale detection: read browser language, activate RTL if needed --- */
+    {
+        char lang_buf[16];
+        lang_buf[0] = '\0';
+        EM_ASM({
+            var lang = (navigator.language || "en").substring(0, 2).toLowerCase();
+            stringToUTF8(lang, $0, 16);
+        }, lang_buf);
+        s_locale = i18n_locale_from_code(lang_buf);
+
+        if (i18n_is_rtl(s_locale)) {
+            EM_ASM({ document.documentElement.dir = "rtl"; });
+        }
+    }
 
     /* --- Help panel: generate HTML from help_overlay data --- */
     char help_buf[UI_HTML_BUF_SIZE];
