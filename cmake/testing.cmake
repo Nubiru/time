@@ -312,6 +312,7 @@ time_add_test(NAME test_view_registry  TEST tests/ui/test_view_registry.c  DEPS 
 time_add_test(NAME test_audio_score   TEST tests/ui/test_audio_score.c    DEPS audio_score audio_data frequency view_registry)
 time_add_test(NAME test_share_moment TEST tests/ui/test_share_moment.c   DEPS share_moment)
 time_add_test(NAME test_view_adapt  TEST tests/ui/test_view_adapt.c    DEPS view_adapt)
+time_add_test(NAME test_a11y_score TEST tests/ui/test_a11y_score.c   DEPS a11y_score)
 # ui_bridge is Emscripten-only (S1) — no native test target
 
 # Cross-system validation test

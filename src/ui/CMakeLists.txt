@@ -41,6 +41,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/audio_score.c
     ${CMAKE_CURRENT_SOURCE_DIR}/share_moment.c
     ${CMAKE_CURRENT_SOURCE_DIR}/view_adapt.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/a11y_score.c
     PARENT_SCOPE
 )
 
@@ -84,5 +85,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_audio_score    OBJECT audio_score.c)
     add_library(time_share_moment   OBJECT share_moment.c)
     add_library(time_view_adapt    OBJECT view_adapt.c)
+    add_library(time_a11y_score    OBJECT a11y_score.c)
     # ui_bridge.c is Emscripten-only (S1) — no native OBJECT lib
 endif()
