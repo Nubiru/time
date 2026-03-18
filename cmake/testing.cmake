@@ -269,6 +269,8 @@ time_add_test(NAME test_calendar_fixed TEST tests/systems/unified/test_calendar_
     DEPS calendar_fixed egyptian coptic ethiopian zoroastrian)
 time_add_test(NAME test_today_summary TEST tests/systems/unified/test_today_summary.c
     DEPS today_summary gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar panchanga nakshatra iching zodiac human_design sefirot coptic ethiopian persian japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed)
+time_add_test(NAME test_cal_vectors TEST tests/systems/unified/test_cal_vectors.c
+    DEPS cal_vectors)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -313,6 +315,7 @@ time_add_test(NAME test_audio_score   TEST tests/ui/test_audio_score.c    DEPS a
 time_add_test(NAME test_share_moment TEST tests/ui/test_share_moment.c   DEPS share_moment)
 time_add_test(NAME test_view_adapt  TEST tests/ui/test_view_adapt.c    DEPS view_adapt)
 time_add_test(NAME test_a11y_score TEST tests/ui/test_a11y_score.c   DEPS a11y_score)
+time_add_test(NAME test_system_theme TEST tests/ui/test_system_theme.c DEPS system_theme theme theme_css color_theory color golden_layout)
 # ui_bridge is Emscripten-only (S1) — no native test target
 
 # Cross-system validation test
