@@ -10,12 +10,22 @@
 #include "text_pass.h"
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 #include <GLES3/gl3.h>
 #include "../shader.h"
 #include "../font_bitmap.h"
 #include "../font_atlas.h"
 #include "../glyph_batch.h"
 #include "../billboard.h"
+#include "../../systems/astronomy/planets.h"
+
+/* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
+static const float TEXT_ORBIT_SCALE = 3.0f;
+
+#ifndef PI
+#define PI 3.14159265358979323846
+#endif
+#define TEXT_DEG_TO_RAD (PI / 180.0)
 
 /* --- Module-static GL handles --- */
 static GLuint s_text_program;
@@ -137,23 +147,69 @@ void text_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_LABELS))
         return;
 
-    /* Build demo text: "Time" above ecliptic plane */
-    static const char *demo_text = "Time";
-    int len = (int)strlen(demo_text);
-    if (len > GLYPH_BATCH_MAX)
-        len = GLYPH_BATCH_MAX;
+    /* Compute planet positions at current simulation time */
+    solar_system_t sys = planets_at(frame->simulation_jd);
 
-    /* Create glyph instances for each character */
+    /* Build glyph instances for planet name labels */
     glyph_instance_t instances[GLYPH_BATCH_MAX];
-    float spacing = 0.35f;
-    float start_x = -spacing * (float)(len - 1) * 0.5f;
+    int len = 0;
 
-    for (int i = 0; i < len; i++) {
-        instances[i].glyph_id  = (int)demo_text[i];
-        instances[i].position  = vec3_create(start_x + (float)i * spacing,
-                                             5.0f, 0.0f);
-        instances[i].scale     = 1.0f;
-        instances[i].color     = (glyph_color_t){1.0f, 0.85f, 0.55f, 1.0f};
+    /* Sun label at origin */
+    {
+        static const char *sun_name = "Sun";
+        int slen = (int)strlen(sun_name);
+        float spacing = 0.3f;
+        float sx = -spacing * (float)(slen - 1) * 0.5f;
+        for (int i = 0; i < slen && len < GLYPH_BATCH_MAX; i++) {
+            instances[len].glyph_id = (int)sun_name[i];
+            instances[len].position = vec3_create(
+                sx + (float)i * spacing, 1.0f, 0.0f);
+            instances[len].scale    = 1.0f;
+            instances[len].color    = (glyph_color_t){1.0f, 0.85f, 0.55f, 1.0f};
+            len++;
+        }
+    }
+
+    /* Planet labels at orbital positions (same math as planet_pass.c) */
+    for (int p = 0; p < 8 && len < GLYPH_BATCH_MAX - 10; p++) {
+        const char *name = planet_name(p);
+        if (!name) continue;
+        int nlen = (int)strlen(name);
+
+        /* Ecliptic spherical -> Cartesian (matches planet_pack.c) */
+        double lon_rad = sys.positions[p].longitude * TEXT_DEG_TO_RAD;
+        double lat_rad = sys.positions[p].latitude  * TEXT_DEG_TO_RAD;
+        double dist    = sys.positions[p].distance;
+        double cos_lat = cos(lat_rad);
+
+        float lx = (float)(dist * cos_lat * cos(lon_rad));
+        float lz = (float)(dist * cos_lat * sin(lon_rad));
+        float ly = (float)(dist * sin(lat_rad));
+
+        /* Apply sqrt distance scaling (matches planet_pass.c) */
+        float r_linear = sqrtf(lx * lx + ly * ly + lz * lz);
+        if (r_linear > 0.001f) {
+            float r_sqrt = sqrtf(r_linear) * TEXT_ORBIT_SCALE;
+            float s = r_sqrt / r_linear;
+            lx *= s;
+            ly *= s;
+            lz *= s;
+        }
+
+        /* Offset label slightly above ecliptic plane */
+        ly += 0.5f;
+
+        /* Place label characters centered above planet */
+        float spacing = 0.25f;
+        float sx = -spacing * (float)(nlen - 1) * 0.5f;
+        for (int i = 0; i < nlen && len < GLYPH_BATCH_MAX; i++) {
+            instances[len].glyph_id = (int)name[i];
+            instances[len].position = vec3_create(
+                lx + sx + (float)i * spacing, ly, lz);
+            instances[len].scale    = 0.8f;
+            instances[len].color    = (glyph_color_t){0.8f, 0.85f, 0.9f, 0.9f};
+            len++;
+        }
     }
 
     /* Get camera basis vectors for billboarding */
