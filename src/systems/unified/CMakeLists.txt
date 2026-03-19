@@ -62,6 +62,7 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/text_lod.c
     ${CMAKE_CURRENT_SOURCE_DIR}/universal_card.c
     ${CMAKE_CURRENT_SOURCE_DIR}/convergence_forecast.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/structural_insight.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -128,4 +129,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_text_lod           OBJECT text_lod.c)
     add_library(time_universal_card     OBJECT universal_card.c)
     add_library(time_convergence_forecast OBJECT convergence_forecast.c)
+    add_library(time_structural_insight   OBJECT structural_insight.c)
 endif()

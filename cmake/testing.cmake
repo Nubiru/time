@@ -358,6 +358,8 @@ time_add_test(NAME test_universal_card TEST tests/systems/unified/test_universal
     DEPS universal_card sensitivity)
 time_add_test(NAME test_convergence_forecast TEST tests/systems/unified/test_convergence_forecast.c
     DEPS convergence_forecast)
+time_add_test(NAME test_structural_insight TEST tests/systems/unified/test_structural_insight.c
+    DEPS structural_insight)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
