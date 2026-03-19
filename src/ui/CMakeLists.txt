@@ -70,6 +70,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/loading_sequence.c
     ${CMAKE_CURRENT_SOURCE_DIR}/text_choreo.c
     ${CMAKE_CURRENT_SOURCE_DIR}/input_dispatch.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/kf_track.c
     PARENT_SCOPE
 )
 
@@ -141,5 +142,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_loading_sequence OBJECT loading_sequence.c)
     add_library(time_text_choreo     OBJECT text_choreo.c)
     add_library(time_input_dispatch  OBJECT input_dispatch.c)
+    add_library(time_kf_track        OBJECT kf_track.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()

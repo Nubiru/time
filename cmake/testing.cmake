@@ -541,6 +541,8 @@ time_add_test(NAME test_loading_sequence TEST tests/ui/test_loading_sequence.c
     DEPS loading_sequence)
 time_add_test(NAME test_input_dispatch TEST tests/ui/test_input_dispatch.c
     DEPS input_dispatch)
+time_add_test(NAME test_kf_track TEST tests/ui/test_kf_track.c
+    DEPS kf_track animation easing LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
