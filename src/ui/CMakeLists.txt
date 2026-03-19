@@ -55,6 +55,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/pianist_score.c
     ${CMAKE_CURRENT_SOURCE_DIR}/midi_output.c
     ${CMAKE_CURRENT_SOURCE_DIR}/audio_vis_data.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/audio_a11y.c
     ${CMAKE_CURRENT_SOURCE_DIR}/zoom_depth.c
     PARENT_SCOPE
 )
@@ -112,6 +113,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_pianist_score   OBJECT pianist_score.c)
     add_library(time_midi_output     OBJECT midi_output.c)
     add_library(time_audio_vis_data  OBJECT audio_vis_data.c)
+    add_library(time_audio_a11y      OBJECT audio_a11y.c)
     add_library(time_zoom_depth      OBJECT zoom_depth.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()

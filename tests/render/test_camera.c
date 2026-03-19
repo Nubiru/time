@@ -223,6 +223,43 @@ void test_camera_position_is_pure(void) {
     TEST_ASSERT_EQUAL_FLOAT(p1.z, p2.z);
 }
 
+/* --- Dynamic FOV --- */
+
+void test_dynamic_fov_at_min_zoom(void) {
+    float base = (float)(PI / 3.0);
+    float fov = camera_dynamic_fov(-4.605f, base);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, base * 0.5f, fov); /* narrow at close zoom */
+}
+
+void test_dynamic_fov_at_max_zoom(void) {
+    float base = (float)(PI / 3.0);
+    float fov = camera_dynamic_fov(10.82f, base);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, base * 1.5f, fov); /* wide at far zoom */
+}
+
+void test_dynamic_fov_at_middle(void) {
+    float base = (float)(PI / 3.0);
+    float mid_zoom = (-4.605f + 10.82f) * 0.5f;
+    float fov = camera_dynamic_fov(mid_zoom, base);
+    TEST_ASSERT_FLOAT_WITHIN(0.05f, base, fov); /* near base at middle */
+}
+
+void test_dynamic_fov_monotonic(void) {
+    float base = (float)(PI / 3.0);
+    float fov1 = camera_dynamic_fov(-2.0f, base);
+    float fov2 = camera_dynamic_fov(2.0f, base);
+    float fov3 = camera_dynamic_fov(8.0f, base);
+    TEST_ASSERT_TRUE(fov1 < fov2);
+    TEST_ASSERT_TRUE(fov2 < fov3);
+}
+
+void test_zoom_updates_fov(void) {
+    camera_t cam = camera_create(5.0f, (float)(PI / 3.0), 1.0f);
+    float fov_before = cam.fov;
+    camera_zoom(&cam, 3.0f); /* zoom out */
+    TEST_ASSERT_TRUE(cam.fov > fov_before); /* FOV should widen */
+}
+
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(test_camera_create_defaults);
@@ -251,5 +288,11 @@ int main(void) {
     RUN_TEST(test_camera_view_matrix_changes_with_rotation);
     RUN_TEST(test_camera_projection_fov_effect);
     RUN_TEST(test_camera_position_is_pure);
+    /* Dynamic FOV */
+    RUN_TEST(test_dynamic_fov_at_min_zoom);
+    RUN_TEST(test_dynamic_fov_at_max_zoom);
+    RUN_TEST(test_dynamic_fov_at_middle);
+    RUN_TEST(test_dynamic_fov_monotonic);
+    RUN_TEST(test_zoom_updates_fov);
     return UNITY_END();
 }

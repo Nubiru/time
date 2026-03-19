@@ -65,4 +65,18 @@ void camera_zoom(camera_t *cam, float delta) {
     if (cam->log_zoom < LOG_ZOOM_MIN) cam->log_zoom = LOG_ZOOM_MIN;
     if (cam->log_zoom > LOG_ZOOM_MAX) cam->log_zoom = LOG_ZOOM_MAX;
     cam->distance = expf(cam->log_zoom);
+    cam->fov = camera_dynamic_fov(cam->log_zoom, PI / 3.0f);
+}
+
+float camera_dynamic_fov(float log_zoom, float base_fov) {
+    /* Map log_zoom range to FOV range:
+     * Close (log_zoom_min): narrow FOV (base * 0.5) — intimate, focused
+     * Middle:               base FOV — standard view
+     * Far (log_zoom_max):   wide FOV (base * 1.5) — cosmic, expansive */
+    float t = (log_zoom - LOG_ZOOM_MIN) / (LOG_ZOOM_MAX - LOG_ZOOM_MIN);
+    if (t < 0.0f) t = 0.0f;
+    if (t > 1.0f) t = 1.0f;
+    float fov_min = base_fov * 0.5f;   /* 30° at closest zoom */
+    float fov_max = base_fov * 1.5f;   /* 90° at farthest zoom */
+    return fov_min + t * (fov_max - fov_min);
 }

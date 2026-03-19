@@ -28,7 +28,13 @@ mat4_t   camera_projection_matrix(const camera_t *cam);
 /* Rotate camera by delta angles (from mouse drag). */
 void camera_rotate(camera_t *cam, float delta_azimuth, float delta_elevation);
 
-/* Zoom camera (change distance). */
+/* Zoom camera (change distance). Updates FOV dynamically. */
 void camera_zoom(camera_t *cam, float delta);
+
+/* Compute dynamic FOV from zoom level.
+ * Close-up (log_zoom small): narrow FOV for intimacy.
+ * Far-out (log_zoom large): wide FOV for cosmic expanse.
+ * Returns FOV in radians. */
+float camera_dynamic_fov(float log_zoom, float base_fov);
 
 #endif

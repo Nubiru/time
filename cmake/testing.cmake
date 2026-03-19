@@ -354,6 +354,8 @@ time_add_test(NAME test_narrative TEST tests/systems/unified/test_narrative.c
     DEPS narrative brain_language_bridge brain_types)
 time_add_test(NAME test_text_lod TEST tests/systems/unified/test_text_lod.c
     DEPS text_lod depth_tier)
+time_add_test(NAME test_universal_card TEST tests/systems/unified/test_universal_card.c
+    DEPS universal_card sensitivity)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -439,6 +441,14 @@ time_add_test(NAME test_midi_output TEST tests/ui/test_midi_output.c
          calendar_fixed)
 time_add_test(NAME test_audio_vis_data TEST tests/ui/test_audio_vis_data.c
     DEPS audio_vis_data)
+time_add_test(NAME test_audio_a11y TEST tests/ui/test_audio_a11y.c
+    DEPS audio_a11y pianist_score audio_score audio_event audio_data frequency
+         view_registry brain_scan brain_audio_bridge brain_types
+         planets orbit kepler aspects convergence_detect julian tzolkin
+         tzolkin_board iching chinese hebrew hijri buddhist lunar persian
+         coptic wheel_of_year bahai japanese egyptian french_republican
+         korean_calendar thai_calendar tamil_calendar myanmar zoroastrian
+         calendar_fixed)
 # ui_bridge is Emscripten-only (S1) — no native test target
 time_add_test(NAME test_welcome_text TEST tests/ui/test_welcome_text.c
     DEPS welcome_text birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
