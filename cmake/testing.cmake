@@ -280,6 +280,10 @@ time_add_test(NAME test_today_summary TEST tests/systems/unified/test_today_summ
     DEPS today_summary gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar panchanga nakshatra iching zodiac human_design sefirot coptic ethiopian persian japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed)
 time_add_test(NAME test_cal_vectors TEST tests/systems/unified/test_cal_vectors.c
     DEPS cal_vectors)
+time_add_test(NAME test_depth_tier TEST tests/systems/unified/test_depth_tier.c
+    DEPS depth_tier)
+time_add_test(NAME test_brain_types TEST tests/systems/unified/test_brain_types.c
+    DEPS brain_types)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

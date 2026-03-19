@@ -30,6 +30,8 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/calendar_fixed.c
     ${CMAKE_CURRENT_SOURCE_DIR}/today_summary.c
     ${CMAKE_CURRENT_SOURCE_DIR}/cal_vectors.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/depth_tier.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/brain_types.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -64,4 +66,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_calendar_fixed  OBJECT calendar_fixed.c)
     add_library(time_today_summary  OBJECT today_summary.c)
     add_library(time_cal_vectors   OBJECT cal_vectors.c)
+    add_library(time_depth_tier   OBJECT depth_tier.c)
+    add_library(time_brain_types  OBJECT brain_types.c)
 endif()
