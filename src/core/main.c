@@ -59,6 +59,28 @@ void main_loop(void) {
         g_state.camera.distance = expf(new_log_zoom);
     }
 
+    /* --- Performance LOD: record frame time, adapt quality --- */
+    g_state.lod = lod_record_frame(g_state.lod, (float)(dt_sec * 1000.0));
+    g_state.view = vs_set_lod(g_state.view, (int)lod_current_tier(&g_state.lod));
+
+    /* --- Auto-theme: sun elevation → Cosmos/Dawn blend --- */
+    if (g_state.auto_theme_enabled) {
+        auto_theme_state_t target = at_from_location(
+            g_state.simulation_jd, g_state.observer_lat, g_state.observer_lon);
+        g_state.auto_theme = at_smooth(g_state.auto_theme, target,
+                                        (float)dt_sec, 2.0f);
+        /* Export key theme colors to DOM as CSS custom properties */
+        theme_t theme = at_blended_theme(g_state.auto_theme);
+        EM_ASM({
+            var s = document.documentElement.style;
+            s.setProperty("--bg-space",
+                $0.toFixed(3) + ", " + $1.toFixed(3) + ", " + $2.toFixed(3));
+            s.setProperty("--text-primary",
+                $3.toFixed(3) + ", " + $4.toFixed(3) + ", " + $5.toFixed(3));
+        }, theme.bg_space.r, theme.bg_space.g, theme.bg_space.b,
+           theme.text_primary.r, theme.text_primary.g, theme.text_primary.b);
+    }
+
     /* --- Advance view state (transitions, focus) --- */
     g_state.view = vs_tick(g_state.view, (float)dt_sec);
 

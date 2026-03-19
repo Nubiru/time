@@ -7,6 +7,8 @@
 #include "../render/camera_scale.h"
 #include "../render/render_layers.h"
 #include "../render/view_state.h"
+#include "../render/render_lod.h"
+#include "../ui/auto_theme.h"
 
 /* All mutable application state in one place.
  * Pure functions never touch this — they receive data and return data.
@@ -39,6 +41,13 @@ typedef struct {
 
     /* View state (view mode, focus, transitions) */
     view_state_t view;
+
+    /* Performance LOD */
+    lod_state_t lod;
+
+    /* Auto-theme (time-of-day Cosmos↔Dawn) */
+    auto_theme_state_t auto_theme;
+    int auto_theme_enabled;    /* 1=auto, 0=manual */
 
     /* Visual toggles */
     int show_trails;       /* orbit trail lines */

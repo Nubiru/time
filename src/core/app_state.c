@@ -24,6 +24,13 @@ app_state_t app_state_create(float aspect_ratio) {
     /* View state: Space View, no focus, LOD ULTRA */
     state.view = vs_init();
 
+    /* Performance LOD: target 60fps */
+    state.lod = lod_init(60.0f);
+
+    /* Auto-theme: enabled by default */
+    state.auto_theme = at_from_sun_elevation(0.0);
+    state.auto_theme_enabled = 1;
+
     /* Toggles */
     state.show_trails = 1; /* on by default */
     state.show_hud = 1;    /* on by default */

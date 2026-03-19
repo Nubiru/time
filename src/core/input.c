@@ -148,9 +148,14 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         return EM_TRUE;
     }
 
-    /* Shift + T: toggle theme (Cosmos / Dawn) */
+    /* Shift + T: toggle auto-theme on/off (manual Cosmos↔Dawn) */
     if (e->shiftKey && e->key[0] == 'T' && e->key[1] == '\0') {
-        EM_ASM({ if (Module._ui_toggle_theme) Module._ui_toggle_theme(); });
+        g_input_state->auto_theme_enabled = !g_input_state->auto_theme_enabled;
+        if (!g_input_state->auto_theme_enabled) {
+            /* Manual toggle: flip between Cosmos and Dawn */
+            float cur = g_input_state->auto_theme.blend_factor;
+            g_input_state->auto_theme.blend_factor = (cur > 0.5f) ? 0.0f : 1.0f;
+        }
         return EM_TRUE;
     }
 
