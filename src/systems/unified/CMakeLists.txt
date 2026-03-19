@@ -67,6 +67,7 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/exploration_progress.c
     ${CMAKE_CURRENT_SOURCE_DIR}/drama_narrator.c
     ${CMAKE_CURRENT_SOURCE_DIR}/profile_lens.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/annual_summary.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -138,4 +139,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_exploration_progress OBJECT exploration_progress.c)
     add_library(time_drama_narrator      OBJECT drama_narrator.c)
     add_library(time_profile_lens        OBJECT profile_lens.c)
+    add_library(time_annual_summary     OBJECT annual_summary.c)
 endif()

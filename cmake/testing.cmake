@@ -296,6 +296,8 @@ time_add_test(NAME test_exploration_progress TEST tests/systems/unified/test_exp
     DEPS exploration_progress)
 time_add_test(NAME test_profile_lens TEST tests/systems/unified/test_profile_lens.c
     DEPS profile_lens cosmic_fingerprint birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
+time_add_test(NAME test_annual_summary TEST tests/systems/unified/test_annual_summary.c
+    DEPS annual_summary birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 time_add_test(NAME test_festival_detector TEST tests/systems/unified/test_festival_detector.c
     DEPS festival_detector korean_calendar hebrew sabbatical hijri buddhist lunar wheel_of_year thai_calendar tamil_calendar myanmar persian zoroastrian calendar_fixed)
 time_add_test(NAME test_calendar_convert TEST tests/systems/unified/test_calendar_convert.c
