@@ -10,6 +10,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/color_palette.c
     ${CMAKE_CURRENT_SOURCE_DIR}/color_theory.c
     ${CMAKE_CURRENT_SOURCE_DIR}/ring_geometry.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/concentric_ring.c
     ${CMAKE_CURRENT_SOURCE_DIR}/ring_data.c
     ${CMAKE_CURRENT_SOURCE_DIR}/aspect_lines.c
     ${CMAKE_CURRENT_SOURCE_DIR}/cusp_lines.c
@@ -93,6 +94,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_color_palette       OBJECT color_palette.c)
     add_library(time_color_theory        OBJECT color_theory.c)
     add_library(time_ring_geometry       OBJECT ring_geometry.c)
+    add_library(time_concentric_ring     OBJECT concentric_ring.c)
     add_library(time_ring_data           OBJECT ring_data.c)
     add_library(time_aspect_lines        OBJECT aspect_lines.c)
     add_library(time_cusp_lines          OBJECT cusp_lines.c)
