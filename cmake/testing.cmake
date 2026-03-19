@@ -330,6 +330,8 @@ time_add_test(NAME test_cal_terms TEST tests/systems/unified/test_cal_terms.c
     DEPS cal_terms)
 time_add_test(NAME test_depth_interpret TEST tests/systems/unified/test_depth_interpret.c
     DEPS depth_interpret hebrew_interpret hebrew islamic_interpret hijri buddhist_interpret hindu_interpret panchanga nakshatra iching_interpret iching kabbalah_interpret)
+time_add_test(NAME test_depth_hud TEST tests/systems/unified/test_depth_hud.c
+    DEPS depth_hud)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
