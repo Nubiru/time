@@ -133,6 +133,7 @@ time_add_test(NAME test_camera_path TEST tests/render/test_camera_path.c DEPS ca
 time_add_test(NAME test_render_lod TEST tests/render/test_render_lod.c DEPS render_lod)
 time_add_test(NAME test_system_rings TEST tests/render/test_system_rings.c DEPS system_rings concentric_ring color_theory color)
 time_add_test(NAME test_convergence_visual TEST tests/render/test_convergence_visual.c DEPS convergence_visual concentric_ring)
+time_add_test(NAME test_pass_schedule TEST tests/render/test_pass_schedule.c DEPS pass_schedule)
 
 # Core tests
 time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
