@@ -11,13 +11,14 @@ target_include_directories(unity PUBLIC tests/unity)
 #
 # Usage:
 #   time_add_test(NAME test_vec3 TEST tests/math/test_vec3.c DEPS vec3)
-#   time_add_test(NAME test_mat4 TEST tests/math/test_mat4.c DEPS mat4 vec3)
+#   time_add_test(NAME test_mat4 TEST tests/math/test_mat4.c DEPS mat4 vec3 LABELS unit)
 #
-# NAME: test executable name (also CTest name)
-# TEST: path to test source file
-# DEPS: list of OBJECT library names (without time_ prefix)
+# NAME:   test executable name (also CTest name)
+# TEST:   path to test source file
+# DEPS:   list of OBJECT library names (without time_ prefix)
+# LABELS: optional test labels (unit, contract, integration, smoke)
 function(time_add_test)
-    cmake_parse_arguments(T "" "NAME;TEST" "DEPS" ${ARGN})
+    cmake_parse_arguments(T "" "NAME;TEST" "DEPS;LABELS" ${ARGN})
 
     # Build dep target names: "vec3" -> "time_vec3"
     set(_link_targets "")
@@ -31,6 +32,14 @@ function(time_add_test)
     # Unity test functions (void test_xxx) lack prototypes by design
     target_compile_options(${T_NAME} PRIVATE -Wno-missing-prototypes -Wno-missing-declarations)
     add_test(NAME ${T_NAME} COMMAND ${T_NAME})
+
+    # 10-second timeout prevents hanging tests from blocking CI
+    set_tests_properties(${T_NAME} PROPERTIES TIMEOUT 10)
+
+    # Apply labels if provided
+    if(T_LABELS)
+        set_tests_properties(${T_NAME} PROPERTIES LABELS "${T_LABELS}")
+    endif()
 endfunction()
 
 # ===========================================================================
@@ -323,16 +332,16 @@ time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validatio
     DEPS julian sidereal ecliptic kepler orbit planets gregorian zodiac aspects observer houses tzolkin chinese)
 
 # ===== Contract Tests =====
-time_add_test(NAME test_contract_julian    TEST tests/contracts/test_contract_julian.c    DEPS julian)
-time_add_test(NAME test_contract_zodiac    TEST tests/contracts/test_contract_zodiac.c    DEPS zodiac)
-time_add_test(NAME test_contract_orbit     TEST tests/contracts/test_contract_orbit.c     DEPS orbit kepler)
-time_add_test(NAME test_contract_planets   TEST tests/contracts/test_contract_planets.c   DEPS planets orbit kepler)
-time_add_test(NAME test_contract_gregorian TEST tests/contracts/test_contract_gregorian.c DEPS gregorian julian)
-time_add_test(NAME test_contract_tzolkin   TEST tests/contracts/test_contract_tzolkin.c   DEPS tzolkin julian)
-time_add_test(NAME test_contract_chinese   TEST tests/contracts/test_contract_chinese.c   DEPS chinese julian)
-time_add_test(NAME test_contract_hebrew    TEST tests/contracts/test_contract_hebrew.c    DEPS hebrew julian)
-time_add_test(NAME test_contract_hijri     TEST tests/contracts/test_contract_hijri.c     DEPS hijri julian)
-time_add_test(NAME test_contract_camera    TEST tests/contracts/test_contract_camera.c    DEPS camera vec3 mat4)
+time_add_test(NAME test_contract_julian    TEST tests/contracts/test_contract_julian.c    DEPS julian    LABELS contract)
+time_add_test(NAME test_contract_zodiac    TEST tests/contracts/test_contract_zodiac.c    DEPS zodiac    LABELS contract)
+time_add_test(NAME test_contract_orbit     TEST tests/contracts/test_contract_orbit.c     DEPS orbit kepler LABELS contract)
+time_add_test(NAME test_contract_planets   TEST tests/contracts/test_contract_planets.c   DEPS planets orbit kepler LABELS contract)
+time_add_test(NAME test_contract_gregorian TEST tests/contracts/test_contract_gregorian.c DEPS gregorian julian LABELS contract)
+time_add_test(NAME test_contract_tzolkin   TEST tests/contracts/test_contract_tzolkin.c   DEPS tzolkin julian LABELS contract)
+time_add_test(NAME test_contract_chinese   TEST tests/contracts/test_contract_chinese.c   DEPS chinese julian LABELS contract)
+time_add_test(NAME test_contract_hebrew    TEST tests/contracts/test_contract_hebrew.c    DEPS hebrew julian LABELS contract)
+time_add_test(NAME test_contract_hijri     TEST tests/contracts/test_contract_hijri.c     DEPS hijri julian LABELS contract)
+time_add_test(NAME test_contract_camera    TEST tests/contracts/test_contract_camera.c    DEPS camera vec3 mat4 LABELS contract)
 
 # ===== Integration Tests =====
 time_add_test(NAME test_render_pipeline TEST tests/integration/test_render_pipeline.c
@@ -352,7 +361,8 @@ time_add_test(NAME test_render_pipeline TEST tests/integration/test_render_pipel
          planet_surface_pack
          lens_flare
          post_process
-         weather_overlay wind_patterns storm_data)
+         weather_overlay wind_patterns storm_data
+    LABELS integration)
 time_add_test(NAME test_calendar_pipeline TEST tests/integration/test_calendar_pipeline.c
     DEPS julian gregorian tzolkin chinese hebrew hijri buddhist lunar
          persian coptic ethiopian egyptian japanese
@@ -360,16 +370,20 @@ time_add_test(NAME test_calendar_pipeline TEST tests/integration/test_calendar_p
          bahai french_republican celtic_tree
          calendar_convert haab cr_cycle iching
          convergence_detect tzolkin_board
-         wheel_of_year calendar_fixed)
+         wheel_of_year calendar_fixed
+    LABELS integration)
 time_add_test(NAME test_astronomy_pipeline TEST tests/integration/test_astronomy_pipeline.c
     DEPS julian kepler ecliptic sidereal orbit planets lunar solar_events
-         zodiac aspects observer houses)
+         zodiac aspects observer houses
+    LABELS integration)
 time_add_test(NAME test_calendar_roundtrip TEST tests/integration/test_calendar_roundtrip.c
     DEPS julian zoroastrian hijri ethiopian coptic thai_calendar egyptian
          tamil_calendar persian bahai hebrew myanmar french_republican japanese
-         korean_calendar celtic_tree chinese tzolkin iching haab pawukon calendar_fixed)
+         korean_calendar celtic_tree chinese tzolkin iching haab pawukon calendar_fixed
+    LABELS integration)
 time_add_test(NAME test_property_based TEST tests/integration/test_property_based.c
-    DEPS easing vec3 mat4)
+    DEPS easing vec3 mat4
+    LABELS integration)
 time_add_test(NAME test_shader_audit TEST tests/integration/test_shader_audit.c
     DEPS star_field star_catalog star_catalog_ext constellation star_colors
          planet_pack planets orbit kepler planet_data atmo_ring
@@ -388,4 +402,5 @@ time_add_test(NAME test_shader_audit TEST tests/integration/test_shader_audit.c
          post_process
          weather_overlay wind_patterns storm_data
          sun_shader mesh_shader billboard_shader diffraction
-         render_layers camera_scale easing golden_layout)
+         render_layers camera_scale easing golden_layout
+    LABELS integration)

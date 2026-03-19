@@ -83,9 +83,10 @@ if(EMSCRIPTEN)
         target_compile_definitions(time_app PRIVATE STAGING=1)
         target_link_options(time_app PRIVATE -O2 -g2 -sASSERTIONS=1)
     else()
-        # Development: debug info, assertions, moderate optimization
+        # Development: debug info, assertions, source maps, moderate optimization
         target_compile_definitions(time_app PRIVATE DEVELOPMENT=1)
-        target_link_options(time_app PRIVATE -Os -sASSERTIONS=2)
+        target_compile_options(time_app PRIVATE -g)
+        target_link_options(time_app PRIVATE -Os -sASSERTIONS=2 -gsource-map)
     endif()
 
     # Copy style.css to build dir
