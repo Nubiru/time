@@ -58,6 +58,8 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/audio_a11y.c
     ${CMAKE_CURRENT_SOURCE_DIR}/audio_queue.c
     ${CMAKE_CURRENT_SOURCE_DIR}/zoom_depth.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/focus_flow.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/symbol_atlas.c
     PARENT_SCOPE
 )
 
@@ -117,5 +119,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_audio_a11y      OBJECT audio_a11y.c)
     add_library(time_audio_queue     OBJECT audio_queue.c)
     add_library(time_zoom_depth      OBJECT zoom_depth.c)
+    add_library(time_focus_flow      OBJECT focus_flow.c)
+    add_library(time_symbol_atlas    OBJECT symbol_atlas.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()

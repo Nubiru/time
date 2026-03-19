@@ -286,6 +286,8 @@ time_add_test(NAME test_cosmic_fingerprint TEST tests/systems/unified/test_cosmi
     DEPS cosmic_fingerprint birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 time_add_test(NAME test_cycle_tracker TEST tests/systems/unified/test_cycle_tracker.c
     DEPS cycle_tracker birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
+time_add_test(NAME test_exploration_progress TEST tests/systems/unified/test_exploration_progress.c
+    DEPS exploration_progress)
 time_add_test(NAME test_festival_detector TEST tests/systems/unified/test_festival_detector.c
     DEPS festival_detector korean_calendar hebrew sabbatical hijri buddhist lunar wheel_of_year thai_calendar tamil_calendar myanmar persian zoroastrian calendar_fixed)
 time_add_test(NAME test_calendar_convert TEST tests/systems/unified/test_calendar_convert.c
@@ -372,6 +374,7 @@ time_add_test(NAME test_glyph_layout    TEST tests/ui/test_glyph_layout.c    DEP
 time_add_test(NAME test_card_data       TEST tests/ui/test_card_data.c        DEPS card_data)
 time_add_test(NAME test_zodiac_glyphs   TEST tests/ui/test_zodiac_glyphs.c   DEPS zodiac_glyphs)
 time_add_test(NAME test_hexagram_visual TEST tests/ui/test_hexagram_visual.c  DEPS hexagram_visual iching)
+time_add_test(NAME test_symbol_atlas    TEST tests/ui/test_symbol_atlas.c    DEPS symbol_atlas zodiac_glyphs)
 time_add_test(NAME test_location_presets TEST tests/ui/test_location_presets.c DEPS location_presets)
 time_add_test(NAME test_scale_hud       TEST tests/ui/test_scale_hud.c       DEPS scale_hud)
 time_add_test(NAME test_system_scale_map TEST tests/ui/test_system_scale_map.c DEPS system_scale_map)
@@ -457,6 +460,17 @@ time_add_test(NAME test_audio_a11y TEST tests/ui/test_audio_a11y.c
          calendar_fixed)
 time_add_test(NAME test_audio_queue TEST tests/ui/test_audio_queue.c
     DEPS audio_queue)
+time_add_test(NAME test_audio_pipeline TEST tests/ui/test_audio_pipeline.c
+    DEPS pianist_score midi_output audio_vis_data audio_a11y audio_queue
+         audio_score audio_event audio_culture audio_meditation audio_data
+         frequency view_registry golden_layout chakra
+         brain_scan brain_audio_bridge brain_types
+         planets orbit kepler aspects convergence_detect julian tzolkin
+         tzolkin_board iching chinese hebrew hijri buddhist lunar persian
+         coptic wheel_of_year bahai japanese egyptian french_republican
+         korean_calendar thai_calendar tamil_calendar myanmar zoroastrian
+         calendar_fixed
+    LABELS integration)
 # ui_bridge is Emscripten-only (S1) — no native test target
 time_add_test(NAME test_welcome_text TEST tests/ui/test_welcome_text.c
     DEPS welcome_text birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
@@ -464,6 +478,9 @@ time_add_test(NAME test_wisdom_display TEST tests/ui/test_wisdom_display.c
     DEPS wisdom_display wisdom_engine wisdom sensitivity)
 time_add_test(NAME test_zoom_depth TEST tests/ui/test_zoom_depth.c
     DEPS zoom_depth depth_tier depth_ring camera_scale easing spring LABELS unit)
+time_add_test(NAME test_focus_flow TEST tests/ui/test_focus_flow.c
+    DEPS focus_flow camera_path click_target render_layers camera_scale easing
+         spring vec_interp vec3 golden_layout LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
