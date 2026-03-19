@@ -132,6 +132,7 @@ time_add_test(NAME test_scale_spring TEST tests/render/test_scale_spring.c DEPS 
 time_add_test(NAME test_camera_path TEST tests/render/test_camera_path.c DEPS camera_path spring vec_interp vec3 easing LABELS unit)
 time_add_test(NAME test_render_lod TEST tests/render/test_render_lod.c DEPS render_lod)
 time_add_test(NAME test_system_rings TEST tests/render/test_system_rings.c DEPS system_rings concentric_ring color_theory color)
+time_add_test(NAME test_convergence_visual TEST tests/render/test_convergence_visual.c DEPS convergence_visual concentric_ring)
 
 # Core tests
 time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
@@ -427,6 +428,7 @@ time_add_test(NAME test_chinese_fmt    TEST tests/ui/test_chinese_fmt.c     DEPS
 time_add_test(NAME test_hd_card        TEST tests/ui/test_hd_card.c         DEPS hd_card human_design)
 time_add_test(NAME test_i18n           TEST tests/ui/test_i18n.c            DEPS i18n)
 time_add_test(NAME test_i18n_locales   TEST tests/ui/test_i18n_locales.c    DEPS i18n)
+time_add_test(NAME test_i18n_p1        TEST tests/ui/test_i18n_p1.c         DEPS i18n)
 time_add_test(NAME test_greeting       TEST tests/ui/test_greeting.c        DEPS greeting)
 time_add_test(NAME test_share_template TEST tests/ui/test_share_template.c  DEPS share_template)
 time_add_test(NAME test_iching_card    TEST tests/ui/test_iching_card.c     DEPS iching_card hexagram_visual iching)
