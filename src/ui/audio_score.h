@@ -27,6 +27,8 @@ typedef struct {
     float harmonic_amps[AS_MAX_PLANETS][AS_MAX_HARMONICS]; /* partial amplitudes (normalized) */
     float reverb_wet;                                  /* 0.0=fully dry, 1.0=fully wet */
     float reverb_decay_s;                              /* reverb impulse response duration */
+    float moon_factor;                                 /* 0.0-1.0 current moon envelope value */
+    float pan_positions[AS_MAX_PLANETS];               /* -1.0=left, 0.0=center, 1.0=right */
 } audio_params_t;
 
 /* Compute full audio parameters from current state.

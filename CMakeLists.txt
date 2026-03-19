@@ -55,6 +55,7 @@ set(ALL_SOURCES
     ${RENDER_SOURCES}
     ${SYSTEMS_SOURCES}
     ${UI_SOURCES}
+    ${PLATFORM_SOURCES}
 )
 
 # ===========================================================================

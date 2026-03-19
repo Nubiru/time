@@ -460,6 +460,102 @@ void test_compute_timbre_consistent_with_audio_data(void)
     }
 }
 
+/* ---- L1.1+L1.3: Moon envelope + Dynamic amplitude tests ---- */
+
+void test_compute_moon_factor_range(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.moon_factor >= 0.19f);
+    TEST_ASSERT_TRUE(p.moon_factor <= 1.01f);
+}
+
+void test_compute_moon_modulates_amplitudes(void)
+{
+    audio_params_t p1 = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    audio_params_t p2 = audio_score_compute(JD_J2000 + 14.76, VIEW_SPACE, 0.0f, 1.0);
+    int any_diff = 0;
+    for (int i = 0; i < p1.planet_count && i < p2.planet_count; i++) {
+        if (fabsf(p1.amplitudes[i] - p2.amplitudes[i]) > 0.01f) any_diff = 1;
+    }
+    TEST_ASSERT_TRUE(any_diff);
+}
+
+void test_compute_moon_factor_full_moon_high(void)
+{
+    double full_moon_jd = 2451550.26 + 14.76;
+    audio_params_t p = audio_score_compute(full_moon_jd, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.moon_factor > 0.85f);
+}
+
+void test_compute_moon_factor_new_moon_low(void)
+{
+    audio_params_t p = audio_score_compute(2451550.26, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.moon_factor < 0.3f);
+}
+
+void test_compute_warmth_boosts_inner_earth(void)
+{
+    audio_params_t warm = audio_score_compute(JD_J2000, VIEW_EARTH, 0.0f, 1.0);
+    audio_params_t cold = audio_score_compute(JD_J2000, VIEW_GALAXY, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(warm.amplitudes[0] > cold.amplitudes[0]);
+}
+
+void test_compute_warmth_boosts_outer_galaxy(void)
+{
+    audio_params_t warm = audio_score_compute(JD_J2000, VIEW_EARTH, 0.0f, 1.0);
+    audio_params_t cold = audio_score_compute(JD_J2000, VIEW_GALAXY, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(cold.amplitudes[7] > warm.amplitudes[7]);
+}
+
+void test_compute_warmth_space_neutral_amplitudes(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    for (int i = 0; i < p.planet_count; i++) {
+        TEST_ASSERT_TRUE(p.amplitudes[i] > 0.0f);
+    }
+}
+
+void test_compute_zoom_in_louder(void)
+{
+    audio_params_t close = audio_score_compute(JD_J2000, VIEW_SPACE, 5.0f, 1.0);
+    audio_params_t far = audio_score_compute(JD_J2000, VIEW_SPACE, -5.0f, 1.0);
+    float sum_close = 0, sum_far = 0;
+    for (int i = 0; i < close.planet_count; i++) sum_close += close.amplitudes[i];
+    for (int i = 0; i < far.planet_count; i++) sum_far += far.amplitudes[i];
+    TEST_ASSERT_TRUE(sum_close > sum_far);
+}
+
+void test_compute_zoom_zero_valid(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    for (int i = 0; i < p.planet_count; i++) {
+        TEST_ASSERT_TRUE(p.amplitudes[i] >= 0.0f);
+        TEST_ASSERT_TRUE(p.amplitudes[i] <= 1.0f);
+    }
+}
+
+void test_compute_amplitudes_clamped(void)
+{
+    audio_params_t p1 = audio_score_compute(JD_J2000, VIEW_EARTH, 10.0f, 1.0);
+    audio_params_t p2 = audio_score_compute(JD_J2000, VIEW_GALAXY, -10.0f, 1.0);
+    for (int i = 0; i < p1.planet_count; i++) {
+        TEST_ASSERT_TRUE(p1.amplitudes[i] >= 0.0f);
+        TEST_ASSERT_TRUE(p1.amplitudes[i] <= 1.0f);
+    }
+    for (int i = 0; i < p2.planet_count; i++) {
+        TEST_ASSERT_TRUE(p2.amplitudes[i] >= 0.0f);
+        TEST_ASSERT_TRUE(p2.amplitudes[i] <= 1.0f);
+    }
+}
+
+void test_compute_pan_positions_zeroed(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    for (int i = 0; i < AS_MAX_PLANETS; i++) {
+        TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.0f, p.pan_positions[i]);
+    }
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -541,6 +637,19 @@ int main(void)
 
     /* timbre consistency */
     RUN_TEST(test_compute_timbre_consistent_with_audio_data);
+
+    /* L1.1+L1.3: moon envelope + dynamic amplitude */
+    RUN_TEST(test_compute_moon_factor_range);
+    RUN_TEST(test_compute_moon_modulates_amplitudes);
+    RUN_TEST(test_compute_moon_factor_full_moon_high);
+    RUN_TEST(test_compute_moon_factor_new_moon_low);
+    RUN_TEST(test_compute_warmth_boosts_inner_earth);
+    RUN_TEST(test_compute_warmth_boosts_outer_galaxy);
+    RUN_TEST(test_compute_warmth_space_neutral_amplitudes);
+    RUN_TEST(test_compute_zoom_in_louder);
+    RUN_TEST(test_compute_zoom_zero_valid);
+    RUN_TEST(test_compute_amplitudes_clamped);
+    RUN_TEST(test_compute_pan_positions_zeroed);
 
     return UNITY_END();
 }

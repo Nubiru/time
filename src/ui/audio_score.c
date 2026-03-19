@@ -199,6 +199,10 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
     }
     result.reverb_wet = 0.0f;
     result.reverb_decay_s = 0.0f;
+    result.moon_factor = 0.0f;
+    for (int j = 0; j < AS_MAX_PLANETS; j++) {
+        result.pan_positions[j] = 0.0f;
+    }
 
     /* Chord */
     result.planet_count = audio_score_chord(jd, result.frequencies,
@@ -226,6 +230,51 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
         for (int h = 0; h < prof.harmonic_count && h < AS_MAX_HARMONICS; h++) {
             result.harmonic_amps[i][h] = (float)prof.harmonics[h].amplitude;
         }
+    }
+
+    /* Moon envelope: modulate all amplitudes by lunar phase (L1.3) */
+    {
+        double phase = lunar_phase_approx(jd);
+        float moon = (float)audio_moon_envelope(phase);
+        result.moon_factor = moon;
+        for (int i = 0; i < result.planet_count; i++) {
+            result.amplitudes[i] *= moon;
+        }
+    }
+
+    /* Warmth-based amplitude scaling (L1.1):
+     * warmth > 0 (warm): boost inner planets, soften outer
+     * warmth < 0 (cold): boost outer planets, soften inner */
+    {
+        float w = result.warmth;
+        for (int i = 0; i < result.planet_count; i++) {
+            float mix_factor;
+            if (i < 4) {
+                /* Inner planet: boost when warm */
+                mix_factor = 1.0f + 0.3f * w;
+            } else {
+                /* Outer planet: boost when cold */
+                mix_factor = 1.0f - 0.3f * w;
+            }
+            if (mix_factor < 0.3f) mix_factor = 0.3f;
+            if (mix_factor > 1.5f) mix_factor = 1.5f;
+            result.amplitudes[i] *= mix_factor;
+        }
+    }
+
+    /* Zoom proximity: zoomed in = louder, zoomed out = softer (L1.1) */
+    {
+        float zoom_factor = 1.0f + log_zoom * 0.02f;
+        if (zoom_factor < 0.6f) zoom_factor = 0.6f;
+        if (zoom_factor > 1.4f) zoom_factor = 1.4f;
+        for (int i = 0; i < result.planet_count; i++) {
+            result.amplitudes[i] *= zoom_factor;
+        }
+    }
+
+    /* Final amplitude clamp to [0, 1] */
+    for (int i = 0; i < result.planet_count; i++) {
+        result.amplitudes[i] = clampf(result.amplitudes[i], 0.0f, 1.0f);
     }
 
     /* Reverb: cold views get more reverb (vast/spacious), warm views less (intimate) */
