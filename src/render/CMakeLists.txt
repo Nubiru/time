@@ -72,6 +72,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/system_rings.c
     ${CMAKE_CURRENT_SOURCE_DIR}/convergence_visual.c
     ${CMAKE_CURRENT_SOURCE_DIR}/pass_schedule.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/view_state.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/star_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/planet_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/zodiac_pass.c
@@ -161,4 +162,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_system_rings        OBJECT system_rings.c)
     add_library(time_convergence_visual  OBJECT convergence_visual.c)
     add_library(time_pass_schedule       OBJECT pass_schedule.c)
+    add_library(time_view_state          OBJECT view_state.c)
 endif()
