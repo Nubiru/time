@@ -316,6 +316,8 @@ time_add_test(NAME test_brain_predict TEST tests/systems/unified/test_brain_pred
     DEPS brain_predict brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_brain_cluster TEST tests/systems/unified/test_brain_cluster.c
     DEPS brain_cluster brain_types)
+time_add_test(NAME test_brain_query TEST tests/systems/unified/test_brain_query.c
+    DEPS brain_query brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
