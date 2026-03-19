@@ -516,6 +516,8 @@ time_add_test(NAME test_focus_flow TEST tests/ui/test_focus_flow.c
          spring vec_interp vec3 golden_layout LABELS unit)
 time_add_test(NAME test_a11y_narrative TEST tests/ui/test_a11y_narrative.c
     DEPS a11y_narrative)
+time_add_test(NAME test_text_reveal TEST tests/ui/test_text_reveal.c
+    DEPS text_reveal animation easing)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
