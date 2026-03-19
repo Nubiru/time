@@ -171,6 +171,7 @@ time_add_test(NAME test_hindu_interpret TEST tests/systems/hindu/test_hindu_inte
 time_add_test(NAME test_sefirot         TEST tests/systems/kabbalah/test_sefirot.c      DEPS sefirot)
 time_add_test(NAME test_four_worlds     TEST tests/systems/kabbalah/test_four_worlds.c  DEPS four_worlds)
 time_add_test(NAME test_tree_geometry   TEST tests/systems/kabbalah/test_tree_geometry.c DEPS tree_geometry sefirot)
+time_add_test(NAME test_kabbalah_interpret TEST tests/systems/kabbalah/test_kabbalah_interpret.c DEPS kabbalah_interpret)
 time_add_test(NAME test_sabbatical     TEST tests/systems/hebrew/test_sabbatical.c    DEPS sabbatical hebrew)
 time_add_test(NAME test_hebrew_interpret TEST tests/systems/hebrew/test_hebrew_interpret.c DEPS hebrew_interpret hebrew)
 time_add_test(NAME test_dreamspell     TEST tests/systems/tzolkin/test_dreamspell.c   DEPS dreamspell)
