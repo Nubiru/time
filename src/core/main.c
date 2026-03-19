@@ -28,6 +28,9 @@
 #include "../render/passes/card_pass.h"
 #include "../render/passes/post_pass.h"
 #include "../ui/ui_bridge.h"
+#include "../ui/view_registry.h"
+#include "../ui/audio_score.h"
+#include "../ui/audio_engine.h"
 #endif
 
 #ifdef __EMSCRIPTEN__
@@ -103,6 +106,18 @@ void main_loop(void) {
 
     /* --- Update time bar display --- */
     ui_bridge_update_time(g_state.simulation_jd, g_state.time_speed);
+
+    /* --- Audio: compute score + pulse, feed engine --- */
+    {
+        audio_params_t audio = audio_score_compute(
+            g_state.simulation_jd,
+            VIEW_SPACE,
+            g_state.camera.log_zoom,
+            g_state.time_speed);
+        audio.pulse_factor = audio_score_pulse(audio.tempo_bpm,
+                                               now_ms / 1000.0);
+        audio_engine_update(&audio);
+    }
 #endif
 }
 
@@ -150,6 +165,9 @@ int main(void) {
 
     /* Initialize UI bridge — populate panels with data from pure modules */
     ui_bridge_init();
+
+    /* Initialize audio engine (WebAudio oscillators + reverb) */
+    audio_engine_init();
 
     printf("Controls: Space=pause, 1-5=speed, -=reverse, T=trails, H=hud, Shift+T=theme, Shift+0-6=scale\n");
 

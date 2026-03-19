@@ -29,6 +29,7 @@ typedef struct {
     float reverb_decay_s;                              /* reverb impulse response duration */
     float moon_factor;                                 /* 0.0-1.0 current moon envelope value */
     float pan_positions[AS_MAX_PLANETS];               /* -1.0=left, 0.0=center, 1.0=right */
+    float pulse_factor;                                /* 0.85-1.0 rhythmic breathing factor */
 } audio_params_t;
 
 /* Compute full audio parameters from current state.
@@ -55,6 +56,12 @@ float audio_score_warmth(int view_id, float log_zoom);
 /* Map time simulation speed to tempo BPM.
  * Real-time (1.0x) = 60 BPM, faster = higher BPM, paused = 0. */
 float audio_score_tempo(double time_speed);
+
+/* Compute rhythmic pulse factor from tempo and real clock time.
+ * Returns a gentle breathing factor (0.85 to 1.0) that pulses at the
+ * given BPM. Uses cosine wave for smooth rise and fall.
+ * If bpm <= 0, returns 1.0 (no pulse). */
+float audio_score_pulse(float tempo_bpm, double real_time_sec);
 
 /* Get a descriptive name for current audio mood. */
 const char *audio_score_mood(float warmth, float tension);

@@ -122,7 +122,7 @@ void audio_engine_update(const audio_params_t *params) {
     /* Update each active planet oscillator */
     for (int i = 0; i < AS_MAX_PLANETS && i < params->planet_count; i++) {
         float freq = params->frequencies[i];
-        float amp = params->amplitudes[i] * params->master_volume;
+        float amp = params->amplitudes[i] * params->master_volume * params->pulse_factor;
         int waveform = params->waveform_types[i];
         int hcount = params->harmonic_counts[i];
         float pan = params->pan_positions[i];
@@ -147,7 +147,7 @@ void audio_engine_update(const audio_params_t *params) {
 
             /* Ramp frequency and amplitude */
             ta.oscs[idx].frequency.linearRampToValueAtTime($1, now + 0.1);
-            ta.gains[idx].gain.linearRampToValueAtTime($2, now + 0.1);
+            ta.gains[idx].gain.linearRampToValueAtTime($2, now + 0.3);
 
             /* Ramp stereo pan position (L1.2) */
             ta.panners[idx].pan.linearRampToValueAtTime($13, now + 0.1);
@@ -203,8 +203,8 @@ void audio_engine_update(const audio_params_t *params) {
             var ta = window._timeAudio;
             if (!ta) return;
             var now = ta.ctx.currentTime;
-            ta.dryGain.gain.linearRampToValueAtTime($0, now + 0.5);
-            ta.wetGain.gain.linearRampToValueAtTime($1, now + 0.5);
+            ta.dryGain.gain.linearRampToValueAtTime($0, now + 1.5);
+            ta.wetGain.gain.linearRampToValueAtTime($1, now + 1.5);
         }, (double)dry, (double)wet);
     }
 }

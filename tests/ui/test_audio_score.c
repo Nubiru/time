@@ -548,6 +548,66 @@ void test_compute_amplitudes_clamped(void)
     }
 }
 
+/* ---- L1.5: Rhythmic pulse tests ---- */
+
+void test_pulse_zero_bpm_returns_one(void)
+{
+    float p = audio_score_pulse(0.0f, 10.0);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 1.0f, p);
+}
+
+void test_pulse_negative_bpm_returns_one(void)
+{
+    float p = audio_score_pulse(-60.0f, 10.0);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 1.0f, p);
+}
+
+void test_pulse_range(void)
+{
+    /* At any time, pulse should be in [0.85, 1.0] */
+    for (int i = 0; i < 100; i++) {
+        float p = audio_score_pulse(60.0f, (double)i * 0.1);
+        TEST_ASSERT_TRUE(p >= 0.84f);
+        TEST_ASSERT_TRUE(p <= 1.01f);
+    }
+}
+
+void test_pulse_at_beat_start(void)
+{
+    /* At time 0.0 with 60 BPM (period=1s), phase=0, cos(0)=1, pulse=1.0 */
+    float p = audio_score_pulse(60.0f, 0.0);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.0f, p);
+}
+
+void test_pulse_at_half_beat(void)
+{
+    /* At time 0.5 with 60 BPM (period=1s), phase=0.5, cos(PI)=-1, pulse=0.85 */
+    float p = audio_score_pulse(60.0f, 0.5);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 0.85f, p);
+}
+
+void test_pulse_periodic(void)
+{
+    /* Pulse should repeat: same value at t and t+period */
+    float p1 = audio_score_pulse(60.0f, 0.3);
+    float p2 = audio_score_pulse(60.0f, 1.3); /* one period later */
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, p1, p2);
+}
+
+void test_pulse_faster_bpm_shorter_period(void)
+{
+    /* At 120 BPM, period=0.5s. Time 0.25 should be at trough (half period) */
+    float p = audio_score_pulse(120.0f, 0.25);
+    TEST_ASSERT_FLOAT_WITHIN(0.02f, 0.85f, p);
+}
+
+void test_pulse_default_in_params(void)
+{
+    /* audio_score_compute should set pulse_factor to 1.0 (caller overrides later) */
+    audio_params_t p = audio_score_compute(2451545.0, 0, 0.0f, 1.0);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 1.0f, p.pulse_factor);
+}
+
 /* ---- L1.2: Spatial panning tests ---- */
 
 void test_compute_pan_mercury_left(void)
@@ -695,6 +755,15 @@ int main(void)
     RUN_TEST(test_compute_zoom_in_louder);
     RUN_TEST(test_compute_zoom_zero_valid);
     RUN_TEST(test_compute_amplitudes_clamped);
+    /* L1.5: rhythmic pulse */
+    RUN_TEST(test_pulse_zero_bpm_returns_one);
+    RUN_TEST(test_pulse_negative_bpm_returns_one);
+    RUN_TEST(test_pulse_range);
+    RUN_TEST(test_pulse_at_beat_start);
+    RUN_TEST(test_pulse_at_half_beat);
+    RUN_TEST(test_pulse_periodic);
+    RUN_TEST(test_pulse_faster_bpm_shorter_period);
+    RUN_TEST(test_pulse_default_in_params);
     /* L1.2: spatial panning */
     RUN_TEST(test_compute_pan_mercury_left);
     RUN_TEST(test_compute_pan_jupiter_right);

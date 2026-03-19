@@ -165,6 +165,25 @@ float audio_score_tempo(double time_speed)
     return clampf(bpm, 0.0f, 200.0f);
 }
 
+float audio_score_pulse(float tempo_bpm, double real_time_sec)
+{
+    if (tempo_bpm <= 0.0f || real_time_sec < 0.0) {
+        return 1.0f;
+    }
+
+    /* Beat period in seconds */
+    double beat_period = 60.0 / (double)tempo_bpm;
+
+    /* Phase within current beat (0.0 to 1.0) */
+    double phase = fmod(real_time_sec / beat_period, 1.0);
+    if (phase < 0.0) phase += 1.0;
+
+    /* Smooth cosine pulse: 0.85 at trough, 1.0 at peak */
+    float pulse = 0.85f + 0.15f * (float)(0.5 + 0.5 * cos(2.0 * PI * phase));
+
+    return pulse;
+}
+
 const char *audio_score_mood(float warmth, float tension)
 {
     /* Thresholds */
@@ -203,6 +222,7 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
     for (int j = 0; j < AS_MAX_PLANETS; j++) {
         result.pan_positions[j] = 0.0f;
     }
+    result.pulse_factor = 1.0f;
 
     /* Chord */
     result.planet_count = audio_score_chord(jd, result.frequencies,
