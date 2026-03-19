@@ -755,6 +755,101 @@ void test_is_rtl_spanish(void)
     TEST_ASSERT_FALSE(i18n_is_rtl(I18N_LOCALE_ES));
 }
 
+/* ---- Expanded i18n keys: tests 125+ ---- */
+
+void test_key_count_expanded(void)
+{
+    TEST_ASSERT_GREATER_OR_EQUAL(100, i18n_key_count());
+}
+
+void test_new_system_keys(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Kabbalah", i18n_get("system.kabbalah"));
+    TEST_ASSERT_EQUAL_STRING("Geology", i18n_get("system.geology"));
+    TEST_ASSERT_EQUAL_STRING("Earth", i18n_get("system.earth"));
+    TEST_ASSERT_EQUAL_STRING("Unified", i18n_get("system.unified"));
+}
+
+void test_depth_tier_keys(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Surface", i18n_get("depth.surface"));
+    TEST_ASSERT_EQUAL_STRING("Context", i18n_get("depth.context"));
+    TEST_ASSERT_EQUAL_STRING("Cycle", i18n_get("depth.cycle"));
+    TEST_ASSERT_EQUAL_STRING("Cosmic", i18n_get("depth.cosmic"));
+}
+
+void test_view_keys(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Space View", i18n_get("view.space"));
+    TEST_ASSERT_EQUAL_STRING("Earth View", i18n_get("view.earth"));
+}
+
+void test_time_control_keys(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Paused", i18n_get("time.paused"));
+    TEST_ASSERT_EQUAL_STRING("Speed", i18n_get("time.speed"));
+    TEST_ASSERT_EQUAL_STRING("Now", i18n_get("time.now"));
+}
+
+void test_welcome_keys(void)
+{
+    TEST_ASSERT_EQUAL_STRING("When did you arrive on this planet?",
+                              i18n_get("welcome.when_born"));
+    TEST_ASSERT_EQUAL_STRING("Skip", i18n_get("welcome.skip"));
+}
+
+void test_planet_keys(void)
+{
+    TEST_ASSERT_EQUAL_STRING("Sun", i18n_get("planet.sun"));
+    TEST_ASSERT_EQUAL_STRING("Moon", i18n_get("planet.moon"));
+    TEST_ASSERT_EQUAL_STRING("Saturn", i18n_get("planet.saturn"));
+}
+
+void test_sensitivity_keys(void)
+{
+    TEST_ASSERT_EQUAL_STRING("General", i18n_get("sensitivity.general"));
+    TEST_ASSERT_EQUAL_STRING("Respectful", i18n_get("sensitivity.respectful"));
+    TEST_ASSERT_EQUAL_STRING("Sacred", i18n_get("sensitivity.sacred"));
+}
+
+void test_get_locale_fallback(void)
+{
+    /* Currently passes through to English */
+    TEST_ASSERT_EQUAL_STRING("Paused",
+                              i18n_get_locale("time.paused", I18N_LOCALE_ES));
+    TEST_ASSERT_EQUAL_STRING("Paused",
+                              i18n_get_locale("time.paused", I18N_LOCALE_AR));
+}
+
+void test_get_locale_unknown_key(void)
+{
+    /* Unknown key returns key itself */
+    TEST_ASSERT_EQUAL_STRING("nonexistent.key",
+                              i18n_get_locale("nonexistent.key", I18N_LOCALE_EN));
+}
+
+void test_error_keys(void)
+{
+    TEST_ASSERT_EQUAL_STRING("No data available", i18n_get("error.no_data"));
+    TEST_ASSERT_EQUAL_STRING("Invalid date", i18n_get("error.invalid_date"));
+}
+
+void test_hierarchical_naming(void)
+{
+    /* Verify all keys follow dotted hierarchical pattern */
+    int count = i18n_key_count();
+    for (int i = 0; i < count; i++) {
+        i18n_entry_t entry = i18n_entry(i);
+        TEST_ASSERT_NOT_NULL(entry.key);
+        /* Every key should contain at least one dot */
+        int has_dot = 0;
+        for (const char *p = entry.key; *p; p++) {
+            if (*p == '.') { has_dot = 1; break; }
+        }
+        TEST_ASSERT_TRUE_MESSAGE(has_dot, entry.key);
+    }
+}
+
 /* ---- main runner ---- */
 
 int main(void)
@@ -928,6 +1023,20 @@ int main(void)
     /* RTL edge */
     RUN_TEST(test_is_rtl_negative);
     RUN_TEST(test_is_rtl_spanish);
+
+    /* Expanded i18n keys */
+    RUN_TEST(test_key_count_expanded);
+    RUN_TEST(test_new_system_keys);
+    RUN_TEST(test_depth_tier_keys);
+    RUN_TEST(test_view_keys);
+    RUN_TEST(test_time_control_keys);
+    RUN_TEST(test_welcome_keys);
+    RUN_TEST(test_planet_keys);
+    RUN_TEST(test_sensitivity_keys);
+    RUN_TEST(test_get_locale_fallback);
+    RUN_TEST(test_get_locale_unknown_key);
+    RUN_TEST(test_error_keys);
+    RUN_TEST(test_hierarchical_naming);
 
     return UNITY_END();
 }

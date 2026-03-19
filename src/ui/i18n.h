@@ -91,4 +91,10 @@ const char *i18n_locale_code(i18n_locale_t locale);
 /* Is this locale RTL (right-to-left)? */
 bool i18n_is_rtl(i18n_locale_t locale);
 
+/* Get a translated string for a specific locale. Falls back:
+ * requested locale -> English -> key itself.
+ * Currently only English translations are stored, so this
+ * always returns the English value. Future: per-locale tables. */
+const char *i18n_get_locale(const char *key, i18n_locale_t locale);
+
 #endif /* TIME_I18N_H */

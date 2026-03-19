@@ -37,7 +37,118 @@ static const i18n_entry_t default_strings[] = {
     { "ui.year",          "year" },
     { "ui.years",         "years" },
     { "ui.loading",       "Loading..." },
-    { "ui.error",         "Error" }
+    { "ui.error",         "Error" },
+
+    /* Additional system names (4) */
+    { "system.kabbalah",    "Kabbalah" },
+    { "system.geology",     "Geology" },
+    { "system.earth",       "Earth" },
+    { "system.unified",     "Unified" },
+
+    /* Depth tier labels (4) */
+    { "depth.surface",      "Surface" },
+    { "depth.context",      "Context" },
+    { "depth.cycle",        "Cycle" },
+    { "depth.cosmic",       "Cosmic" },
+
+    /* View names (6) */
+    { "view.space",         "Space View" },
+    { "view.earth",         "Earth View" },
+    { "view.tzolkin",       "Tzolkin View" },
+    { "view.iching",        "I Ching View" },
+    { "view.calendar",      "Calendar View" },
+    { "view.deep_time",     "Deep Time View" },
+
+    /* Time controls (8) */
+    { "time.paused",        "Paused" },
+    { "time.reversed",      "Reversed" },
+    { "time.speed",         "Speed" },
+    { "time.now",           "Now" },
+    { "time.realtime",      "Real-time" },
+    { "time.faster",        "Faster" },
+    { "time.slower",        "Slower" },
+    { "time.jump_to",       "Jump to" },
+
+    /* Layer categories (6) */
+    { "layer.astronomy",    "Astronomy" },
+    { "layer.astrology",    "Astrology" },
+    { "layer.calendar",     "Calendars" },
+    { "layer.sacred",       "Sacred Systems" },
+    { "layer.earth",        "Earth" },
+    { "layer.display",      "Display" },
+
+    /* Content labels (8) */
+    { "content.wisdom",     "Wisdom" },
+    { "content.fun_fact",   "Fun Fact" },
+    { "content.story",      "Cultural Story" },
+    { "content.achievement","Achievement" },
+    { "content.drama",      "Dramatization" },
+    { "content.card",       "Card" },
+    { "content.help",       "Help" },
+    { "content.command",    "Command" },
+
+    /* Sensitivity labels (3) */
+    { "sensitivity.general",    "General" },
+    { "sensitivity.respectful", "Respectful" },
+    { "sensitivity.sacred",     "Sacred" },
+
+    /* Navigation (6) */
+    { "nav.home",           "Home" },
+    { "nav.settings",       "Settings" },
+    { "nav.about",          "About" },
+    { "nav.share",          "Share" },
+    { "nav.search",         "Search" },
+    { "nav.close",          "Close" },
+
+    /* Calendar terms (6) */
+    { "cal.month",          "Month" },
+    { "cal.day",            "Day" },
+    { "cal.cycle",          "Cycle" },
+    { "cal.element",        "Element" },
+    { "cal.sign",           "Sign" },
+    { "cal.festival",       "Festival" },
+
+    /* Toast messages (6) */
+    { "toast.speed_changed",    "Speed changed" },
+    { "toast.view_changed",     "View changed" },
+    { "toast.layer_toggled",    "Layer toggled" },
+    { "toast.jump_complete",    "Jump complete" },
+    { "toast.location_set",     "Location set" },
+    { "toast.time_paused",      "Time paused" },
+
+    /* Accessibility (4) */
+    { "a11y.skip_to_content",  "Skip to content" },
+    { "a11y.screen_reader",    "Screen reader mode" },
+    { "a11y.high_contrast",    "High contrast" },
+    { "a11y.reduced_motion",   "Reduced motion" },
+
+    /* Welcome journey (6) */
+    { "welcome.when_born",     "When did you arrive on this planet?" },
+    { "welcome.where_born",    "Where on Earth were you standing?" },
+    { "welcome.skip",          "Skip" },
+    { "welcome.continue",      "Continue" },
+    { "welcome.reveal",        "Discover your cosmic identity" },
+    { "welcome.complete",      "Welcome to Time" },
+
+    /* Error states (4) */
+    { "error.no_data",         "No data available" },
+    { "error.invalid_date",    "Invalid date" },
+    { "error.out_of_range",    "Date out of range" },
+    { "error.unknown",         "Unknown error" },
+
+    /* Attribution format (2) */
+    { "attr.source",           "Source" },
+    { "attr.author",           "Author" },
+
+    /* Planets (8) */
+    { "planet.sun",       "Sun" },
+    { "planet.moon",      "Moon" },
+    { "planet.mercury",   "Mercury" },
+    { "planet.venus",     "Venus" },
+    { "planet.mars",      "Mars" },
+    { "planet.jupiter",   "Jupiter" },
+    { "planet.saturn",    "Saturn" },
+    { "planet.neptune",   "Neptune" }
 };
 
 #define DEFAULT_STRING_COUNT \
@@ -261,4 +372,10 @@ bool i18n_is_rtl(i18n_locale_t locale)
         return false;
     }
     return locale_rtl[locale];
+}
+
+const char *i18n_get_locale(const char *key, i18n_locale_t locale)
+{
+    (void)locale; /* Future: per-locale lookup tables */
+    return i18n_get(key);
 }
