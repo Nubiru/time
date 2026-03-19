@@ -72,6 +72,7 @@ time_add_test(NAME test_font_atlas      TEST tests/render/test_font_atlas.c     
 time_add_test(NAME test_font_bitmap    TEST tests/render/test_font_bitmap.c    DEPS font_bitmap)
 time_add_test(NAME test_color_palette   TEST tests/render/test_color_palette.c   DEPS color_palette color_theory color)
 time_add_test(NAME test_ring_geometry   TEST tests/render/test_ring_geometry.c   DEPS ring_geometry)
+time_add_test(NAME test_concentric_ring TEST tests/render/test_concentric_ring.c DEPS concentric_ring)
 time_add_test(NAME test_aspect_lines    TEST tests/render/test_aspect_lines.c    DEPS aspect_lines color_palette color_theory color)
 time_add_test(NAME test_cusp_lines      TEST tests/render/test_cusp_lines.c      DEPS cusp_lines)
 time_add_test(NAME test_galaxy_geometry TEST tests/render/test_galaxy_geometry.c  DEPS galaxy_geometry)
@@ -226,7 +227,8 @@ time_add_test(NAME test_celtic_tree     TEST tests/systems/celtic/test_celtic_tr
 time_add_test(NAME test_celtic_interpret TEST tests/systems/celtic/test_celtic_interpret.c DEPS celtic_interpret)
 
 # Korean tests
-time_add_test(NAME test_korean_calendar TEST tests/systems/korean/test_korean_calendar.c DEPS korean_calendar)
+time_add_test(NAME test_korean_calendar  TEST tests/systems/korean/test_korean_calendar.c DEPS korean_calendar)
+time_add_test(NAME test_korean_interpret TEST tests/systems/korean/test_korean_interpret.c DEPS korean_interpret korean_calendar)
 
 # Balinese tests
 time_add_test(NAME test_pawukon         TEST tests/systems/balinese/test_pawukon.c       DEPS pawukon)
