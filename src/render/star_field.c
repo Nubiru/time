@@ -428,18 +428,26 @@ static const char STAR_VERT_SOURCE[] =
     "\n"
     "uniform mat4 u_mvp;\n"
     "uniform float u_scale_factor;\n"
+    "uniform float u_time;\n"
     "\n"
     "layout(location = 0) in vec3 a_position;\n"
     "layout(location = 1) in vec3 a_color;\n"
     "layout(location = 2) in float a_size;\n"
     "\n"
     "out vec3 v_color;\n"
+    "out float v_twinkle;\n"
     "\n"
     "void main() {\n"
     "    gl_Position = u_mvp * vec4(a_position, 1.0);\n"
     "    float ps = a_size * u_scale_factor / gl_Position.w;\n"
     "    gl_PointSize = clamp(ps, 1.0, 32.0);\n"
     "    v_color = a_color;\n"
+    "\n"
+    "    /* Per-star scintillation — position hash gives unique phase per star */\n"
+    "    float star_hash = fract(sin(dot(a_position.xy, vec2(12.9898, 78.233))) * 43758.5453);\n"
+    "    float twinkle_speed = 2.0 + star_hash * 4.0;\n"
+    "    float twinkle_amp = 0.15 * (1.0 - clamp(a_size / 8.0, 0.0, 1.0));\n"
+    "    v_twinkle = 1.0 - twinkle_amp * (0.5 + 0.5 * sin(u_time * twinkle_speed + star_hash * 6.283));\n"
     "}\n";
 
 static const char STAR_FRAG_SOURCE[] =
@@ -447,13 +455,14 @@ static const char STAR_FRAG_SOURCE[] =
     "precision highp float;\n"
     "\n"
     "in vec3 v_color;\n"
+    "in float v_twinkle;\n"
     "out vec4 frag_color;\n"
     "\n"
     "void main() {\n"
     "    vec2 pc = gl_PointCoord - vec2(0.5);\n"
     "    float dist = length(pc) * 2.0;\n"
     "    float alpha = 1.0 - smoothstep(0.5, 1.0, dist);\n"
-    "    frag_color = vec4(v_color * alpha, alpha);\n"
+    "    frag_color = vec4(v_color * alpha * v_twinkle, alpha * v_twinkle);\n"
     "}\n";
 
 static const char CLINE_VERT_SOURCE[] =

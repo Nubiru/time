@@ -72,8 +72,10 @@ constellation_line_info_t constellation_lines_info(int line_count);
 int star_field_total_count(void);
 
 /* Star point-sprite vertex shader source (GLSL ES 3.00).
- * Uniforms: u_mvp (mat4), u_scale_factor (float).
+ * Uniforms: u_mvp (mat4), u_scale_factor (float), u_time (float).
  * Attributes: a_position (vec3, loc 0), a_color (vec3, loc 1), a_size (float, loc 2).
+ * Per-star scintillation: position hash -> unique twinkle phase/speed.
+ * Bright stars (large a_size) stay stable; dim stars twinkle more.
  * Returns pointer to static const null-terminated string. */
 const char *star_field_vert_source(void);
 

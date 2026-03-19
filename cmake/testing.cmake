@@ -240,6 +240,7 @@ time_add_test(NAME test_event_filter  TEST tests/systems/earth/test_event_filter
 time_add_test(NAME test_neighbor_roulette TEST tests/systems/earth/test_neighbor_roulette.c DEPS neighbor_roulette interest_profile privacy_framework dreamspell tzolkin julian zodiac)
 time_add_test(NAME test_personal_space TEST tests/systems/earth/test_personal_space.c DEPS personal_space)
 time_add_test(NAME test_content_curator TEST tests/systems/earth/test_content_curator.c DEPS content_curator personal_space interest_profile wisdom fun_facts cultural_stories)
+time_add_test(NAME test_persona_persist TEST tests/systems/earth/test_persona_persist.c DEPS persona_persist user_prefs interest_profile personal_space privacy_framework theme golden_layout color_theory color)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)

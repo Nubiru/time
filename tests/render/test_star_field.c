@@ -502,7 +502,37 @@ void test_star_vert_has_u_scale_factor(void)
 }
 
 /* ═══════════════════════════════════════════════════════════════════════
- * 18. CLINE vertex stride
+ * 18. Star scintillation — shader tokens
+ * ═══════════════════════════════════════════════════════════════════════ */
+
+void test_star_vert_has_u_time(void)
+{
+    const char *src = star_field_vert_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "u_time"));
+}
+
+void test_star_vert_has_v_twinkle(void)
+{
+    const char *src = star_field_vert_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "v_twinkle"));
+}
+
+void test_star_frag_has_v_twinkle(void)
+{
+    const char *src = star_field_frag_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "v_twinkle"));
+}
+
+void test_star_scintillation_subtle(void)
+{
+    /* Bright stars should stay near 1.0 — check the 0.15 amplitude constant
+     * ensures minimum twinkle is around 0.85 for dim stars */
+    const char *src = star_field_vert_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "0.15"));
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+ * 19. CLINE vertex stride
  * ═══════════════════════════════════════════════════════════════════════ */
 
 void test_cline_vertex_stride(void)
@@ -616,6 +646,12 @@ int main(void)
     RUN_TEST(test_line_vert_has_u_mvp);
     RUN_TEST(test_star_vert_has_u_mvp);
     RUN_TEST(test_star_vert_has_u_scale_factor);
+
+    /* Star scintillation */
+    RUN_TEST(test_star_vert_has_u_time);
+    RUN_TEST(test_star_vert_has_v_twinkle);
+    RUN_TEST(test_star_frag_has_v_twinkle);
+    RUN_TEST(test_star_scintillation_subtle);
 
     /* CLINE stride */
     RUN_TEST(test_cline_vertex_stride);

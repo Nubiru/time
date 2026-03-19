@@ -17,6 +17,7 @@
 static GLuint s_star_program;
 static GLint  s_star_loc_mvp;
 static GLint  s_star_loc_scale;
+static GLint  s_star_loc_time;
 static GLuint s_star_vao;
 static GLuint s_star_vbo;
 static int    s_star_count;
@@ -41,6 +42,7 @@ int star_pass_init(void) {
     }
     s_star_loc_mvp = glGetUniformLocation(s_star_program, "u_mvp");
     s_star_loc_scale = glGetUniformLocation(s_star_program, "u_scale_factor");
+    s_star_loc_time = glGetUniformLocation(s_star_program, "u_time");
 
     /* Pack star vertex data */
     s_star_count = star_field_pack(s_star_init_verts, 600, 8.0f, 100.0f);
@@ -109,6 +111,7 @@ void star_pass_draw(const render_frame_t *frame) {
     glUseProgram(s_star_program);
     glUniformMatrix4fv(s_star_loc_mvp, 1, GL_FALSE, frame->view_proj.m);
     glUniform1f(s_star_loc_scale, star_opacity);
+    glUniform1f(s_star_loc_time, frame->time_sec);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
