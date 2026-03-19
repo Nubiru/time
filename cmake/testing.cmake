@@ -313,6 +313,8 @@ time_add_test(NAME test_brain_surprise TEST tests/systems/unified/test_brain_sur
     DEPS brain_surprise brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_brain_predict TEST tests/systems/unified/test_brain_predict.c
     DEPS brain_predict brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+time_add_test(NAME test_brain_cluster TEST tests/systems/unified/test_brain_cluster.c
+    DEPS brain_cluster brain_types)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -359,6 +361,8 @@ time_add_test(NAME test_view_adapt  TEST tests/ui/test_view_adapt.c    DEPS view
 time_add_test(NAME test_a11y_score TEST tests/ui/test_a11y_score.c   DEPS a11y_score)
 time_add_test(NAME test_system_theme TEST tests/ui/test_system_theme.c DEPS system_theme theme theme_css color_theory color golden_layout)
 time_add_test(NAME test_timeline    TEST tests/ui/test_timeline.c    DEPS timeline animation easing LABELS unit)
+time_add_test(NAME test_sensitivity TEST tests/ui/test_sensitivity.c
+    DEPS sensitivity wisdom cultural_stories fun_facts)
 # ui_bridge is Emscripten-only (S1) — no native test target
 
 # Platform tests
