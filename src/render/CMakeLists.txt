@@ -53,6 +53,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/constellation_bounds.c
     ${CMAKE_CURRENT_SOURCE_DIR}/horizon_geometry.c
     ${CMAKE_CURRENT_SOURCE_DIR}/horizon_camera.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/sky_dome.c
     ${CMAKE_CURRENT_SOURCE_DIR}/weather_overlay.c
     ${CMAKE_CURRENT_SOURCE_DIR}/post_process.c
     ${CMAKE_CURRENT_SOURCE_DIR}/shared_uniforms.c
@@ -135,6 +136,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_constellation_bounds OBJECT constellation_bounds.c)
     add_library(time_horizon_geometry    OBJECT horizon_geometry.c)
     add_library(time_horizon_camera     OBJECT horizon_camera.c)
+    add_library(time_sky_dome            OBJECT sky_dome.c)
     add_library(time_weather_overlay     OBJECT weather_overlay.c)
     add_library(time_post_process        OBJECT post_process.c)
     add_library(time_shared_uniforms     OBJECT shared_uniforms.c)
