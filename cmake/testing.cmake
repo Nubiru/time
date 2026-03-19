@@ -328,6 +328,8 @@ time_add_test(NAME test_brain_query TEST tests/systems/unified/test_brain_query.
     DEPS brain_query brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_cal_terms TEST tests/systems/unified/test_cal_terms.c
     DEPS cal_terms)
+time_add_test(NAME test_depth_interpret TEST tests/systems/unified/test_depth_interpret.c
+    DEPS depth_interpret hebrew_interpret hebrew islamic_interpret hijri buddhist_interpret hindu_interpret panchanga nakshatra iching_interpret iching kabbalah_interpret)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -390,6 +392,8 @@ time_add_test(NAME test_audio_event TEST tests/ui/test_audio_event.c
          hebrew hijri buddhist lunar persian coptic wheel_of_year bahai
          japanese egyptian french_republican korean_calendar thai_calendar
          tamil_calendar myanmar zoroastrian calendar_fixed)
+time_add_test(NAME test_audio_culture TEST tests/ui/test_audio_culture.c
+    DEPS audio_culture)
 # ui_bridge is Emscripten-only (S1) — no native test target
 
 # Platform tests
