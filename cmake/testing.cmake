@@ -296,6 +296,8 @@ time_add_test(NAME test_depth_ring TEST tests/systems/unified/test_depth_ring.c
     DEPS depth_ring)
 time_add_test(NAME test_brain_narrative TEST tests/systems/unified/test_brain_narrative.c
     DEPS brain_narrative brain_types)
+time_add_test(NAME test_brain_temporal TEST tests/systems/unified/test_brain_temporal.c
+    DEPS brain_temporal brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

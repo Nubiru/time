@@ -38,6 +38,7 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_explain.c
     ${CMAKE_CURRENT_SOURCE_DIR}/depth_ring.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_narrative.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/brain_temporal.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -80,4 +81,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_brain_explain  OBJECT brain_explain.c)
     add_library(time_depth_ring     OBJECT depth_ring.c)
     add_library(time_brain_narrative OBJECT brain_narrative.c)
+    add_library(time_brain_temporal  OBJECT brain_temporal.c)
 endif()
