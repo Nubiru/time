@@ -60,6 +60,7 @@ time_add_test(NAME test_bezier          TEST tests/math/test_bezier.c          D
 time_add_test(NAME test_sacred_geometry TEST tests/math/test_sacred_geometry.c DEPS sacred_geometry vec3)
 time_add_test(NAME test_wheel_layout    TEST tests/math/test_wheel_layout.c    DEPS wheel_layout)
 time_add_test(NAME test_projection      TEST tests/math/test_projection.c      DEPS projection mat4 vec3)
+time_add_test(NAME test_spring          TEST tests/math/test_spring.c          DEPS spring          LABELS unit)
 
 # Render tests
 time_add_test(NAME test_camera          TEST tests/render/test_camera.c          DEPS camera vec3 mat4)
@@ -164,6 +165,7 @@ time_add_test(NAME test_sefirot         TEST tests/systems/kabbalah/test_sefirot
 time_add_test(NAME test_four_worlds     TEST tests/systems/kabbalah/test_four_worlds.c  DEPS four_worlds)
 time_add_test(NAME test_tree_geometry   TEST tests/systems/kabbalah/test_tree_geometry.c DEPS tree_geometry sefirot)
 time_add_test(NAME test_sabbatical     TEST tests/systems/hebrew/test_sabbatical.c    DEPS sabbatical hebrew)
+time_add_test(NAME test_hebrew_interpret TEST tests/systems/hebrew/test_hebrew_interpret.c DEPS hebrew_interpret hebrew)
 time_add_test(NAME test_dreamspell     TEST tests/systems/tzolkin/test_dreamspell.c   DEPS dreamspell)
 time_add_test(NAME test_tzolkin_board  TEST tests/systems/tzolkin/test_tzolkin_board.c DEPS tzolkin_board)
 time_add_test(NAME test_kin_social    TEST tests/systems/tzolkin/test_kin_social.c   DEPS kin_social dreamspell)
@@ -298,6 +300,8 @@ time_add_test(NAME test_brain_narrative TEST tests/systems/unified/test_brain_na
     DEPS brain_narrative brain_types)
 time_add_test(NAME test_brain_temporal TEST tests/systems/unified/test_brain_temporal.c
     DEPS brain_temporal brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+time_add_test(NAME test_brain_personal TEST tests/systems/unified/test_brain_personal.c
+    DEPS brain_personal brain_types birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
