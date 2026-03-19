@@ -155,6 +155,7 @@ time_add_test(NAME test_gregorian       TEST tests/systems/test_gregorian.c     
 time_add_test(NAME test_tzolkin         TEST tests/systems/test_tzolkin.c        DEPS tzolkin julian)
 time_add_test(NAME test_haab            TEST tests/systems/test_haab.c           DEPS haab tzolkin julian)
 time_add_test(NAME test_chinese         TEST tests/systems/test_chinese.c        DEPS chinese julian)
+time_add_test(NAME test_chinese_interpret TEST tests/systems/chinese/test_chinese_interpret.c DEPS chinese_interpret chinese julian)
 time_add_test(NAME test_iching          TEST tests/systems/test_iching.c         DEPS iching)
 time_add_test(NAME test_iching_interpret TEST tests/systems/iching/test_iching_interpret.c DEPS iching_interpret iching)
 time_add_test(NAME test_numerology      TEST tests/systems/test_numerology.c     DEPS numerology)
