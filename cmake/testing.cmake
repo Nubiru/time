@@ -289,6 +289,8 @@ time_add_test(NAME test_cycle_tracker TEST tests/systems/unified/test_cycle_trac
     DEPS cycle_tracker birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 time_add_test(NAME test_exploration_progress TEST tests/systems/unified/test_exploration_progress.c
     DEPS exploration_progress)
+time_add_test(NAME test_profile_lens TEST tests/systems/unified/test_profile_lens.c
+    DEPS profile_lens cosmic_fingerprint birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 time_add_test(NAME test_festival_detector TEST tests/systems/unified/test_festival_detector.c
     DEPS festival_detector korean_calendar hebrew sabbatical hijri buddhist lunar wheel_of_year thai_calendar tamil_calendar myanmar persian zoroastrian calendar_fixed)
 time_add_test(NAME test_calendar_convert TEST tests/systems/unified/test_calendar_convert.c
@@ -378,6 +380,8 @@ time_add_test(NAME test_card_data       TEST tests/ui/test_card_data.c        DE
 time_add_test(NAME test_zodiac_glyphs   TEST tests/ui/test_zodiac_glyphs.c   DEPS zodiac_glyphs)
 time_add_test(NAME test_hexagram_visual TEST tests/ui/test_hexagram_visual.c  DEPS hexagram_visual iching)
 time_add_test(NAME test_symbol_atlas    TEST tests/ui/test_symbol_atlas.c    DEPS symbol_atlas zodiac_glyphs)
+time_add_test(NAME test_visual_transition TEST tests/ui/test_visual_transition.c
+    DEPS visual_transition animation golden_layout card_layout toast_message render_layers camera_scale easing)
 time_add_test(NAME test_location_presets TEST tests/ui/test_location_presets.c DEPS location_presets)
 time_add_test(NAME test_scale_hud       TEST tests/ui/test_scale_hud.c       DEPS scale_hud)
 time_add_test(NAME test_system_scale_map TEST tests/ui/test_system_scale_map.c DEPS system_scale_map)

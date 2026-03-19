@@ -60,6 +60,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/zoom_depth.c
     ${CMAKE_CURRENT_SOURCE_DIR}/focus_flow.c
     ${CMAKE_CURRENT_SOURCE_DIR}/symbol_atlas.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/visual_transition.c
     PARENT_SCOPE
 )
 
@@ -121,5 +122,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_zoom_depth      OBJECT zoom_depth.c)
     add_library(time_focus_flow      OBJECT focus_flow.c)
     add_library(time_symbol_atlas    OBJECT symbol_atlas.c)
+    add_library(time_visual_transition OBJECT visual_transition.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
