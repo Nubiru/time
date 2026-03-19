@@ -1,16 +1,16 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-19 (INFRA health sweep #3)
+**Last refreshed**: 2026-03-19 (INFRA session 4)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 344 |
-| Header files (.h) | 344 |
-| Lines of code (src/) | 85,523 |
-| Lines of tests | 152,790 |
-| Test files | 339 |
+| Source files (.c) | 349 |
+| Header files (.h) | 349 |
+| Lines of code (src/) | 86,412 |
+| Lines of tests | 153,500+ |
+| Test files | 343 |
 | Render pass files | 17 |
 | Contributors | 179 |
 
@@ -18,9 +18,9 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 339 |
-| Test functions (RUN_TEST) | 14,178 |
-| Test assertions (TEST_ASSERT) | 24,029 |
+| Test suites (CTest) | 343 |
+| Test functions (RUN_TEST) | 14,263 |
+| Test assertions (TEST_ASSERT) | 24,237 |
 | Failures | 0 |
 | CTest time | 1.72s |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
@@ -83,7 +83,7 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (339/339) |
+| CTest -j12 | PASS (343/343) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
 | WASM build | PASS (285 KB raw, 111 KB gzipped) — 3 symbol collisions fixed |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
@@ -180,9 +180,9 @@
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (344 .c files, all registered, 0 phantoms) |
+| Build system sync | OK (349 .c files, all registered, 0 phantoms) |
 | Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (339/339 tests) |
+| Native build | PASS (343/343 tests) |
 | WASM build | PASS (285 KB) — zero linker warnings |
 | Symbol conflicts | **FIXED** — 4 total: cal_system_name, ti_interpret, hdi_interpret, ci_interpret |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, 0 findings) |

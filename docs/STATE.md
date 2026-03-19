@@ -1,6 +1,6 @@
 # Time — State Inventory
 
-**Last Updated**: 2026-03-19 (INFRA health sweep — STATE.md sync)
+**Last Updated**: 2026-03-19 (INFRA session 4 — STATE.md sync)
 
 This document tracks what is **pure** (stateless) and what is **stateful** in the codebase. The goal: maximize pure code, minimize and isolate mutable state.
 
@@ -15,10 +15,10 @@ This document tracks what is **pure** (stateless) and what is **stateful** in th
  No side effects                GL calls, input handling
  Fully testable                 Tested visually / integration
  ─────────────────────          ───────────────────────────
- src/math/* (15 modules)        src/core/main.c (orchestrator)
- src/systems/* (148 modules)   src/core/app_state.c (init)
- src/render/* (most, 61)       src/core/hud.c (DOM overlay)
- src/ui/* (56 modules)         src/core/input.c (callbacks)
+ src/math/* (16 modules)        src/core/main.c (orchestrator)
+ src/systems/* (179 modules)   src/core/app_state.c (init)
+ src/render/* (most, 64)       src/core/hud.c (DOM overlay)
+ src/ui/* (63 modules)         src/core/input.c (callbacks)
  src/platform/* (1 module)     src/render/gl_init.c
                                 src/render/mesh.c
                                 src/render/shader.c
