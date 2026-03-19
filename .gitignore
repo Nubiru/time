@@ -1,9 +1,11 @@
-build/
-build-native/
-build-wasm/
+build*/
 *.o
 *.wasm
 *.js.mem
+
+# Coverage artifacts
+coverage*.info
+coverage-report/
 emsdk/
 .vscode/
 *.swp
