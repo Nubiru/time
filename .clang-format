@@ -1,0 +1,65 @@
+---
+# .clang-format — Time Project
+# Matches conventions in .context/standards/CONVENTIONS.md
+# and observed style across src/
+Language: C
+BasedOnStyle: LLVM
+
+# Indentation: 4 spaces, no tabs
+IndentWidth: 4
+UseTab: Never
+TabWidth: 4
+ContinuationIndentWidth: 4
+IndentCaseLabels: false
+
+# Braces: K&R style (Linux = Attach for all except functions on their own line)
+# Functions: opening brace on SAME line
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortBlocksOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortCaseLabelsOnASingleLine: false
+
+# Pointer: left-aligned (type *name)
+PointerAlignment: Left
+
+# Spacing
+SpaceBeforeParens: ControlStatements
+SpaceAfterCStyleCast: false
+SpaceBeforeAssignmentOperators: true
+SpaceInEmptyParentheses: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpaceBeforeSquareBrackets: false
+
+# Line width
+ColumnLimit: 100
+
+# Includes: project first, then system (matches actual codebase practice)
+IncludeBlocks: Preserve
+SortIncludes: Never
+
+# Parameters and arguments
+BinPackParameters: true
+BinPackArguments: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AllowAllArgumentsOnNextLine: true
+
+# Alignment
+AlignConsecutiveAssignments: false
+AlignConsecutiveDeclarations: false
+AlignConsecutiveMacros: true
+AlignOperands: true
+AlignTrailingComments: true
+AlignEscapedNewlines: Left
+
+# Comments
+ReflowComments: false
+SpacesBeforeTrailingComments: 1
+
+# Misc
+KeepEmptyLinesAtTheStartOfBlocks: false
+MaxEmptyLinesToKeep: 2
+InsertBraces: false
+RemoveSemicolon: false
