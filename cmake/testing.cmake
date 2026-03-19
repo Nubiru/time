@@ -364,6 +364,8 @@ time_add_test(NAME test_structural_insight TEST tests/systems/unified/test_struc
     DEPS structural_insight)
 time_add_test(NAME test_aha_moments TEST tests/systems/unified/test_aha_moments.c
     DEPS aha_moments)
+time_add_test(NAME test_drama_narrator TEST tests/systems/unified/test_drama_narrator.c
+    DEPS drama_narrator)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
