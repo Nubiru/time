@@ -18,6 +18,14 @@
 #include "../glyph_batch.h"
 #include "../billboard.h"
 #include "../../systems/astronomy/planets.h"
+#include "../../systems/astronomy/lunar.h"
+#include "../../systems/astrology/zodiac.h"
+#include "../../systems/tzolkin/tzolkin.h"
+#include "../../systems/iching/iching.h"
+#include "../../systems/chinese/chinese.h"
+#include "../../systems/human_design/human_design.h"
+#include "../../ui/card_data.h"
+#include "../../ui/card_layout.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
 static const float TEXT_ORBIT_SCALE = 3.0f;
@@ -143,9 +151,232 @@ int text_pass_init(void) {
     return 0;
 }
 
-void text_pass_draw(const render_frame_t *frame) {
-    if (!layer_is_visible(frame->layers, LAYER_LABELS))
+/* --- Card text helpers --- */
+
+/* Maximum characters per card text line to keep within GLYPH_BATCH_MAX */
+#define CARD_TEXT_LINE_MAX 20
+
+/* Append characters from a string as glyph instances at a given pixel position.
+ * Advances px_x by character spacing. Returns updated glyph count. */
+static int append_text_glyphs(glyph_instance_t *inst, int len,
+                              const char *text, int max_chars,
+                              float px_x, float px_y,
+                              float scale, glyph_color_t color)
+{
+    float spacing = 10.0f * scale;  /* pixels per character advance */
+    int chars = (int)strlen(text);
+    if (chars > max_chars) chars = max_chars;
+    for (int i = 0; i < chars && len < GLYPH_BATCH_MAX; i++) {
+        if (text[i] < 32) continue;  /* skip control chars */
+        inst[len].glyph_id = (int)text[i];
+        inst[len].position = vec3_create(
+            px_x + (float)i * spacing, px_y, 0.0f);
+        inst[len].scale    = scale;
+        inst[len].color    = color;
+        len++;
+    }
+    return len;
+}
+
+/* Compute approximate sun ecliptic longitude from JD (Meeus low-accuracy). */
+static double approx_sun_longitude(double jd)
+{
+    double T = (jd - 2451545.0) / 36525.0;
+    double lon = 280.46646 + 36000.76983 * T;
+    lon = lon - 360.0 * (int)(lon / 360.0);
+    if (lon < 0.0) lon += 360.0;
+    return lon;
+}
+
+/* Draw card text as a 2D screen-space overlay.
+ * Called after the 3D planet label draw; reuses same VAO/VBO/EBO. */
+static void draw_card_text(const render_frame_t *frame)
+{
+    if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
+
+    /* Get viewport dimensions */
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    int vw = viewport[2];
+    int vh = viewport[3];
+    if (vw < 1) vw = 1920;
+    if (vh < 1) vh = 1080;
+
+    /* Compute card layout (all cards visible for demo) */
+    float aspect = (float)vw / (float)vh;
+    card_layout_t layout = card_layout_compute(card_all_mask(), aspect);
+
+    /* Compute system data from simulation JD */
+    double jd = frame->simulation_jd;
+
+    /* Tzolkin */
+    tzolkin_day_t tz = tzolkin_from_jd(jd);
+    card_content_t c_tz = card_format_tzolkin(
+        tz.seal, tz.tone, tz.kin, tzolkin_seal_name(tz.seal));
+
+    /* I Ching */
+    hexagram_t hex = iching_from_jd(jd);
+    card_content_t c_ic = card_format_iching(
+        hex.king_wen, iching_hexagram_name(hex.king_wen),
+        iching_trigram_name(hex.upper_trigram),
+        iching_trigram_name(hex.lower_trigram),
+        hex.lines);
+
+    /* Chinese */
+    chinese_year_t cy = chinese_year_from_jd(jd);
+    card_content_t c_ch = card_format_chinese(
+        chinese_animal_symbol(cy.animal),
+        chinese_element_name(cy.element),
+        chinese_animal_name(cy.animal),
+        chinese_polarity_name(cy.polarity),
+        cy.stem, cy.branch);
+
+    /* Human Design */
+    double sun_lon = approx_sun_longitude(jd);
+    hd_incarnation_t inc = hd_incarnation(sun_lon);
+    card_content_t c_hd = card_format_human_design(
+        inc.sun.gate, inc.sun.line,
+        inc.earth.gate, inc.earth.line,
+        hd_gate_name(inc.sun.gate),
+        hd_gate_keyword(inc.sun.gate));
+
+    /* Astrology */
+    int sun_sign = zodiac_sign(sun_lon);
+    double sun_deg = zodiac_degree(sun_lon);
+    lunar_info_t moon = lunar_phase(jd);
+    int moon_sign = zodiac_sign(moon.moon_longitude);
+    double moon_deg = zodiac_degree(moon.moon_longitude);
+    /* Ascendant requires location/time; use 0 as placeholder */
+    card_content_t c_as = card_format_astrology(
+        sun_sign, sun_deg, moon_sign, moon_deg, 0, 0.0);
+
+    /* Map card types to content */
+    const card_content_t *contents[CARD_TYPE_COUNT];
+    contents[CARD_TZOLKIN]   = &c_tz;
+    contents[CARD_ICHING]    = &c_ic;
+    contents[CARD_CHINESE]   = &c_ch;
+    contents[CARD_HD]        = &c_hd;
+    contents[CARD_ASTROLOGY] = &c_as;
+
+    /* Build glyph instances for card text */
+    glyph_instance_t instances[GLYPH_BATCH_MAX];
+    int len = 0;
+
+    /* Colors: solar gold for titles, white for content */
+    glyph_color_t title_color = {1.0f, 0.85f, 0.55f, 1.0f};
+    glyph_color_t body_color  = {0.9f, 0.92f, 0.95f, 0.9f};
+
+    /* Scale: title slightly larger than body */
+    float title_scale = 1.8f;
+    float body_scale  = 1.4f;
+
+    /* Vertical offsets within card (in pixels from card top) */
+    float margin_x = 8.0f;
+    float margin_y_title = 6.0f;
+    float line_height = 18.0f;
+
+    for (int c = 0; c < CARD_TYPE_COUNT && len < GLYPH_BATCH_MAX - 20; c++) {
+        const card_rect_t *r = &layout.cards[c];
+        if (!r->visible) continue;
+
+        const card_content_t *content = contents[c];
+
+        /* Convert normalized card position to pixel coordinates */
+        float px = r->x * (float)vw + margin_x;
+        float py = r->y * (float)vh + margin_y_title;
+
+        /* Title */
+        len = append_text_glyphs(instances, len, content->title,
+                                 CARD_TEXT_LINE_MAX,
+                                 px, py, title_scale, title_color);
+
+        /* Line 1 */
+        py += line_height * title_scale;
+        len = append_text_glyphs(instances, len, content->line1,
+                                 CARD_TEXT_LINE_MAX,
+                                 px, py, body_scale, body_color);
+
+        /* Line 2 */
+        py += line_height * body_scale;
+        len = append_text_glyphs(instances, len, content->line2,
+                                 CARD_TEXT_LINE_MAX,
+                                 px, py, body_scale, body_color);
+    }
+
+    if (len == 0)
+        return;
+
+    /* Build orthographic projection: pixel coords -> NDC.
+     * (0,0) = top-left, (vw,vh) = bottom-right. */
+    mat4_t ortho;
+    memset(&ortho, 0, sizeof(ortho));
+    ortho.m[0]  =  2.0f / (float)vw;
+    ortho.m[5]  = -2.0f / (float)vh;  /* flip Y: top = 0 */
+    ortho.m[10] = -1.0f;
+    ortho.m[12] = -1.0f;
+    ortho.m[13] =  1.0f;
+    ortho.m[14] =  0.0f;
+    ortho.m[15] =  1.0f;
+
+    /* For screen-space text: fixed camera axes, no billboarding */
+    vec3_t cam_right = vec3_create(1.0f, 0.0f, 0.0f);
+    vec3_t cam_up    = vec3_create(0.0f, -1.0f, 0.0f);  /* -Y: screen Y grows down */
+
+    glyph_atlas_t batch_atlas = {
+        .cols     = FONT_BITMAP_COLS,
+        .rows     = FONT_BITMAP_ROWS,
+        .first_id = FONT_BITMAP_FIRST,
+        .last_id  = FONT_BITMAP_LAST
+    };
+
+    /* Base size in pixels: each glyph quad is base_width x base_height pixels,
+     * then multiplied by per-instance scale. */
+    glyph_batch_t batch = glyph_batch_create(
+        instances, len, batch_atlas,
+        cam_right, cam_up,
+        8.0f, 14.0f);
+
+    if (batch.glyph_count == 0)
+        return;
+
+    /* Upload to same VAO/VBO/EBO (replaces 3D label data) */
+    glBindVertexArray(s_text_vao);
+
+    glBindBuffer(GL_ARRAY_BUFFER, s_text_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0,
+                    (GLsizeiptr)glyph_batch_vertex_bytes(&batch),
+                    batch.vertices);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_text_ebo);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                    (GLsizeiptr)glyph_batch_index_bytes(&batch),
+                    batch.indices);
+
+    /* GL state: depth off, blend on (should still be set from labels draw) */
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    /* Set ortho MVP for screen-space rendering */
+    glUseProgram(s_text_program);
+    glUniformMatrix4fv(s_text_loc_mvp, 1, GL_FALSE, ortho.m);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, s_text_atlas_tex);
+    glUniform1i(s_text_loc_atlas, 0);
+
+    /* Draw card text */
+    glDrawElements(GL_TRIANGLES, batch.index_count, GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(0);
+}
+
+void text_pass_draw(const render_frame_t *frame) {
+    if (!layer_is_visible(frame->layers, LAYER_LABELS)) {
+        /* Labels layer hidden but still draw card text if cards are visible */
+        draw_card_text(frame);
+        return;
+    }
 
     /* Compute planet positions at current simulation time */
     solar_system_t sys = planets_at(frame->simulation_jd);
@@ -230,8 +461,11 @@ void text_pass_draw(const render_frame_t *frame) {
         cam_right, cam_up,
         0.3f, 0.6f);
 
-    if (batch.glyph_count == 0)
+    if (batch.glyph_count == 0) {
+        /* No 3D labels but still draw card text */
+        draw_card_text(frame);
         return;
+    }
 
     /* Upload vertices + indices to GPU */
     glBindVertexArray(s_text_vao);
@@ -258,13 +492,16 @@ void text_pass_draw(const render_frame_t *frame) {
     glBindTexture(GL_TEXTURE_2D, s_text_atlas_tex);
     glUniform1i(s_text_loc_atlas, 0);
 
-    /* Draw */
+    /* Draw 3D planet labels */
     glDrawElements(GL_TRIANGLES, batch.index_count, GL_UNSIGNED_INT, 0);
 
-    /* Restore GL state */
+    /* Restore GL state after 3D labels */
     glBindVertexArray(0);
     glEnable(GL_DEPTH_TEST);
     glDisable(GL_BLEND);
+
+    /* --- Second draw batch: 2D card text overlay --- */
+    draw_card_text(frame);
 }
 
 void text_pass_destroy(void) {
