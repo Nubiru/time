@@ -62,6 +62,7 @@ time_add_test(NAME test_wheel_layout    TEST tests/math/test_wheel_layout.c    D
 time_add_test(NAME test_projection      TEST tests/math/test_projection.c      DEPS projection mat4 vec3)
 time_add_test(NAME test_spring          TEST tests/math/test_spring.c          DEPS spring          LABELS unit)
 time_add_test(NAME test_vec_interp     TEST tests/math/test_vec_interp.c     DEPS vec_interp vec3 spring LABELS unit)
+time_add_test(NAME test_equatorial_horizontal TEST tests/math/test_equatorial_horizontal.c DEPS equatorial_horizontal ecliptic sidereal)
 
 # Render tests
 time_add_test(NAME test_camera          TEST tests/render/test_camera.c          DEPS camera vec3 mat4)
@@ -186,6 +187,7 @@ time_add_test(NAME test_kin_social    TEST tests/systems/tzolkin/test_kin_social
 time_add_test(NAME test_tzolkin_interpret TEST tests/systems/tzolkin/test_tzolkin_interpret.c DEPS tzolkin_interpret dreamspell)
 time_add_test(NAME test_coptic         TEST tests/systems/coptic/test_coptic.c        DEPS coptic calendar_fixed)
 time_add_test(NAME test_egyptian       TEST tests/systems/egyptian/test_egyptian.c    DEPS egyptian calendar_fixed)
+time_add_test(NAME test_egyptian_interpret TEST tests/systems/egyptian/test_egyptian_interpret.c DEPS egyptian_interpret)
 time_add_test(NAME test_ethiopian      TEST tests/systems/ethiopian/test_ethiopian.c  DEPS ethiopian calendar_fixed)
 time_add_test(NAME test_wheel_of_year  TEST tests/systems/celtic/test_wheel_of_year.c DEPS wheel_of_year)
 time_add_test(NAME test_chakra         TEST tests/systems/chakra/test_chakra.c        DEPS chakra)

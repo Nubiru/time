@@ -814,11 +814,14 @@ void test_sensitivity_keys(void)
 
 void test_get_locale_fallback(void)
 {
-    /* Currently passes through to English */
-    TEST_ASSERT_EQUAL_STRING("Paused",
+    /* P0 locales (ES, AR, ZH) now return locale-specific translations.
+     * Untranslated locales (e.g. FR) still fall back to English. */
+    TEST_ASSERT_EQUAL_STRING("Pausado",
                               i18n_get_locale("time.paused", I18N_LOCALE_ES));
+    const char *ar = i18n_get_locale("time.paused", I18N_LOCALE_AR);
+    TEST_ASSERT_TRUE(strcmp(ar, "Paused") != 0); /* Arabic, not English */
     TEST_ASSERT_EQUAL_STRING("Paused",
-                              i18n_get_locale("time.paused", I18N_LOCALE_AR));
+                              i18n_get_locale("time.paused", I18N_LOCALE_FR));
 }
 
 void test_get_locale_unknown_key(void)

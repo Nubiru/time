@@ -13,18 +13,32 @@
 #define I18N_MAX_VALUE_LEN  128
 #define I18N_MAX_KEYS       256
 
-/* Locale identifier */
+/* Locale identifier — 21 languages across 4 priority tiers.
+ * P0: EN, ES, AR, ZH (translations shipped).
+ * P1: HI, JA, FR, PT, HE.  P2: DE, RU, KO, TH, TR, ID.
+ * P3: MY, AM, BN, VI, SW, FA. */
 typedef enum {
     I18N_LOCALE_EN = 0,      /* English (default) */
     I18N_LOCALE_ES,          /* Spanish */
     I18N_LOCALE_AR,          /* Arabic */
     I18N_LOCALE_HE,          /* Hebrew */
-    I18N_LOCALE_ZH,          /* Chinese */
+    I18N_LOCALE_ZH,          /* Chinese (Simplified) */
     I18N_LOCALE_HI,          /* Hindi */
     I18N_LOCALE_JA,          /* Japanese */
+    I18N_LOCALE_FR,          /* French */
+    I18N_LOCALE_PT,          /* Portuguese */
+    I18N_LOCALE_DE,          /* German */
+    I18N_LOCALE_RU,          /* Russian */
+    I18N_LOCALE_KO,          /* Korean */
     I18N_LOCALE_TH,          /* Thai */
+    I18N_LOCALE_TR,          /* Turkish */
+    I18N_LOCALE_ID,          /* Indonesian */
     I18N_LOCALE_MY,          /* Myanmar/Burmese */
     I18N_LOCALE_AM,          /* Amharic */
+    I18N_LOCALE_BN,          /* Bengali */
+    I18N_LOCALE_VI,          /* Vietnamese */
+    I18N_LOCALE_SW,          /* Swahili */
+    I18N_LOCALE_FA,          /* Persian/Farsi */
     I18N_LOCALE_COUNT
 } i18n_locale_t;
 
@@ -93,8 +107,16 @@ bool i18n_is_rtl(i18n_locale_t locale);
 
 /* Get a translated string for a specific locale. Falls back:
  * requested locale -> English -> key itself.
- * Currently only English translations are stored, so this
- * always returns the English value. Future: per-locale tables. */
+ * P0 locales (ES, AR, ZH) have full translations.
+ * Other locales fall back to English. */
 const char *i18n_get_locale(const char *key, i18n_locale_t locale);
+
+/* Translation coverage for a locale (0.0 = none, 1.0 = all keys).
+ * English always returns 1.0. Invalid locale returns 0.0. */
+float i18n_locale_coverage(i18n_locale_t locale);
+
+/* Number of translated keys for a locale.
+ * English returns i18n_key_count(). Invalid locale returns 0. */
+int i18n_translated_count(i18n_locale_t locale);
 
 #endif /* TIME_I18N_H */
