@@ -1,16 +1,16 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-19 (INFRA session 4)
+**Last refreshed**: 2026-03-20 (INFRA session 6)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 349 |
-| Header files (.h) | 349 |
-| Lines of code (src/) | 86,412 |
-| Lines of tests | 153,500+ |
-| Test files | 343 |
+| Source files (.c) | 369 |
+| Header files (.h) | 370 |
+| Lines of code (src/) | 90,000+ |
+| Lines of tests | 158,000+ |
+| Test files | 365 |
 | Render pass files | 17 |
 | Contributors | 179 |
 
@@ -18,9 +18,9 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 343 |
-| Test functions (RUN_TEST) | 14,263 |
-| Test assertions (TEST_ASSERT) | 24,237 |
+| Test suites (CTest) | 365 |
+| Test functions (RUN_TEST) | 14,679 |
+| Test assertions (TEST_ASSERT) | 25,083 |
 | Failures | 0 |
 | CTest time | 1.72s |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
@@ -83,7 +83,7 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (343/343) |
+| CTest -j12 | PASS (365/365) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
 | WASM build | PASS (285 KB raw, 111 KB gzipped) — 3 symbol collisions fixed |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
@@ -156,8 +156,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 285,503 bytes (285 KB) |
-| Gzipped | 113,438 bytes (111 KB) |
+| Raw .wasm | 289,211 bytes (289 KB) |
+| Gzipped | 114,735 bytes (112 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 | Growth since sweep #19 | +70 KB raw (+33%) |
 
@@ -180,9 +180,9 @@
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (349 .c files, all registered, 0 phantoms) |
+| Build system sync | OK (369 .c files, all registered, 0 phantoms) |
 | Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (343/343 tests) |
+| Native build | PASS (365/365 tests) |
 | WASM build | PASS (285 KB) — zero linker warnings |
 | Symbol conflicts | **FIXED** — 4 total: cal_system_name, ti_interpret, hdi_interpret, ci_interpret |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, 0 findings) |
