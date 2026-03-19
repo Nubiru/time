@@ -341,6 +341,8 @@ time_add_test(NAME test_brain_visual_bridge TEST tests/systems/unified/test_brai
     DEPS brain_visual_bridge brain_types)
 time_add_test(NAME test_daily_narrative TEST tests/systems/unified/test_daily_narrative.c
     DEPS daily_narrative)
+time_add_test(NAME test_personal_resonance TEST tests/systems/unified/test_personal_resonance.c
+    DEPS personal_resonance)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

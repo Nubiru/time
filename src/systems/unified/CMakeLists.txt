@@ -54,6 +54,7 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_language_bridge.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_visual_bridge.c
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_narrative.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/personal_resonance.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -112,4 +113,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_brain_language_bridge OBJECT brain_language_bridge.c)
     add_library(time_brain_visual_bridge   OBJECT brain_visual_bridge.c)
     add_library(time_daily_narrative      OBJECT daily_narrative.c)
+    add_library(time_personal_resonance  OBJECT personal_resonance.c)
 endif()
