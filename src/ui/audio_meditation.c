@@ -5,6 +5,7 @@
 
 #include "audio_meditation.h"
 #include "golden_layout.h"
+#include "../systems/chakra/chakra.h"
 #include <math.h>
 
 #define MED_PI 3.14159265358979323846
@@ -96,5 +97,26 @@ med_state_t med_compute(double real_time_sec, float binaural_hz)
     state.binaural_offset_hz = (binaural_hz > 0.0f) ? binaural_hz : 6.0f;
     state.reverb_boost = 0.25f; /* meditation gets more reverb */
     state.dimming = 0.7f;       /* dim visuals to 30% brightness */
+    state.chakra_active = 0;
+    state.chakra_id = -1;
+    state.chakra_freq_hz = 0.0f;
+    return state;
+}
+
+med_state_t med_compute_chakra(double real_time_sec, float binaural_hz,
+                               int chakra)
+{
+    med_state_t state = med_compute(real_time_sec, binaural_hz);
+
+    if (chakra >= 0 && chakra < CHAKRA_COUNT) {
+        state.chakra_active = 1;
+        state.chakra_id = chakra;
+        state.chakra_freq_hz = (float)chakra_frequency((chakra_t)chakra);
+    } else {
+        state.chakra_active = 0;
+        state.chakra_id = -1;
+        state.chakra_freq_hz = 0.0f;
+    }
+
     return state;
 }

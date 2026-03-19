@@ -407,7 +407,7 @@ time_add_test(NAME test_audio_event TEST tests/ui/test_audio_event.c
 time_add_test(NAME test_audio_culture TEST tests/ui/test_audio_culture.c
     DEPS audio_culture)
 time_add_test(NAME test_audio_meditation TEST tests/ui/test_audio_meditation.c
-    DEPS audio_meditation golden_layout)
+    DEPS audio_meditation golden_layout chakra)
 # ui_bridge is Emscripten-only (S1) — no native test target
 time_add_test(NAME test_welcome_text TEST tests/ui/test_welcome_text.c
     DEPS welcome_text birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)

@@ -29,6 +29,9 @@ typedef struct {
     float binaural_offset_hz; /* frequency offset for binaural beats (e.g., 6.0) */
     float reverb_boost;       /* extra reverb wet for meditation (0.0-0.3) */
     float dimming;            /* visual dimming factor 0.0=normal, 1.0=full dim */
+    int   chakra_active;      /* 1 if a chakra is selected, 0 if not */
+    int   chakra_id;          /* 0-6 (CHAKRA_MULADHARA to CHAKRA_SAHASRARA) */
+    float chakra_freq_hz;     /* Solfeggio frequency for selected chakra */
 } med_state_t;
 
 /* Compute meditation breathing factor from real-time clock.
@@ -47,6 +50,12 @@ float med_breath_progress(double real_time_sec);
  * binaural_hz: desired binaural beat frequency (typically 4-8 Hz for theta).
  * Returns complete state snapshot. */
 med_state_t med_compute(double real_time_sec, float binaural_hz);
+
+/* Compute meditation state with optional chakra focus.
+ * chakra: -1 for no chakra, 0-6 for specific chakra.
+ * binaural_hz: binaural beat frequency (typically 4-8 Hz). */
+med_state_t med_compute_chakra(double real_time_sec, float binaural_hz,
+                               int chakra);
 
 /* Get the phi breathing cycle duration (phi + phi^2 = phi^3 seconds). */
 float med_cycle_duration(void);

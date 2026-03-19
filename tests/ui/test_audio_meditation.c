@@ -1,9 +1,11 @@
 /* test_audio_meditation.c — Tests for meditation mode computation.
  *
- * Validates phi-timed breathing, binaural offset, and full state compute. */
+ * Validates phi-timed breathing, binaural offset, full state compute,
+ * and L3.2 chakra resonance in meditation. */
 
 #include "../unity/unity.h"
 #include "../../src/ui/audio_meditation.h"
+#include "../../src/systems/chakra/chakra.h"
 #include <math.h>
 
 void setUp(void) {}
@@ -219,6 +221,71 @@ void test_breath_factor_negative_time(void)
     TEST_ASSERT_TRUE(f <= 1.01f);
 }
 
+/* ---- L3.2: Chakra resonance tests ---- */
+
+void test_compute_chakra_root(void)
+{
+    med_state_t s = med_compute_chakra(1.0, 6.0f, CHAKRA_MULADHARA);
+    TEST_ASSERT_EQUAL_INT(1, s.chakra_active);
+    TEST_ASSERT_EQUAL_INT(CHAKRA_MULADHARA, s.chakra_id);
+    TEST_ASSERT_TRUE(s.chakra_freq_hz > 0.0f);
+}
+
+void test_compute_chakra_crown(void)
+{
+    med_state_t s = med_compute_chakra(1.0, 6.0f, CHAKRA_SAHASRARA);
+    TEST_ASSERT_EQUAL_INT(1, s.chakra_active);
+    TEST_ASSERT_EQUAL_INT(CHAKRA_SAHASRARA, s.chakra_id);
+}
+
+void test_compute_chakra_freq_matches(void)
+{
+    /* Frequency should match chakra_frequency() from chakra.h */
+    med_state_t s = med_compute_chakra(1.0, 6.0f, CHAKRA_ANAHATA);
+    float expected = (float)chakra_frequency(CHAKRA_ANAHATA);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, expected, s.chakra_freq_hz);
+}
+
+void test_compute_chakra_none(void)
+{
+    med_state_t s = med_compute_chakra(1.0, 6.0f, -1);
+    TEST_ASSERT_EQUAL_INT(0, s.chakra_active);
+    TEST_ASSERT_EQUAL_INT(-1, s.chakra_id);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.0f, s.chakra_freq_hz);
+}
+
+void test_compute_chakra_invalid_high(void)
+{
+    med_state_t s = med_compute_chakra(1.0, 6.0f, 99);
+    TEST_ASSERT_EQUAL_INT(0, s.chakra_active);
+}
+
+void test_compute_chakra_breathing_still_works(void)
+{
+    /* Chakra mode shouldn't affect breathing */
+    med_state_t with = med_compute_chakra(1.0, 6.0f, CHAKRA_ANAHATA);
+    med_state_t without = med_compute(1.0, 6.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, without.breath_factor, with.breath_factor);
+}
+
+void test_compute_chakra_all_seven(void)
+{
+    /* All 7 chakras should produce valid frequencies */
+    for (int i = 0; i < CHAKRA_COUNT; i++) {
+        med_state_t s = med_compute_chakra(1.0, 6.0f, i);
+        TEST_ASSERT_EQUAL_INT(1, s.chakra_active);
+        TEST_ASSERT_TRUE(s.chakra_freq_hz > 100.0f);
+        TEST_ASSERT_TRUE(s.chakra_freq_hz < 2000.0f);
+    }
+}
+
+void test_compute_no_chakra_default(void)
+{
+    /* med_compute (without chakra) should have chakra_active=0 */
+    med_state_t s = med_compute(1.0, 6.0f);
+    TEST_ASSERT_EQUAL_INT(0, s.chakra_active);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -254,5 +321,14 @@ int main(void)
     RUN_TEST(test_compute_breath_progress_matches);
     RUN_TEST(test_compute_negative_binaural_defaults);
     RUN_TEST(test_breath_factor_negative_time);
+    /* L3.2: chakra resonance */
+    RUN_TEST(test_compute_chakra_root);
+    RUN_TEST(test_compute_chakra_crown);
+    RUN_TEST(test_compute_chakra_freq_matches);
+    RUN_TEST(test_compute_chakra_none);
+    RUN_TEST(test_compute_chakra_invalid_high);
+    RUN_TEST(test_compute_chakra_breathing_still_works);
+    RUN_TEST(test_compute_chakra_all_seven);
+    RUN_TEST(test_compute_no_chakra_default);
     return UNITY_END();
 }
