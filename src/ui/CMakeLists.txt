@@ -63,6 +63,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/visual_transition.c
     ${CMAKE_CURRENT_SOURCE_DIR}/a11y_narrative.c
     ${CMAKE_CURRENT_SOURCE_DIR}/focus_mode.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/greeting.c
     PARENT_SCOPE
 )
 
@@ -127,5 +128,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_visual_transition OBJECT visual_transition.c)
     add_library(time_a11y_narrative    OBJECT a11y_narrative.c)
     add_library(time_focus_mode      OBJECT focus_mode.c)
+    add_library(time_greeting        OBJECT greeting.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
