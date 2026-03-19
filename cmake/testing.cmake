@@ -205,6 +205,7 @@ time_add_test(NAME test_tarot_interpret TEST tests/systems/tarot/test_tarot_inte
 
 # Persian tests
 time_add_test(NAME test_persian         TEST tests/systems/persian/test_persian.c DEPS persian)
+time_add_test(NAME test_persian_interpret TEST tests/systems/persian/test_persian_interpret.c DEPS persian_interpret)
 
 # Baha'i tests
 time_add_test(NAME test_bahai           TEST tests/systems/bahai/test_bahai.c     DEPS bahai)
