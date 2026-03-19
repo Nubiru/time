@@ -213,6 +213,7 @@ time_add_test(NAME test_bahai           TEST tests/systems/bahai/test_bahai.c   
 
 # Japanese tests
 time_add_test(NAME test_japanese        TEST tests/systems/japanese/test_japanese.c DEPS japanese)
+time_add_test(NAME test_japanese_interpret TEST tests/systems/japanese/test_japanese_interpret.c DEPS japanese_interpret)
 
 # Aztec tests
 time_add_test(NAME test_aztec           TEST tests/systems/aztec/test_aztec.c      DEPS aztec)
