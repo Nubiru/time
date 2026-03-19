@@ -40,6 +40,7 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_narrative.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_temporal.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_personal.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/brain_adapt.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -84,4 +85,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_brain_narrative OBJECT brain_narrative.c)
     add_library(time_brain_temporal  OBJECT brain_temporal.c)
     add_library(time_brain_personal OBJECT brain_personal.c)
+    add_library(time_brain_adapt    OBJECT brain_adapt.c)
 endif()
