@@ -130,6 +130,7 @@ time_add_test(NAME test_camera_motion TEST tests/render/test_camera_motion.c DEP
 time_add_test(NAME test_scale_spring TEST tests/render/test_scale_spring.c DEPS scale_spring spring camera_scale easing LABELS unit)
 time_add_test(NAME test_camera_path TEST tests/render/test_camera_path.c DEPS camera_path spring vec_interp vec3 easing LABELS unit)
 time_add_test(NAME test_render_lod TEST tests/render/test_render_lod.c DEPS render_lod)
+time_add_test(NAME test_system_rings TEST tests/render/test_system_rings.c DEPS system_rings concentric_ring color_theory color)
 
 # Core tests
 time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
@@ -222,9 +223,11 @@ time_add_test(NAME test_japanese_interpret TEST tests/systems/japanese/test_japa
 
 # Aztec tests
 time_add_test(NAME test_aztec           TEST tests/systems/aztec/test_aztec.c      DEPS aztec)
+time_add_test(NAME test_aztec_interpret TEST tests/systems/aztec/test_aztec_interpret.c DEPS aztec_interpret)
 
 # Tamil tests
 time_add_test(NAME test_tamil_calendar  TEST tests/systems/tamil/test_tamil_calendar.c DEPS tamil_calendar)
+time_add_test(NAME test_tamil_interpret TEST tests/systems/tamil/test_tamil_interpret.c DEPS tamil_interpret)
 
 # Celtic Tree tests
 time_add_test(NAME test_celtic_tree     TEST tests/systems/celtic/test_celtic_tree.c   DEPS celtic_tree)
@@ -239,6 +242,7 @@ time_add_test(NAME test_pawukon         TEST tests/systems/balinese/test_pawukon
 
 # French Republican tests
 time_add_test(NAME test_french_republican TEST tests/systems/french_republican/test_french_republican.c DEPS french_republican)
+time_add_test(NAME test_french_republican_interpret TEST tests/systems/french_republican/test_french_republican_interpret.c DEPS french_republican_interpret)
 
 # Geology tests
 time_add_test(NAME test_geo_time        TEST tests/systems/test_geo_time.c              DEPS geo_time)
