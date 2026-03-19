@@ -1,16 +1,16 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-19 (INFRA health sweep)
+**Last refreshed**: 2026-03-19 (INFRA health sweep #2)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 316 |
-| Header files (.h) | 316 |
-| Lines of code (src/) | 77,369 |
-| Lines of tests | 141,733 |
-| Test files | 311 |
+| Source files (.c) | 325 |
+| Header files (.h) | 328 |
+| Lines of code (src/) | 81,313 (.c) + 21,778 (.h) = 103,091 |
+| Lines of tests | 144,658 |
+| Test files | 320 |
 | Render pass files | 17 |
 | Contributors | 179 |
 
@@ -18,12 +18,12 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 310 |
-| Test functions (RUN_TEST) | 13,191 |
-| Test assertions (TEST_ASSERT) | 21,934 |
+| Test suites (CTest) | 317-320 |
+| Test functions (RUN_TEST) | 13,607 |
+| Test assertions (TEST_ASSERT) | 22,837 |
 | Failures | 0 |
-| CTest time | 0.57s |
-| ASan/UBSan | PASS (309/310 functional — bench_memory excluded, ASan inflates VmPeak) |
+| CTest time | 0.58s |
+| ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
 ### Test Pyramid
 
@@ -35,14 +35,15 @@
 | benchmark | 2 | CPU + memory |
 | unlabeled | 284 | Functional tests without explicit labels |
 
-## Code Coverage (baseline — 2026-03-16)
+## Code Coverage (refreshed — 2026-03-19)
 
 | Metric | Value |
 |--------|-------|
-| **Overall line coverage** | **96.5%** (18,325 / 18,986 lines) |
-| **Overall function coverage** | **100.0%** (2,364 / 2,364 functions) |
+| **Overall line coverage** | **95.8%** (25,773 / 26,907 lines) |
+| **Overall function coverage** | **99.9%** (3,181 / 3,183 functions) |
+| Uncovered functions | `spring_vec3_velocity`, `headline_cycle` |
 
-*Note: Coverage baseline predates stream era (75+ new modules since). Re-run needed.*
+*Coverage includes 80+ new stream-era modules. 95.8% across 26,907 lines is excellent.*
 
 ### Foundational Math Modules
 
@@ -82,8 +83,8 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (310/310) |
-| Sanitizer build | PASS (309/309 functional, 0 ASan/UBSan findings) |
+| CTest -j12 | PASS (317/317) |
+| Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
 | WASM build | PASS (279 KB raw, 111 KB gzipped) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
@@ -179,12 +180,12 @@
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (316 .c files, all registered, 0 phantoms) |
+| Build system sync | OK (325 .c files, all registered, 0 phantoms) |
 | Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (310/310 tests) |
+| Native build | PASS (317/317 tests) |
 | WASM build | PASS (279 KB) — **FIXED** audio_engine.c EM_ASM $10+ bug |
 | Symbol conflicts | **FIXED** — cal_system_name duplicate resolved |
-| ASan/UBSan | PASS (309/309 functional, 0 findings) |
+| ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, 0 findings) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Missing attribution | 0 |

@@ -42,7 +42,7 @@ jobs:
         run: |
           cmake -B build-sanitize -DCMAKE_BUILD_TYPE=Sanitize
           cmake --build build-sanitize -j$(nproc)
-          ctest --test-dir build-sanitize -j$(nproc) --output-on-failure
+          ctest --test-dir build-sanitize -j$(nproc) --output-on-failure -LE benchmark
 
       - name: Purity audit
         run: bash scripts/check_purity.sh
