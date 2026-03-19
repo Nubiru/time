@@ -1,13 +1,13 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 6)
+**Last refreshed**: 2026-03-20 (INFRA session 7)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 369 |
-| Header files (.h) | 370 |
+| Source files (.c) | 370 |
+| Header files (.h) | 373 |
 | Lines of code (src/) | 90,000+ |
 | Lines of tests | 158,000+ |
 | Test files | 365 |
@@ -19,8 +19,8 @@
 | Metric | Count |
 |--------|-------|
 | Test suites (CTest) | 365 |
-| Test functions (RUN_TEST) | 14,679 |
-| Test assertions (TEST_ASSERT) | 25,083 |
+| Test functions (RUN_TEST) | 14,699 |
+| Test assertions (TEST_ASSERT) | 25,152 |
 | Failures | 0 |
 | CTest time | 1.72s |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
@@ -85,7 +85,7 @@
 | CMake native | PASS (zero warnings) |
 | CTest -j12 | PASS (365/365) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
-| WASM build | PASS (285 KB raw, 111 KB gzipped) — 3 symbol collisions fixed |
+| WASM build | PASS (306 KB raw, 121 KB gzipped) — ring_pass + render wiring |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
@@ -156,8 +156,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 289,211 bytes (289 KB) |
-| Gzipped | 114,735 bytes (112 KB) |
+| Raw .wasm | 306,377 bytes (306 KB) |
+| Gzipped | 120,907 bytes (121 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 | Growth since sweep #19 | +70 KB raw (+33%) |
 
@@ -180,7 +180,7 @@
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (369 .c files, all registered, 0 phantoms) |
+| Build system sync | OK (370 .c files, all registered, 0 phantoms) |
 | Purity audit | CLEAN (P1-P5 all zones) |
 | Native build | PASS (365/365 tests) |
 | WASM build | PASS (285 KB) — zero linker warnings |
