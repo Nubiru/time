@@ -196,6 +196,7 @@ time_add_test(NAME test_zoroastrian    TEST tests/systems/zoroastrian/test_zoroa
 
 # Tarot tests
 time_add_test(NAME test_tarot           TEST tests/systems/tarot/test_tarot.c   DEPS tarot)
+time_add_test(NAME test_tarot_interpret TEST tests/systems/tarot/test_tarot_interpret.c DEPS tarot_interpret)
 
 # Persian tests
 time_add_test(NAME test_persian         TEST tests/systems/persian/test_persian.c DEPS persian)
