@@ -148,6 +148,7 @@ time_add_test(NAME test_houses          TEST tests/systems/test_houses.c        
 time_add_test(NAME test_dignity         TEST tests/systems/test_dignity.c        DEPS dignity)
 time_add_test(NAME test_planetary_hours TEST tests/systems/test_planetary_hours.c DEPS planetary_hours)
 time_add_test(NAME test_astro_wheel     TEST tests/systems/test_wheel_layout.c   DEPS astro_wheel vec3)
+time_add_test(NAME test_astrology_interpret TEST tests/systems/astrology/test_astrology_interpret.c DEPS astrology_interpret zodiac)
 
 # Calendar tests
 time_add_test(NAME test_gregorian       TEST tests/systems/test_gregorian.c      DEPS gregorian julian)
