@@ -4,6 +4,9 @@
  * Consumes audio_params_t from audio_score.h and drives WebAudio
  * oscillators in the browser.
  *
+ * L0.4: PeriodicWave from harmonic partials per planet
+ * L0.5: ConvolverNode reverb with procedural impulse response
+ *
  * Behind #ifdef __EMSCRIPTEN__ — native builds get no-op stubs. */
 
 #include "audio_engine.h"
@@ -29,12 +32,41 @@ void audio_engine_init(void) {
     EM_ASM({
         if (window._timeAudio) return;
         var ctx = new (window.AudioContext || window.webkitAudioContext)();
+
+        /* Master gain */
         var master = ctx.createGain();
         master.gain.value = 0.3;
         master.connect(ctx.destination);
 
+        /* Dry/wet routing for reverb */
+        var dryGain = ctx.createGain();
+        dryGain.gain.value = 0.7;
+        dryGain.connect(master);
+
+        var wetGain = ctx.createGain();
+        wetGain.gain.value = 0.3;
+        wetGain.connect(master);
+
+        /* Procedural impulse response for convolution reverb */
+        var irLen = Math.floor(ctx.sampleRate * 2.0); /* 2 second tail */
+        var irBuf = ctx.createBuffer(2, irLen, ctx.sampleRate);
+        for (var ch = 0; ch < 2; ch++) {
+            var data = irBuf.getChannelData(ch);
+            for (var s = 0; s < irLen; s++) {
+                /* Exponential decay with random noise */
+                var t = s / ctx.sampleRate;
+                data[s] = (Math.random() * 2 - 1) * Math.exp(-3.0 * t);
+            }
+        }
+
+        var convolver = ctx.createConvolver();
+        convolver.buffer = irBuf;
+        convolver.connect(wetGain);
+
+        /* Create 9 oscillators with per-planet gains */
         var oscs = [];
         var gains = [];
+        var waveTypes = []; /* track current waveform to avoid redundant updates */
         for (var i = 0; i < 9; i++) {
             var osc = ctx.createOscillator();
             var gain = ctx.createGain();
@@ -42,17 +74,24 @@ void audio_engine_init(void) {
             osc.frequency.value = 0;
             gain.gain.value = 0;
             osc.connect(gain);
-            gain.connect(master);
+            /* Route each oscillator to both dry and wet paths */
+            gain.connect(dryGain);
+            gain.connect(convolver);
             osc.start();
             oscs.push(osc);
             gains.push(gain);
+            waveTypes.push('sine');
         }
 
         var ta = {};
         ta.ctx = ctx;
         ta.master = master;
+        ta.dryGain = dryGain;
+        ta.wetGain = wetGain;
+        ta.convolver = convolver;
         ta.oscs = oscs;
         ta.gains = gains;
+        ta.waveTypes = waveTypes;
         ta.prevVol = 0.3;
         window._timeAudio = ta;
     });
@@ -74,18 +113,65 @@ void audio_engine_update(const audio_params_t *params) {
 
     if (!params) return;
 
-    /* Pass frequencies and amplitudes to JS for active planets */
+    /* Update each active planet oscillator */
     for (int i = 0; i < AS_MAX_PLANETS && i < params->planet_count; i++) {
         float freq = params->frequencies[i];
         float amp = params->amplitudes[i] * params->master_volume;
+        int waveform = params->waveform_types[i];
+        int hcount = params->harmonic_counts[i];
+
+        /* Pass harmonic amplitudes for PeriodicWave creation */
+        float h0 = (hcount > 0) ? params->harmonic_amps[i][0] : 0.0f;
+        float h1 = (hcount > 1) ? params->harmonic_amps[i][1] : 0.0f;
+        float h2 = (hcount > 2) ? params->harmonic_amps[i][2] : 0.0f;
+        float h3 = (hcount > 3) ? params->harmonic_amps[i][3] : 0.0f;
+        float h4 = (hcount > 4) ? params->harmonic_amps[i][4] : 0.0f;
+        float h5 = (hcount > 5) ? params->harmonic_amps[i][5] : 0.0f;
+        float h6 = (hcount > 6) ? params->harmonic_amps[i][6] : 0.0f;
+        float h7 = (hcount > 7) ? params->harmonic_amps[i][7] : 0.0f;
+
         EM_ASM({
             var ta = window._timeAudio;
             if (!ta) return;
             var idx = $0;
             var now = ta.ctx.currentTime;
+            var hcount = $3;
+            var waveform = $4;
+
+            /* Ramp frequency and amplitude */
             ta.oscs[idx].frequency.linearRampToValueAtTime($1, now + 0.1);
             ta.gains[idx].gain.linearRampToValueAtTime($2, now + 0.1);
-        }, i, (double)freq, (double)amp);
+
+            /* Set waveform: use PeriodicWave for rich harmonics, preset for simple */
+            if (hcount > 2) {
+                /* Build PeriodicWave from harmonic amplitudes */
+                var real = new Float32Array(hcount + 1);
+                var imag = new Float32Array(hcount + 1);
+                real[0] = 0; /* DC offset = 0 */
+                real[1] = $5;  /* fundamental */
+                if (hcount > 1) real[2] = $6;
+                if (hcount > 2) real[3] = $7;
+                if (hcount > 3) real[4] = $8;
+                if (hcount > 4) real[5] = $9;
+                if (hcount > 5) real[6] = $10;
+                if (hcount > 6) real[7] = $11;
+                if (hcount > 7) real[8] = $12;
+                var wave = ta.ctx.createPeriodicWave(real, imag,
+                    {disableNormalization: false});
+                ta.oscs[idx].setPeriodicWave(wave);
+                ta.waveTypes[idx] = 'periodic';
+            } else {
+                /* Use preset waveform type */
+                var types = ['sine', 'triangle', 'sawtooth'];
+                var newType = types[waveform] || 'sine';
+                if (ta.waveTypes[idx] !== newType) {
+                    ta.oscs[idx].type = newType;
+                    ta.waveTypes[idx] = newType;
+                }
+            }
+        }, i, (double)freq, (double)amp, hcount, waveform,
+           (double)h0, (double)h1, (double)h2, (double)h3,
+           (double)h4, (double)h5, (double)h6, (double)h7);
     }
 
     /* Silence unused oscillators */
@@ -96,6 +182,19 @@ void audio_engine_update(const audio_params_t *params) {
             var now = ta.ctx.currentTime;
             ta.gains[$0].gain.linearRampToValueAtTime(0, now + 0.1);
         }, i);
+    }
+
+    /* Update reverb wet/dry mix */
+    {
+        float wet = params->reverb_wet;
+        float dry = 1.0f - wet;
+        EM_ASM({
+            var ta = window._timeAudio;
+            if (!ta) return;
+            var now = ta.ctx.currentTime;
+            ta.dryGain.gain.linearRampToValueAtTime($0, now + 0.5);
+            ta.wetGain.gain.linearRampToValueAtTime($1, now + 0.5);
+        }, (double)dry, (double)wet);
     }
 }
 
@@ -142,6 +241,8 @@ void audio_engine_unmute(void) {
         var ta = window._timeAudio;
         if (!ta) return;
         var now = ta.ctx.currentTime;
+        /* Resume audio context in case browser suspended it */
+        if (ta.ctx.state === 'suspended') ta.ctx.resume();
         ta.master.gain.linearRampToValueAtTime(ta.prevVol, now + 0.05);
     });
 }
@@ -168,6 +269,9 @@ void audio_engine_destroy(void) {
             ta.oscs[i].disconnect();
             ta.gains[i].disconnect();
         }
+        ta.dryGain.disconnect();
+        ta.wetGain.disconnect();
+        ta.convolver.disconnect();
         ta.master.disconnect();
         ta.ctx.close();
         window._timeAudio = null;

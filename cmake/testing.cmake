@@ -151,6 +151,7 @@ time_add_test(NAME test_tzolkin         TEST tests/systems/test_tzolkin.c       
 time_add_test(NAME test_haab            TEST tests/systems/test_haab.c           DEPS haab tzolkin julian)
 time_add_test(NAME test_chinese         TEST tests/systems/test_chinese.c        DEPS chinese julian)
 time_add_test(NAME test_iching          TEST tests/systems/test_iching.c         DEPS iching)
+time_add_test(NAME test_iching_interpret TEST tests/systems/iching/test_iching_interpret.c DEPS iching_interpret iching)
 time_add_test(NAME test_numerology      TEST tests/systems/test_numerology.c     DEPS numerology)
 time_add_test(NAME test_human_design    TEST tests/systems/test_human_design.c   DEPS human_design)
 time_add_test(NAME test_bodygraph       TEST tests/systems/test_bodygraph.c      DEPS bodygraph)
@@ -307,6 +308,8 @@ time_add_test(NAME test_brain_adapt TEST tests/systems/unified/test_brain_adapt.
     DEPS brain_adapt brain_types user_context birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 time_add_test(NAME test_brain_depth TEST tests/systems/unified/test_brain_depth.c
     DEPS brain_depth brain_types depth_tier today_summary gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar panchanga nakshatra iching zodiac human_design sefirot coptic ethiopian persian japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed)
+time_add_test(NAME test_brain_surprise TEST tests/systems/unified/test_brain_surprise.c
+    DEPS brain_surprise brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -352,6 +355,7 @@ time_add_test(NAME test_share_moment TEST tests/ui/test_share_moment.c   DEPS sh
 time_add_test(NAME test_view_adapt  TEST tests/ui/test_view_adapt.c    DEPS view_adapt)
 time_add_test(NAME test_a11y_score TEST tests/ui/test_a11y_score.c   DEPS a11y_score)
 time_add_test(NAME test_system_theme TEST tests/ui/test_system_theme.c DEPS system_theme theme theme_css color_theory color golden_layout)
+time_add_test(NAME test_timeline    TEST tests/ui/test_timeline.c    DEPS timeline animation easing LABELS unit)
 # ui_bridge is Emscripten-only (S1) — no native test target
 
 # Platform tests
