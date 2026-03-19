@@ -382,6 +382,7 @@ time_add_test(NAME test_hexagram_visual TEST tests/ui/test_hexagram_visual.c  DE
 time_add_test(NAME test_symbol_atlas    TEST tests/ui/test_symbol_atlas.c    DEPS symbol_atlas zodiac_glyphs)
 time_add_test(NAME test_visual_transition TEST tests/ui/test_visual_transition.c
     DEPS visual_transition animation golden_layout card_layout toast_message render_layers camera_scale easing)
+time_add_test(NAME test_focus_mode      TEST tests/ui/test_focus_mode.c       DEPS focus_mode card_layout render_layers camera_scale golden_layout easing)
 time_add_test(NAME test_location_presets TEST tests/ui/test_location_presets.c DEPS location_presets)
 time_add_test(NAME test_scale_hud       TEST tests/ui/test_scale_hud.c       DEPS scale_hud)
 time_add_test(NAME test_system_scale_map TEST tests/ui/test_system_scale_map.c DEPS system_scale_map)
