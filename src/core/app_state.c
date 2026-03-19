@@ -21,6 +21,9 @@ app_state_t app_state_create(float aspect_ratio) {
         state.layer_configs[i] = layer_default_config((layer_id_t)i);
     }
 
+    /* View state: Space View, no focus, LOD ULTRA */
+    state.view = vs_init();
+
     /* Toggles */
     state.show_trails = 1; /* on by default */
     state.show_hud = 1;    /* on by default */

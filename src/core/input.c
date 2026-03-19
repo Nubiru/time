@@ -108,6 +108,40 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         return EM_TRUE;
     }
 
+    /* E: switch to Earth View (toggle Space ↔ Earth) */
+    if ((e->key[0] == 'e' || e->key[0] == 'E') && e->key[1] == '\0' && !e->shiftKey) {
+        int cur = g_input_state->view.current_view;
+        g_input_state->view = vs_set_view(g_input_state->view,
+                                           cur == 1 ? 0 : 1); /* VIEW_EARTH=1, VIEW_SPACE=0 */
+        return EM_TRUE;
+    }
+
+    /* Focus mode keys: A=Astrology, K=Kin, I=I Ching, C=Chinese, D=HD */
+    if (!e->shiftKey && e->key[1] == '\0') {
+        int focus = -1;
+        switch (e->key[0]) {
+            case 'a': case 'A': focus = 1; break; /* FOCUS_MODE_ASTROLOGY */
+            case 'k': case 'K': focus = 2; break; /* FOCUS_MODE_KIN */
+            case 'i': case 'I': focus = 3; break; /* FOCUS_MODE_ICHING */
+            case 'c': case 'C': focus = 4; break; /* FOCUS_MODE_CHINESE */
+            case 'd': case 'D': focus = 5; break; /* FOCUS_MODE_HD */
+            default: break;
+        }
+        if (focus >= 0) {
+            /* Toggle: if already in this focus, return to overview */
+            int cur_focus = g_input_state->view.focus_mode;
+            g_input_state->view = vs_set_focus(g_input_state->view,
+                                                cur_focus == focus ? 0 : focus);
+            return EM_TRUE;
+        }
+    }
+
+    /* Escape: return to overview mode */
+    if (e->key[0] == 27 || (e->key[0] == 'E' && e->key[1] == 's')) {
+        g_input_state->view = vs_set_focus(g_input_state->view, 0); /* FOCUS_MODE_OVERVIEW */
+        return EM_TRUE;
+    }
+
     /* Shift + M: toggle meditation mode */
     if (e->shiftKey && e->key[0] == 'M' && e->key[1] == '\0') {
         g_input_state->meditation_active = !g_input_state->meditation_active;

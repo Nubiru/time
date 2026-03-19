@@ -59,6 +59,9 @@ void main_loop(void) {
         g_state.camera.distance = expf(new_log_zoom);
     }
 
+    /* --- Advance view state (transitions, focus) --- */
+    g_state.view = vs_tick(g_state.view, (float)dt_sec);
+
     /* --- Compute layer visibility from current zoom --- */
     g_state.layer_state = layers_compute(g_state.layer_configs,
                                          g_state.camera.log_zoom);
@@ -78,25 +81,28 @@ void main_loop(void) {
         .observer_lon  = g_state.observer_lon,
     };
 
+    /* --- Get pass schedule from view state --- */
+    pass_schedule_t sched = vs_blended_schedule(&g_state.view);
+
     /* --- Clear + draw (post-process wraps all passes) --- */
     post_pass_begin(&frame);
 
-    star_pass_draw(&frame);
-    constellation_pass_draw(&frame);
-    deep_sky_pass_draw(&frame);
-    milkyway_pass_draw(&frame);
-    diffraction_pass_draw(&frame);
-    orbit_trail_pass_draw(&frame);
-    planet_pass_draw(&frame);
-    saturn_pass_draw(&frame);
-    moon_pass_draw(&frame);
-    zodiac_pass_draw(&frame);
-    earth_pass_draw(&frame);
-    bodygraph_pass_draw(&frame);
-    hexagram_pass_draw(&frame);
-    tree_pass_draw(&frame);
-    card_pass_draw(&frame);
-    text_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_STARS))         star_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_CONSTELLATION)) constellation_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_DEEP_SKY))      deep_sky_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_MILKYWAY))       milkyway_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_DIFFRACTION))    diffraction_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_ORBIT_TRAIL))    orbit_trail_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_PLANET))         planet_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_SATURN))         saturn_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_MOON))           moon_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_ZODIAC))         zodiac_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_EARTH))          earth_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_BODYGRAPH))      bodygraph_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_HEXAGRAM))       hexagram_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_TREE))           tree_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_CARD))           card_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_TEXT))           text_pass_draw(&frame);
 
     post_pass_end(&frame);
 

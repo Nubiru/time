@@ -6,6 +6,7 @@
 #include "../render/camera.h"
 #include "../render/camera_scale.h"
 #include "../render/render_layers.h"
+#include "../render/view_state.h"
 
 /* All mutable application state in one place.
  * Pure functions never touch this — they receive data and return data.
@@ -35,6 +36,9 @@ typedef struct {
     /* Render layers */
     layer_config_t layer_configs[LAYER_COUNT];
     layer_state_t layer_state;
+
+    /* View state (view mode, focus, transitions) */
+    view_state_t view;
 
     /* Visual toggles */
     int show_trails;       /* orbit trail lines */
