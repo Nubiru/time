@@ -18,7 +18,7 @@ typedef struct {
     const char *quality;        /* "Auspicious", "Inauspicious", "Neutral", "Very Auspicious" */
     const char *activity;       /* recommended activity */
     const char *brief;          /* one-sentence meaning */
-} hdi_tithi_t;
+} hndi_tithi_t;
 
 /* Tiered interpretation result */
 typedef struct {
@@ -29,15 +29,15 @@ typedef struct {
 
 /* Return interpretation data for a tithi (1-30).
  * Invalid: returns struct with number=-1, all strings "?". */
-hdi_tithi_t hdi_tithi_data(int tithi);
+hndi_tithi_t hndi_tithi_data(int tithi);
 
 /* Compose tiered interpretation from tithi number + optional context.
  * nakshatra_name: if non-NULL, included in detail.
  * yoga_name: if non-NULL, included in detail. */
-hindu_interp_t hdi_interpret(int tithi, const char *nakshatra_name,
+hindu_interp_t hndi_interpret(int tithi, const char *nakshatra_name,
                              const char *yoga_name);
 
 /* Returns 30 (total number of tithis). */
-int hdi_tithi_count(void);
+int hndi_tithi_count(void);
 
 #endif /* TIME_HINDU_INTERPRET_H */

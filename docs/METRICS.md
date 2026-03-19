@@ -1,16 +1,16 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-19 (INFRA health sweep #2)
+**Last refreshed**: 2026-03-19 (INFRA health sweep #3)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 325 |
-| Header files (.h) | 328 |
-| Lines of code (src/) | 81,313 (.c) + 21,778 (.h) = 103,091 |
-| Lines of tests | 144,658 |
-| Test files | 320 |
+| Source files (.c) | 344 |
+| Header files (.h) | 344 |
+| Lines of code (src/) | 85,523 |
+| Lines of tests | 152,790 |
+| Test files | 339 |
 | Render pass files | 17 |
 | Contributors | 179 |
 
@@ -18,11 +18,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 317-320 |
-| Test functions (RUN_TEST) | 13,607 |
-| Test assertions (TEST_ASSERT) | 22,837 |
+| Test suites (CTest) | 339 |
+| Test functions (RUN_TEST) | 14,178 |
+| Test assertions (TEST_ASSERT) | 24,029 |
 | Failures | 0 |
-| CTest time | 0.58s |
+| CTest time | 1.72s |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
 ### Test Pyramid
@@ -83,9 +83,9 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (317/317) |
+| CTest -j12 | PASS (339/339) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
-| WASM build | PASS (279 KB raw, 111 KB gzipped) |
+| WASM build | PASS (285 KB raw, 111 KB gzipped) — 3 symbol collisions fixed |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
@@ -156,8 +156,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 285,429 bytes (279 KB) |
-| Gzipped | 113,397 bytes (111 KB) |
+| Raw .wasm | 285,503 bytes (285 KB) |
+| Gzipped | 113,438 bytes (111 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 | Growth since sweep #19 | +70 KB raw (+33%) |
 
@@ -180,11 +180,11 @@
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (325 .c files, all registered, 0 phantoms) |
+| Build system sync | OK (344 .c files, all registered, 0 phantoms) |
 | Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (317/317 tests) |
-| WASM build | PASS (279 KB) — **FIXED** audio_engine.c EM_ASM $10+ bug |
-| Symbol conflicts | **FIXED** — cal_system_name duplicate resolved |
+| Native build | PASS (339/339 tests) |
+| WASM build | PASS (285 KB) — zero linker warnings |
+| Symbol conflicts | **FIXED** — 4 total: cal_system_name, ti_interpret, hdi_interpret, ci_interpret |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, 0 findings) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |

@@ -23,7 +23,7 @@ typedef struct {
     const char *light;          /* Upright/integrated expression */
     const char *shadow;         /* Reversed/shadow expression */
     const char *brief;          /* One-sentence meaning */
-} ti_major_t;
+} trt_major_t;
 
 /* Per-suit interpretation (4 suits) */
 typedef struct {
@@ -33,7 +33,7 @@ typedef struct {
     const char *domain;         /* Life domain this suit governs */
     const char *quality;        /* Essential quality */
     const char *brief;          /* One-sentence meaning */
-} ti_suit_t;
+} trt_suit_t;
 
 /* Tiered interpretation result */
 typedef struct {
@@ -44,24 +44,24 @@ typedef struct {
 
 /* Return interpretation data for a Major Arcanum (0-21).
  * Invalid number: returns struct with number=-1, all strings "?". */
-ti_major_t ti_major_data(int number);
+trt_major_t trt_major_data(int number);
 
 /* Return interpretation data for a Tarot suit (0-3).
  * 0=Wands, 1=Cups, 2=Swords, 3=Disks.
  * Invalid index: returns struct with suit=-1, all strings "?". */
-ti_suit_t ti_suit_data(int suit);
+trt_suit_t trt_suit_data(int suit);
 
 /* Compose tiered interpretation from Tarot components.
  * major_number: 0-21 (Major Arcanum from zodiac/planet attribution).
  * decan_suit: 0-3 (suit of the decan card), or -1 if no decan.
  * decan_rank: 2-10 (rank of the decan card), or -1 if no decan.
  * Invalid major_number: "?" strings in result. */
-tarot_interp_t ti_interpret(int major_number, int decan_suit, int decan_rank);
+tarot_interp_t trt_interpret(int major_number, int decan_suit, int decan_rank);
 
 /* Returns 22 (number of Major Arcana). */
-int ti_major_count(void);
+int trt_major_count(void);
 
 /* Returns 4 (number of suits). */
-int ti_suit_count(void);
+int trt_suit_count(void);
 
 #endif /* TIME_TAROT_INTERPRET_H */

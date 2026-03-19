@@ -23,7 +23,7 @@ static const char *const TITHI_FULL_NAMES[TITHI_COUNT] = {
     "Krishna Trayodashi",  "Krishna Chaturdashi", "Amavasya"
 };
 
-static const hdi_tithi_t TITHIS[TITHI_COUNT] = {
+static const hndi_tithi_t TITHIS[TITHI_COUNT] = {
     /*  1 */ {  1, "Agni",      "Auspicious",       "Beginning new ventures",
                "First day of the bright fortnight -- new beginnings" },
     /*  2 */ {  2, "Brahma",    "Auspicious",       "Travel, marriage",
@@ -86,27 +86,27 @@ static const hdi_tithi_t TITHIS[TITHI_COUNT] = {
                "New Moon -- the still point before rebirth" }
 };
 
-hdi_tithi_t hdi_tithi_data(int tithi)
+hndi_tithi_t hndi_tithi_data(int tithi)
 {
     if (tithi < 1 || tithi > TITHI_COUNT) {
-        hdi_tithi_t invalid = { -1, "?", "?", "?", "?" };
+        hndi_tithi_t invalid = { -1, "?", "?", "?", "?" };
         return invalid;
     }
     return TITHIS[tithi - 1];
 }
 
-int hdi_tithi_count(void)
+int hndi_tithi_count(void)
 {
     return TITHI_COUNT;
 }
 
-hindu_interp_t hdi_interpret(int tithi, const char *nakshatra_name,
+hindu_interp_t hndi_interpret(int tithi, const char *nakshatra_name,
                              const char *yoga_name)
 {
     hindu_interp_t result;
     memset(&result, 0, sizeof(result));
 
-    hdi_tithi_t t = hdi_tithi_data(tithi);
+    hndi_tithi_t t = hndi_tithi_data(tithi);
 
     if (t.number < 0) {
         /* Invalid tithi */

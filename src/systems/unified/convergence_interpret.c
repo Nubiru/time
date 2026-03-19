@@ -10,7 +10,7 @@
  * Static data tables
  * =================================================================== */
 
-static const ci_strength_t s_strengths[4] = {
+static const cvi_strength_t s_strengths[4] = {
     {
         CD_STRENGTH_MINOR,
         "Minor Alignment",
@@ -37,7 +37,7 @@ static const ci_strength_t s_strengths[4] = {
     }
 };
 
-static const ci_system_t s_systems[21] = {
+static const cvi_system_t s_systems[21] = {
     { CD_SYS_ASTRONOMY,    "Astronomy",            "Scientific observation",  "Solstice, equinox, or lunar phase" },
     { CD_SYS_ASTROLOGY,    "Astrology",            "Western esoteric",        "Sign ingress or major planetary aspect" },
     { CD_SYS_TZOLKIN,      "Tzolkin",              "Mayan Dreamspell",        "Kin 1 (Red Magnetic Dragon) or galactic portal day" },
@@ -61,7 +61,7 @@ static const ci_system_t s_systems[21] = {
     { CD_SYS_ZOROASTRIAN,  "Zoroastrian Calendar", "Mazdayasna",              "Gatha days or seasonal gahanbar" }
 };
 
-static const ci_pattern_t s_patterns[8] = {
+static const cvi_pattern_t s_patterns[8] = {
     {
         "Lunar Triple",
         "Three lunar calendars mark new month together",
@@ -104,15 +104,15 @@ static const ci_pattern_t s_patterns[8] = {
     }
 };
 
-static const ci_strength_t s_invalid_strength = {
+static const cvi_strength_t s_invalid_strength = {
     0, "?", "?", "?"
 };
 
-static const ci_system_t s_invalid_system = {
+static const cvi_system_t s_invalid_system = {
     0, "?", "?", "?"
 };
 
-static const ci_pattern_t s_invalid_pattern = {
+static const cvi_pattern_t s_invalid_pattern = {
     "?", "?", { -1, -1, -1, -1, -1, -1 }
 };
 
@@ -120,7 +120,7 @@ static const ci_pattern_t s_invalid_pattern = {
  * Public API
  * =================================================================== */
 
-ci_strength_t ci_strength_data(cd_strength_t strength)
+cvi_strength_t cvi_strength_data(cd_strength_t strength)
 {
     if (strength < CD_STRENGTH_MINOR || strength > CD_STRENGTH_RARE) {
         return s_invalid_strength;
@@ -128,7 +128,7 @@ ci_strength_t ci_strength_data(cd_strength_t strength)
     return s_strengths[strength - 1];
 }
 
-ci_system_t ci_system_data(cd_system_t system)
+cvi_system_t cvi_system_data(cd_system_t system)
 {
     if ((int)system < 0 || (int)system >= CD_SYS_COUNT) {
         return s_invalid_system;
@@ -136,7 +136,7 @@ ci_system_t ci_system_data(cd_system_t system)
     return s_systems[system];
 }
 
-ci_pattern_t ci_pattern_data(int index)
+cvi_pattern_t cvi_pattern_data(int index)
 {
     if (index < 0 || index >= 8) {
         return s_invalid_pattern;
@@ -144,14 +144,14 @@ ci_pattern_t ci_pattern_data(int index)
     return s_patterns[index];
 }
 
-convergence_interp_t ci_interpret(cd_strength_t strength,
+convergence_interp_t cvi_interpret(cd_strength_t strength,
                                   const cd_system_t *systems,
                                   int system_count)
 {
     convergence_interp_t result;
     memset(&result, 0, sizeof(result));
 
-    ci_strength_t st = ci_strength_data(strength);
+    cvi_strength_t st = cvi_strength_data(strength);
 
     /* Glyph: one star per strength level */
     int stars = (int)strength;
@@ -188,7 +188,7 @@ convergence_interp_t ci_interpret(cd_strength_t strength,
     }
 
     for (int i = 0; i < system_count && remaining > 1; i++) {
-        ci_system_t sys = ci_system_data(systems[i]);
+        cvi_system_t sys = cvi_system_data(systems[i]);
         if (i > 0) {
             n = snprintf(result.detail + pos, (size_t)remaining, ", ");
             if (n > 0 && n < remaining) {
@@ -211,17 +211,17 @@ convergence_interp_t ci_interpret(cd_strength_t strength,
     return result;
 }
 
-int ci_strength_count(void)
+int cvi_strength_count(void)
 {
     return 4;
 }
 
-int ci_system_count(void)
+int cvi_system_count(void)
 {
     return CD_SYS_COUNT;
 }
 
-int ci_pattern_count(void)
+int cvi_pattern_count(void)
 {
     return 8;
 }

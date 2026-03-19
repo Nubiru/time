@@ -146,7 +146,7 @@ static depth_interp_t interpret_hindu(const di_params_t *p)
         return make_empty(TS_SYS_HINDU);
     }
 
-    hindu_interp_t hi = hdi_interpret(
+    hindu_interp_t hi = hndi_interpret(
         p->hindu_tithi,
         p->hindu_nakshatra,
         p->hindu_yoga

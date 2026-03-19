@@ -21,7 +21,7 @@ static const char *ROMAN[22] = {
  * Static Major Arcana data (22 cards, Thoth tradition)
  * ================================================================ */
 
-static const ti_major_t MAJORS[22] = {
+static const trt_major_t MAJORS[22] = {
     {  0, "The Fool",
        "The Divine Child",
        "Potential",
@@ -181,7 +181,7 @@ static const ti_major_t MAJORS[22] = {
  * Static suit data (4 suits)
  * ================================================================ */
 
-static const ti_suit_t SUITS[4] = {
+static const trt_suit_t SUITS[4] = {
     { 0, "Wands", "Fire",
       "Will, creativity, career, spiritual purpose",
       "The spark that initiates \xe2\x80\x94 active, creative, transformative",
@@ -207,11 +207,11 @@ static const ti_suit_t SUITS[4] = {
  * Invalid sentinels
  * ================================================================ */
 
-static const ti_major_t INVALID_MAJOR = {
+static const trt_major_t INVALID_MAJOR = {
     -1, "?", "?", "?", "?", "?", "?"
 };
 
-static const ti_suit_t INVALID_SUIT = {
+static const trt_suit_t INVALID_SUIT = {
     -1, "?", "?", "?", "?", "?"
 };
 
@@ -219,24 +219,24 @@ static const ti_suit_t INVALID_SUIT = {
  * Public API
  * ================================================================ */
 
-ti_major_t ti_major_data(int number)
+trt_major_t trt_major_data(int number)
 {
     if (number < 0 || number > 21) return INVALID_MAJOR;
     return MAJORS[number];
 }
 
-ti_suit_t ti_suit_data(int suit)
+trt_suit_t trt_suit_data(int suit)
 {
     if (suit < 0 || suit > 3) return INVALID_SUIT;
     return SUITS[suit];
 }
 
-tarot_interp_t ti_interpret(int major_number, int decan_suit, int decan_rank)
+tarot_interp_t trt_interpret(int major_number, int decan_suit, int decan_rank)
 {
     tarot_interp_t r;
     memset(&r, 0, sizeof(r));
 
-    ti_major_t m = ti_major_data(major_number);
+    trt_major_t m = trt_major_data(major_number);
 
     /* Glyph: Roman numeral */
     if (m.number < 0) {
@@ -249,7 +249,7 @@ tarot_interp_t ti_interpret(int major_number, int decan_suit, int decan_rank)
     if (m.number < 0) {
         snprintf(r.glance, sizeof(r.glance), "?");
     } else if (decan_suit >= 0 && decan_suit <= 3 && decan_rank >= 2 && decan_rank <= 10) {
-        ti_suit_t s = ti_suit_data(decan_suit);
+        trt_suit_t s = trt_suit_data(decan_suit);
         snprintf(r.glance, sizeof(r.glance),
                  "%s \xe2\x80\x94 %s + %d of %s (%s)",
                  m.name, m.keyword, decan_rank, s.name, s.element);
@@ -271,7 +271,7 @@ tarot_interp_t ti_interpret(int major_number, int decan_suit, int decan_rank)
                         m.light, m.shadow);
 
         if (decan_suit >= 0 && decan_suit <= 3 && decan_rank >= 2 && decan_rank <= 10) {
-            ti_suit_t s = ti_suit_data(decan_suit);
+            trt_suit_t s = trt_suit_data(decan_suit);
             snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
                      " Decan: %d of %s (%s). Domain: %s. %s",
                      decan_rank, s.name, s.element, s.domain, s.quality);
@@ -281,12 +281,12 @@ tarot_interp_t ti_interpret(int major_number, int decan_suit, int decan_rank)
     return r;
 }
 
-int ti_major_count(void)
+int trt_major_count(void)
 {
     return 22;
 }
 
-int ti_suit_count(void)
+int trt_suit_count(void)
 {
     return 4;
 }
