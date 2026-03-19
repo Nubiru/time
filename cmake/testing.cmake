@@ -154,6 +154,7 @@ time_add_test(NAME test_astrology_interpret TEST tests/systems/astrology/test_as
 
 # Calendar tests
 time_add_test(NAME test_gregorian       TEST tests/systems/test_gregorian.c      DEPS gregorian julian)
+time_add_test(NAME test_gregorian_interpret TEST tests/systems/gregorian/test_gregorian_interpret.c DEPS gregorian_interpret)
 time_add_test(NAME test_tzolkin         TEST tests/systems/test_tzolkin.c        DEPS tzolkin julian)
 time_add_test(NAME test_haab            TEST tests/systems/test_haab.c           DEPS haab tzolkin julian)
 time_add_test(NAME test_chinese         TEST tests/systems/test_chinese.c        DEPS chinese julian)
