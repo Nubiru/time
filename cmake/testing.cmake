@@ -195,6 +195,7 @@ time_add_test(NAME test_myanmar        TEST tests/systems/myanmar/test_myanmar.c
 time_add_test(NAME test_thai_calendar  TEST tests/systems/thai/test_thai_calendar.c   DEPS thai_calendar)
 time_add_test(NAME test_cosmic_duality TEST tests/systems/zoroastrian/test_cosmic_duality.c DEPS cosmic_duality)
 time_add_test(NAME test_zoroastrian    TEST tests/systems/zoroastrian/test_zoroastrian.c   DEPS zoroastrian calendar_fixed)
+time_add_test(NAME test_zoroastrian_interpret TEST tests/systems/zoroastrian/test_zoroastrian_interpret.c DEPS zoroastrian_interpret zoroastrian calendar_fixed)
 
 # Tarot tests
 time_add_test(NAME test_tarot           TEST tests/systems/tarot/test_tarot.c   DEPS tarot)
