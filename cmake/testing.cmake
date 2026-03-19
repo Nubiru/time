@@ -284,6 +284,8 @@ time_add_test(NAME test_depth_tier TEST tests/systems/unified/test_depth_tier.c
     DEPS depth_tier)
 time_add_test(NAME test_brain_types TEST tests/systems/unified/test_brain_types.c
     DEPS brain_types)
+time_add_test(NAME test_brain_scan TEST tests/systems/unified/test_brain_scan.c
+    DEPS brain_scan brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -408,3 +410,12 @@ time_add_test(NAME test_shader_audit TEST tests/integration/test_shader_audit.c
          sun_shader mesh_shader billboard_shader diffraction
          render_layers camera_scale easing golden_layout
     LABELS integration)
+
+# ===== Performance Benchmarks =====
+time_add_test(NAME bench_core TEST tests/benchmark/bench_core.c
+    DEPS julian kepler mat4 vec3 orbit planets planet_data
+         calendar_convert gregorian tzolkin haab cr_cycle chinese iching hebrew
+         hijri persian coptic ethiopian egyptian french_republican japanese
+         bahai korean_calendar thai_calendar tamil_calendar myanmar zoroastrian
+         celtic_tree pawukon calendar_fixed
+    LABELS benchmark)
