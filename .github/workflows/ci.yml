@@ -34,6 +34,72 @@ jobs:
           cmake --build build-sanitize -j$(nproc)
           ctest --test-dir build-sanitize -j$(nproc) --output-on-failure
 
+      - name: Purity audit
+        run: bash scripts/check_purity.sh
+
+  memory:
+    name: Memory Safety (Valgrind)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake gcc valgrind
+
+      - name: Configure
+        run: cmake -B build-native -DCMAKE_BUILD_TYPE=Debug
+
+      - name: Build
+        run: cmake --build build-native -j$(nproc)
+
+      - name: Run tests under Valgrind
+        run: |
+          cd build-native
+          FAILED=0
+          for test in $(ctest --show-only=json-v1 | grep -oP '"name"\s*:\s*"\K[^"]+'); do
+            echo "--- valgrind: $test ---"
+            if ! valgrind --leak-check=full --errors-for-leak-kinds=definite \
+                          --error-exitcode=1 --quiet "./$test" 2>&1; then
+              echo "VALGRIND FAIL: $test"
+              FAILED=$((FAILED + 1))
+            fi
+          done
+          if [ "$FAILED" -gt 0 ]; then
+            echo "Valgrind found issues in $FAILED test(s)"
+            exit 1
+          fi
+          echo "All tests passed valgrind clean"
+
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y cmake gcc lcov
+
+      - name: Configure (coverage)
+        run: cmake -B build-coverage -DCMAKE_BUILD_TYPE=Coverage
+
+      - name: Build
+        run: cmake --build build-coverage -j$(nproc)
+
+      - name: Run tests
+        run: ctest --test-dir build-coverage -j$(nproc) --output-on-failure
+
+      - name: Generate coverage report
+        run: |
+          lcov --capture --directory build-coverage --output-file coverage.info --ignore-errors mismatch
+          lcov --remove coverage.info '/usr/*' '*/tests/*' '*/unity/*' --output-file coverage-src.info --ignore-errors unused
+          lcov --summary coverage-src.info
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage-src.info
+
   wasm:
     name: WASM Build + Size Check
     runs-on: ubuntu-latest
@@ -53,8 +119,28 @@ jobs:
       - name: Binary size check
         run: |
           echo "=== WASM Binary Sizes ==="
-          ls -la build-wasm/index.wasm
           RAW=$(stat -c%s build-wasm/index.wasm)
           GZIP=$(gzip -c build-wasm/index.wasm | wc -c)
-          echo "Raw:    ${RAW} bytes ($(( RAW / 1024 )) KB)"
-          echo "Gzipped: ${GZIP} bytes ($(( GZIP / 1024 )) KB)"
+          JS_RAW=$(stat -c%s build-wasm/index.js)
+          echo "WASM Raw:    ${RAW} bytes ($(( RAW / 1024 )) KB)"
+          echo "WASM Gzip:   ${GZIP} bytes ($(( GZIP / 1024 )) KB)"
+          echo "JS Raw:      ${JS_RAW} bytes ($(( JS_RAW / 1024 )) KB)"
+
+          # Compare against baseline if it exists
+          BASELINE="docs/wasm-size-baseline.txt"
+          if [ -f "$BASELINE" ]; then
+            PREV_RAW=$(cat "$BASELINE")
+            if [ "$PREV_RAW" -gt 0 ] 2>/dev/null; then
+              DELTA=$(( RAW - PREV_RAW ))
+              PCT=$(( DELTA * 100 / PREV_RAW ))
+              echo ""
+              echo "Baseline:    ${PREV_RAW} bytes ($(( PREV_RAW / 1024 )) KB)"
+              echo "Delta:       ${DELTA} bytes (${PCT}%)"
+              if [ "$PCT" -gt 5 ] || [ "$PCT" -lt -5 ]; then
+                echo "::warning::WASM binary size changed by ${PCT}% (${DELTA} bytes)"
+              fi
+            fi
+          else
+            echo ""
+            echo "No baseline found. Set one with: echo ${RAW} > ${BASELINE}"
+          fi
