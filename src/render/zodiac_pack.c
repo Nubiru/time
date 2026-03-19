@@ -472,7 +472,17 @@ const char *zp_ring_frag_source(void)
         "in vec2 v_uv;\n"
         "out vec4 frag_color;\n"
         "void main() {\n"
-        "    frag_color = v_color;\n"
+        "    /* Radial glow: brightest at ring midline, fading at edges */\n"
+        "    float radial = v_uv.y;\n"
+        "    float center = 0.5;\n"
+        "    float dist_from_center = abs(radial - center) / center;\n"
+        "    float glow = 1.0 - dist_from_center * dist_from_center;\n"
+        "    glow = clamp(glow, 0.0, 1.0);\n"
+        "    /* Color: enhance brightness at glow center */\n"
+        "    vec3 color = v_color.rgb * (0.5 + 0.5 * glow);\n"
+        "    /* Alpha: fade at ring edges */\n"
+        "    float alpha = v_color.a * (0.3 + 0.7 * glow);\n"
+        "    frag_color = vec4(color, alpha);\n"
         "}\n";
 }
 

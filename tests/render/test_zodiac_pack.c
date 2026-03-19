@@ -473,7 +473,22 @@ void test_glyph_shader_has_atlas(void)
  * Edge case tests
  * ═══════════════════════════════════════════════════════════════════════ */
 
-/* 37. Zero planets = no aspect lines, no planet glyphs */
+/* 37. Ring frag shader uses v_uv varying for radial glow */
+void test_ring_frag_has_v_uv(void)
+{
+    TEST_ASSERT_NOT_NULL(strstr(zp_ring_frag_source(), "v_uv"));
+}
+
+/* 38. Ring frag shader has radial glow computation */
+void test_ring_frag_has_radial_glow(void)
+{
+    const char *src = zp_ring_frag_source();
+    int has_glow = (strstr(src, "glow") != NULL) ||
+                   (strstr(src, "radial") != NULL);
+    TEST_ASSERT_TRUE(has_glow);
+}
+
+/* 39. Zero planets = no aspect lines, no planet glyphs */
 void test_zero_planets_no_aspects(void)
 {
     zp_line_data_t lines = zp_pack_lines(4.0f, 5.0f, NULL, NULL, NULL, 0, 8.0);
@@ -630,7 +645,11 @@ int main(void)
     RUN_TEST(test_line_shader_has_mvp);
     RUN_TEST(test_glyph_shader_has_atlas);
 
-    /* Edge cases (37-45) */
+    /* Radial glow (37-38) */
+    RUN_TEST(test_ring_frag_has_v_uv);
+    RUN_TEST(test_ring_frag_has_radial_glow);
+
+    /* Edge cases (39-47) */
     RUN_TEST(test_zero_planets_no_aspects);
     RUN_TEST(test_zero_planets_no_glyphs);
     RUN_TEST(test_null_cusps_no_cusps);

@@ -106,19 +106,32 @@ static const char *s_ring_vert_source =
     "uniform mat4 u_view;\n"
     "uniform mat4 u_proj;\n"
     "out vec3 v_color;\n"
+    "out vec3 v_world_pos;\n"
     "void main() {\n"
     "    gl_Position = u_proj * u_view * vec4(a_position, 1.0);\n"
     "    v_color = a_color;\n"
+    "    v_world_pos = a_position;\n"
     "}\n";
 
 static const char *s_ring_frag_source =
     "#version 300 es\n"
     "precision mediump float;\n"
     "in vec3 v_color;\n"
+    "in vec3 v_world_pos;\n"
     "uniform float u_opacity;\n"
     "out vec4 frag_color;\n"
     "void main() {\n"
-    "    frag_color = vec4(v_color, u_opacity);\n"
+    "    /* Radial glow from world position */\n"
+    "    float r = length(v_world_pos.xz);\n"
+    "    float inner = 4.2;\n"
+    "    float outer = 4.8;\n"
+    "    float radial = clamp((r - inner) / (outer - inner), 0.0, 1.0);\n"
+    "    float dist_from_center = abs(radial - 0.5) / 0.5;\n"
+    "    float glow = 1.0 - dist_from_center * dist_from_center;\n"
+    "    glow = clamp(glow, 0.0, 1.0);\n"
+    "    vec3 color = v_color * (0.5 + 0.5 * glow);\n"
+    "    float alpha = u_opacity * (0.3 + 0.7 * glow);\n"
+    "    frag_color = vec4(color, alpha);\n"
     "}\n";
 
 /* --- Line shader sources --- */
