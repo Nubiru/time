@@ -21,6 +21,7 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/content_curator.c
     ${CMAKE_CURRENT_SOURCE_DIR}/persona_persist.c
     ${CMAKE_CURRENT_SOURCE_DIR}/persona_io.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/onboarding.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -46,4 +47,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_content_curator   OBJECT content_curator.c)
     add_library(time_persona_persist  OBJECT persona_persist.c)
     add_library(time_persona_io      OBJECT persona_io.c)
+    add_library(time_onboarding      OBJECT onboarding.c)
 endif()
