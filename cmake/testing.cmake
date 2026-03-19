@@ -61,6 +61,7 @@ time_add_test(NAME test_sacred_geometry TEST tests/math/test_sacred_geometry.c D
 time_add_test(NAME test_wheel_layout    TEST tests/math/test_wheel_layout.c    DEPS wheel_layout)
 time_add_test(NAME test_projection      TEST tests/math/test_projection.c      DEPS projection mat4 vec3)
 time_add_test(NAME test_spring          TEST tests/math/test_spring.c          DEPS spring          LABELS unit)
+time_add_test(NAME test_vec_interp     TEST tests/math/test_vec_interp.c     DEPS vec_interp vec3 spring LABELS unit)
 
 # Render tests
 time_add_test(NAME test_camera          TEST tests/render/test_camera.c          DEPS camera vec3 mat4)
@@ -304,6 +305,8 @@ time_add_test(NAME test_brain_personal TEST tests/systems/unified/test_brain_per
     DEPS brain_personal brain_types birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 time_add_test(NAME test_brain_adapt TEST tests/systems/unified/test_brain_adapt.c
     DEPS brain_adapt brain_types user_context birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
+time_add_test(NAME test_brain_depth TEST tests/systems/unified/test_brain_depth.c
+    DEPS brain_depth brain_types depth_tier today_summary gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar panchanga nakshatra iching zodiac human_design sefirot coptic ethiopian persian japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -350,6 +353,9 @@ time_add_test(NAME test_view_adapt  TEST tests/ui/test_view_adapt.c    DEPS view
 time_add_test(NAME test_a11y_score TEST tests/ui/test_a11y_score.c   DEPS a11y_score)
 time_add_test(NAME test_system_theme TEST tests/ui/test_system_theme.c DEPS system_theme theme theme_css color_theory color golden_layout)
 # ui_bridge is Emscripten-only (S1) — no native test target
+
+# Platform tests
+time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
 
 # Cross-system validation test
 time_add_test(NAME test_cross_validation TEST tests/systems/test_cross_validation.c
