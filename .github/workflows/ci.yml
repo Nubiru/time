@@ -47,6 +47,12 @@ jobs:
       - name: Purity audit
         run: bash scripts/check_purity.sh
 
+      - name: Performance benchmark
+        run: |
+          cmake -B build-benchmark -DCMAKE_BUILD_TYPE=Benchmark
+          cmake --build build-benchmark --target bench_core -j$(nproc)
+          ./build-benchmark/bench_core
+
   memory:
     name: Memory Safety (Valgrind)
     runs-on: ubuntu-latest

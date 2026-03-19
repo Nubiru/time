@@ -41,6 +41,15 @@
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Sanitize"
       }
+    },
+    {
+      "name": "benchmark",
+      "displayName": "Benchmark",
+      "description": "Optimized native build for performance measurement",
+      "binaryDir": "build-benchmark",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Benchmark"
+      }
     }
   ],
   "buildPresets": [
@@ -59,6 +68,10 @@
     {
       "name": "sanitize",
       "configurePreset": "sanitize"
+    },
+    {
+      "name": "benchmark",
+      "configurePreset": "benchmark"
     }
   ],
   "testPresets": [

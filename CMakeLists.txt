@@ -36,6 +36,11 @@ if(NOT EMSCRIPTEN AND CMAKE_BUILD_TYPE STREQUAL "Sanitize")
     add_link_options(-fsanitize=address,undefined)
 endif()
 
+# Benchmark build: optimized with no debug overhead
+if(NOT EMSCRIPTEN AND CMAKE_BUILD_TYPE STREQUAL "Benchmark")
+    add_compile_options(-O2 -DNDEBUG)
+endif()
+
 # ===========================================================================
 # Source tree — per-directory CMakeLists define sources + OBJECT libraries
 # ===========================================================================
