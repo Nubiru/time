@@ -272,6 +272,24 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
         }
     }
 
+    /* Spatial panning: spread planets across stereo field (L1.2)
+     * Simple fixed positions for now -- future: compute from ecliptic longitude */
+    {
+        static const float PAN_SPREAD[8] = {
+            -0.7f,  /* Mercury: left */
+            -0.4f,  /* Venus: slight left */
+            -0.1f,  /* Earth year: near center-left */
+             0.2f,  /* Mars: slight right */
+             0.5f,  /* Jupiter: right */
+             0.8f,  /* Saturn: far right */
+            -0.5f,  /* Uranus: left */
+             0.0f   /* Neptune: center */
+        };
+        for (int i = 0; i < result.planet_count && i < 8; i++) {
+            result.pan_positions[i] = PAN_SPREAD[i];
+        }
+    }
+
     /* Final amplitude clamp to [0, 1] */
     for (int i = 0; i < result.planet_count; i++) {
         result.amplitudes[i] = clampf(result.amplitudes[i], 0.0f, 1.0f);

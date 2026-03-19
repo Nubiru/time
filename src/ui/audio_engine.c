@@ -63,23 +63,28 @@ void audio_engine_init(void) {
         convolver.buffer = irBuf;
         convolver.connect(wetGain);
 
-        /* Create 9 oscillators with per-planet gains */
+        /* Create 9 oscillators with per-planet gains and stereo panners */
         var oscs = [];
         var gains = [];
+        var panners = [];
         var waveTypes = []; /* track current waveform to avoid redundant updates */
         for (var i = 0; i < 9; i++) {
             var osc = ctx.createOscillator();
             var gain = ctx.createGain();
+            var panner = ctx.createStereoPanner();
             osc.type = 'sine';
             osc.frequency.value = 0;
             gain.gain.value = 0;
+            panner.pan.value = 0;
             osc.connect(gain);
-            /* Route each oscillator to both dry and wet paths */
-            gain.connect(dryGain);
-            gain.connect(convolver);
+            gain.connect(panner);
+            /* Route each panner output to both dry and wet paths */
+            panner.connect(dryGain);
+            panner.connect(convolver);
             osc.start();
             oscs.push(osc);
             gains.push(gain);
+            panners.push(panner);
             waveTypes.push('sine');
         }
 
@@ -91,6 +96,7 @@ void audio_engine_init(void) {
         ta.convolver = convolver;
         ta.oscs = oscs;
         ta.gains = gains;
+        ta.panners = panners;
         ta.waveTypes = waveTypes;
         ta.prevVol = 0.3;
         window._timeAudio = ta;
@@ -119,6 +125,7 @@ void audio_engine_update(const audio_params_t *params) {
         float amp = params->amplitudes[i] * params->master_volume;
         int waveform = params->waveform_types[i];
         int hcount = params->harmonic_counts[i];
+        float pan = params->pan_positions[i];
 
         /* Pass harmonic amplitudes for PeriodicWave creation */
         float h0 = (hcount > 0) ? params->harmonic_amps[i][0] : 0.0f;
@@ -141,6 +148,9 @@ void audio_engine_update(const audio_params_t *params) {
             /* Ramp frequency and amplitude */
             ta.oscs[idx].frequency.linearRampToValueAtTime($1, now + 0.1);
             ta.gains[idx].gain.linearRampToValueAtTime($2, now + 0.1);
+
+            /* Ramp stereo pan position (L1.2) */
+            ta.panners[idx].pan.linearRampToValueAtTime($13, now + 0.1);
 
             /* Set waveform: use PeriodicWave for rich harmonics, preset for simple */
             if (hcount > 2) {
@@ -171,7 +181,8 @@ void audio_engine_update(const audio_params_t *params) {
             }
         }, i, (double)freq, (double)amp, hcount, waveform,
            (double)h0, (double)h1, (double)h2, (double)h3,
-           (double)h4, (double)h5, (double)h6, (double)h7);
+           (double)h4, (double)h5, (double)h6, (double)h7,
+           (double)pan);
     }
 
     /* Silence unused oscillators */
@@ -268,6 +279,7 @@ void audio_engine_destroy(void) {
             ta.oscs[i].stop();
             ta.oscs[i].disconnect();
             ta.gains[i].disconnect();
+            ta.panners[i].disconnect();
         }
         ta.dryGain.disconnect();
         ta.wetGain.disconnect();

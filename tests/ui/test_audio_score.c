@@ -548,10 +548,56 @@ void test_compute_amplitudes_clamped(void)
     }
 }
 
-void test_compute_pan_positions_zeroed(void)
+/* ---- L1.2: Spatial panning tests ---- */
+
+void test_compute_pan_mercury_left(void)
 {
     audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
-    for (int i = 0; i < AS_MAX_PLANETS; i++) {
+    TEST_ASSERT_TRUE(p.pan_positions[0] < 0.0f); /* Mercury pans left */
+}
+
+void test_compute_pan_jupiter_right(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.pan_positions[4] > 0.0f); /* Jupiter pans right */
+}
+
+void test_compute_pan_range(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    for (int i = 0; i < p.planet_count; i++) {
+        TEST_ASSERT_TRUE(p.pan_positions[i] >= -1.0f);
+        TEST_ASSERT_TRUE(p.pan_positions[i] <= 1.0f);
+    }
+}
+
+void test_compute_pan_not_all_center(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    int any_nonzero = 0;
+    for (int i = 0; i < p.planet_count; i++) {
+        if (fabsf(p.pan_positions[i]) > 0.05f) any_nonzero = 1;
+    }
+    TEST_ASSERT_TRUE(any_nonzero);
+}
+
+void test_compute_pan_spread(void)
+{
+    /* At least some left, some right */
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    int has_left = 0, has_right = 0;
+    for (int i = 0; i < p.planet_count; i++) {
+        if (p.pan_positions[i] < -0.1f) has_left = 1;
+        if (p.pan_positions[i] > 0.1f) has_right = 1;
+    }
+    TEST_ASSERT_TRUE(has_left);
+    TEST_ASSERT_TRUE(has_right);
+}
+
+void test_compute_pan_unused_zeroed(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    for (int i = p.planet_count; i < AS_MAX_PLANETS; i++) {
         TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.0f, p.pan_positions[i]);
     }
 }
@@ -649,7 +695,13 @@ int main(void)
     RUN_TEST(test_compute_zoom_in_louder);
     RUN_TEST(test_compute_zoom_zero_valid);
     RUN_TEST(test_compute_amplitudes_clamped);
-    RUN_TEST(test_compute_pan_positions_zeroed);
+    /* L1.2: spatial panning */
+    RUN_TEST(test_compute_pan_mercury_left);
+    RUN_TEST(test_compute_pan_jupiter_right);
+    RUN_TEST(test_compute_pan_range);
+    RUN_TEST(test_compute_pan_not_all_center);
+    RUN_TEST(test_compute_pan_spread);
+    RUN_TEST(test_compute_pan_unused_zeroed);
 
     return UNITY_END();
 }
