@@ -57,6 +57,8 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/personal_resonance.c
     ${CMAKE_CURRENT_SOURCE_DIR}/depth_temporal.c
     ${CMAKE_CURRENT_SOURCE_DIR}/cosmic_fingerprint.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/cycle_tracker.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/narrative.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -118,4 +120,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_personal_resonance  OBJECT personal_resonance.c)
     add_library(time_depth_temporal     OBJECT depth_temporal.c)
     add_library(time_cosmic_fingerprint OBJECT cosmic_fingerprint.c)
+    add_library(time_cycle_tracker      OBJECT cycle_tracker.c)
+    add_library(time_narrative          OBJECT narrative.c)
 endif()

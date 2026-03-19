@@ -284,6 +284,8 @@ time_add_test(NAME test_birth_profile TEST tests/systems/unified/test_birth_prof
     DEPS birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 time_add_test(NAME test_cosmic_fingerprint TEST tests/systems/unified/test_cosmic_fingerprint.c
     DEPS cosmic_fingerprint birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
+time_add_test(NAME test_cycle_tracker TEST tests/systems/unified/test_cycle_tracker.c
+    DEPS cycle_tracker birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 time_add_test(NAME test_festival_detector TEST tests/systems/unified/test_festival_detector.c
     DEPS festival_detector korean_calendar hebrew sabbatical hijri buddhist lunar wheel_of_year thai_calendar tamil_calendar myanmar persian zoroastrian calendar_fixed)
 time_add_test(NAME test_calendar_convert TEST tests/systems/unified/test_calendar_convert.c
@@ -348,6 +350,8 @@ time_add_test(NAME test_personal_resonance TEST tests/systems/unified/test_perso
     DEPS personal_resonance)
 time_add_test(NAME test_depth_temporal TEST tests/systems/unified/test_depth_temporal.c
     DEPS depth_temporal)
+time_add_test(NAME test_narrative TEST tests/systems/unified/test_narrative.c
+    DEPS narrative brain_language_bridge brain_types)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -429,7 +433,7 @@ time_add_test(NAME test_welcome_text TEST tests/ui/test_welcome_text.c
 time_add_test(NAME test_wisdom_display TEST tests/ui/test_wisdom_display.c
     DEPS wisdom_display wisdom_engine wisdom sensitivity)
 time_add_test(NAME test_zoom_depth TEST tests/ui/test_zoom_depth.c
-    DEPS zoom_depth depth_tier depth_ring camera_scale easing spring today_summary LABELS unit)
+    DEPS zoom_depth depth_tier depth_ring camera_scale easing spring LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
