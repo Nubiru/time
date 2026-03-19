@@ -121,6 +121,8 @@ time_add_test(NAME test_billboard_shader TEST tests/render/test_billboard_shader
 time_add_test(NAME test_shader_constants TEST tests/render/test_shader_constants.c DEPS shader_constants)
 time_add_test(NAME test_lens_flare TEST tests/render/test_lens_flare.c DEPS lens_flare)
 time_add_test(NAME test_click_target TEST tests/render/test_click_target.c DEPS click_target)
+time_add_test(NAME test_camera_motion TEST tests/render/test_camera_motion.c DEPS camera_motion LABELS unit)
+time_add_test(NAME test_scale_spring TEST tests/render/test_scale_spring.c DEPS scale_spring spring camera_scale easing LABELS unit)
 
 # Core tests
 time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
@@ -319,6 +321,8 @@ time_add_test(NAME test_brain_cluster TEST tests/systems/unified/test_brain_clus
     DEPS brain_cluster brain_types)
 time_add_test(NAME test_brain_query TEST tests/systems/unified/test_brain_query.c
     DEPS brain_query brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+time_add_test(NAME test_cal_terms TEST tests/systems/unified/test_cal_terms.c
+    DEPS cal_terms)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
