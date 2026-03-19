@@ -12,6 +12,7 @@
 #define TIME_AUDIO_SCORE_H
 
 #define AS_MAX_PLANETS 9
+#define AS_MAX_HARMONICS 8
 
 typedef struct {
     float frequencies[AS_MAX_PLANETS];  /* per-planet Hz (transposed to audible) */
@@ -21,6 +22,11 @@ typedef struct {
     float tension;                      /* 0=consonant, 1=maximum dissonance */
     float warmth;                       /* -1=cold (galaxy), 0=neutral (space), +1=warm (earth) */
     float tempo_bpm;                    /* rhythm rate from time speed */
+    int   waveform_types[AS_MAX_PLANETS];              /* audio_waveform_t per planet */
+    int   harmonic_counts[AS_MAX_PLANETS];             /* number of partials per planet */
+    float harmonic_amps[AS_MAX_PLANETS][AS_MAX_HARMONICS]; /* partial amplitudes (normalized) */
+    float reverb_wet;                                  /* 0.0=fully dry, 1.0=fully wet */
+    float reverb_decay_s;                              /* reverb impulse response duration */
 } audio_params_t;
 
 /* Compute full audio parameters from current state.

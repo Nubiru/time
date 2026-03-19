@@ -191,7 +191,14 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
     for (int i = 0; i < AS_MAX_PLANETS; i++) {
         result.frequencies[i] = 0.0f;
         result.amplitudes[i] = 0.0f;
+        result.waveform_types[i] = 0;
+        result.harmonic_counts[i] = 0;
+        for (int h = 0; h < AS_MAX_HARMONICS; h++) {
+            result.harmonic_amps[i][h] = 0.0f;
+        }
     }
+    result.reverb_wet = 0.0f;
+    result.reverb_decay_s = 0.0f;
 
     /* Chord */
     result.planet_count = audio_score_chord(jd, result.frequencies,
@@ -209,6 +216,27 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
 
     /* Tempo */
     result.tempo_bpm = audio_score_tempo(time_speed);
+
+    /* Populate timbre data from audio_data profiles */
+    for (int i = 0; i < result.planet_count; i++) {
+        int planet_idx = i + 1; /* audio_score_chord uses planets 1-8, mapping to slots 0-7 */
+        audio_planet_profile_t prof = audio_planet_profile(planet_idx);
+        result.waveform_types[i] = (int)prof.waveform;
+        result.harmonic_counts[i] = prof.harmonic_count;
+        for (int h = 0; h < prof.harmonic_count && h < AS_MAX_HARMONICS; h++) {
+            result.harmonic_amps[i][h] = (float)prof.harmonics[h].amplitude;
+        }
+    }
+
+    /* Reverb: cold views get more reverb (vast/spacious), warm views less (intimate) */
+    {
+        float w = result.warmth;
+        if (w < -1.0f) w = -1.0f;
+        if (w > 1.0f) w = 1.0f;
+        float cold_factor = (-w + 1.0f) * 0.5f; /* 0.0 at warmth=+1, 1.0 at warmth=-1 */
+        result.reverb_wet = 0.15f + 0.45f * cold_factor;   /* range: 0.15 to 0.60 */
+        result.reverb_decay_s = 1.0f + 1.0f * cold_factor; /* range: 1.0 to 2.0 */
+    }
 
     return result;
 }

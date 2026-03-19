@@ -1,6 +1,7 @@
 #include "../unity/unity.h"
 #include "../../src/ui/audio_score.h"
 #include "../../src/ui/view_registry.h"
+#include "../../src/systems/unified/audio_data.h"
 
 #include <math.h>
 #include <string.h>
@@ -336,6 +337,129 @@ void test_compute_tempo_consistent(void)
     TEST_ASSERT_FLOAT_WITHIN(0.01f, standalone, p.tempo_bpm);
 }
 
+/* ---- Waveform tests ---- */
+
+void test_compute_waveform_mercury_sawtooth(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    /* Mercury is planet index 1, goes to slot 0 */
+    TEST_ASSERT_EQUAL_INT(AUDIO_WAVE_SAWTOOTH, p.waveform_types[0]);
+}
+
+void test_compute_waveform_venus_sine(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_EQUAL_INT(AUDIO_WAVE_SINE, p.waveform_types[1]);
+}
+
+void test_compute_waveform_earth_year_sine(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_EQUAL_INT(AUDIO_WAVE_SINE, p.waveform_types[2]);
+}
+
+void test_compute_waveform_mars_triangle(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_EQUAL_INT(AUDIO_WAVE_TRIANGLE, p.waveform_types[3]);
+}
+
+/* ---- Harmonic tests ---- */
+
+void test_compute_harmonics_mercury_count(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_EQUAL_INT(6, p.harmonic_counts[0]); /* Mercury has 6 */
+}
+
+void test_compute_harmonics_venus_count(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_EQUAL_INT(2, p.harmonic_counts[1]); /* Venus has 2 */
+}
+
+void test_compute_harmonics_fundamental_is_one(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    for (int i = 0; i < p.planet_count; i++) {
+        TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.0f, p.harmonic_amps[i][0]);
+    }
+}
+
+void test_compute_harmonics_decrease(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    /* Mercury (slot 0) has 6 harmonics, each less than previous */
+    for (int h = 1; h < p.harmonic_counts[0]; h++) {
+        TEST_ASSERT_TRUE(p.harmonic_amps[0][h] < p.harmonic_amps[0][h - 1]);
+    }
+}
+
+/* ---- Reverb tests ---- */
+
+void test_compute_reverb_wet_range(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.reverb_wet >= 0.15f);
+    TEST_ASSERT_TRUE(p.reverb_wet <= 0.60f);
+}
+
+void test_compute_reverb_decay_range(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.reverb_decay_s >= 1.0f);
+    TEST_ASSERT_TRUE(p.reverb_decay_s <= 2.0f);
+}
+
+void test_compute_reverb_galaxy_wetter(void)
+{
+    audio_params_t galaxy = audio_score_compute(JD_J2000, VIEW_GALAXY, 0.0f, 1.0);
+    audio_params_t earth = audio_score_compute(JD_J2000, VIEW_EARTH, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(galaxy.reverb_wet > earth.reverb_wet);
+}
+
+void test_compute_reverb_galaxy_longer_decay(void)
+{
+    audio_params_t galaxy = audio_score_compute(JD_J2000, VIEW_GALAXY, 0.0f, 1.0);
+    audio_params_t earth = audio_score_compute(JD_J2000, VIEW_EARTH, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(galaxy.reverb_decay_s > earth.reverb_decay_s);
+}
+
+void test_compute_reverb_galaxy_wet_high(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_GALAXY, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.reverb_wet > 0.4f);
+}
+
+void test_compute_reverb_earth_wet_low(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_EARTH, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.reverb_wet < 0.35f);
+}
+
+void test_compute_unused_slots_zeroed(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    /* Slots beyond planet_count should be zero */
+    for (int i = p.planet_count; i < AS_MAX_PLANETS; i++) {
+        TEST_ASSERT_EQUAL_INT(0, p.waveform_types[i]);
+        TEST_ASSERT_EQUAL_INT(0, p.harmonic_counts[i]);
+    }
+}
+
+/* ---- Consistency tests ---- */
+
+void test_compute_timbre_consistent_with_audio_data(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    /* Check all planets match their audio_data profile */
+    for (int i = 0; i < p.planet_count; i++) {
+        audio_planet_profile_t prof = audio_planet_profile(i + 1);
+        TEST_ASSERT_EQUAL_INT((int)prof.waveform, p.waveform_types[i]);
+        TEST_ASSERT_EQUAL_INT(prof.harmonic_count, p.harmonic_counts[i]);
+    }
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -393,6 +517,30 @@ int main(void)
     RUN_TEST(test_compute_warmth_consistent);
     RUN_TEST(test_compute_tension_consistent);
     RUN_TEST(test_compute_tempo_consistent);
+
+    /* waveform */
+    RUN_TEST(test_compute_waveform_mercury_sawtooth);
+    RUN_TEST(test_compute_waveform_venus_sine);
+    RUN_TEST(test_compute_waveform_earth_year_sine);
+    RUN_TEST(test_compute_waveform_mars_triangle);
+
+    /* harmonics */
+    RUN_TEST(test_compute_harmonics_mercury_count);
+    RUN_TEST(test_compute_harmonics_venus_count);
+    RUN_TEST(test_compute_harmonics_fundamental_is_one);
+    RUN_TEST(test_compute_harmonics_decrease);
+
+    /* reverb */
+    RUN_TEST(test_compute_reverb_wet_range);
+    RUN_TEST(test_compute_reverb_decay_range);
+    RUN_TEST(test_compute_reverb_galaxy_wetter);
+    RUN_TEST(test_compute_reverb_galaxy_longer_decay);
+    RUN_TEST(test_compute_reverb_galaxy_wet_high);
+    RUN_TEST(test_compute_reverb_earth_wet_low);
+    RUN_TEST(test_compute_unused_slots_zeroed);
+
+    /* timbre consistency */
+    RUN_TEST(test_compute_timbre_consistent_with_audio_data);
 
     return UNITY_END();
 }
