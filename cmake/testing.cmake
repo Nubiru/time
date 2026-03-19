@@ -290,6 +290,8 @@ time_add_test(NAME test_depth_selector TEST tests/systems/unified/test_depth_sel
     DEPS depth_selector)
 time_add_test(NAME test_brain_score TEST tests/systems/unified/test_brain_score.c
     DEPS brain_score brain_types)
+time_add_test(NAME test_brain_explain TEST tests/systems/unified/test_brain_explain.c
+    DEPS brain_explain brain_types)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -417,6 +419,13 @@ time_add_test(NAME test_shader_audit TEST tests/integration/test_shader_audit.c
 
 # ===== Performance Benchmarks =====
 time_add_test(NAME bench_core TEST tests/benchmark/bench_core.c
+    DEPS julian kepler mat4 vec3 orbit planets planet_data
+         calendar_convert gregorian tzolkin haab cr_cycle chinese iching hebrew
+         hijri persian coptic ethiopian egyptian french_republican japanese
+         bahai korean_calendar thai_calendar tamil_calendar myanmar zoroastrian
+         celtic_tree pawukon calendar_fixed
+    LABELS benchmark)
+time_add_test(NAME bench_memory TEST tests/benchmark/bench_memory.c
     DEPS julian kepler mat4 vec3 orbit planets planet_data
          calendar_convert gregorian tzolkin haab cr_cycle chinese iching hebrew
          hijri persian coptic ethiopian egyptian french_republican japanese
