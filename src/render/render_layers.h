@@ -51,4 +51,15 @@ const char *layer_name(layer_id_t id);
 /* Check if a layer is effectively visible (opacity > 0.01). */
 int layer_is_visible(layer_state_t state, layer_id_t id);
 
+/* Override a single layer's opacity. Returns new state with override applied.
+ * override_opacity: 0.0-1.0 = forced value, negative = no override (keeps computed). */
+layer_state_t layer_override_opacity(layer_state_t state, layer_id_t id,
+                                     float override_opacity);
+
+/* Blend a layer's opacity toward a target. Returns new state.
+ * mix: 0.0 = keep original, 1.0 = fully override to target.
+ * Useful for smooth camera transition animations. */
+layer_state_t layer_blend_opacity(layer_state_t state, layer_id_t id,
+                                  float target_opacity, float mix);
+
 #endif

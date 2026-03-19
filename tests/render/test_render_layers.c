@@ -148,6 +148,53 @@ static void test_purity(void) {
     TEST_ASSERT_EQUAL_FLOAT(o1, o2);
 }
 
+/* --- Override + blend API --- */
+
+void test_override_sets_opacity(void) {
+    layer_state_t state = {{0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f}};
+    layer_state_t result = layer_override_opacity(state, LAYER_STARS, 0.8f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.8f, result.opacity[LAYER_STARS]);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.5f, result.opacity[LAYER_PLANETS]); /* unchanged */
+}
+
+void test_override_clamps_max(void) {
+    layer_state_t state = {{0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f}};
+    layer_state_t result = layer_override_opacity(state, LAYER_STARS, 2.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 1.0f, result.opacity[LAYER_STARS]);
+}
+
+void test_override_negative_no_change(void) {
+    layer_state_t state = {{0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f}};
+    layer_state_t result = layer_override_opacity(state, LAYER_STARS, -1.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.5f, result.opacity[LAYER_STARS]); /* unchanged */
+}
+
+void test_override_invalid_layer(void) {
+    layer_state_t state = {{0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f, 0.5f}};
+    layer_state_t result = layer_override_opacity(state, (layer_id_t)99, 0.8f);
+    /* All unchanged */
+    for (int i = 0; i < LAYER_COUNT; i++)
+        TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.5f, result.opacity[i]);
+}
+
+void test_blend_zero_mix_no_change(void) {
+    layer_state_t state = {{0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f}};
+    layer_state_t result = layer_blend_opacity(state, LAYER_ZODIAC_RING, 0.0f, 0.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.8f, result.opacity[LAYER_ZODIAC_RING]);
+}
+
+void test_blend_full_mix_replaces(void) {
+    layer_state_t state = {{0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f, 0.8f}};
+    layer_state_t result = layer_blend_opacity(state, LAYER_ZODIAC_RING, 0.2f, 1.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.2f, result.opacity[LAYER_ZODIAC_RING]);
+}
+
+void test_blend_half_mix_interpolates(void) {
+    layer_state_t state = {{1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f, 1.0f}};
+    layer_state_t result = layer_blend_opacity(state, LAYER_PLANETS, 0.0f, 0.5f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.5f, result.opacity[LAYER_PLANETS]);
+}
+
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(test_default_stars);
@@ -169,5 +216,13 @@ int main(void) {
     RUN_TEST(test_is_visible_false);
     RUN_TEST(test_is_visible_invalid);
     RUN_TEST(test_purity);
+    /* Override + blend API */
+    RUN_TEST(test_override_sets_opacity);
+    RUN_TEST(test_override_clamps_max);
+    RUN_TEST(test_override_negative_no_change);
+    RUN_TEST(test_override_invalid_layer);
+    RUN_TEST(test_blend_zero_mix_no_change);
+    RUN_TEST(test_blend_full_mix_replaces);
+    RUN_TEST(test_blend_half_mix_interpolates);
     return UNITY_END();
 }

@@ -114,3 +114,22 @@ int layer_is_visible(layer_state_t state, layer_id_t id) {
     if (id < 0 || id >= LAYER_COUNT) return 0;
     return state.opacity[id] > 0.01f;
 }
+
+layer_state_t layer_override_opacity(layer_state_t state, layer_id_t id,
+                                     float override_opacity) {
+    if (id >= 0 && id < LAYER_COUNT && override_opacity >= 0.0f) {
+        state.opacity[id] = override_opacity > 1.0f ? 1.0f : override_opacity;
+    }
+    return state;
+}
+
+layer_state_t layer_blend_opacity(layer_state_t state, layer_id_t id,
+                                  float target_opacity, float mix) {
+    if (id < 0 || id >= LAYER_COUNT) return state;
+    if (mix < 0.0f) mix = 0.0f;
+    if (mix > 1.0f) mix = 1.0f;
+    if (target_opacity < 0.0f) target_opacity = 0.0f;
+    if (target_opacity > 1.0f) target_opacity = 1.0f;
+    state.opacity[id] = state.opacity[id] * (1.0f - mix) + target_opacity * mix;
+    return state;
+}
