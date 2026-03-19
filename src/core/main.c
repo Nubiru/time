@@ -32,6 +32,7 @@
 #include "../ui/view_registry.h"
 #include "../ui/audio_score.h"
 #include "../ui/audio_engine.h"
+#include "../ui/audio_meditation.h"
 #endif
 
 #ifdef __EMSCRIPTEN__
@@ -118,6 +119,18 @@ void main_loop(void) {
             g_state.time_speed);
         audio.pulse_factor = audio_score_pulse(audio.tempo_bpm,
                                                now_ms / 1000.0);
+
+        /* Meditation mode modulation */
+        if (g_state.meditation_active) {
+            med_state_t med = med_compute(now_ms / 1000.0, 6.0f);
+            /* Override pulse factor with meditation breathing */
+            audio.pulse_factor = med.breath_factor;
+            /* Boost reverb for spaciousness */
+            audio.reverb_wet += med.reverb_boost;
+            if (audio.reverb_wet > 0.85f)
+                audio.reverb_wet = 0.85f;
+        }
+
         audio_engine_update(&audio);
     }
 #endif
@@ -172,7 +185,7 @@ int main(void) {
     /* Initialize audio engine (WebAudio oscillators + reverb) */
     audio_engine_init();
 
-    printf("Controls: Space=pause, 1-5=speed, -=reverse, T=trails, H=hud, Shift+T=theme, Shift+0-6=scale\n");
+    printf("Controls: Space=pause, 1-5=speed, -=reverse, T=trails, H=hud, Shift+T=theme, Shift+M=meditate, Shift+0-6=scale\n");
 
     /* Show init success in HUD */
     EM_ASM({

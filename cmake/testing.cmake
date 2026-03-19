@@ -396,6 +396,8 @@ time_add_test(NAME test_audio_event TEST tests/ui/test_audio_event.c
          tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_audio_culture TEST tests/ui/test_audio_culture.c
     DEPS audio_culture)
+time_add_test(NAME test_audio_meditation TEST tests/ui/test_audio_meditation.c
+    DEPS audio_meditation golden_layout)
 # ui_bridge is Emscripten-only (S1) — no native test target
 
 # Platform tests

@@ -39,6 +39,7 @@ typedef struct {
     /* Visual toggles */
     int show_trails;       /* orbit trail lines */
     int show_hud;          /* time HUD overlay */
+    int meditation_active; /* 1=meditation mode on */
 
     /* Timing */
     double prev_time_ms;

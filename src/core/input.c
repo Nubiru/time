@@ -108,6 +108,12 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         return EM_TRUE;
     }
 
+    /* Shift + M: toggle meditation mode */
+    if (e->shiftKey && e->key[0] == 'M' && e->key[1] == '\0') {
+        g_input_state->meditation_active = !g_input_state->meditation_active;
+        return EM_TRUE;
+    }
+
     /* Shift + T: toggle theme (Cosmos / Dawn) */
     if (e->shiftKey && e->key[0] == 'T' && e->key[1] == '\0') {
         EM_ASM({ if (Module._ui_toggle_theme) Module._ui_toggle_theme(); });
