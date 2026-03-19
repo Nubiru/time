@@ -332,6 +332,12 @@ time_add_test(NAME test_depth_interpret TEST tests/systems/unified/test_depth_in
     DEPS depth_interpret hebrew_interpret hebrew islamic_interpret hijri buddhist_interpret hindu_interpret panchanga nakshatra iching_interpret iching kabbalah_interpret)
 time_add_test(NAME test_depth_hud TEST tests/systems/unified/test_depth_hud.c
     DEPS depth_hud)
+time_add_test(NAME test_brain_audio_bridge TEST tests/systems/unified/test_brain_audio_bridge.c
+    DEPS brain_audio_bridge brain_types)
+time_add_test(NAME test_brain_language_bridge TEST tests/systems/unified/test_brain_language_bridge.c
+    DEPS brain_language_bridge brain_types)
+time_add_test(NAME test_brain_visual_bridge TEST tests/systems/unified/test_brain_visual_bridge.c
+    DEPS brain_visual_bridge brain_types)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

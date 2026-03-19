@@ -50,6 +50,9 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/convergence_interpret.c
     ${CMAKE_CURRENT_SOURCE_DIR}/depth_interpret.c
     ${CMAKE_CURRENT_SOURCE_DIR}/depth_hud.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/brain_audio_bridge.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/brain_language_bridge.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/brain_visual_bridge.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -104,4 +107,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_convergence_interpret OBJECT convergence_interpret.c)
     add_library(time_depth_interpret OBJECT depth_interpret.c)
     add_library(time_depth_hud      OBJECT depth_hud.c)
+    add_library(time_brain_audio_bridge    OBJECT brain_audio_bridge.c)
+    add_library(time_brain_language_bridge OBJECT brain_language_bridge.c)
+    add_library(time_brain_visual_bridge   OBJECT brain_visual_bridge.c)
 endif()
