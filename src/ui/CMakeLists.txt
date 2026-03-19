@@ -48,6 +48,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/sensitivity.c
     ${CMAKE_CURRENT_SOURCE_DIR}/input_motion.c
     ${CMAKE_CURRENT_SOURCE_DIR}/audio_event.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/audio_culture.c
     PARENT_SCOPE
 )
 
@@ -97,5 +98,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_sensitivity OBJECT sensitivity.c)
     add_library(time_input_motion OBJECT input_motion.c)
     add_library(time_audio_event OBJECT audio_event.c)
+    add_library(time_audio_culture OBJECT audio_culture.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
