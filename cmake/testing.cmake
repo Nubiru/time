@@ -534,6 +534,8 @@ time_add_test(NAME test_auto_theme TEST tests/ui/test_auto_theme.c
     DEPS auto_theme theme golden_layout color_theory color daylight solar_events)
 time_add_test(NAME test_loading_sequence TEST tests/ui/test_loading_sequence.c
     DEPS loading_sequence)
+time_add_test(NAME test_input_dispatch TEST tests/ui/test_input_dispatch.c
+    DEPS input_dispatch)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
