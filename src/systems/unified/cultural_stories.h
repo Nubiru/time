@@ -14,6 +14,8 @@
 #ifndef TIME_CULTURAL_STORIES_H
 #define TIME_CULTURAL_STORIES_H
 
+#include "../../ui/sensitivity.h"
+
 #define CS_MAX_TAGS 4
 #define CS_MAX_RESULTS 16
 
@@ -59,6 +61,7 @@ typedef struct {
     cs_category_t category;
     cs_system_t related_systems[CS_MAX_TAGS];
     int system_count;
+    sensitivity_t sensitivity;
 } cs_story_t;
 
 /* Total number of stories in the database. */
@@ -94,5 +97,9 @@ int cs_distinct_cultures(void);
 /* Count stories for a given culture (case-insensitive substring match).
  * Returns 0 for NULL. */
 int cs_culture_story_count(const char *culture);
+
+/* Find stories by sensitivity level. Writes matching indices to results[].
+ * Returns count found (up to max_results). */
+int cs_by_sensitivity(sensitivity_t level, int *results, int max_results);
 
 #endif /* TIME_CULTURAL_STORIES_H */

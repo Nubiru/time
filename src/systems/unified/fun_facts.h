@@ -16,6 +16,8 @@
 #ifndef TIME_FUN_FACTS_H
 #define TIME_FUN_FACTS_H
 
+#include "../../ui/sensitivity.h"
+
 #define FF_MAX_RESULTS  16
 #define FF_TEXT_MAX     256
 
@@ -49,6 +51,7 @@ typedef struct {
     ff_trigger_t trigger;
     unsigned int system_mask;
     int priority;
+    sensitivity_t sensitivity;
 } ff_fact_t;
 
 typedef struct {
@@ -93,5 +96,9 @@ const char *ff_trigger_name(ff_trigger_t trig);
 
 /* Return a default context (space view, human scale, no systems). */
 ff_context_t ff_context_default(void);
+
+/* Find facts by sensitivity level. Writes matching indices to out[].
+ * Returns count found (up to max_out). */
+int ff_by_sensitivity(sensitivity_t level, int *out, int max_out);
 
 #endif /* TIME_FUN_FACTS_H */

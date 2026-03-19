@@ -64,7 +64,8 @@ static const cs_story_t STORIES[] = {
       "into the wells of wisdom, fate, and the underworld. The tree is tended "
       "by the Norns, who water it daily from the Well of Urd.",
       "Pre-Viking Age (~800 BCE)", CS_CAT_ORIGIN_MYTH,
-      { CS_SYSTEM_GREGORIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_GREGORIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 1, "Norse", "Ragnarok -- Twilight of the Gods",
       "Ragnarok is the prophesied destruction and rebirth of the cosmos. "
@@ -72,7 +73,8 @@ static const cs_story_t STORIES[] = {
       "consumed by fire and flood, then rises anew from the sea. Two human "
       "survivors repopulate a renewed, green earth.",
       "Pre-Viking Age (~800 BCE)", CS_CAT_COSMIC_CYCLE,
-      { CS_SYSTEM_ASTRONOMY, CS_SYSTEM_GREGORIAN, 0, 0 }, 2 },
+      { CS_SYSTEM_ASTRONOMY, CS_SYSTEM_GREGORIAN, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 2, "Norse", "The Norns -- Weavers of Fate",
       "Urd (past), Verdandi (present), and Skuld (future) are three female "
@@ -80,7 +82,8 @@ static const cs_story_t STORIES[] = {
       "runes into the tree's trunk, determining the fate of gods and mortals. "
       "Their weaving represents time as an interconnected fabric, not a line.",
       "Pre-Viking Age (~800 BCE)", CS_CAT_KEY_FIGURE,
-      { CS_SYSTEM_GREGORIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_GREGORIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 3, "Norse", "Weekday Names -- Gods in Our Calendar",
       "Tuesday (Tyr), Wednesday (Odin/Woden), Thursday (Thor), and Friday "
@@ -88,7 +91,8 @@ static const cs_story_t STORIES[] = {
       "and Monday derive from Roman and celestial sources. This linguistic "
       "fossil reveals how deeply Norse cosmology shaped Western timekeeping.",
       "Germanic Iron Age (~200 CE)", CS_CAT_TIME_PHILOSOPHY,
-      { CS_SYSTEM_GREGORIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_GREGORIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     /* ===== GREEK (4 stories, indices 4-7) ===== */
     { 4, "Greek", "Chronos vs Kairos -- Two Faces of Time",
@@ -97,7 +101,8 @@ static const cs_story_t STORIES[] = {
       "clock; Kairos is the archer releasing at the perfect instant. Together "
       "they reveal that time has both quantity and quality.",
       "Classical Greece (~500 BCE)", CS_CAT_TIME_PHILOSOPHY,
-      { CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0, 0 }, 2 },
+      { CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     { 5, "Greek", "Plato's Timaeus -- Time as Moving Image of Eternity",
       "In the Timaeus, Plato describes the Demiurge creating time as a "
@@ -105,7 +110,8 @@ static const cs_story_t STORIES[] = {
       "planets become the instruments of time, each orbit a measure. This "
       "dialogue established the philosophical link between astronomy and time.",
       "Classical Greece (~360 BCE)", CS_CAT_ORIGIN_MYTH,
-      { CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0, 0 }, 2 },
+      { CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     { 6, "Greek", "Pythagoras -- Harmony of the Spheres",
       "Pythagoras taught that planetary orbits produce a celestial music "
@@ -113,7 +119,8 @@ static const cs_story_t STORIES[] = {
       "to its distance and speed. This concept united mathematics, astronomy, "
       "and aesthetics into a single vision of cosmic order.",
       "Classical Greece (~530 BCE)", CS_CAT_KEY_FIGURE,
-      { CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0, 0 }, 2 },
+      { CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     { 7, "Greek", "Aristarchus -- The First Heliocentric Model",
       "Around 270 BCE, Aristarchus of Samos proposed that the Earth revolves "
@@ -121,7 +128,8 @@ static const cs_story_t STORIES[] = {
       "estimated the relative sizes of the Sun and Moon. His work was rejected "
       "in his time but proved prescient.",
       "Hellenistic Period (~270 BCE)", CS_CAT_KEY_FIGURE,
-      { CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0, 0 }, 2 },
+      { CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     /* ===== ROMAN (3 stories, indices 8-10) ===== */
     { 8, "Roman", "Caesar's Calendar Reform -- The 445-Day Year",
@@ -130,7 +138,8 @@ static const cs_story_t STORIES[] = {
       "Julian calendar introduced the 365.25-day year with a leap day every "
       "four years, serving Western civilization for over 1,600 years.",
       "Late Republic (46 BCE)", CS_CAT_CALENDAR_REFORM,
-      { CS_SYSTEM_GREGORIAN, 0, 0, 0 }, 1 },
+      { CS_SYSTEM_GREGORIAN, 0, 0, 0 }, 1,
+      SENSITIVITY_GENERAL },
 
     { 9, "Roman", "July and August -- Ego in the Calendar",
       "The months Quintilis and Sextilis were renamed July (for Julius Caesar) "
@@ -138,7 +147,8 @@ static const cs_story_t STORIES[] = {
       "calendar itself. Augustus reportedly added a day to 'his' month so it "
       "would not be shorter than Julius's.",
       "Early Empire (~8 BCE)", CS_CAT_CALENDAR_REFORM,
-      { CS_SYSTEM_GREGORIAN, 0, 0, 0 }, 1 },
+      { CS_SYSTEM_GREGORIAN, 0, 0, 0 }, 1,
+      SENSITIVITY_GENERAL },
 
     { 10, "Roman", "Pax Romana -- Two Centuries of Stability",
       "From 27 BCE to 180 CE, the Roman Empire experienced an unprecedented "
@@ -146,7 +156,8 @@ static const cs_story_t STORIES[] = {
       "timekeeping, road networks, and administrative calendars unified a "
       "vast territory from Britain to Egypt.",
       "Early Empire (27 BCE - 180 CE)", CS_CAT_GOLDEN_AGE,
-      { CS_SYSTEM_GREGORIAN, 0, 0, 0 }, 1 },
+      { CS_SYSTEM_GREGORIAN, 0, 0, 0 }, 1,
+      SENSITIVITY_GENERAL },
 
     /* ===== INDIAN (4 stories, indices 11-14) ===== */
     { 11, "Indian", "Dance of Shiva -- Nataraja as Cosmic Rhythm",
@@ -155,7 +166,8 @@ static const cs_story_t STORIES[] = {
       "hand beats the rhythm of creation; the flame in his left hand "
       "represents dissolution. The dance is time itself.",
       "Chola Dynasty (~10th century CE)", CS_CAT_ORIGIN_MYTH,
-      { CS_SYSTEM_HINDU, CS_SYSTEM_BUDDHIST, CS_SYSTEM_ASTROLOGY, 0 }, 3 },
+      { CS_SYSTEM_HINDU, CS_SYSTEM_BUDDHIST, CS_SYSTEM_ASTROLOGY, 0 }, 3,
+      SENSITIVITY_RESPECTFUL },
 
     { 12, "Indian", "Aryabhata -- Earth Rotation and Pi",
       "In the 5th century CE, Aryabhata declared that the Earth rotates on "
@@ -163,7 +175,8 @@ static const cs_story_t STORIES[] = {
       "to 3.1416 and developed a sine table fundamental to Indian astronomy. "
       "His Aryabhatiya influenced both Islamic and European mathematics.",
       "Gupta Empire (499 CE)", CS_CAT_KEY_FIGURE,
-      { CS_SYSTEM_HINDU, CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0 }, 3 },
+      { CS_SYSTEM_HINDU, CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0 }, 3,
+      SENSITIVITY_GENERAL },
 
     { 13, "Indian", "Yuga Cycle -- 4.32 Million Years of Cosmic Time",
       "Hindu cosmology divides cosmic time into four Yugas totaling 4.32 "
@@ -171,7 +184,8 @@ static const cs_story_t STORIES[] = {
       "Yuga marks progressive decline in dharma. We currently inhabit the "
       "Kali Yuga, the age of strife, which began around 3102 BCE.",
       "Vedic Period (~1500 BCE)", CS_CAT_COSMIC_CYCLE,
-      { CS_SYSTEM_HINDU, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_HINDU, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 14, "Indian", "Vedic Golden Age -- The Surya Siddhanta",
       "The Surya Siddhanta, a foundational text of Indian astronomy, "
@@ -180,7 +194,8 @@ static const cs_story_t STORIES[] = {
       "to within seconds of modern values and influenced all subsequent "
       "Indian astronomical traditions.",
       "Gupta Period (~400 CE)", CS_CAT_GOLDEN_AGE,
-      { CS_SYSTEM_HINDU, CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0 }, 3 },
+      { CS_SYSTEM_HINDU, CS_SYSTEM_ASTRONOMY, CS_SYSTEM_ASTROLOGY, 0 }, 3,
+      SENSITIVITY_GENERAL },
 
     /* ===== CHINESE (4 stories, indices 15-18) ===== */
     { 15, "Chinese", "Mandate of Heaven -- Calendar as Legitimacy",
@@ -189,7 +204,8 @@ static const cs_story_t STORIES[] = {
       "demonstrated the Mandate of Heaven. A failed prediction could signal "
       "that heaven had withdrawn its favor from the ruling dynasty.",
       "Zhou Dynasty (~1046 BCE)", CS_CAT_TIME_PHILOSOPHY,
-      { CS_SYSTEM_CHINESE, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_CHINESE, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     { 16, "Chinese", "I Ching -- The Cosmic Computer",
       "The Book of Changes contains 64 hexagrams, each a six-line binary "
@@ -197,7 +213,8 @@ static const cs_story_t STORIES[] = {
       "as a divination and philosophical system, the I Ching maps all "
       "possible transformations of yin and yang through time.",
       "Western Zhou (~1000 BCE)", CS_CAT_ORIGIN_MYTH,
-      { CS_SYSTEM_CHINESE, CS_SYSTEM_ICHING, 0, 0 }, 2 },
+      { CS_SYSTEM_CHINESE, CS_SYSTEM_ICHING, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 17, "Chinese", "Sima Qian -- The Grand Historian",
       "Sima Qian (145-86 BCE) wrote the Shiji, a comprehensive history of "
@@ -205,7 +222,8 @@ static const cs_story_t STORIES[] = {
       "history and integrated astronomical records with political events. "
       "He endured castration rather than abandon his life's work.",
       "Han Dynasty (~94 BCE)", CS_CAT_KEY_FIGURE,
-      { CS_SYSTEM_CHINESE, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_CHINESE, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     { 18, "Chinese", "Dynasty Calendar Reforms",
       "Each new Chinese dynasty typically issued a new calendar to demonstrate "
@@ -213,7 +231,8 @@ static const cs_story_t STORIES[] = {
       "years, each refining lunar and solar calculations. The Shoushi calendar "
       "of 1281 achieved accuracy rivaling Gregorian reform three centuries later.",
       "Multiple Dynasties (~200 BCE - 1644 CE)", CS_CAT_CALENDAR_REFORM,
-      { CS_SYSTEM_CHINESE, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_CHINESE, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     /* ===== BUDDHIST (4 stories, indices 19-22) ===== */
     { 19, "Buddhist", "Anicca -- The Law of Impermanence",
@@ -222,7 +241,8 @@ static const cs_story_t STORIES[] = {
       "the experience of time from something to grasp into something to "
       "observe with equanimity and wisdom.",
       "5th century BCE", CS_CAT_TIME_PHILOSOPHY,
-      { CS_SYSTEM_BUDDHIST, CS_SYSTEM_MYANMAR, 0, 0 }, 2 },
+      { CS_SYSTEM_BUDDHIST, CS_SYSTEM_MYANMAR, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 20, "Buddhist", "Kalpas -- Cosmic Time Beyond Measure",
       "A kalpa is a vast unit of cosmic time in Buddhist cosmology. The "
@@ -230,7 +250,8 @@ static const cs_story_t STORIES[] = {
       "by brushing it with a silk cloth once per century. Worlds arise and "
       "dissolve through countless kalpas in endless succession.",
       "5th century BCE", CS_CAT_COSMIC_CYCLE,
-      { CS_SYSTEM_BUDDHIST, CS_SYSTEM_MYANMAR, 0, 0 }, 2 },
+      { CS_SYSTEM_BUDDHIST, CS_SYSTEM_MYANMAR, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 21, "Buddhist", "Siddhartha Gautama -- The Present Moment",
       "The historical Buddha, born Siddhartha Gautama around 563 BCE, taught "
@@ -238,7 +259,8 @@ static const cs_story_t STORIES[] = {
       "is projection. His meditation practices train attention on immediate "
       "experience, dissolving the illusion of linear time.",
       "5th century BCE", CS_CAT_KEY_FIGURE,
-      { CS_SYSTEM_BUDDHIST, CS_SYSTEM_MYANMAR, 0, 0 }, 2 },
+      { CS_SYSTEM_BUDDHIST, CS_SYSTEM_MYANMAR, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 22, "Buddhist", "Uposatha -- Lunar Observance Days",
       "Buddhist communities observe Uposatha on the new moon, full moon, and "
@@ -246,7 +268,8 @@ static const cs_story_t STORIES[] = {
       "precepts and monastics recite the Patimokkha. This practice weaves "
       "spiritual discipline into the rhythm of the Moon.",
       "5th century BCE onward", CS_CAT_COSMIC_CYCLE,
-      { CS_SYSTEM_BUDDHIST, CS_SYSTEM_MYANMAR, CS_SYSTEM_ASTRONOMY, 0 }, 3 },
+      { CS_SYSTEM_BUDDHIST, CS_SYSTEM_MYANMAR, CS_SYSTEM_ASTRONOMY, 0 }, 3,
+      SENSITIVITY_RESPECTFUL },
 
     /* ===== CELTIC (3 stories, indices 23-25) ===== */
     { 23, "Celtic", "Newgrange -- 5,000-Year-Old Solstice Marker",
@@ -255,7 +278,8 @@ static const cs_story_t STORIES[] = {
       "solstice dawn. Older than Stonehenge and the Pyramids, it demonstrates "
       "Neolithic mastery of solar astronomy.",
       "Neolithic (~3200 BCE)", CS_CAT_ORIGIN_MYTH,
-      { CS_SYSTEM_CELTIC, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_CELTIC, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     { 24, "Celtic", "Thin Places -- Samhain and Beltane",
       "The Celts believed certain times were 'thin,' when the boundary "
@@ -263,7 +287,8 @@ static const cs_story_t STORIES[] = {
       "year's end and honored the dead; Beltane (May 1) celebrated fertility "
       "and renewal. Both were fire festivals aligning to cross-quarter days.",
       "Iron Age (~500 BCE)", CS_CAT_TIME_PHILOSOPHY,
-      { CS_SYSTEM_CELTIC, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_CELTIC, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 25, "Celtic", "Wheel of the Year -- Eight Festivals",
       "The Celtic year was structured around eight festivals: four solar "
@@ -271,7 +296,8 @@ static const cs_story_t STORIES[] = {
       "(Samhain, Imbolc, Beltane, Lughnasadh). This eightfold wheel reflects "
       "agricultural, astronomical, and spiritual cycles in unity.",
       "Iron Age (~500 BCE)", CS_CAT_COSMIC_CYCLE,
-      { CS_SYSTEM_CELTIC, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_CELTIC, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     /* ===== EGYPTIAN (4 stories, indices 26-29) ===== */
     { 26, "Egyptian", "Ma'at -- Cosmic Order and Truth",
@@ -280,7 +306,8 @@ static const cs_story_t STORIES[] = {
       "The pharaoh's primary duty was to uphold Ma'at. Without it, the Nile "
       "would not flood, crops would fail, and chaos would reign.",
       "Old Kingdom (~2600 BCE)", CS_CAT_ORIGIN_MYTH,
-      { CS_SYSTEM_EGYPTIAN, CS_SYSTEM_COPTIC, CS_SYSTEM_ASTRONOMY, 0 }, 3 },
+      { CS_SYSTEM_EGYPTIAN, CS_SYSTEM_COPTIC, CS_SYSTEM_ASTRONOMY, 0 }, 3,
+      SENSITIVITY_RESPECTFUL },
 
     { 27, "Egyptian", "Sothic Cycle -- 1,461 Years of Sirius",
       "The Egyptian civil calendar of 365 days drifted one day every four "
@@ -288,7 +315,8 @@ static const cs_story_t STORIES[] = {
       "years, the calendar realigned with the star. This Sothic cycle was "
       "the longest recognized astronomical period in the ancient world.",
       "Old Kingdom (~2800 BCE)", CS_CAT_COSMIC_CYCLE,
-      { CS_SYSTEM_EGYPTIAN, CS_SYSTEM_COPTIC, CS_SYSTEM_ASTRONOMY, 0 }, 3 },
+      { CS_SYSTEM_EGYPTIAN, CS_SYSTEM_COPTIC, CS_SYSTEM_ASTRONOMY, 0 }, 3,
+      SENSITIVITY_GENERAL },
 
     { 28, "Egyptian", "Imhotep -- Architect, Priest, Astronomer",
       "Imhotep served Pharaoh Djoser around 2650 BCE as architect of the "
@@ -296,7 +324,8 @@ static const cs_story_t STORIES[] = {
       "He was later deified as a god of wisdom and medicine. His integration "
       "of building, ritual, and celestial observation defined Egyptian culture.",
       "Old Kingdom (~2650 BCE)", CS_CAT_KEY_FIGURE,
-      { CS_SYSTEM_EGYPTIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_EGYPTIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     { 29, "Egyptian", "Old Kingdom -- Age of Pyramid Builders",
       "The Old Kingdom (2686-2181 BCE) saw the construction of the Great "
@@ -305,7 +334,8 @@ static const cs_story_t STORIES[] = {
       "sophistication, and monumental architecture remain unparalleled in "
       "antiquity.",
       "Old Kingdom (2686-2181 BCE)", CS_CAT_GOLDEN_AGE,
-      { CS_SYSTEM_EGYPTIAN, CS_SYSTEM_COPTIC, CS_SYSTEM_ASTRONOMY, 0 }, 3 },
+      { CS_SYSTEM_EGYPTIAN, CS_SYSTEM_COPTIC, CS_SYSTEM_ASTRONOMY, 0 }, 3,
+      SENSITIVITY_GENERAL },
 
     /* ===== MAYAN (4 stories, indices 30-33) ===== */
     { 30, "Mayan", "Popol Vuh -- The Hero Twins",
@@ -314,7 +344,8 @@ static const cs_story_t STORIES[] = {
       "through cunning, and rise as the Sun and Moon. This origin narrative "
       "encodes the cycles of maize, death, and celestial rebirth.",
       "Classic Period (~200-900 CE)", CS_CAT_ORIGIN_MYTH,
-      { CS_SYSTEM_MAYAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_MAYAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 31, "Mayan", "Long Count -- 5,125 Years of Time",
       "The Mayan Long Count calendar measures time from a mythical creation "
@@ -322,7 +353,8 @@ static const cs_story_t STORIES[] = {
       "spans 13 Baktuns or about 5,125 years. The calendar's completion on "
       "December 21, 2012 marked a new cycle, not an apocalypse.",
       "Preclassic Period (~400 BCE)", CS_CAT_COSMIC_CYCLE,
-      { CS_SYSTEM_MAYAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_MAYAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 32, "Mayan", "Each Day a Living Entity",
       "In Mayan time philosophy, each day carries its own character, energy, "
@@ -330,7 +362,8 @@ static const cs_story_t STORIES[] = {
       "not empty containers to be filled but living beings that bring specific "
       "qualities. Time is not a resource to spend but an art to live.",
       "Classic Period (~200-900 CE)", CS_CAT_TIME_PHILOSOPHY,
-      { CS_SYSTEM_MAYAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_MAYAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 33, "Mayan", "Pacal the Great of Palenque",
       "K'inich Janaab Pakal ruled Palenque for 68 years (615-683 CE), the "
@@ -338,7 +371,8 @@ static const cs_story_t STORIES[] = {
       "the underworld along the World Tree. The astronomical alignments of "
       "his Temple of Inscriptions encode sophisticated calendar knowledge.",
       "Classic Period (615-683 CE)", CS_CAT_KEY_FIGURE,
-      { CS_SYSTEM_MAYAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_MAYAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     /* ===== HEBREW (2 stories, indices 34-35) ===== */
     { 34, "Hebrew", "Sabbath -- Sacred Architecture of Time",
@@ -347,7 +381,8 @@ static const cs_story_t STORIES[] = {
       "palace in time.' This weekly rhythm of work and rest structures Jewish "
       "life and influenced the global adoption of the seven-day week.",
       "Biblical Period (~1200 BCE)", CS_CAT_TIME_PHILOSOPHY,
-      { CS_SYSTEM_HEBREW, CS_SYSTEM_GREGORIAN, 0, 0 }, 2 },
+      { CS_SYSTEM_HEBREW, CS_SYSTEM_GREGORIAN, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 35, "Hebrew", "Metonic Cycle -- Lunisolar Harmony",
       "The Hebrew calendar reconciles lunar months with solar years using "
@@ -355,7 +390,8 @@ static const cs_story_t STORIES[] = {
       "equal 19 solar years. Seven leap months are intercalated over 19 "
       "years, keeping Passover in spring and festivals aligned with seasons.",
       "Second Temple Period (~5th century BCE)", CS_CAT_COSMIC_CYCLE,
-      { CS_SYSTEM_HEBREW, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_HEBREW, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     /* ===== ISLAMIC (2 stories, indices 36-37) ===== */
     { 36, "Islamic", "Hijra -- The Calendar's Zero Point",
@@ -364,7 +400,8 @@ static const cs_story_t STORIES[] = {
       "days, it drifts through the solar seasons over a 33-year cycle. This "
       "design ensures every generation experiences Ramadan in every season.",
       "622 CE", CS_CAT_CALENDAR_REFORM,
-      { CS_SYSTEM_ISLAMIC, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_ISLAMIC, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 37, "Islamic", "Al-Khwarizmi -- Father of Algebra and Algorithms",
       "Muhammad ibn Musa al-Khwarizmi (780-850 CE) wrote foundational works "
@@ -372,7 +409,8 @@ static const cs_story_t STORIES[] = {
       "gave us the word 'algorithm.' His Zij al-Sindhind astronomical tables "
       "calculated planetary positions used in Islamic calendar-making.",
       "Abbasid Caliphate (~820 CE)", CS_CAT_KEY_FIGURE,
-      { CS_SYSTEM_ISLAMIC, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_ISLAMIC, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 
     /* ===== PERSIAN (2 stories, indices 38-39) ===== */
     { 38, "Persian", "Nowruz -- The Zoroastrian New Year",
@@ -381,7 +419,8 @@ static const cs_story_t STORIES[] = {
       "it honors the triumph of light over darkness. The Haft-sin table's "
       "seven symbolic items represent renewal and cosmic harmony.",
       "Achaemenid Period (~550 BCE)", CS_CAT_COSMIC_CYCLE,
-      { CS_SYSTEM_ZOROASTRIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_ZOROASTRIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_RESPECTFUL },
 
     { 39, "Persian", "Omar Khayyam -- Calendar Reformer and Poet",
       "Omar Khayyam (1048-1131 CE) led the committee that created the Jalali "
@@ -389,7 +428,8 @@ static const cs_story_t STORIES[] = {
       "A mathematician, astronomer, and poet, his Rubaiyat meditates on the "
       "preciousness of time: 'Be happy for this moment. This moment is your life.'",
       "Seljuk Empire (1079 CE)", CS_CAT_KEY_FIGURE,
-      { CS_SYSTEM_ZOROASTRIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2 },
+      { CS_SYSTEM_ZOROASTRIAN, CS_SYSTEM_ASTRONOMY, 0, 0 }, 2,
+      SENSITIVITY_GENERAL },
 };
 
 static const int STORY_COUNT = sizeof(STORIES) / sizeof(STORIES[0]);
@@ -441,7 +481,8 @@ cs_story_t cs_story_get(int index)
                                .text = NULL, .era = NULL,
                                .category = CS_CAT_ORIGIN_MYTH,
                                .related_systems = {0, 0, 0, 0},
-                               .system_count = 0 };
+                               .system_count = 0,
+                               .sensitivity = SENSITIVITY_GENERAL };
         return invalid;
     }
     return STORIES[index];
@@ -526,6 +567,19 @@ int cs_culture_story_count(const char *culture)
     for (int i = 0; i < STORY_COUNT; i++) {
         if (cs_ci_contains(STORIES[i].culture, culture)) {
             count++;
+        }
+    }
+    return count;
+}
+
+int cs_by_sensitivity(sensitivity_t level, int *results, int max_results)
+{
+    if (results == NULL || max_results <= 0) return 0;
+    int count = 0;
+    int total = (int)(sizeof(STORIES) / sizeof(STORIES[0]));
+    for (int i = 0; i < total && count < max_results; i++) {
+        if (STORIES[i].sensitivity == level) {
+            results[count++] = i;
         }
     }
     return count;

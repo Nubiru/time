@@ -12,6 +12,8 @@
 #ifndef TIME_WISDOM_H
 #define TIME_WISDOM_H
 
+#include "../../ui/sensitivity.h"
+
 #define WISDOM_MAX_TAGS 6
 #define WISDOM_MAX_RESULTS 32
 
@@ -42,6 +44,7 @@ typedef struct {
     const char *culture;       /* "Greek", "Indian", "Islamic", "Mayan", etc. */
     wisdom_tag_t tags[WISDOM_MAX_TAGS];
     int tag_count;
+    sensitivity_t sensitivity;
 } wisdom_t;
 
 /* Total number of quotes. */
@@ -70,5 +73,9 @@ int wisdom_culture_count(const char *culture);
 
 /* Count distinct cultures represented. */
 int wisdom_distinct_cultures(void);
+
+/* Find quotes by sensitivity level. Writes matching indices to results[].
+ * Returns count found (up to max_results). */
+int wisdom_by_sensitivity(sensitivity_t level, int *results, int max_results);
 
 #endif /* TIME_WISDOM_H */
