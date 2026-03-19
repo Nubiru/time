@@ -161,6 +161,7 @@ time_add_test(NAME test_iching_interpret TEST tests/systems/iching/test_iching_i
 time_add_test(NAME test_numerology      TEST tests/systems/test_numerology.c     DEPS numerology)
 time_add_test(NAME test_human_design    TEST tests/systems/test_human_design.c   DEPS human_design)
 time_add_test(NAME test_bodygraph       TEST tests/systems/test_bodygraph.c      DEPS bodygraph)
+time_add_test(NAME test_human_design_interpret TEST tests/systems/human_design/test_human_design_interpret.c DEPS human_design_interpret human_design)
 time_add_test(NAME test_hebrew          TEST tests/systems/hebrew/test_hebrew.c  DEPS hebrew)
 time_add_test(NAME test_hijri           TEST tests/systems/islamic/test_hijri.c  DEPS hijri)
 time_add_test(NAME test_prayer_times    TEST tests/systems/islamic/test_prayer_times.c DEPS prayer_times solar_events julian)
