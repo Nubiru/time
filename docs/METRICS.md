@@ -1,28 +1,29 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 7)
+**Last refreshed**: 2026-03-20 (INFRA session 8)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 370 |
-| Header files (.h) | 373 |
-| Lines of code (src/) | 90,000+ |
-| Lines of tests | 158,000+ |
-| Test files | 365 |
-| Render pass files | 17 |
+| Source files (.c) | 373 |
+| Header files (.h) | 374 |
+| Lines of code (src/) | 90,647 |
+| Lines of tests | 159,078 |
+| Test files | 367 |
+| Render pass files | 19 |
 | Contributors | 179 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 365 |
-| Test functions (RUN_TEST) | 14,699 |
-| Test assertions (TEST_ASSERT) | 25,152 |
+| Test suites (CTest) | 367 |
+| Test functions (RUN_TEST) | 14,727 |
+| Test assertions (TEST_ASSERT) | 25,978 |
 | Failures | 0 |
-| CTest time | 1.72s |
+| CTest time | 1.32s |
+| E2E tests (Playwright) | 5 |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
 ### Test Pyramid
@@ -34,6 +35,7 @@
 | integration | 6 | Labeled tests |
 | benchmark | 2 | CPU + memory |
 | unlabeled | 284 | Functional tests without explicit labels |
+| e2e | 5 | Playwright (WASM load, canvas, help, pause) |
 
 ## Code Coverage (refreshed — 2026-03-19)
 
@@ -83,14 +85,14 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (365/365) |
+| CTest -j12 | PASS (367/367) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
 | WASM build | PASS (306 KB raw, 121 KB gzipped) — ring_pass + render wiring |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
 
-## Render Pipeline (17 passes)
+## Render Pipeline (19 passes)
 
 | # | Pass | Layer | Type |
 |---|------|-------|------|
@@ -110,7 +112,9 @@
 | 14 | tree_pass | CARDS | Kabbalah Sefirot + paths + pillars |
 | 15 | card_pass | CARDS | Info card backgrounds + borders |
 | 16 | text_pass | TEXT | Text rendering pass |
-| 17 | post_pass | (wraps all) | FBO bloom + tonemap + vignette |
+| 17 | ring_pass | RINGS | Concentric knowledge system rings |
+| 18 | convergence_pass | CONVERGENCE | Cross-system convergence visuals |
+| 19 | post_pass | (wraps all) | FBO bloom + tonemap + vignette |
 
 ## Purity
 
@@ -156,8 +160,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 306,377 bytes (306 KB) |
-| Gzipped | 120,907 bytes (121 KB) |
+| Raw .wasm | 306,410 bytes (306 KB) |
+| Gzipped | 120,919 bytes (121 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 | Growth since sweep #19 | +70 KB raw (+33%) |
 
@@ -175,19 +179,20 @@
 
 *Most are domain-specific switch/dispatch logic. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-19)
+## Health (INFRA sweep — 2026-03-20, session 8)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (370 .c files, all registered, 0 phantoms) |
+| Build system sync | OK (373 .c files, all registered, 0 phantoms) |
 | Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (365/365 tests) |
-| WASM build | PASS (285 KB) — zero linker warnings |
+| Native build | PASS (367/367 tests, 1.32s) |
+| WASM build | PASS (306 KB raw, 121 KB gzipped) — zero linker warnings |
+| E2E tests | PASS (5/5 Playwright — WASM load, canvas, enter, help, pause) |
 | Symbol conflicts | **FIXED** — 4 total: cal_system_name, ti_interpret, hdi_interpret, ci_interpret |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, 0 findings) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Missing attribution | 0 |
-| Render pipeline | 17/17 passes (text_pass added) |
+| Render pipeline | 19/19 passes (ring_pass, convergence_pass added) |
 | Refactor audit | 7 God Functions >100L, all domain logic, no urgency |
