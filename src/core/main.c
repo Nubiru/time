@@ -26,6 +26,7 @@
 #include "../render/passes/tree_pass.h"
 #include "../render/passes/orbit_trail_pass.h"
 #include "../render/passes/card_pass.h"
+#include "../render/passes/text_pass.h"
 #include "../render/passes/post_pass.h"
 #include "../ui/ui_bridge.h"
 #include "../ui/view_registry.h"
@@ -94,6 +95,7 @@ void main_loop(void) {
     hexagram_pass_draw(&frame);
     tree_pass_draw(&frame);
     card_pass_draw(&frame);
+    text_pass_draw(&frame);
 
     post_pass_end(&frame);
 
@@ -151,6 +153,7 @@ int main(void) {
     if (tree_pass_init() != 0) return 1;
     if (orbit_trail_pass_init() != 0) return 1;
     if (card_pass_init() != 0) return 1;
+    if (text_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
 
     /* Initialize timing — start at the actual current date/time */
