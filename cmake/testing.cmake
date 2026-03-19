@@ -488,6 +488,8 @@ time_add_test(NAME test_zoom_depth TEST tests/ui/test_zoom_depth.c
 time_add_test(NAME test_focus_flow TEST tests/ui/test_focus_flow.c
     DEPS focus_flow camera_path click_target render_layers camera_scale easing
          spring vec_interp vec3 golden_layout LABELS unit)
+time_add_test(NAME test_a11y_narrative TEST tests/ui/test_a11y_narrative.c
+    DEPS a11y_narrative)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
