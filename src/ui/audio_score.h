@@ -30,6 +30,9 @@ typedef struct {
     float moon_factor;                                 /* 0.0-1.0 current moon envelope value */
     float pan_positions[AS_MAX_PLANETS];               /* -1.0=left, 0.0=center, 1.0=right */
     float pulse_factor;                                /* 0.85-1.0 rhythmic breathing factor */
+    float consonance;                                  /* 0.0-1.0 aspect consonance score */
+    float event_density;                               /* 0.0-1.0 convergence density */
+    float event_intensity;                             /* 0.0-1.0 combined event intensity */
 } audio_params_t;
 
 /* Compute full audio parameters from current state.

@@ -16,6 +16,7 @@
  * Pure module: no GL, no malloc, no globals, no side effects. */
 
 #include "audio_score.h"
+#include "audio_event.h"
 #include "../systems/unified/audio_data.h"
 #include "view_registry.h"
 
@@ -223,6 +224,9 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
         result.pan_positions[j] = 0.0f;
     }
     result.pulse_factor = 1.0f;
+    result.consonance = 0.0f;
+    result.event_density = 0.0f;
+    result.event_intensity = 0.0f;
 
     /* Chord */
     result.planet_count = audio_score_chord(jd, result.frequencies,
@@ -240,6 +244,14 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
 
     /* Tempo */
     result.tempo_bpm = audio_score_tempo(time_speed);
+
+    /* Event detection: aspects + convergences (L2.1+L2.2) */
+    {
+        audio_event_summary_t events = audio_event_scan(jd, 8.0);
+        result.consonance = events.consonance;
+        result.event_density = events.convergence_density;
+        result.event_intensity = events.event_intensity;
+    }
 
     /* Populate timbre data from audio_data profiles */
     for (int i = 0; i < result.planet_count; i++) {
