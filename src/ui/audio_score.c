@@ -18,6 +18,8 @@
 #include "audio_score.h"
 #include "audio_event.h"
 #include "../systems/unified/audio_data.h"
+#include "../systems/unified/brain_scan.h"
+#include "../systems/unified/brain_audio_bridge.h"
 #include "view_registry.h"
 
 #include <math.h>
@@ -227,6 +229,8 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
     result.consonance = 0.0f;
     result.event_density = 0.0f;
     result.event_intensity = 0.0f;
+    result.surprise_factor = 0.0f;
+    result.brain_system_count = 0;
 
     /* Chord */
     result.planet_count = audio_score_chord(jd, result.frequencies,
@@ -245,12 +249,31 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
     /* Tempo */
     result.tempo_bpm = audio_score_tempo(time_speed);
 
-    /* Event detection: aspects + convergences (L2.1+L2.2) */
+    /* Event detection: brain intelligence + aspects (L2.1+L2.2+L2.4) */
     {
-        audio_event_summary_t events = audio_event_scan(jd, 8.0);
-        result.consonance = events.consonance;
-        result.event_density = events.convergence_density;
-        result.event_intensity = events.event_intensity;
+        /* Brain scan provides the deepest intelligence */
+        br_result_t br;
+        br_scan(jd, &br);
+        br_audio_event_t brain_evt;
+        br_audio_from_result(&br, &brain_evt);
+
+        /* Also get aspect-level consonance from audio_event for immediacy */
+        audio_event_summary_t aspect_events = audio_event_scan(jd, 8.0);
+
+        /* Blend brain and aspect consonance (brain=deeper, aspects=immediate) */
+        result.consonance = 0.4f * brain_evt.consonance
+                          + 0.6f * aspect_events.consonance;
+
+        /* Use brain's convergence density (more comprehensive than
+         * cd_significance alone) */
+        result.event_density = brain_evt.convergence_density;
+
+        /* Combined intensity from brain */
+        result.event_intensity = brain_evt.event_intensity;
+
+        /* Brain-specific fields */
+        result.surprise_factor = brain_evt.surprise_factor;
+        result.brain_system_count = brain_evt.system_count;
     }
 
     /* Populate timbre data from audio_data profiles */

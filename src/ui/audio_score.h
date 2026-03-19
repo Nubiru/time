@@ -33,6 +33,8 @@ typedef struct {
     float consonance;                                  /* 0.0-1.0 aspect consonance score */
     float event_density;                               /* 0.0-1.0 convergence density */
     float event_intensity;                             /* 0.0-1.0 combined event intensity */
+    float surprise_factor;                             /* 0.0-1.0 from brain anomaly detection */
+    int   brain_system_count;                          /* systems involved in brain insights */
 } audio_params_t;
 
 /* Compute full audio parameters from current state.

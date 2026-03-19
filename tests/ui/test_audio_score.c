@@ -662,6 +662,55 @@ void test_compute_pan_unused_zeroed(void)
     }
 }
 
+/* ---- L2.4: Brain event pipeline tests ---- */
+
+void test_compute_surprise_factor_range(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.surprise_factor >= 0.0f);
+    TEST_ASSERT_TRUE(p.surprise_factor <= 1.0f);
+}
+
+void test_compute_brain_system_count_non_negative(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.brain_system_count >= 0);
+}
+
+void test_compute_consonance_blended(void)
+{
+    /* Consonance should still be in [0, 1] after brain blending */
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.consonance >= 0.0f);
+    TEST_ASSERT_TRUE(p.consonance <= 1.0f);
+}
+
+void test_compute_event_density_from_brain(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.event_density >= 0.0f);
+    TEST_ASSERT_TRUE(p.event_density <= 1.0f);
+}
+
+void test_compute_event_intensity_from_brain(void)
+{
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.event_intensity >= 0.0f);
+    TEST_ASSERT_TRUE(p.event_intensity <= 1.0f);
+}
+
+void test_compute_brain_across_dates(void)
+{
+    /* Multiple dates should all produce valid brain-derived values */
+    for (int i = 0; i < 5; i++) {
+        double jd = JD_J2000 + i * 73.0;
+        audio_params_t p = audio_score_compute(jd, VIEW_SPACE, 0.0f, 1.0);
+        TEST_ASSERT_TRUE(p.consonance >= 0.0f && p.consonance <= 1.0f);
+        TEST_ASSERT_TRUE(p.event_intensity >= 0.0f && p.event_intensity <= 1.0f);
+        TEST_ASSERT_TRUE(p.surprise_factor >= 0.0f && p.surprise_factor <= 1.0f);
+    }
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -771,6 +820,13 @@ int main(void)
     RUN_TEST(test_compute_pan_not_all_center);
     RUN_TEST(test_compute_pan_spread);
     RUN_TEST(test_compute_pan_unused_zeroed);
+    /* L2.4: brain event pipeline */
+    RUN_TEST(test_compute_surprise_factor_range);
+    RUN_TEST(test_compute_brain_system_count_non_negative);
+    RUN_TEST(test_compute_consonance_blended);
+    RUN_TEST(test_compute_event_density_from_brain);
+    RUN_TEST(test_compute_event_intensity_from_brain);
+    RUN_TEST(test_compute_brain_across_dates);
 
     return UNITY_END();
 }

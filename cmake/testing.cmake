@@ -249,6 +249,7 @@ time_add_test(NAME test_personal_space TEST tests/systems/earth/test_personal_sp
 time_add_test(NAME test_content_curator TEST tests/systems/earth/test_content_curator.c DEPS content_curator personal_space interest_profile wisdom fun_facts cultural_stories)
 time_add_test(NAME test_persona_persist TEST tests/systems/earth/test_persona_persist.c DEPS persona_persist user_prefs interest_profile personal_space privacy_framework theme golden_layout color_theory color)
 time_add_test(NAME test_persona_io TEST tests/systems/earth/test_persona_io.c DEPS persona_io persona_persist storage_bridge user_prefs interest_profile personal_space privacy_framework theme golden_layout color_theory color)
+time_add_test(NAME test_onboarding TEST tests/systems/earth/test_onboarding.c DEPS onboarding)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
@@ -338,6 +339,8 @@ time_add_test(NAME test_brain_language_bridge TEST tests/systems/unified/test_br
     DEPS brain_language_bridge brain_types)
 time_add_test(NAME test_brain_visual_bridge TEST tests/systems/unified/test_brain_visual_bridge.c
     DEPS brain_visual_bridge brain_types)
+time_add_test(NAME test_daily_narrative TEST tests/systems/unified/test_daily_narrative.c
+    DEPS daily_narrative)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -380,6 +383,7 @@ time_add_test(NAME test_touch_gestures TEST tests/ui/test_touch_gestures.c DEPS 
 time_add_test(NAME test_view_registry  TEST tests/ui/test_view_registry.c  DEPS view_registry)
 time_add_test(NAME test_audio_score   TEST tests/ui/test_audio_score.c
     DEPS audio_score audio_event audio_data frequency view_registry
+         brain_scan brain_audio_bridge brain_types
          planets orbit kepler aspects convergence_detect julian tzolkin
          tzolkin_board iching chinese hebrew hijri buddhist lunar persian
          coptic wheel_of_year bahai japanese egyptian french_republican
@@ -405,6 +409,8 @@ time_add_test(NAME test_audio_culture TEST tests/ui/test_audio_culture.c
 time_add_test(NAME test_audio_meditation TEST tests/ui/test_audio_meditation.c
     DEPS audio_meditation golden_layout)
 # ui_bridge is Emscripten-only (S1) — no native test target
+time_add_test(NAME test_welcome_text TEST tests/ui/test_welcome_text.c
+    DEPS welcome_text birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
