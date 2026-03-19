@@ -60,6 +60,8 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/cycle_tracker.c
     ${CMAKE_CURRENT_SOURCE_DIR}/narrative.c
     ${CMAKE_CURRENT_SOURCE_DIR}/text_lod.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/universal_card.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/convergence_forecast.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -124,4 +126,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_cycle_tracker      OBJECT cycle_tracker.c)
     add_library(time_narrative          OBJECT narrative.c)
     add_library(time_text_lod           OBJECT text_lod.c)
+    add_library(time_universal_card     OBJECT universal_card.c)
 endif()
