@@ -259,6 +259,7 @@ time_add_test(NAME test_calendar_epoch  TEST tests/systems/unified/test_calendar
 time_add_test(NAME test_calendar_politics TEST tests/systems/unified/test_calendar_politics.c DEPS calendar_politics)
 time_add_test(NAME test_convergence     TEST tests/systems/unified/test_convergence.c     DEPS convergence)
 time_add_test(NAME test_convergence_detect TEST tests/systems/unified/test_convergence_detect.c DEPS convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+time_add_test(NAME test_convergence_interpret TEST tests/systems/unified/test_convergence_interpret.c DEPS convergence_interpret)
 time_add_test(NAME test_earth_drama     TEST tests/systems/unified/test_earth_drama.c     DEPS earth_drama climate_history fossil_milestones geo_time)
 time_add_test(NAME test_frequency       TEST tests/systems/unified/test_frequency.c       DEPS frequency)
 time_add_test(NAME test_precession_detect TEST tests/systems/unified/test_precession_detect.c DEPS precession_detect)
@@ -366,7 +367,13 @@ time_add_test(NAME test_timeline_data TEST tests/ui/test_timeline_data.c DEPS ti
 time_add_test(NAME test_theme_css    TEST tests/ui/test_theme_css.c    DEPS theme_css theme golden_layout color_theory color)
 time_add_test(NAME test_touch_gestures TEST tests/ui/test_touch_gestures.c DEPS touch_gestures)
 time_add_test(NAME test_view_registry  TEST tests/ui/test_view_registry.c  DEPS view_registry)
-time_add_test(NAME test_audio_score   TEST tests/ui/test_audio_score.c    DEPS audio_score audio_data frequency view_registry)
+time_add_test(NAME test_audio_score   TEST tests/ui/test_audio_score.c
+    DEPS audio_score audio_event audio_data frequency view_registry
+         planets orbit kepler aspects convergence_detect julian tzolkin
+         tzolkin_board iching chinese hebrew hijri buddhist lunar persian
+         coptic wheel_of_year bahai japanese egyptian french_republican
+         korean_calendar thai_calendar tamil_calendar myanmar zoroastrian
+         calendar_fixed)
 time_add_test(NAME test_share_moment TEST tests/ui/test_share_moment.c   DEPS share_moment)
 time_add_test(NAME test_view_adapt  TEST tests/ui/test_view_adapt.c    DEPS view_adapt)
 time_add_test(NAME test_a11y_score TEST tests/ui/test_a11y_score.c   DEPS a11y_score)
@@ -376,6 +383,12 @@ time_add_test(NAME test_sensitivity TEST tests/ui/test_sensitivity.c
     DEPS sensitivity wisdom cultural_stories fun_facts)
 time_add_test(NAME test_input_motion TEST tests/ui/test_input_motion.c
     DEPS input_motion spring LABELS unit)
+time_add_test(NAME test_audio_event TEST tests/ui/test_audio_event.c
+    DEPS audio_event planets orbit kepler aspects audio_data frequency
+         convergence_detect julian tzolkin tzolkin_board iching chinese
+         hebrew hijri buddhist lunar persian coptic wheel_of_year bahai
+         japanese egyptian french_republican korean_calendar thai_calendar
+         tamil_calendar myanmar zoroastrian calendar_fixed)
 # ui_bridge is Emscripten-only (S1) — no native test target
 
 # Platform tests
