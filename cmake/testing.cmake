@@ -352,6 +352,8 @@ time_add_test(NAME test_depth_temporal TEST tests/systems/unified/test_depth_tem
     DEPS depth_temporal)
 time_add_test(NAME test_narrative TEST tests/systems/unified/test_narrative.c
     DEPS narrative brain_language_bridge brain_types)
+time_add_test(NAME test_text_lod TEST tests/systems/unified/test_text_lod.c
+    DEPS text_lod depth_tier)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
