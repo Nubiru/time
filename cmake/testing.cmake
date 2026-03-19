@@ -204,6 +204,7 @@ time_add_test(NAME test_ethiopian_interpret TEST tests/systems/ethiopian/test_et
 time_add_test(NAME test_wheel_of_year  TEST tests/systems/celtic/test_wheel_of_year.c DEPS wheel_of_year)
 time_add_test(NAME test_chakra         TEST tests/systems/chakra/test_chakra.c        DEPS chakra)
 time_add_test(NAME test_myanmar        TEST tests/systems/myanmar/test_myanmar.c      DEPS myanmar)
+time_add_test(NAME test_myanmar_interpret TEST tests/systems/myanmar/test_myanmar_interpret.c DEPS myanmar_interpret)
 time_add_test(NAME test_thai_calendar  TEST tests/systems/thai/test_thai_calendar.c   DEPS thai_calendar)
 time_add_test(NAME test_thai_interpret TEST tests/systems/thai/test_thai_interpret.c  DEPS thai_interpret)
 time_add_test(NAME test_cosmic_duality TEST tests/systems/zoroastrian/test_cosmic_duality.c DEPS cosmic_duality)
@@ -220,6 +221,7 @@ time_add_test(NAME test_persian_interpret TEST tests/systems/persian/test_persia
 
 # Baha'i tests
 time_add_test(NAME test_bahai           TEST tests/systems/bahai/test_bahai.c     DEPS bahai)
+time_add_test(NAME test_bahai_interpret TEST tests/systems/bahai/test_bahai_interpret.c DEPS bahai_interpret)
 
 # Japanese tests
 time_add_test(NAME test_japanese        TEST tests/systems/japanese/test_japanese.c DEPS japanese)
@@ -243,6 +245,7 @@ time_add_test(NAME test_korean_interpret TEST tests/systems/korean/test_korean_i
 
 # Balinese tests
 time_add_test(NAME test_pawukon         TEST tests/systems/balinese/test_pawukon.c       DEPS pawukon)
+time_add_test(NAME test_pawukon_interpret TEST tests/systems/balinese/test_pawukon_interpret.c DEPS pawukon_interpret)
 
 # French Republican tests
 time_add_test(NAME test_french_republican TEST tests/systems/french_republican/test_french_republican.c DEPS french_republican)
