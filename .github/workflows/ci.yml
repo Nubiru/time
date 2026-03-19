@@ -50,8 +50,12 @@ jobs:
       - name: Performance benchmark
         run: |
           cmake -B build-benchmark -DCMAKE_BUILD_TYPE=Benchmark
-          cmake --build build-benchmark --target bench_core -j$(nproc)
+          cmake --build build-benchmark -j$(nproc)
+          echo "--- CPU Benchmarks ---"
           ./build-benchmark/bench_core
+          echo ""
+          echo "--- Memory Budget ---"
+          ./build-benchmark/bench_memory
 
   memory:
     name: Memory Safety (Valgrind)
