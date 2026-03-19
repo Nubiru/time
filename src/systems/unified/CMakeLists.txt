@@ -64,6 +64,8 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/convergence_forecast.c
     ${CMAKE_CURRENT_SOURCE_DIR}/structural_insight.c
     ${CMAKE_CURRENT_SOURCE_DIR}/aha_moments.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/exploration_progress.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/drama_narrator.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -132,4 +134,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_convergence_forecast OBJECT convergence_forecast.c)
     add_library(time_structural_insight   OBJECT structural_insight.c)
     add_library(time_aha_moments         OBJECT aha_moments.c)
+    add_library(time_exploration_progress OBJECT exploration_progress.c)
+    add_library(time_drama_narrator      OBJECT drama_narrator.c)
 endif()
