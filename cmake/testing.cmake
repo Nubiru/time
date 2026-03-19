@@ -167,6 +167,7 @@ time_add_test(NAME test_buddhist_interpret TEST tests/systems/buddhist/test_budd
 time_add_test(NAME test_nakshatra       TEST tests/systems/test_nakshatra.c     DEPS nakshatra)
 time_add_test(NAME test_panchanga       TEST tests/systems/hindu/test_panchanga.c DEPS panchanga nakshatra)
 time_add_test(NAME test_yuga            TEST tests/systems/hindu/test_yuga.c     DEPS yuga)
+time_add_test(NAME test_hindu_interpret TEST tests/systems/hindu/test_hindu_interpret.c DEPS hindu_interpret panchanga nakshatra)
 time_add_test(NAME test_sefirot         TEST tests/systems/kabbalah/test_sefirot.c      DEPS sefirot)
 time_add_test(NAME test_four_worlds     TEST tests/systems/kabbalah/test_four_worlds.c  DEPS four_worlds)
 time_add_test(NAME test_tree_geometry   TEST tests/systems/kabbalah/test_tree_geometry.c DEPS tree_geometry sefirot)
