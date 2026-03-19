@@ -114,6 +114,7 @@ time_add_test(NAME test_constellation_bounds TEST tests/render/test_constellatio
 time_add_test(NAME test_horizon_geometry TEST tests/render/test_horizon_geometry.c DEPS horizon_geometry)
 time_add_test(NAME test_horizon_camera  TEST tests/render/test_horizon_camera.c  DEPS horizon_camera mat4 vec3)
 time_add_test(NAME test_sky_dome        TEST tests/render/test_sky_dome.c        DEPS sky_dome earth_atmosphere)
+time_add_test(NAME test_earth_view_frame TEST tests/render/test_earth_view_frame.c DEPS earth_view_frame horizon_camera horizon_geometry sky_dome earth_atmosphere solar_events ecliptic sidereal mat4 vec3)
 time_add_test(NAME test_weather_overlay TEST tests/render/test_weather_overlay.c DEPS weather_overlay wind_patterns storm_data)
 time_add_test(NAME test_post_process TEST tests/render/test_post_process.c DEPS post_process noise_shader)
 time_add_test(NAME test_shared_uniforms TEST tests/render/test_shared_uniforms.c DEPS shared_uniforms)
