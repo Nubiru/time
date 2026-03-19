@@ -129,6 +129,7 @@ time_add_test(NAME test_click_target TEST tests/render/test_click_target.c DEPS 
 time_add_test(NAME test_camera_motion TEST tests/render/test_camera_motion.c DEPS camera_motion LABELS unit)
 time_add_test(NAME test_scale_spring TEST tests/render/test_scale_spring.c DEPS scale_spring spring camera_scale easing LABELS unit)
 time_add_test(NAME test_camera_path TEST tests/render/test_camera_path.c DEPS camera_path spring vec_interp vec3 easing LABELS unit)
+time_add_test(NAME test_render_lod TEST tests/render/test_render_lod.c DEPS render_lod)
 
 # Core tests
 time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
