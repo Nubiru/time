@@ -14,6 +14,8 @@ set(MATH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/sacred_geometry.c
     ${CMAKE_CURRENT_SOURCE_DIR}/wheel_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/projection.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/spring.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/vec_interp.c
     PARENT_SCOPE
 )
 
@@ -31,4 +33,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_sacred_geometry OBJECT sacred_geometry.c)
     add_library(time_wheel_layout    OBJECT wheel_layout.c)
     add_library(time_projection      OBJECT projection.c)
+    add_library(time_spring          OBJECT spring.c)
+    add_library(time_vec_interp     OBJECT vec_interp.c)
 endif()
