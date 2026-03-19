@@ -302,6 +302,8 @@ time_add_test(NAME test_brain_temporal TEST tests/systems/unified/test_brain_tem
     DEPS brain_temporal brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_brain_personal TEST tests/systems/unified/test_brain_personal.c
     DEPS brain_personal brain_types birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
+time_add_test(NAME test_brain_adapt TEST tests/systems/unified/test_brain_adapt.c
+    DEPS brain_adapt brain_types user_context birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
