@@ -518,6 +518,8 @@ time_add_test(NAME test_a11y_narrative TEST tests/ui/test_a11y_narrative.c
     DEPS a11y_narrative)
 time_add_test(NAME test_text_reveal TEST tests/ui/test_text_reveal.c
     DEPS text_reveal animation easing)
+time_add_test(NAME test_auto_theme TEST tests/ui/test_auto_theme.c
+    DEPS auto_theme theme golden_layout color_theory color daylight solar_events)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)

@@ -65,6 +65,8 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/focus_mode.c
     ${CMAKE_CURRENT_SOURCE_DIR}/greeting.c
     ${CMAKE_CURRENT_SOURCE_DIR}/text_reveal.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/auto_theme.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/share_template.c
     PARENT_SCOPE
 )
 
@@ -131,5 +133,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_focus_mode      OBJECT focus_mode.c)
     add_library(time_greeting        OBJECT greeting.c)
     add_library(time_text_reveal     OBJECT text_reveal.c)
+    add_library(time_auto_theme      OBJECT auto_theme.c)
+    add_library(time_share_template  OBJECT share_template.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
