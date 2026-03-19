@@ -163,6 +163,7 @@ time_add_test(NAME test_prayer_times    TEST tests/systems/islamic/test_prayer_t
 time_add_test(NAME test_islamic_interpret TEST tests/systems/islamic/test_islamic_interpret.c DEPS islamic_interpret hijri)
 time_add_test(NAME test_buddhist        TEST tests/systems/buddhist/test_buddhist.c    DEPS buddhist lunar)
 time_add_test(NAME test_kalpa           TEST tests/systems/buddhist/test_kalpa.c       DEPS kalpa)
+time_add_test(NAME test_buddhist_interpret TEST tests/systems/buddhist/test_buddhist_interpret.c DEPS buddhist_interpret)
 time_add_test(NAME test_nakshatra       TEST tests/systems/test_nakshatra.c     DEPS nakshatra)
 time_add_test(NAME test_panchanga       TEST tests/systems/hindu/test_panchanga.c DEPS panchanga nakshatra)
 time_add_test(NAME test_yuga            TEST tests/systems/hindu/test_yuga.c     DEPS yuga)
