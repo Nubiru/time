@@ -33,6 +33,8 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/depth_tier.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_types.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_scan.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/depth_selector.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/brain_score.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -70,4 +72,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_depth_tier   OBJECT depth_tier.c)
     add_library(time_brain_types  OBJECT brain_types.c)
     add_library(time_brain_scan   OBJECT brain_scan.c)
+    add_library(time_depth_selector OBJECT depth_selector.c)
+    add_library(time_brain_score    OBJECT brain_score.c)
 endif()

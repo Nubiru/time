@@ -286,6 +286,10 @@ time_add_test(NAME test_brain_types TEST tests/systems/unified/test_brain_types.
     DEPS brain_types)
 time_add_test(NAME test_brain_scan TEST tests/systems/unified/test_brain_scan.c
     DEPS brain_scan brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+time_add_test(NAME test_depth_selector TEST tests/systems/unified/test_depth_selector.c
+    DEPS depth_selector)
+time_add_test(NAME test_brain_score TEST tests/systems/unified/test_brain_score.c
+    DEPS brain_score brain_types)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
