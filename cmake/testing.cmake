@@ -143,6 +143,7 @@ time_add_test(NAME test_cosmic_time     TEST tests/systems/test_cosmic_time.c   
 time_add_test(NAME test_planet_data     TEST tests/systems/test_planet_data.c    DEPS planet_data)
 time_add_test(NAME test_moon_nodes      TEST tests/systems/test_moon_nodes.c     DEPS moon_nodes)
 time_add_test(NAME test_retrograde      TEST tests/systems/test_retrograde.c     DEPS retrograde planets orbit kepler)
+time_add_test(NAME test_astronomy_interpret TEST tests/systems/astronomy/test_astronomy_interpret.c DEPS astronomy_interpret)
 
 # Astrology tests
 time_add_test(NAME test_zodiac          TEST tests/systems/test_zodiac.c         DEPS zodiac)
@@ -245,6 +246,7 @@ time_add_test(NAME test_fossil_milestones TEST tests/systems/geology/test_fossil
 time_add_test(NAME test_tectonic        TEST tests/systems/geology/test_tectonic.c      DEPS tectonic)
 time_add_test(NAME test_radiometric    TEST tests/systems/geology/test_radiometric.c   DEPS radiometric)
 time_add_test(NAME test_thermo         TEST tests/systems/geology/test_thermo.c        DEPS thermo)
+time_add_test(NAME test_geology_interpret TEST tests/systems/geology/test_geology_interpret.c DEPS geology_interpret)
 
 # Earth tests
 time_add_test(NAME test_biorhythm       TEST tests/systems/earth/test_biorhythm.c       DEPS biorhythm)

@@ -5,6 +5,7 @@ set(GEOLOGY_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/tectonic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/radiometric.c
     ${CMAKE_CURRENT_SOURCE_DIR}/thermo.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/geology_interpret.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -14,4 +15,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_tectonic          OBJECT tectonic.c)
     add_library(time_radiometric       OBJECT radiometric.c)
     add_library(time_thermo            OBJECT thermo.c)
+    add_library(time_geology_interpret OBJECT geology_interpret.c)
 endif()
