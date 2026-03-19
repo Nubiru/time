@@ -20,6 +20,7 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/personal_space.c
     ${CMAKE_CURRENT_SOURCE_DIR}/content_curator.c
     ${CMAKE_CURRENT_SOURCE_DIR}/persona_persist.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/persona_io.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -44,4 +45,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_personal_space    OBJECT personal_space.c)
     add_library(time_content_curator   OBJECT content_curator.c)
     add_library(time_persona_persist  OBJECT persona_persist.c)
+    add_library(time_persona_io      OBJECT persona_io.c)
 endif()
