@@ -14,6 +14,7 @@
 #ifdef __EMSCRIPTEN__
 
 #include <emscripten.h>
+#include <emscripten/em_js.h>
 
 /* ------------------------------------------------------------------ */
 /* Module-static state (S1)                                            */
@@ -22,6 +23,42 @@
 static int s_muted = 0;
 static int s_initialized = 0;
 static int s_frame_counter = 0;
+
+/* ------------------------------------------------------------------ */
+/* EM_JS helpers — complex JS that exceeds EM_ASM parameter limits     */
+/* ------------------------------------------------------------------ */
+
+EM_JS(void, js_update_oscillator, (int idx, double freq, double amp,
+       int hcount, int waveform, double pan, const double *hptr), {
+    var ta = window._timeAudio;
+    if (!ta) return;
+    var now = ta.ctx.currentTime;
+
+    ta.oscs[idx].frequency.linearRampToValueAtTime(freq, now + 0.1);
+    ta.gains[idx].gain.linearRampToValueAtTime(amp, now + 0.3);
+    ta.panners[idx].pan.linearRampToValueAtTime(pan, now + 0.1);
+
+    if (hcount > 2) {
+        var real = new Float32Array(hcount + 1);
+        var imag = new Float32Array(hcount + 1);
+        real[0] = 0;
+        var byteIdx = hptr >> 3;
+        for (var k = 0; k < hcount && k < 8; k++) {
+            real[k + 1] = HEAPF64[byteIdx + k];
+        }
+        var wave = ta.ctx.createPeriodicWave(real, imag,
+            {disableNormalization: false});
+        ta.oscs[idx].setPeriodicWave(wave);
+        ta.waveTypes[idx] = "periodic";
+    } else {
+        var types = ["sine", "triangle", "sawtooth"];
+        var newType = types[waveform] || "sine";
+        if (ta.waveTypes[idx] !== newType) {
+            ta.oscs[idx].type = newType;
+            ta.waveTypes[idx] = newType;
+        }
+    }
+});
 
 /* ------------------------------------------------------------------ */
 /* audio_engine_init                                                    */
@@ -127,62 +164,14 @@ void audio_engine_update(const audio_params_t *params) {
         int hcount = params->harmonic_counts[i];
         float pan = params->pan_positions[i];
 
-        /* Pass harmonic amplitudes for PeriodicWave creation */
-        float h0 = (hcount > 0) ? params->harmonic_amps[i][0] : 0.0f;
-        float h1 = (hcount > 1) ? params->harmonic_amps[i][1] : 0.0f;
-        float h2 = (hcount > 2) ? params->harmonic_amps[i][2] : 0.0f;
-        float h3 = (hcount > 3) ? params->harmonic_amps[i][3] : 0.0f;
-        float h4 = (hcount > 4) ? params->harmonic_amps[i][4] : 0.0f;
-        float h5 = (hcount > 5) ? params->harmonic_amps[i][5] : 0.0f;
-        float h6 = (hcount > 6) ? params->harmonic_amps[i][6] : 0.0f;
-        float h7 = (hcount > 7) ? params->harmonic_amps[i][7] : 0.0f;
+        /* Pack harmonic amplitudes into a local array for heap access */
+        double harmonics[8];
+        for (int h = 0; h < 8; h++) {
+            harmonics[h] = (h < hcount) ? (double)params->harmonic_amps[i][h] : 0.0;
+        }
 
-        EM_ASM({
-            var ta = window._timeAudio;
-            if (!ta) return;
-            var idx = $0;
-            var now = ta.ctx.currentTime;
-            var hcount = $3;
-            var waveform = $4;
-
-            /* Ramp frequency and amplitude */
-            ta.oscs[idx].frequency.linearRampToValueAtTime($1, now + 0.1);
-            ta.gains[idx].gain.linearRampToValueAtTime($2, now + 0.3);
-
-            /* Ramp stereo pan position (L1.2) */
-            ta.panners[idx].pan.linearRampToValueAtTime($13, now + 0.1);
-
-            /* Set waveform: use PeriodicWave for rich harmonics, preset for simple */
-            if (hcount > 2) {
-                /* Build PeriodicWave from harmonic amplitudes */
-                var real = new Float32Array(hcount + 1);
-                var imag = new Float32Array(hcount + 1);
-                real[0] = 0; /* DC offset = 0 */
-                real[1] = $5;  /* fundamental */
-                if (hcount > 1) real[2] = $6;
-                if (hcount > 2) real[3] = $7;
-                if (hcount > 3) real[4] = $8;
-                if (hcount > 4) real[5] = $9;
-                if (hcount > 5) real[6] = $10;
-                if (hcount > 6) real[7] = $11;
-                if (hcount > 7) real[8] = $12;
-                var wave = ta.ctx.createPeriodicWave(real, imag,
-                    {disableNormalization: false});
-                ta.oscs[idx].setPeriodicWave(wave);
-                ta.waveTypes[idx] = 'periodic';
-            } else {
-                /* Use preset waveform type */
-                var types = ['sine', 'triangle', 'sawtooth'];
-                var newType = types[waveform] || 'sine';
-                if (ta.waveTypes[idx] !== newType) {
-                    ta.oscs[idx].type = newType;
-                    ta.waveTypes[idx] = newType;
-                }
-            }
-        }, i, (double)freq, (double)amp, hcount, waveform,
-           (double)h0, (double)h1, (double)h2, (double)h3,
-           (double)h4, (double)h5, (double)h6, (double)h7,
-           (double)pan);
+        js_update_oscillator(i, (double)freq, (double)amp, hcount, waveform,
+                             (double)pan, harmonics);
     }
 
     /* Silence unused oscillators */

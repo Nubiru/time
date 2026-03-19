@@ -1,29 +1,39 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-16 (OMEGA sweep #19)
+**Last refreshed**: 2026-03-19 (INFRA health sweep)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 241 |
-| Header files (.h) | 241 |
-| Lines of code (src/) | 77,014 |
-| Lines of tests | 112,199 |
-| Test files | 230 |
-| Render pass files | 16 |
-| Contributors | 189 |
+| Source files (.c) | 316 |
+| Header files (.h) | 316 |
+| Lines of code (src/) | 77,369 |
+| Lines of tests | 141,733 |
+| Test files | 311 |
+| Render pass files | 17 |
+| Contributors | 179 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 233 |
-| Test functions (RUN_TEST) | 10,775 |
-| Test assertions (TEST_ASSERT) | 17,420 |
+| Test suites (CTest) | 310 |
+| Test functions (RUN_TEST) | 13,191 |
+| Test assertions (TEST_ASSERT) | 21,934 |
 | Failures | 0 |
-| CTest time | 0.88s |
-| ASan/UBSan | PASS (233/233, 0 findings) |
+| CTest time | 0.57s |
+| ASan/UBSan | PASS (309/310 functional — bench_memory excluded, ASan inflates VmPeak) |
+
+### Test Pyramid
+
+| Label | Count | Notes |
+|-------|-------|-------|
+| unit | 8 | Labeled tests |
+| contract | 10 | Labeled tests |
+| integration | 6 | Labeled tests |
+| benchmark | 2 | CPU + memory |
+| unlabeled | 284 | Functional tests without explicit labels |
 
 ## Code Coverage (baseline — 2026-03-16)
 
@@ -31,6 +41,8 @@
 |--------|-------|
 | **Overall line coverage** | **96.5%** (18,325 / 18,986 lines) |
 | **Overall function coverage** | **100.0%** (2,364 / 2,364 functions) |
+
+*Note: Coverage baseline predates stream era (75+ new modules since). Re-run needed.*
 
 ### Foundational Math Modules
 
@@ -70,15 +82,14 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (233/233) |
-| Sanitizer build | PASS (ASan + UBSan, 0 findings) |
-| Coverage build | PASS (96.5% line, 100% function — `make coverage`) |
-| WASM build | PASS (209 KB raw, 83 KB gzipped) |
+| CTest -j12 | PASS (310/310) |
+| Sanitizer build | PASS (309/309 functional, 0 ASan/UBSan findings) |
+| WASM build | PASS (279 KB raw, 111 KB gzipped) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
 
-## Render Pipeline (16 passes)
+## Render Pipeline (17 passes)
 
 | # | Pass | Layer | Type |
 |---|------|-------|------|
@@ -97,7 +108,8 @@
 | 13 | hexagram_pass | CARDS | I Ching hexagram lines |
 | 14 | tree_pass | CARDS | Kabbalah Sefirot + paths + pillars |
 | 15 | card_pass | CARDS | Info card backgrounds + borders |
-| 16 | post_pass | (wraps all) | FBO bloom + tonemap + vignette |
+| 16 | text_pass | TEXT | Text rendering pass |
+| 17 | post_pass | (wraps all) | FBO bloom + tonemap + vignette |
 
 ## Purity
 
@@ -108,70 +120,73 @@
 | P3 violations (I/O in pure zones) | 0 |
 | P4 violations (globals in pure zones) | 0 |
 | P5 violations (mutable statics) | 4 (2 files — lazy shader string init, low severity) |
-| Stateful modules | 24 (gl_init, shader, mesh, main, app_state, hud, input, ui_bridge, 16 passes) |
+| Naming convention compliance | 100% |
+| Include guard compliance | 100% |
 
 ## System Domains
 
 | Domain | Modules | Tests |
 |--------|---------|-------|
-| math | 13 | 13 |
-| render | 57 pure + 20 stateful | 51 |
-| astrology | 7 | 7 |
-| astronomy | 10 | 10 |
-| aztec | 1 | 1 |
-| bahai | 1 | 1 |
-| balinese | 1 | 1 |
-| buddhist | 2 | 2 |
-| celtic | 2 | 2 |
-| chakra | 1 | 1 |
-| chinese | 1 | 1 |
-| coptic | 1 | 1 |
-| earth | 15 | 15 |
-| egyptian | 1 | 1 |
-| ethiopian | 1 | 1 |
-| french_republican | 1 | 1 |
-| geology | 6 | 6 |
-| gregorian | 1 | 1 |
-| hebrew | 2 | 2 |
-| hindu | 3 | 3 |
-| human_design | 2 | 2 |
-| iching | 1 | 1 |
-| islamic | 2 | 2 |
-| japanese | 1 | 1 |
-| kabbalah | 3 | 3 |
-| korean | 1 | 1 |
-| myanmar | 1 | 1 |
-| numerology | 1 | 1 |
-| persian | 1 | 1 |
-| tamil | 1 | 1 |
-| tarot | 1 | 1 |
-| thai | 1 | 1 |
-| tzolkin | 6 | 6 |
-| unified | 28 | 28 |
-| zoroastrian | 2 | 2 |
-| ui | 33 | 33 |
+| math | 15 | 15 |
+| render | 63 + 17 passes | 60 |
+| ui | 56 | 54 |
 | core | 5 | 1 |
+| platform | 1 | 1 |
+| unified | 65 | 64 |
+| earth | 23 | 23 |
+| astronomy | 10 | — |
+| astrology | 7 | — |
+| tzolkin | 6 | 4 |
+| geology | 6 | 5 |
+| kabbalah | 4 | 4 |
+| hindu | 4 | 3 |
+| buddhist | 3 | 3 |
+| hebrew | 3 | 3 |
+| islamic | 3 | 3 |
+| iching | 2 | 1 |
+| human_design | 2 | — |
+| celtic | 2 | 2 |
+| zoroastrian | 2 | 2 |
+| 16 single-module domains | 16 | 16 |
+| integration tests | — | 6 |
+| benchmarks | — | 2 |
 
 ## WASM Binary Size
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 214,492 bytes (209 KB) |
-| Gzipped | 84,713 bytes (83 KB) |
+| Raw .wasm | 285,429 bytes (279 KB) |
+| Gzipped | 113,397 bytes (111 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
+| Growth since sweep #19 | +70 KB raw (+33%) |
 
-## Health (OMEGA sweep #19)
+## God Functions (>80 lines)
+
+| Lines | File | Function | Notes |
+|-------|------|----------|-------|
+| 235 | convergence_detect.c | cd_is_significant | 18-case switch — domain logic |
+| 183 | calendar_convert.c | cal_convert | Exhaustive date converter |
+| 179 | text_pass.c | draw_card_text | Complex text render |
+| 156 | audio_score.c | audio_score_compute | Audio computation |
+| 153 | seasonal_lighting.c | slp_sky_gradient | Sky color gradient |
+| 129 | touch_gestures.c | tg_touch_end | Multi-gesture handler |
+| 129 | scale_hud.c | hud_visibility_at_scale | Visibility rules |
+
+*Most are domain-specific switch/dispatch logic. No refactoring urgency.*
+
+## Health (INFRA sweep — 2026-03-19)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (241 .c files, all registered) |
-| Purity audit | CLEAN (P1-P6 all zones) |
-| Native build | PASS (233/233 tests) |
-| WASM build | PASS (209 KB) |
-| CI/CD | GREEN (in_progress on latest push) |
+| Build system sync | OK (316 .c files, all registered, 0 phantoms) |
+| Purity audit | CLEAN (P1-P5 all zones) |
+| Native build | PASS (310/310 tests) |
+| WASM build | PASS (279 KB) — **FIXED** audio_engine.c EM_ASM $10+ bug |
+| Symbol conflicts | **FIXED** — cal_system_name duplicate resolved |
+| ASan/UBSan | PASS (309/309 functional, 0 findings) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Missing attribution | 0 |
-| Render pipeline | COMPLETE (16/16 passes wired) |
-| Refactor audit | ALL CLOSED — convergence.c already dispatched (50L max), knowledge_graph.c BFS already decomposed (37L max) |
+| Render pipeline | 17/17 passes (text_pass added) |
+| Refactor audit | 7 God Functions >100L, all domain logic, no urgency |

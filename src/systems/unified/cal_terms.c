@@ -266,7 +266,7 @@ cal_term_t cal_term_lookup(cal_system_t system, cal_kind_t kind, int position)
     return cal_term_invalid();
 }
 
-const char *cal_system_name(cal_system_t system)
+const char *cal_term_system_name(cal_system_t system)
 {
     if ((int)system < 0 || system >= CAL_SYS_COUNT) return "Unknown";
     return SYSTEM_NAMES[system];

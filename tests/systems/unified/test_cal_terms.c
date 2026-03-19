@@ -240,12 +240,12 @@ void test_hindu_script(void)
 
 void test_system_name_valid(void)
 {
-    TEST_ASSERT_EQUAL_STRING("Gregorian", cal_system_name(CAL_SYS_GREGORIAN));
+    TEST_ASSERT_EQUAL_STRING("Gregorian", cal_term_system_name(CAL_SYS_GREGORIAN));
 }
 
 void test_system_name_invalid(void)
 {
-    TEST_ASSERT_EQUAL_STRING("Unknown", cal_system_name((cal_system_t)99));
+    TEST_ASSERT_EQUAL_STRING("Unknown", cal_term_system_name((cal_system_t)99));
 }
 
 void test_kind_name_valid(void)

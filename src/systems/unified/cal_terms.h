@@ -79,7 +79,7 @@ int cal_terms_by_system_kind(cal_system_t system, cal_kind_t kind,
 cal_term_t cal_term_lookup(cal_system_t system, cal_kind_t kind, int position);
 
 /* Get human-readable system name. Returns "Unknown" for invalid. */
-const char *cal_system_name(cal_system_t system);
+const char *cal_term_system_name(cal_system_t system);
 
 /* Get human-readable kind name. Returns "Unknown" for invalid. */
 const char *cal_kind_name(cal_kind_t kind);
