@@ -292,6 +292,10 @@ time_add_test(NAME test_brain_score TEST tests/systems/unified/test_brain_score.
     DEPS brain_score brain_types)
 time_add_test(NAME test_brain_explain TEST tests/systems/unified/test_brain_explain.c
     DEPS brain_explain brain_types)
+time_add_test(NAME test_depth_ring TEST tests/systems/unified/test_depth_ring.c
+    DEPS depth_ring)
+time_add_test(NAME test_brain_narrative TEST tests/systems/unified/test_brain_narrative.c
+    DEPS brain_narrative brain_types)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

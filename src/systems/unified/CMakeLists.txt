@@ -36,6 +36,8 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/depth_selector.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_score.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_explain.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/depth_ring.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/brain_narrative.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -76,4 +78,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_depth_selector OBJECT depth_selector.c)
     add_library(time_brain_score    OBJECT brain_score.c)
     add_library(time_brain_explain  OBJECT brain_explain.c)
+    add_library(time_depth_ring     OBJECT depth_ring.c)
+    add_library(time_brain_narrative OBJECT brain_narrative.c)
 endif()
