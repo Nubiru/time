@@ -68,6 +68,7 @@ time_add_test(NAME test_camera          TEST tests/render/test_camera.c         
 time_add_test(NAME test_camera_scale    TEST tests/render/test_camera_scale.c    DEPS camera_scale easing)
 time_add_test(NAME test_render_layers   TEST tests/render/test_render_layers.c   DEPS render_layers camera_scale easing golden_layout)
 time_add_test(NAME test_font_atlas      TEST tests/render/test_font_atlas.c      DEPS font_atlas)
+time_add_test(NAME test_font_bitmap    TEST tests/render/test_font_bitmap.c    DEPS font_bitmap)
 time_add_test(NAME test_color_palette   TEST tests/render/test_color_palette.c   DEPS color_palette color_theory color)
 time_add_test(NAME test_ring_geometry   TEST tests/render/test_ring_geometry.c   DEPS ring_geometry)
 time_add_test(NAME test_aspect_lines    TEST tests/render/test_aspect_lines.c    DEPS aspect_lines color_palette color_theory color)

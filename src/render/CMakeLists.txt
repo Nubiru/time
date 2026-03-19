@@ -22,6 +22,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/atmo_ring.c
     ${CMAKE_CURRENT_SOURCE_DIR}/deep_sky.c
     ${CMAKE_CURRENT_SOURCE_DIR}/font_atlas.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/font_bitmap.c
     ${CMAKE_CURRENT_SOURCE_DIR}/glyph_batch.c
     ${CMAKE_CURRENT_SOURCE_DIR}/decan_stars.c
     ${CMAKE_CURRENT_SOURCE_DIR}/megalithic.c
@@ -101,6 +102,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_deep_sky            OBJECT deep_sky.c)
     add_library(time_deep_sky_pack       OBJECT deep_sky_pack.c)
     add_library(time_font_atlas          OBJECT font_atlas.c)
+    add_library(time_font_bitmap         OBJECT font_bitmap.c)
     add_library(time_glyph_batch         OBJECT glyph_batch.c)
     add_library(time_decan_stars         OBJECT decan_stars.c)
     add_library(time_megalithic          OBJECT megalithic.c)
