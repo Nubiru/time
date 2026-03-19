@@ -2,7 +2,7 @@
  * test_earth_pack.c -- Tests for Earth render pack: globe, coastlines,
  * terminator, atmosphere shell packing into GPU-ready vertex arrays.
  *
- * 48 tests covering all public API functions + edge cases.
+ * 50 tests covering all public API functions + edge cases.
  */
 
 #include "../unity/unity.h"
@@ -536,6 +536,22 @@ void test_atmo_frag_has_limb_glow(void)
     TEST_ASSERT_NOT_NULL(strstr(src, "dot"));
 }
 
+/* 49. Atmosphere fragment shader contains u_sun_dir uniform */
+void test_atmo_frag_has_sun_dir(void)
+{
+    const char *src = erp_atmo_frag_source();
+    TEST_ASSERT_NOT_NULL(src);
+    TEST_ASSERT_NOT_NULL(strstr(src, "u_sun_dir"));
+}
+
+/* 50. Atmosphere fragment shader contains Rayleigh scattering term */
+void test_atmo_frag_has_rayleigh(void)
+{
+    const char *src = erp_atmo_frag_source();
+    TEST_ASSERT_NOT_NULL(src);
+    TEST_ASSERT_NOT_NULL(strstr(src, "rayleigh"));
+}
+
 /* 40. Line vertex shader source exists */
 void test_line_vert_source_exists(void)
 {
@@ -722,6 +738,8 @@ int main(void)
     RUN_TEST(test_globe_frag_has_sun_dir);
     RUN_TEST(test_atmo_vert_source_exists);
     RUN_TEST(test_atmo_frag_has_limb_glow);
+    RUN_TEST(test_atmo_frag_has_sun_dir);
+    RUN_TEST(test_atmo_frag_has_rayleigh);
     RUN_TEST(test_line_vert_source_exists);
     RUN_TEST(test_line_frag_source_exists);
     RUN_TEST(test_shaders_version_300_es);

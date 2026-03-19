@@ -66,6 +66,7 @@ static GLuint s_atmo_program;
 static GLint  s_atmo_loc_mvp;
 static GLint  s_atmo_loc_model;
 static GLint  s_atmo_loc_camera_pos;
+static GLint  s_atmo_loc_sun_dir;
 static GLuint s_atmo_vao;
 static GLuint s_atmo_vbo;
 static GLuint s_atmo_ebo;
@@ -182,6 +183,7 @@ static int init_atmosphere(const erp_info_t *info) {
     s_atmo_loc_mvp        = glGetUniformLocation(s_atmo_program, "u_mvp");
     s_atmo_loc_model      = glGetUniformLocation(s_atmo_program, "u_model");
     s_atmo_loc_camera_pos = glGetUniformLocation(s_atmo_program, "u_camera_pos");
+    s_atmo_loc_sun_dir    = glGetUniformLocation(s_atmo_program, "u_sun_dir");
 
     erp_pack_atmosphere(&s_erp_config, s_erp_atmo_verts, s_erp_atmo_indices);
     s_atmo_index_count = info->atmo_indices;
@@ -287,7 +289,8 @@ static void draw_terminator(const mat4_t *mvp, const render_frame_t *frame,
 }
 
 static void draw_atmo_shell(const mat4_t *mvp, const mat4_t *model,
-                            const render_frame_t *frame) {
+                            const render_frame_t *frame,
+                            float sun_dx, float sun_dy, float sun_dz) {
     if (s_atmo_index_count <= 0) return;
 
     glUseProgram(s_atmo_program);
@@ -296,6 +299,7 @@ static void draw_atmo_shell(const mat4_t *mvp, const mat4_t *model,
 
     glUniform3f(s_atmo_loc_camera_pos, 0.0f, 0.0f,
                 frame->view.m[14] != 0.0f ? -frame->view.m[14] : 10.0f);
+    glUniform3f(s_atmo_loc_sun_dir, sun_dx, sun_dy, sun_dz);
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
@@ -354,7 +358,7 @@ void earth_pass_draw(const render_frame_t *frame) {
     draw_globe(&mvp, &model, sun_dx, sun_dy, sun_dz);
     draw_coastlines(&mvp);
     draw_terminator(&mvp, frame, earth_lon);
-    draw_atmo_shell(&mvp, &model, frame);
+    draw_atmo_shell(&mvp, &model, frame, sun_dx, sun_dy, sun_dz);
 }
 
 void earth_pass_destroy(void) {
