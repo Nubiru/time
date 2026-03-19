@@ -43,6 +43,7 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_adapt.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_depth.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_surprise.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/brain_predict.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -90,4 +91,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_brain_adapt    OBJECT brain_adapt.c)
     add_library(time_brain_depth   OBJECT brain_depth.c)
     add_library(time_brain_surprise OBJECT brain_surprise.c)
+    add_library(time_brain_predict  OBJECT brain_predict.c)
 endif()
