@@ -28,7 +28,9 @@
 #include "../render/passes/card_pass.h"
 #include "../render/passes/text_pass.h"
 #include "../render/passes/ring_pass.h"
+#include "../render/passes/convergence_pass.h"
 #include "../render/passes/post_pass.h"
+#include "../render/earth_view_frame.h"
 #include "../ui/ui_bridge.h"
 #include "../ui/view_registry.h"
 #include "../ui/audio_score.h"
@@ -90,8 +92,19 @@ void main_loop(void) {
                                          g_state.camera.log_zoom);
 
     /* --- Build per-frame render data --- */
-    mat4_t view = camera_view_matrix(&g_state.camera);
-    mat4_t proj = camera_projection_matrix(&g_state.camera);
+    mat4_t view, proj;
+    int effective_view = vs_effective_view(&g_state.view);
+    if (effective_view == 1) { /* VIEW_EARTH: ground-level horizon camera */
+        ev_frame_t ev = ev_compute_simple(
+            g_state.simulation_jd,
+            g_state.observer_lat, g_state.observer_lon,
+            g_state.camera.azimuth, g_state.camera.elevation);
+        view = ev.view_matrix;
+        proj = ev.proj_matrix;
+    } else { /* Space View (and others): orbital camera */
+        view = camera_view_matrix(&g_state.camera);
+        proj = camera_projection_matrix(&g_state.camera);
+    }
     render_frame_t frame = {
         .simulation_jd = g_state.simulation_jd,
         .time_sec      = (float)(now_ms / 1000.0),
@@ -121,6 +134,7 @@ void main_loop(void) {
     if (ps_is_enabled(&sched, PASS_MOON))           moon_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_ZODIAC))         zodiac_pass_draw(&frame);
     ring_pass_draw(&frame);  /* concentric knowledge system rings */
+    convergence_pass_draw(&frame);  /* brain convergence connection lines */
     if (ps_is_enabled(&sched, PASS_EARTH))          earth_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_BODYGRAPH))      bodygraph_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_HEXAGRAM))       hexagram_pass_draw(&frame);
@@ -196,6 +210,7 @@ int main(void) {
     if (tree_pass_init() != 0) return 1;
     if (orbit_trail_pass_init() != 0) return 1;
     if (ring_pass_init() != 0) return 1;
+    if (convergence_pass_init() != 0) return 1;
     if (card_pass_init() != 0) return 1;
     if (text_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;

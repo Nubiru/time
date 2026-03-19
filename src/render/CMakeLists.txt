@@ -88,6 +88,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/tree_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/orbit_trail_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/ring_pass.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/passes/convergence_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/card_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/text_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/post_pass.c
