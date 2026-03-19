@@ -110,6 +110,7 @@ time_add_test(NAME test_text_render    TEST tests/render/test_text_render.c     
 time_add_test(NAME test_zodiac_pack    TEST tests/render/test_zodiac_pack.c     DEPS zodiac_pack ring_geometry cusp_lines aspect_lines billboard color_palette color_theory color vec3 mat4)
 time_add_test(NAME test_constellation_bounds TEST tests/render/test_constellation_bounds.c DEPS constellation_bounds)
 time_add_test(NAME test_horizon_geometry TEST tests/render/test_horizon_geometry.c DEPS horizon_geometry)
+time_add_test(NAME test_horizon_camera  TEST tests/render/test_horizon_camera.c  DEPS horizon_camera mat4 vec3)
 time_add_test(NAME test_weather_overlay TEST tests/render/test_weather_overlay.c DEPS weather_overlay wind_patterns storm_data)
 time_add_test(NAME test_post_process TEST tests/render/test_post_process.c DEPS post_process noise_shader)
 time_add_test(NAME test_shared_uniforms TEST tests/render/test_shared_uniforms.c DEPS shared_uniforms)
@@ -213,6 +214,7 @@ time_add_test(NAME test_tamil_calendar  TEST tests/systems/tamil/test_tamil_cale
 
 # Celtic Tree tests
 time_add_test(NAME test_celtic_tree     TEST tests/systems/celtic/test_celtic_tree.c   DEPS celtic_tree)
+time_add_test(NAME test_celtic_interpret TEST tests/systems/celtic/test_celtic_interpret.c DEPS celtic_interpret)
 
 # Korean tests
 time_add_test(NAME test_korean_calendar TEST tests/systems/korean/test_korean_calendar.c DEPS korean_calendar)
@@ -401,6 +403,7 @@ time_add_test(NAME test_astro_fmt      TEST tests/ui/test_astro_fmt.c       DEPS
 time_add_test(NAME test_chinese_fmt    TEST tests/ui/test_chinese_fmt.c     DEPS chinese_fmt chinese julian)
 time_add_test(NAME test_hd_card        TEST tests/ui/test_hd_card.c         DEPS hd_card human_design)
 time_add_test(NAME test_i18n           TEST tests/ui/test_i18n.c            DEPS i18n)
+time_add_test(NAME test_i18n_locales   TEST tests/ui/test_i18n_locales.c    DEPS i18n)
 time_add_test(NAME test_iching_card    TEST tests/ui/test_iching_card.c     DEPS iching_card hexagram_visual iching)
 time_add_test(NAME test_lunar_display  TEST tests/ui/test_lunar_display.c   DEPS lunar_display lunar julian zodiac)
 time_add_test(NAME test_rtl_layout     TEST tests/ui/test_rtl_layout.c      DEPS rtl_layout)
