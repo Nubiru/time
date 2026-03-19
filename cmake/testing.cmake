@@ -124,6 +124,7 @@ time_add_test(NAME test_lens_flare TEST tests/render/test_lens_flare.c DEPS lens
 time_add_test(NAME test_click_target TEST tests/render/test_click_target.c DEPS click_target)
 time_add_test(NAME test_camera_motion TEST tests/render/test_camera_motion.c DEPS camera_motion LABELS unit)
 time_add_test(NAME test_scale_spring TEST tests/render/test_scale_spring.c DEPS scale_spring spring camera_scale easing LABELS unit)
+time_add_test(NAME test_camera_path TEST tests/render/test_camera_path.c DEPS camera_path spring vec_interp vec3 easing LABELS unit)
 
 # Core tests
 time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
@@ -413,6 +414,8 @@ time_add_test(NAME test_audio_meditation TEST tests/ui/test_audio_meditation.c
 # ui_bridge is Emscripten-only (S1) — no native test target
 time_add_test(NAME test_welcome_text TEST tests/ui/test_welcome_text.c
     DEPS welcome_text birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
+time_add_test(NAME test_wisdom_display TEST tests/ui/test_wisdom_display.c
+    DEPS wisdom_display wisdom_engine wisdom sensitivity)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)

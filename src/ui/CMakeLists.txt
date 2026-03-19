@@ -51,6 +51,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/audio_culture.c
     ${CMAKE_CURRENT_SOURCE_DIR}/audio_meditation.c
     ${CMAKE_CURRENT_SOURCE_DIR}/welcome_text.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/wisdom_display.c
     PARENT_SCOPE
 )
 
@@ -103,5 +104,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_audio_culture OBJECT audio_culture.c)
     add_library(time_audio_meditation OBJECT audio_meditation.c)
     add_library(time_welcome_text    OBJECT welcome_text.c)
+    add_library(time_wisdom_display  OBJECT wisdom_display.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
