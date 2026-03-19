@@ -27,6 +27,7 @@
 #include "../render/passes/orbit_trail_pass.h"
 #include "../render/passes/card_pass.h"
 #include "../render/passes/text_pass.h"
+#include "../render/passes/ring_pass.h"
 #include "../render/passes/post_pass.h"
 #include "../ui/ui_bridge.h"
 #include "../ui/view_registry.h"
@@ -119,6 +120,7 @@ void main_loop(void) {
     if (ps_is_enabled(&sched, PASS_SATURN))         saturn_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_MOON))           moon_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_ZODIAC))         zodiac_pass_draw(&frame);
+    ring_pass_draw(&frame);  /* concentric knowledge system rings */
     if (ps_is_enabled(&sched, PASS_EARTH))          earth_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_BODYGRAPH))      bodygraph_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_HEXAGRAM))       hexagram_pass_draw(&frame);
@@ -193,6 +195,7 @@ int main(void) {
     if (hexagram_pass_init() != 0) return 1;
     if (tree_pass_init() != 0) return 1;
     if (orbit_trail_pass_init() != 0) return 1;
+    if (ring_pass_init() != 0) return 1;
     if (card_pass_init() != 0) return 1;
     if (text_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
