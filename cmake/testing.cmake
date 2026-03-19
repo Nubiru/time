@@ -372,6 +372,8 @@ time_add_test(NAME test_system_theme TEST tests/ui/test_system_theme.c DEPS syst
 time_add_test(NAME test_timeline    TEST tests/ui/test_timeline.c    DEPS timeline animation easing LABELS unit)
 time_add_test(NAME test_sensitivity TEST tests/ui/test_sensitivity.c
     DEPS sensitivity wisdom cultural_stories fun_facts)
+time_add_test(NAME test_input_motion TEST tests/ui/test_input_motion.c
+    DEPS input_motion spring LABELS unit)
 # ui_bridge is Emscripten-only (S1) — no native test target
 
 # Platform tests

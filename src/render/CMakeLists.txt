@@ -60,6 +60,8 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/shader_constants.c
     ${CMAKE_CURRENT_SOURCE_DIR}/lens_flare.c
     ${CMAKE_CURRENT_SOURCE_DIR}/click_target.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/camera_motion.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/scale_spring.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/star_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/planet_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/zodiac_pass.c
@@ -136,4 +138,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_shader_constants    OBJECT shader_constants.c)
     add_library(time_lens_flare          OBJECT lens_flare.c)
     add_library(time_click_target        OBJECT click_target.c)
+    add_library(time_camera_motion       OBJECT camera_motion.c)
+    add_library(time_scale_spring        OBJECT scale_spring.c)
 endif()
