@@ -16,6 +16,7 @@ set(MATH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/projection.c
     ${CMAKE_CURRENT_SOURCE_DIR}/spring.c
     ${CMAKE_CURRENT_SOURCE_DIR}/vec_interp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/equatorial_horizontal.c
     PARENT_SCOPE
 )
 
@@ -35,4 +36,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_projection      OBJECT projection.c)
     add_library(time_spring          OBJECT spring.c)
     add_library(time_vec_interp     OBJECT vec_interp.c)
+    add_library(time_equatorial_horizontal OBJECT equatorial_horizontal.c)
 endif()
