@@ -356,6 +356,8 @@ time_add_test(NAME test_text_lod TEST tests/systems/unified/test_text_lod.c
     DEPS text_lod depth_tier)
 time_add_test(NAME test_universal_card TEST tests/systems/unified/test_universal_card.c
     DEPS universal_card sensitivity)
+time_add_test(NAME test_convergence_forecast TEST tests/systems/unified/test_convergence_forecast.c
+    DEPS convergence_forecast)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
