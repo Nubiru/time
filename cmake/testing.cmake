@@ -427,6 +427,14 @@ time_add_test(NAME test_pianist_score TEST tests/ui/test_pianist_score.c
          coptic wheel_of_year bahai japanese egyptian french_republican
          korean_calendar thai_calendar tamil_calendar myanmar zoroastrian
          calendar_fixed)
+time_add_test(NAME test_midi_output TEST tests/ui/test_midi_output.c
+    DEPS midi_output audio_score audio_event audio_data frequency view_registry
+         brain_scan brain_audio_bridge brain_types
+         planets orbit kepler aspects convergence_detect julian tzolkin
+         tzolkin_board iching chinese hebrew hijri buddhist lunar persian
+         coptic wheel_of_year bahai japanese egyptian french_republican
+         korean_calendar thai_calendar tamil_calendar myanmar zoroastrian
+         calendar_fixed)
 # ui_bridge is Emscripten-only (S1) — no native test target
 time_add_test(NAME test_welcome_text TEST tests/ui/test_welcome_text.c
     DEPS welcome_text birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
