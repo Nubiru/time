@@ -435,6 +435,8 @@ time_add_test(NAME test_fmt             TEST tests/ui/test_fmt.c              DE
 time_add_test(NAME test_animation       TEST tests/ui/test_animation.c        DEPS animation easing)
 time_add_test(NAME test_glyph_layout    TEST tests/ui/test_glyph_layout.c    DEPS glyph_layout)
 time_add_test(NAME test_card_data       TEST tests/ui/test_card_data.c        DEPS card_data)
+time_add_test(NAME test_today_card     TEST tests/ui/test_today_card.c
+    DEPS today_card card_data julian gregorian tzolkin haab iching chinese hebrew hijri buddhist lunar panchanga nakshatra zodiac human_design sefirot geo_time coptic ethiopian persian japanese korean_calendar thai_calendar calendar_fixed)
 time_add_test(NAME test_zodiac_glyphs   TEST tests/ui/test_zodiac_glyphs.c   DEPS zodiac_glyphs)
 time_add_test(NAME test_hexagram_visual TEST tests/ui/test_hexagram_visual.c  DEPS hexagram_visual iching)
 time_add_test(NAME test_symbol_atlas    TEST tests/ui/test_symbol_atlas.c    DEPS symbol_atlas zodiac_glyphs)
