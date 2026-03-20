@@ -17,7 +17,7 @@ void test_fr_system_gregorian(void)
 
 void test_fr_ui_loading(void)
 {
-    TEST_ASSERT_EQUAL_STRING("Chargement...",
+    TEST_ASSERT_EQUAL_STRING("\xc3\x89veil en cours...",
                               i18n_get_locale("ui.loading", I18N_LOCALE_FR));
 }
 
@@ -55,7 +55,7 @@ void test_pt_system_gregorian(void)
 
 void test_pt_ui_loading(void)
 {
-    TEST_ASSERT_EQUAL_STRING("Carregando...",
+    TEST_ASSERT_EQUAL_STRING("Despertando...",
                               i18n_get_locale("ui.loading", I18N_LOCALE_PT));
 }
 
@@ -88,7 +88,7 @@ void test_de_system_gregorian(void)
 
 void test_de_ui_loading(void)
 {
-    TEST_ASSERT_EQUAL_STRING("Laden...",
+    TEST_ASSERT_EQUAL_STRING("Erwachen...",
                               i18n_get_locale("ui.loading", I18N_LOCALE_DE));
 }
 
@@ -112,7 +112,7 @@ void test_de_welcome_skip(void)
 
 void test_de_time_paused(void)
 {
-    TEST_ASSERT_EQUAL_STRING("Pausiert",
+    TEST_ASSERT_EQUAL_STRING("Angehalten",
                               i18n_get_locale("time.paused", I18N_LOCALE_DE));
 }
 

@@ -815,13 +815,13 @@ void test_sensitivity_keys(void)
 void test_get_locale_fallback(void)
 {
     /* Translated locales return locale-specific text.
-     * Untranslated locales (e.g. RU) still fall back to English. */
-    TEST_ASSERT_EQUAL_STRING("Pausado",
+     * Invalid locale falls back to English. */
+    TEST_ASSERT_EQUAL_STRING("En pausa",
                               i18n_get_locale("time.paused", I18N_LOCALE_ES));
     const char *ar = i18n_get_locale("time.paused", I18N_LOCALE_AR);
     TEST_ASSERT_TRUE(strcmp(ar, "Paused") != 0); /* Arabic, not English */
     TEST_ASSERT_EQUAL_STRING("Paused",
-                              i18n_get_locale("time.paused", I18N_LOCALE_RU));
+                              i18n_get_locale("time.paused", I18N_LOCALE_COUNT));
 }
 
 void test_get_locale_unknown_key(void)

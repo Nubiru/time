@@ -246,7 +246,7 @@ void test_es_system_islamic(void)
 
 void test_es_ui_loading(void)
 {
-    TEST_ASSERT_EQUAL_STRING("Cargando...",
+    TEST_ASSERT_EQUAL_STRING("Despertando...",
                               i18n_get_locale("ui.loading", I18N_LOCALE_ES));
 }
 
@@ -270,7 +270,7 @@ void test_es_planet_sun(void)
 
 void test_es_time_paused(void)
 {
-    TEST_ASSERT_EQUAL_STRING("Pausado",
+    TEST_ASSERT_EQUAL_STRING("En pausa",
                               i18n_get_locale("time.paused", I18N_LOCALE_ES));
 }
 
@@ -350,9 +350,9 @@ void test_zh_ui_loading(void)
 
 void test_fallback_untranslated_locale_returns_english(void)
 {
-    /* Russian has no translations yet — should fall back to English */
+    /* Invalid locale index falls back to English */
     TEST_ASSERT_EQUAL_STRING("Gregorian",
-                              i18n_get_locale("system.gregorian", I18N_LOCALE_RU));
+                              i18n_get_locale("system.gregorian", I18N_LOCALE_COUNT));
 }
 
 void test_fallback_unknown_key_returns_key(void)
@@ -400,8 +400,8 @@ void test_coverage_chinese_is_100(void)
 
 void test_coverage_untranslated_is_zero(void)
 {
-    /* Russian has no translations → 0% coverage */
-    TEST_ASSERT_EQUAL_FLOAT(0.0f, i18n_locale_coverage(I18N_LOCALE_RU));
+    /* Out-of-range locale → 0% coverage */
+    TEST_ASSERT_EQUAL_FLOAT(0.0f, i18n_locale_coverage((i18n_locale_t)(I18N_LOCALE_COUNT + 1)));
 }
 
 void test_coverage_invalid_is_zero(void)
@@ -422,7 +422,7 @@ void test_translated_count_spanish(void)
 
 void test_translated_count_untranslated(void)
 {
-    TEST_ASSERT_EQUAL_INT(0, i18n_translated_count(I18N_LOCALE_RU));
+    TEST_ASSERT_EQUAL_INT(0, i18n_translated_count((i18n_locale_t)(I18N_LOCALE_COUNT + 1)));
 }
 
 /* ==== Completeness: all P0 keys translated ==== */
