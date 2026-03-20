@@ -137,6 +137,8 @@ time_add_test(NAME test_pass_schedule TEST tests/render/test_pass_schedule.c DEP
 time_add_test(NAME test_view_state TEST tests/render/test_view_state.c DEPS view_state pass_schedule)
 time_add_test(NAME test_ring_today TEST tests/render/test_ring_today.c
     DEPS ring_today system_rings concentric_ring color_theory color gregorian julian tzolkin haab chinese hebrew hijri buddhist lunar nakshatra iching zodiac human_design coptic ethiopian persian japanese korean_calendar thai_calendar geo_time calendar_fixed)
+time_add_test(NAME test_birth_sky TEST tests/render/test_birth_sky.c
+    DEPS birth_sky ring_today system_rings concentric_ring color_theory color birth_profile gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar nakshatra iching zodiac human_design planets orbit kepler coptic ethiopian persian japanese korean_calendar thai_calendar geo_time calendar_fixed)
 
 # Core tests
 time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
