@@ -27,6 +27,9 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/author_card.c
     ${CMAKE_CURRENT_SOURCE_DIR}/surf_display.c
     ${CMAKE_CURRENT_SOURCE_DIR}/human_population.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/today_for_you.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/notification_data.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/moment_snapshot.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -58,4 +61,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_author_card     OBJECT author_card.c)
     add_library(time_surf_display    OBJECT surf_display.c)
     add_library(time_human_population OBJECT human_population.c)
+    add_library(time_today_for_you    OBJECT today_for_you.c)
+    add_library(time_notification_data OBJECT notification_data.c)
+    add_library(time_moment_snapshot  OBJECT moment_snapshot.c)
 endif()

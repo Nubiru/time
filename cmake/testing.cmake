@@ -298,6 +298,9 @@ time_add_test(NAME test_birth_entry TEST tests/systems/earth/test_birth_entry.c 
 time_add_test(NAME test_author_card TEST tests/systems/earth/test_author_card.c DEPS author_card)
 time_add_test(NAME test_surf_display TEST tests/systems/earth/test_surf_display.c DEPS surf_display tide_predict tidal surf_spots lunar julian)
 time_add_test(NAME test_human_population TEST tests/systems/earth/test_human_population.c DEPS human_population)
+time_add_test(NAME test_today_for_you TEST tests/systems/earth/test_today_for_you.c DEPS today_for_you)
+time_add_test(NAME test_notification_data TEST tests/systems/earth/test_notification_data.c DEPS notification_data)
+time_add_test(NAME test_moment_snapshot TEST tests/systems/earth/test_moment_snapshot.c DEPS moment_snapshot)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
