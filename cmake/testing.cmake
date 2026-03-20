@@ -229,6 +229,8 @@ time_add_test(NAME test_chakra         TEST tests/systems/chakra/test_chakra.c  
 time_add_test(NAME test_chakra_interpret TEST tests/systems/chakra/test_chakra_interpret.c DEPS chakra_interpret chakra)
 time_add_test(NAME test_myanmar        TEST tests/systems/myanmar/test_myanmar.c      DEPS myanmar)
 time_add_test(NAME test_myanmar_interpret TEST tests/systems/myanmar/test_myanmar_interpret.c DEPS myanmar_interpret)
+time_add_test(NAME test_lao_calendar   TEST tests/systems/lao/test_lao_calendar.c     DEPS lao_calendar)
+time_add_test(NAME test_lao_interpret  TEST tests/systems/lao/test_lao_interpret.c    DEPS lao_interpret)
 time_add_test(NAME test_thai_calendar  TEST tests/systems/thai/test_thai_calendar.c   DEPS thai_calendar)
 time_add_test(NAME test_thai_interpret TEST tests/systems/thai/test_thai_interpret.c  DEPS thai_interpret)
 time_add_test(NAME test_cosmic_duality TEST tests/systems/zoroastrian/test_cosmic_duality.c DEPS cosmic_duality)

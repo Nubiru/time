@@ -1,8 +1,8 @@
 {
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
-    "last_updated": "2026-03-15",
-    "total_contributors": 182
+    "last_updated": "2026-03-20",
+    "total_contributors": 185
   },
   "contributors": [
     {
@@ -4503,7 +4503,10 @@
       "name": "Gunther S. Stent",
       "born": 1924,
       "died": 2008,
-      "category": ["molecular-biologist", "philosopher"],
+      "category": [
+        "molecular-biologist",
+        "philosopher"
+      ],
       "contributions": [
         {
           "work": "The Coming of the Golden Age",
@@ -4521,7 +4524,10 @@
     {
       "id": "frank-fiedeler",
       "name": "Frank Fiedeler",
-      "category": ["sinologist", "author"],
+      "category": [
+        "sinologist",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Epilogue to The I Ching and the Genetic Code",
@@ -4541,7 +4547,10 @@
       "name": "Lama Anagarika Govinda",
       "born": 1898,
       "died": 1985,
-      "category": ["buddhist-scholar", "philosopher"],
+      "category": [
+        "buddhist-scholar",
+        "philosopher"
+      ],
       "contributions": [
         {
           "work": "Introduction to The I Ching and the Genetic Code",
@@ -4561,7 +4570,10 @@
       "name": "Gottfried Wilhelm Leibniz",
       "born": 1646,
       "died": 1716,
-      "category": ["mathematician", "philosopher"],
+      "category": [
+        "mathematician",
+        "philosopher"
+      ],
       "contributions": [
         {
           "work": "Two Letters on the Binary Number System and Chinese Philosophy",
@@ -4581,7 +4593,10 @@
       "name": "Fritz-Albert Popp",
       "born": 1938,
       "died": 2018,
-      "category": ["biophysicist", "researcher"],
+      "category": [
+        "biophysicist",
+        "researcher"
+      ],
       "contributions": [
         {
           "work": "Biophoton emissions from DNA",
@@ -4599,7 +4614,11 @@
     {
       "id": "eg-richards",
       "name": "E.G. Richards",
-      "category": ["historian", "scientist", "author"],
+      "category": [
+        "historian",
+        "scientist",
+        "author"
+      ],
       "contributions": [
         {
           "work": "Mapping Time: The Calendar and its History",
@@ -4618,7 +4637,10 @@
     {
       "id": "shao-yong",
       "name": "Shao Yong",
-      "category": ["philosopher", "mathematician"],
+      "category": [
+        "philosopher",
+        "mathematician"
+      ],
       "contributions": [
         {
           "work": "Horizontal Diagram of the Sixty-Four Gua",
@@ -4637,7 +4659,9 @@
     {
       "id": "jiang-yun",
       "name": "Jiang Yun",
-      "category": ["scholar"],
+      "category": [
+        "scholar"
+      ],
       "contributions": [
         {
           "work": "The Quintessence of He Tu and Lo Shu",
@@ -4656,7 +4680,10 @@
     {
       "id": "father-bouvet",
       "name": "Joachim Bouvet",
-      "category": ["missionary", "scholar"],
+      "category": [
+        "missionary",
+        "scholar"
+      ],
       "contributions": [
         {
           "work": "Transmission of I Ching diagrams to Leibniz",
@@ -4669,6 +4696,28 @@
           "file": ".context/research/digested/086-numerology-iching-huang.md",
           "line": 1,
           "note": "Bridge between Eastern and Western binary mathematics"
+        }
+      ]
+    },
+    {
+      "id": "lars-gislen",
+      "name": "Lars Gislen",
+      "category": [
+        "astronomer",
+        "calendar scholar"
+      ],
+      "contributions": [
+        {
+          "work": "The Calendars of Southeast Asia",
+          "description": "Comprehensive academic study of Burmese, Thai, Lao, and Cambodian calendar systems. Documented intercalation rules, lunisolar structure, and year-type calculations for all SE Asian Buddhist calendars.",
+          "module": "src/systems/lao/lao_calendar.c"
+        }
+      ],
+      "references": [
+        {
+          "file": "src/systems/lao/lao_calendar.c",
+          "line": 1,
+          "note": "SE Asian Buddhist calendar structure and BE offset"
         }
       ]
     }

@@ -26,6 +26,7 @@ add_subdirectory(celtic)
 add_subdirectory(chakra)
 add_subdirectory(coptic)
 add_subdirectory(korean)
+add_subdirectory(lao)
 add_subdirectory(balinese)
 add_subdirectory(tamil)
 add_subdirectory(egyptian)
@@ -62,6 +63,7 @@ set(SYSTEMS_SOURCES
     ${CHAKRA_SOURCES}
     ${COPTIC_SOURCES}
     ${KOREAN_SOURCES}
+    ${LAO_SOURCES}
     ${BALINESE_SOURCES}
     ${TAMIL_SOURCES}
     ${EGYPTIAN_SOURCES}
