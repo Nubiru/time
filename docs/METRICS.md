@@ -1,17 +1,19 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 8)
+**Last refreshed**: 2026-03-20 (INFRA session 10)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
 | Source files (.c) | 373 |
-| Header files (.h) | 374 |
-| Lines of code (src/) | 90,647 |
-| Lines of tests | 159,078 |
-| Test files | 367 |
+| Header files (.h) | 375 |
+| Lines of code (src/) | 90,160 |
+| Lines of tests | 159,935 |
+| Test suites (CTest) | 367 |
 | Render pass files | 19 |
+| Pure modules | 347 |
+| Stateful modules | 29 |
 | Contributors | 179 |
 
 ## Testing
@@ -130,38 +132,32 @@
 
 ## System Domains
 
-| Domain | Modules | Tests |
+| Domain | Modules | Notes |
 |--------|---------|-------|
-| math | 15 | 15 |
-| render | 63 + 17 passes | 60 |
-| ui | 56 | 54 |
-| core | 5 | 1 |
-| platform | 1 | 1 |
-| unified | 65 | 64 |
-| earth | 23 | 23 |
-| astronomy | 10 | — |
-| astrology | 7 | — |
-| tzolkin | 6 | 4 |
-| geology | 6 | 5 |
-| kabbalah | 4 | 4 |
-| hindu | 4 | 3 |
-| buddhist | 3 | 3 |
-| hebrew | 3 | 3 |
-| islamic | 3 | 3 |
-| iching | 2 | 1 |
-| human_design | 2 | — |
-| celtic | 2 | 2 |
-| zoroastrian | 2 | 2 |
-| 16 single-module domains | 16 | 16 |
-| integration tests | — | 6 |
-| benchmarks | — | 2 |
+| math | 16 | All pure |
+| render | 72 + 19 passes | 69 pure + 3 infra + 19 stateful passes |
+| ui | 72 | 70 pure + 2 stateful |
+| core | 5 | 1 pure (date_parse) + 4 stateful |
+| platform | 1 | Pure |
+| unified | 69 | All pure (brain_*, depth_*, convergence, etc.) |
+| earth | 23 | All pure |
+| astronomy | 11 | All pure |
+| astrology | 8 | All pure |
+| tzolkin | 7 | All pure |
+| geology | 7 | All pure |
+| kabbalah | 4 | All pure |
+| hindu | 4 | All pure |
+| 20 other calendar systems | 54 | All pure (2-3 modules each) |
+| integration tests | — | 7 tests |
+| benchmarks | — | 2 tests |
+| e2e | — | 5 tests (Playwright) |
 
 ## WASM Binary Size
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 306,410 bytes (306 KB) |
-| Gzipped | 120,919 bytes (121 KB) |
+| Raw .wasm | 306,539 bytes (307 KB) |
+| Gzipped | 120,965 bytes (121 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 | Growth since sweep #19 | +70 KB raw (+33%) |
 
@@ -169,30 +165,36 @@
 
 | Lines | File | Function | Notes |
 |-------|------|----------|-------|
-| 235 | convergence_detect.c | cd_is_significant | 18-case switch — domain logic |
+| 240 | convergence_detect.c | cd_is_significant | 18-case switch — domain logic |
 | 183 | calendar_convert.c | cal_convert | Exhaustive date converter |
 | 179 | text_pass.c | draw_card_text | Complex text render |
-| 156 | audio_score.c | audio_score_compute | Audio computation |
 | 153 | seasonal_lighting.c | slp_sky_gradient | Sky color gradient |
-| 129 | touch_gestures.c | tg_touch_end | Multi-gesture handler |
 | 129 | scale_hud.c | hud_visibility_at_scale | Visibility rules |
+| 105 | kin_social.c | ks_match | Kin matching logic |
+| 98 | timeline_data.c | format_label | Label formatting |
+| 97 | content_curator.c | cc_digest | Content digest |
+| 97 | horizon_geometry.c | hzg_pack | Horizon mesh packing |
+| 95 | number_scanner.c | number_scan | Number pattern detection |
+| 87 | command_palette.c | cmd_palette_search | Command search |
+| 84 | zoroastrian_interpret.c | zi_interpret | Calendar interpretation |
+| 83 | lens_flare.c | lf_sun_config | Lens flare configuration |
 
-*Most are domain-specific switch/dispatch logic. No refactoring urgency.*
+*13 functions >80L (5 over 100L). All domain-specific logic. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-20, session 8)
+## Health (INFRA sweep — 2026-03-20, session 10)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
 | Build system sync | OK (373 .c files, all registered, 0 phantoms) |
 | Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (367/367 tests, 1.32s) |
-| WASM build | PASS (306 KB raw, 121 KB gzipped) — zero linker warnings |
-| E2E tests | PASS (5/5 Playwright — WASM load, canvas, enter, help, pause) |
-| Symbol conflicts | **FIXED** — 4 total: cal_system_name, ti_interpret, hdi_interpret, ci_interpret |
-| ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, 0 findings) |
+| Native build | PASS (367/367 tests, 0.61s) |
+| WASM build | PASS (307 KB raw, 121 KB gzipped) — zero linker warnings |
+| E2E tests | PASS (5/5 Playwright) |
+| Coverage | 95.9% lines (28,393/29,616), 99.9% functions (3,523/3,525) |
+| Git hooks | pre-commit (build safety) + commit-msg (stream domain) — both active |
+| STATE.md | SYNCED (347 pure + 29 stateful = 376 modules) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
-| Missing attribution | 0 |
-| Render pipeline | 19/19 passes (ring_pass, convergence_pass added) |
-| Refactor audit | 7 God Functions >100L, all domain logic, no urgency |
+| Render pipeline | 19/19 passes |
+| Refactor audit | 13 God Functions >80L (5 over 100L), all domain logic, no urgency |
