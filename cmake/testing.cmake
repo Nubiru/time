@@ -138,7 +138,7 @@ time_add_test(NAME test_view_state TEST tests/render/test_view_state.c DEPS view
 time_add_test(NAME test_ring_today TEST tests/render/test_ring_today.c
     DEPS ring_today system_rings concentric_ring color_theory color gregorian julian tzolkin haab chinese hebrew hijri buddhist lunar nakshatra iching zodiac human_design coptic ethiopian persian japanese korean_calendar thai_calendar geo_time calendar_fixed)
 time_add_test(NAME test_birth_sky TEST tests/render/test_birth_sky.c
-    DEPS birth_sky ring_today system_rings concentric_ring color_theory color birth_profile gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar nakshatra iching zodiac human_design planets orbit kepler coptic ethiopian persian japanese korean_calendar thai_calendar geo_time calendar_fixed)
+    DEPS birth_sky ring_today system_rings concentric_ring color_theory color birth_profile gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar nakshatra iching zodiac aspects human_design planets orbit kepler coptic ethiopian persian japanese korean_calendar thai_calendar geo_time calendar_fixed)
 
 # Core tests
 time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
@@ -448,6 +448,10 @@ time_add_test(NAME test_stored_convergences TEST tests/systems/unified/test_stor
     DEPS stored_convergences convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_brain_stats TEST tests/systems/unified/test_brain_stats.c
     DEPS brain_stats brain_archive brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+time_add_test(NAME test_grand_cycle TEST tests/systems/unified/test_grand_cycle.c
+    DEPS grand_cycle)
+time_add_test(NAME test_time_entropy TEST tests/systems/unified/test_time_entropy.c
+    DEPS time_entropy convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

@@ -8,9 +8,15 @@
 #include "birth_sky.h"
 #include "../systems/unified/today_summary.h"
 #include "../systems/human_design/human_design.h"
+#include "../systems/astronomy/planets.h"
+#include "../systems/astrology/aspects.h"
 
+#include <math.h>
 #include <stdio.h>
 #include <string.h>
+
+/* Natal chart orb: wider than live aspects (standard is 8-10 degrees) */
+#define NATAL_ORB 10.0
 
 /* ---- helpers ---- */
 
@@ -69,6 +75,26 @@ birth_sky_t birth_sky_from_profile(const birth_profile_t *profile)
     /* Conditionally add Hebrew if month data present */
     if (profile->hebrew.month > 0) {
         add_featured(&bs, TS_SYS_HEBREW);
+    }
+
+    /* Compute natal planet positions and aspects */
+    {
+        solar_system_t ss = planets_at(profile->jd);
+        /* Convert heliocentric to approximate geocentric longitudes.
+         * Sun = Earth helio + 180°, others ≈ helio (first-order approx). */
+        double geo[8];
+        for (int i = 0; i < 8; i++) {
+            geo[i] = ss.positions[i].longitude;
+        }
+        /* Sun's geocentric longitude = Earth's helio longitude + 180° */
+        double sun_geo = fmod(ss.positions[PLANET_EARTH].longitude + 180.0, 360.0);
+        /* Shift: slot 0 = Sun (replacing Mercury's helio for natal chart).
+         * Standard natal: Sun, Moon(placeholder), Mercury..Neptune.
+         * Use Earth slot for Sun position since natal charts are geocentric. */
+        geo[PLANET_EARTH] = sun_geo; /* Earth slot → Sun geocentric */
+
+        memcpy(bs.geo_longitudes, geo, sizeof(geo));
+        bs.natal_aspects = aspects_find_all(geo, NATAL_ORB);
     }
 
     return bs;
@@ -250,4 +276,46 @@ birth_card_t birth_card_for_system(const birth_profile_t *profile,
     default:
         return empty_card();
     }
+}
+
+const char *birth_sky_top_aspect(const birth_sky_t *bs, char *buf, int buf_size)
+{
+    if (!bs || !buf || buf_size < 1) {
+        if (buf && buf_size > 0) buf[0] = '\0';
+        return buf ? buf : "";
+    }
+    if (bs->natal_aspects.count == 0) {
+        buf[0] = '\0';
+        return buf;
+    }
+
+    /* Find the tightest aspect (smallest orb) */
+    int best = 0;
+    for (int i = 1; i < bs->natal_aspects.count; i++) {
+        if (bs->natal_aspects.aspects[i].orb <
+            bs->natal_aspects.aspects[best].orb) {
+            best = i;
+        }
+    }
+
+    const aspect_t *a = &bs->natal_aspects.aspects[best];
+    snprintf(buf, (size_t)buf_size, "%s %s %s (%.1f%s orb)",
+             planet_name(a->planet_a),
+             aspect_symbol(a->type),
+             planet_name(a->planet_b),
+             a->orb, "\xC2\xB0"); /* degree sign UTF-8 */
+
+    return buf;
+}
+
+int birth_sky_aspect_count(const birth_sky_t *bs, aspect_type_t type)
+{
+    if (!bs) return 0;
+    int count = 0;
+    for (int i = 0; i < bs->natal_aspects.count; i++) {
+        if (bs->natal_aspects.aspects[i].type == type) {
+            count++;
+        }
+    }
+    return count;
 }

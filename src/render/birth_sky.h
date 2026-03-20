@@ -9,6 +9,7 @@
 #define TIME_BIRTH_SKY_H
 
 #include "../systems/unified/birth_profile.h"
+#include "../systems/astrology/aspects.h"
 #include "ring_today.h"
 
 #include <stdbool.h>
@@ -21,6 +22,8 @@ typedef struct {
     ring_today_t ring_indices;          /* ring segments for birth moment */
     int featured[BS_MAX_FEATURED];      /* top systems to feature (ts_system_t values) */
     int featured_count;                 /* how many featured (0-6) */
+    aspect_list_t natal_aspects;        /* natal chart aspects (planet pairs) */
+    double geo_longitudes[8];           /* geocentric planet longitudes at birth */
     bool active;                        /* true when viewing birth sky */
 } birth_sky_t;
 
@@ -58,5 +61,13 @@ birth_card_t birth_card_iching(const birth_profile_t *profile);
 /* Format birth card for a system by ts_system_t ID.
  * Returns empty card for unsupported systems. */
 birth_card_t birth_card_for_system(const birth_profile_t *profile, int system_id);
+
+/* Format a one-line summary of the most notable natal aspect.
+ * buf: output buffer, buf_size: max bytes.
+ * Returns buf, or "" if no aspects found. */
+const char *birth_sky_top_aspect(const birth_sky_t *bs, char *buf, int buf_size);
+
+/* Count aspects of a given type in the natal chart. */
+int birth_sky_aspect_count(const birth_sky_t *bs, aspect_type_t type);
 
 #endif /* TIME_BIRTH_SKY_H */

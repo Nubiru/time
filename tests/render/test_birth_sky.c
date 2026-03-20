@@ -148,6 +148,59 @@ void test_birth_card_for_system_kabbalah_empty(void) {
     TEST_ASSERT_EQUAL_STRING("", card.title);
 }
 
+/* --- 20. natal_aspects computed --- */
+static void test_natal_aspects_computed(void) {
+    birth_sky_t bs = birth_sky_from_profile(&s_profile);
+    /* Any date should produce at least 1 aspect among 8 planets with 10° orb */
+    TEST_ASSERT_GREATER_THAN(0, bs.natal_aspects.count);
+    TEST_ASSERT_LESS_OR_EQUAL(28, bs.natal_aspects.count);
+}
+
+/* --- 21. natal_aspects have valid types --- */
+static void test_natal_aspects_valid_types(void) {
+    birth_sky_t bs = birth_sky_from_profile(&s_profile);
+    for (int i = 0; i < bs.natal_aspects.count; i++) {
+        TEST_ASSERT_GREATER_OR_EQUAL(0, (int)bs.natal_aspects.aspects[i].type);
+        TEST_ASSERT_LESS_OR_EQUAL(4, (int)bs.natal_aspects.aspects[i].type);
+    }
+}
+
+/* --- 22. geo_longitudes populated --- */
+static void test_geo_longitudes_populated(void) {
+    birth_sky_t bs = birth_sky_from_profile(&s_profile);
+    /* All longitudes should be 0-360 */
+    for (int i = 0; i < 8; i++) {
+        TEST_ASSERT_GREATER_OR_EQUAL(0.0, bs.geo_longitudes[i]);
+        TEST_ASSERT_LESS_THAN(360.0, bs.geo_longitudes[i]);
+    }
+}
+
+/* --- 23. top_aspect returns non-empty --- */
+static void test_top_aspect_non_empty(void) {
+    birth_sky_t bs = birth_sky_from_profile(&s_profile);
+    char buf[128];
+    birth_sky_top_aspect(&bs, buf, sizeof(buf));
+    TEST_ASSERT_GREATER_THAN(0, (int)strlen(buf));
+}
+
+/* --- 24. aspect_count for specific type --- */
+static void test_aspect_count_bounded(void) {
+    birth_sky_t bs = birth_sky_from_profile(&s_profile);
+    int total = 0;
+    for (int t = 0; t <= 4; t++) {
+        int c = birth_sky_aspect_count(&bs, (aspect_type_t)t);
+        TEST_ASSERT_GREATER_OR_EQUAL(0, c);
+        total += c;
+    }
+    TEST_ASSERT_EQUAL(bs.natal_aspects.count, total);
+}
+
+/* --- 25. empty birth sky has zero aspects --- */
+static void test_empty_has_no_aspects(void) {
+    birth_sky_t bs = birth_sky_empty();
+    TEST_ASSERT_EQUAL(0, bs.natal_aspects.count);
+}
+
 int main(void) {
     UNITY_BEGIN();
     RUN_TEST(test_birth_sky_from_known_date);
@@ -169,5 +222,11 @@ int main(void) {
     RUN_TEST(test_birth_card_for_system_tzolkin);
     RUN_TEST(test_birth_card_for_system_unknown);
     RUN_TEST(test_birth_card_for_system_kabbalah_empty);
+    RUN_TEST(test_natal_aspects_computed);
+    RUN_TEST(test_natal_aspects_valid_types);
+    RUN_TEST(test_geo_longitudes_populated);
+    RUN_TEST(test_top_aspect_non_empty);
+    RUN_TEST(test_aspect_count_bounded);
+    RUN_TEST(test_empty_has_no_aspects);
     return UNITY_END();
 }
