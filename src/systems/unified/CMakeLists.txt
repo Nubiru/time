@@ -71,6 +71,8 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_archive.c
     ${CMAKE_CURRENT_SOURCE_DIR}/stored_convergences.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_stats.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/grand_cycle.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/time_entropy.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -146,4 +148,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_brain_archive     OBJECT brain_archive.c)
     add_library(time_stored_convergences OBJECT stored_convergences.c)
     add_library(time_brain_stats OBJECT brain_stats.c)
+    add_library(time_grand_cycle OBJECT grand_cycle.c)
+    add_library(time_time_entropy OBJECT time_entropy.c)
 endif()
