@@ -112,10 +112,23 @@ static ts_entry_t compute_gregorian(double jd)
     int y, m, d;
     jd_to_ymd(jd, &y, &m, &d);
 
-    /* Significance: New Year = major, first of month = notable */
+    /* Significance: New Year = major, equinox/solstice = major,
+     * first of month = notable */
     if (m == 1 && d == 1) {
         e.significance = 2;
         snprintf(e.note, TS_NOTE_MAX, "New Year's Day");
+    } else if (m == 3 && d >= 19 && d <= 21) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Spring Equinox");
+    } else if (m == 6 && d >= 20 && d <= 22) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Summer Solstice");
+    } else if (m == 9 && d >= 22 && d <= 24) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Autumn Equinox");
+    } else if (m == 12 && d >= 20 && d <= 22) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Winter Solstice");
     } else if (d == 1) {
         e.significance = 1;
         snprintf(e.note, TS_NOTE_MAX, "First of month");
@@ -198,13 +211,28 @@ static ts_entry_t compute_hebrew(double jd)
 
     snprintf(e.date_str, TS_DATE_MAX, "%d %s %d", hd.day, month, hd.year);
 
-    /* Significance: 1 Tishrei = Rosh Hashana (major), 1st of month = notable */
+    /* Significance: major holidays = 2, minor = 1 */
     if (hd.month == 7 && hd.day == 1) {
         e.significance = 2;
         snprintf(e.note, TS_NOTE_MAX, "Rosh Hashana");
     } else if (hd.month == 7 && hd.day == 10) {
         e.significance = 2;
         snprintf(e.note, TS_NOTE_MAX, "Yom Kippur");
+    } else if (hd.month == 7 && hd.day == 15) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Sukkot");
+    } else if (hd.month == 1 && hd.day == 15) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Pesach (Passover)");
+    } else if (hd.month == 3 && hd.day == 6) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Shavuot");
+    } else if (hd.month == 9 && hd.day == 25) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Hanukkah begins");
+    } else if (hd.month == 12 && hd.day == 14) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Purim");
     } else if (hd.day == 1) {
         e.significance = 1;
         snprintf(e.note, TS_NOTE_MAX, "Rosh Chodesh");
@@ -220,13 +248,25 @@ static ts_entry_t compute_islamic(double jd)
     hijri_date_t hd = hijri_from_jd(jd);
     hijri_fmt(hd, e.date_str, TS_DATE_MAX);
 
-    /* Significance: 1 Muharram = new year (major), 1st of Ramadan (month 9) = major */
+    /* Significance: major holidays = 2, Ramadan days = 1, new month = 1 */
     if (hd.month == 1 && hd.day == 1) {
         e.significance = 2;
         snprintf(e.note, TS_NOTE_MAX, "Islamic New Year");
     } else if (hd.month == 9 && hd.day == 1) {
         e.significance = 2;
         snprintf(e.note, TS_NOTE_MAX, "Ramadan begins");
+    } else if (hd.month == 10 && hd.day == 1) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Eid al-Fitr");
+    } else if (hd.month == 12 && hd.day == 10) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Eid al-Adha");
+    } else if (hd.month == 3 && hd.day == 12) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Mawlid an-Nabi");
+    } else if (hd.month == 9) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Ramadan");
     } else if (hd.day == 1) {
         e.significance = 1;
         snprintf(e.note, TS_NOTE_MAX, "New month");

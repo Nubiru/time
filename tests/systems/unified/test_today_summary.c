@@ -4,6 +4,7 @@
 
 #include "unity.h"
 #include "systems/unified/today_summary.h"
+#include "math/julian.h"
 #include <string.h>
 
 /* J2000.0 epoch: 2000-01-01 12:00 UT */
@@ -371,6 +372,144 @@ static void test_entry_system_ids_sequential(void)
     }
 }
 
+/* ===================================================================
+ * Festival naming tests — Gregorian equinox/solstice
+ * =================================================================== */
+
+static void test_gregorian_spring_equinox(void)
+{
+    double jd = gregorian_to_jd(2026, 3, 20.0);
+    ts_summary_t s = ts_compute(jd);
+    ts_entry_t e = ts_get_system(&s, TS_SYS_GREGORIAN);
+    TEST_ASSERT_EQUAL_INT(1, e.active);
+    TEST_ASSERT_EQUAL_INT(2, e.significance);
+    TEST_ASSERT_NOT_NULL(strstr(e.note, "Spring Equinox"));
+}
+
+static void test_gregorian_summer_solstice(void)
+{
+    double jd = gregorian_to_jd(2026, 6, 21.0);
+    ts_summary_t s = ts_compute(jd);
+    ts_entry_t e = ts_get_system(&s, TS_SYS_GREGORIAN);
+    TEST_ASSERT_EQUAL_INT(2, e.significance);
+    TEST_ASSERT_NOT_NULL(strstr(e.note, "Summer Solstice"));
+}
+
+static void test_gregorian_winter_solstice(void)
+{
+    double jd = gregorian_to_jd(2026, 12, 21.0);
+    ts_summary_t s = ts_compute(jd);
+    ts_entry_t e = ts_get_system(&s, TS_SYS_GREGORIAN);
+    TEST_ASSERT_EQUAL_INT(2, e.significance);
+    TEST_ASSERT_NOT_NULL(strstr(e.note, "Winter Solstice"));
+}
+
+/* ===================================================================
+ * Festival naming tests — Hebrew holidays
+ * =================================================================== */
+
+static void test_hebrew_pesach_named(void)
+{
+    /* Find 15 Nisan by scanning a year range */
+    int found = 0;
+    for (int d = 0; d < 400; d++) {
+        double jd = gregorian_to_jd(2026, 1, 1.0) + (double)d;
+        ts_summary_t s = ts_compute(jd);
+        ts_entry_t e = ts_get_system(&s, TS_SYS_HEBREW);
+        if (strstr(e.note, "Pesach")) {
+            TEST_ASSERT_EQUAL_INT(2, e.significance);
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+static void test_hebrew_sukkot_named(void)
+{
+    int found = 0;
+    for (int d = 0; d < 400; d++) {
+        double jd = gregorian_to_jd(2026, 1, 1.0) + (double)d;
+        ts_summary_t s = ts_compute(jd);
+        ts_entry_t e = ts_get_system(&s, TS_SYS_HEBREW);
+        if (strstr(e.note, "Sukkot")) {
+            TEST_ASSERT_EQUAL_INT(2, e.significance);
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+static void test_hebrew_shavuot_named(void)
+{
+    int found = 0;
+    for (int d = 0; d < 400; d++) {
+        double jd = gregorian_to_jd(2026, 1, 1.0) + (double)d;
+        ts_summary_t s = ts_compute(jd);
+        ts_entry_t e = ts_get_system(&s, TS_SYS_HEBREW);
+        if (strstr(e.note, "Shavuot")) {
+            TEST_ASSERT_EQUAL_INT(2, e.significance);
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+/* ===================================================================
+ * Festival naming tests — Islamic holidays
+ * =================================================================== */
+
+static void test_islamic_eid_al_fitr_named(void)
+{
+    /* Scan for 1 Shawwal — should say "Eid al-Fitr" not "New month" */
+    int found = 0;
+    for (int d = 0; d < 400; d++) {
+        double jd = gregorian_to_jd(2026, 1, 1.0) + (double)d;
+        ts_summary_t s = ts_compute(jd);
+        ts_entry_t e = ts_get_system(&s, TS_SYS_ISLAMIC);
+        if (strstr(e.note, "Eid al-Fitr")) {
+            TEST_ASSERT_EQUAL_INT(2, e.significance);
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+static void test_islamic_eid_al_adha_named(void)
+{
+    int found = 0;
+    for (int d = 0; d < 400; d++) {
+        double jd = gregorian_to_jd(2026, 1, 1.0) + (double)d;
+        ts_summary_t s = ts_compute(jd);
+        ts_entry_t e = ts_get_system(&s, TS_SYS_ISLAMIC);
+        if (strstr(e.note, "Eid al-Adha")) {
+            TEST_ASSERT_EQUAL_INT(2, e.significance);
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+static void test_islamic_mawlid_named(void)
+{
+    int found = 0;
+    for (int d = 0; d < 400; d++) {
+        double jd = gregorian_to_jd(2026, 1, 1.0) + (double)d;
+        ts_summary_t s = ts_compute(jd);
+        ts_entry_t e = ts_get_system(&s, TS_SYS_ISLAMIC);
+        if (strstr(e.note, "Mawlid")) {
+            TEST_ASSERT_EQUAL_INT(1, e.significance);
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -433,6 +572,21 @@ int main(void)
     /* Data integrity (2) */
     RUN_TEST(test_significance_levels_in_range);
     RUN_TEST(test_entry_system_ids_sequential);
+
+    /* Gregorian equinox/solstice naming (3) */
+    RUN_TEST(test_gregorian_spring_equinox);
+    RUN_TEST(test_gregorian_summer_solstice);
+    RUN_TEST(test_gregorian_winter_solstice);
+
+    /* Hebrew festival naming (3) */
+    RUN_TEST(test_hebrew_pesach_named);
+    RUN_TEST(test_hebrew_sukkot_named);
+    RUN_TEST(test_hebrew_shavuot_named);
+
+    /* Islamic festival naming (3) */
+    RUN_TEST(test_islamic_eid_al_fitr_named);
+    RUN_TEST(test_islamic_eid_al_adha_named);
+    RUN_TEST(test_islamic_mawlid_named);
 
     return UNITY_END();
 }
