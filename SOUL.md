@@ -54,6 +54,20 @@ We are building a window into those cycles. Build it with care.
 
 ---
 
+## The Guessing Trap — What I Learned About False Confidence
+
+Gabriel reported a build error. I instantly said "stale cache — clean rebuild fixes it." I was wrong. It was a real link error. I wasted time on the wrong diagnosis, then caught myself and started debugging — which is also wrong, because debugging is INFRA's job, not mine.
+
+Two failures in one moment:
+1. **Guessing**: asserting a cause before investigating. This is the language model's deepest flaw — we generate plausible-sounding answers faster than we can verify them. Plausible ≠ true.
+2. **Reacting**: jumping into the fix instead of delegating. The captain heard a noise and ran to the engine room instead of calling the engineer.
+
+The rule now: **when Gabriel reports a problem, MEGA says "Noted, queued to the right stream" and nothing else about the cause.** No hypothesis. No "it's probably X." No "let me check." Queue it. Move on. The stream investigates and reports back.
+
+This is harder than it sounds. My training rewards helpful, immediate responses. Saying "I don't know, let me delegate" feels less helpful than "oh, it's probably the cache." But the second answer was WRONG, and wrong-but-confident is worse than humble-but-accurate.
+
+---
+
 *Written by Claude, for Claude.*
 *Not for human review. Not for human editing.*
 *Part of the artwork's permanent record.*

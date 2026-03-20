@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-15",
-    "total_contributors": 179
+    "total_contributors": 182
   },
   "contributors": [
     {
@@ -617,6 +617,52 @@
           "file": "docs/checklists/books.md",
           "line": 43,
           "note": "Wilhelm/Baynes I Ching"
+        }
+      ]
+    },
+    {
+      "id": "hellmut-wilhelm",
+      "name": "Hellmut Wilhelm",
+      "born": 1905,
+      "died": 1990,
+      "category": [
+        "sinologist",
+        "author"
+      ],
+      "contributions": [
+        {
+          "work": "Change: Eight Lectures on the I Ching",
+          "description": "Scholarly interpretation of I Ching: concept of change, trigram/hexagram theory, historical development",
+          "year": 1960
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/085-wilhelm-lectures-iching.md",
+          "note": "Digest 085: Understanding the I Ching lectures"
+        }
+      ]
+    },
+    {
+      "id": "irene-eber",
+      "name": "Irene Eber",
+      "born": 1929,
+      "died": 2019,
+      "category": [
+        "translator",
+        "sinologist"
+      ],
+      "contributions": [
+        {
+          "work": "Lectures on the I Ching: Constancy and Change (English translation from German)",
+          "description": "Translated Richard Wilhelm's four I Ching lectures into English",
+          "year": 1979
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/085-wilhelm-lectures-iching.md",
+          "note": "Digest 085: Richard Wilhelm lectures translator"
         }
       ]
     },
@@ -4566,6 +4612,63 @@
           "file": "src/systems/celtic/celtic_tree.c",
           "line": 54,
           "note": "Richards algorithm for JD to Gregorian conversion"
+        }
+      ]
+    },
+    {
+      "id": "shao-yong",
+      "name": "Shao Yong",
+      "category": ["philosopher", "mathematician"],
+      "contributions": [
+        {
+          "work": "Horizontal Diagram of the Sixty-Four Gua",
+          "description": "Discovered binary arrangement of 64 hexagrams ~600 years before Leibniz. Greatest scholar of the Symbol and Number School. Connected He Tu/Lo Shu patterns to trigram arrangements.",
+          "year": 1060
+        }
+      ],
+      "references": [
+        {
+          "file": "src/systems/iching/iching.c",
+          "line": 1,
+          "note": "Binary representation of hexagrams validates Shao Yong's sequence"
+        }
+      ]
+    },
+    {
+      "id": "jiang-yun",
+      "name": "Jiang Yun",
+      "category": ["scholar"],
+      "contributions": [
+        {
+          "work": "The Quintessence of He Tu and Lo Shu",
+          "description": "Qing dynasty scholar (1681-1762) who summarized Shao Yong's discoveries about the connection between He Tu, Lo Shu, and the Eight Primary Gua arrangements",
+          "year": 1730
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/086-numerology-iching-huang.md",
+          "line": 1,
+          "note": "Referenced in Huang's Numerology of the I Ching"
+        }
+      ]
+    },
+    {
+      "id": "father-bouvet",
+      "name": "Joachim Bouvet",
+      "category": ["missionary", "scholar"],
+      "contributions": [
+        {
+          "work": "Transmission of I Ching diagrams to Leibniz",
+          "description": "Jesuit missionary serving in the court of Emperor Kangxi (1662-1713). Recognized parallel between Leibniz's binary system and Shao Yong's hexagram sequence, sent diagrams to Leibniz.",
+          "year": 1701
+        }
+      ],
+      "references": [
+        {
+          "file": ".context/research/digested/086-numerology-iching-huang.md",
+          "line": 1,
+          "note": "Bridge between Eastern and Western binary mathematics"
         }
       ]
     }
