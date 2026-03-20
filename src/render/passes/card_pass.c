@@ -134,7 +134,7 @@ void card_pass_draw(const render_frame_t *frame) {
     /* Overwrite per-card vertex colors from card_style */
     for (int i = 0; i < qdata.card_count && i < sel.filled_count; i++) {
         card_style_t style = card_style_for_system(
-            sel.slots[i].system_id, sel.slots[i].opacity, THEME_COSMOS);
+            sel.slots[i].system_id, sel.slots[i].opacity, (theme_id_t)frame->theme_id);
         for (int v = 0; v < CP_VERTS_PER_QUAD; v++) {
             int base = (i * CP_VERTS_PER_QUAD + v) * CP_VERTEX_FLOATS;
             qdata.vertices[base + 4] = style.background.r;
@@ -169,7 +169,7 @@ void card_pass_draw(const render_frame_t *frame) {
     }
 
     /* Pack card border lines with theme border color */
-    card_style_t border_style = card_style_default(1.0f, THEME_COSMOS);
+    card_style_t border_style = card_style_default(1.0f, (theme_id_t)frame->theme_id);
     cp_line_data_t ldata = cp_pack_lines(&layout, vw, vh,
                                           border_style.border.r,
                                           border_style.border.g,

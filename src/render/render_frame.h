@@ -22,6 +22,7 @@ typedef struct {
     float  log_zoom;              /* camera log-zoom level (for depth-aware rendering) */
     double observer_lat;
     double observer_lon;
+    int    theme_id;              /* active theme (0=COSMOS, 1=DAWN) for themed rendering */
 } render_frame_t;
 
 #endif /* TIME_RENDER_FRAME_H */

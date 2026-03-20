@@ -254,8 +254,8 @@ static void draw_card_text(const render_frame_t *frame)
         /* Per-card themed colors from card_style */
         int sys_id = (c < sel.filled_count) ? sel.slots[c].system_id : -1;
         card_style_t style = (sys_id >= 0)
-            ? card_style_for_system(sys_id, r->opacity, THEME_COSMOS)
-            : card_style_default(r->opacity, THEME_COSMOS);
+            ? card_style_for_system(sys_id, r->opacity, (theme_id_t)frame->theme_id)
+            : card_style_default(r->opacity, (theme_id_t)frame->theme_id);
         glyph_color_t title_color = {style.title.r, style.title.g,
                                      style.title.b, style.title.a};
         glyph_color_t body_color  = {style.body.r, style.body.g,
