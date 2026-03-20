@@ -220,9 +220,13 @@ void test_factor_of_exact_match(void)
 
 void test_factor_of_multiple_of_sacred(void)
 {
-    /* 9 is a multiple of 3 (sacred), so 3 is a factor of 9 */
+    /* 9 is itself sacred (Ennead), so exact match returns 9. */
     int result = sacred_number_factor_of(9);
-    TEST_ASSERT_EQUAL_INT(3, result);
+    TEST_ASSERT_EQUAL_INT(9, result);
+
+    /* 6 = 2 * 3, and 3 is the smallest sacred factor of 6 */
+    int result2 = sacred_number_factor_of(6);
+    TEST_ASSERT_EQUAL_INT(3, result2);
 }
 
 void test_factor_of_factor_of_sacred(void)

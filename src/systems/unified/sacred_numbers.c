@@ -94,6 +94,19 @@ static const sacred_number_t REGISTRY[] = {
             { SYSTEM_HINDU,       "Ashtanga (eight limbs of yoga)" }
         }
     },
+    /* 9 */
+    {
+        .value = 9,
+        .name = "Ennead",
+        .significance = "Fu Xi pairing constant, completion, greatest single digit",
+        .appearance_count = 4,
+        .appearances = {
+            { SYSTEM_ICHING,       "Fu Xi trigram opposite pairs all sum to 9" },
+            { SYSTEM_CHINESE,      "Nine is Heaven's number; highest yang digit" },
+            { SYSTEM_KABBALAH,     "Nine visible Sefirot (excluding Da'at)" },
+            { SYSTEM_HUMAN_DESIGN, "Nine Centers of the Bodygraph" }
+        }
+    },
     /* 10 */
     {
         .value = 10,
