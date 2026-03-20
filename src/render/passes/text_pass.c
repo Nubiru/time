@@ -281,6 +281,16 @@ static void draw_card_text(const render_frame_t *frame)
         len = append_text_glyphs(instances, len, content->line2,
                                  CARD_TEXT_LINE_MAX,
                                  px, py, body_scale, body_color);
+
+        /* Line 3 (muted color for secondary detail) */
+        if (content->line3[0] != '\0') {
+            glyph_color_t muted_color = {style.muted.r, style.muted.g,
+                                         style.muted.b, style.muted.a};
+            py += line_height * body_scale;
+            len = append_text_glyphs(instances, len, content->line3,
+                                     CARD_TEXT_LINE_MAX,
+                                     px, py, body_scale, muted_color);
+        }
     }
 
     if (len == 0)

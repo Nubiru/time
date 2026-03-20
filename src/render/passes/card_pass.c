@@ -147,7 +147,8 @@ void card_pass_draw(const render_frame_t *frame) {
     if (qdata.vertex_count > 0) {
         glUseProgram(s_quad_program);
         glUniform2f(s_quad_loc_resolution, vw, vh);
-        glUniform1f(s_quad_loc_corner_radius, 8.0f);
+        theme_t t = theme_get((theme_id_t)frame->theme_id);
+        glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
 
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
