@@ -308,6 +308,128 @@ static const br_explanation_t EXPLANATIONS[] = {
       "cycles through 12 archetypal energies. Both assign qualitative meaning "
       "to positions in a cycle. The I Ching uses binary logic; astrology uses "
       "celestial geometry." },
+
+    /* --- Batch 4: Under-connected systems + high-value gaps --- */
+
+    { CD_SYS_TAMIL, CD_SYS_HINDU, BR_EXPLAIN_TRANSMISSION,
+      "Tamil is a regional Hindu calendar variant",
+      "The Tamil calendar is the South Indian version of the Hindu lunisolar "
+      "system. It uses the same Surya Siddhanta astronomical parameters, "
+      "60-year Jupiter cycle (samvatsara), and solar month boundaries." },
+
+    { CD_SYS_TAMIL, CD_SYS_ASTRONOMY, BR_EXPLAIN_SHARED_SOURCE,
+      "60-year Jupiter cycle from astronomical observation",
+      "The Tamil 60-year Jovian cycle tracks Jupiter's ~11.86-year orbital "
+      "period. Five Jupiter orbits approximate 60 years, matching the "
+      "sexagenary cycle — a direct astronomical observation." },
+
+    { CD_SYS_TAMIL, CD_SYS_BUDDHIST, BR_EXPLAIN_CONVERGENT,
+      "South and Southeast Asian parallels",
+      "Tamil Hindu and Theravada Buddhist calendars share Indian astronomical "
+      "roots but diverged. Tamil uses the Surya Siddhanta directly; Buddhist "
+      "calendars in Southeast Asia use modified Indian parameters." },
+
+    { CD_SYS_MYANMAR, CD_SYS_BUDDHIST, BR_EXPLAIN_TRANSMISSION,
+      "Myanmar calendar serves Buddhist observance",
+      "The Myanmar calendar exists primarily to determine Buddhist holy days. "
+      "Uposatha (quarter-moon) and Thingyan (new year) timing are the "
+      "calendar's central purpose." },
+
+    { CD_SYS_BUDDHIST, CD_SYS_THAI, BR_EXPLAIN_TRANSMISSION,
+      "Thai calendar counts Buddhist Era",
+      "Thailand's official calendar counts from the Buddha's parinibbana "
+      "(543 BCE). Buddhist Uposatha days are national holidays, and the "
+      "Thai lunisolar calendar tracks them." },
+
+    { CD_SYS_KOREAN, CD_SYS_JAPANESE, BR_EXPLAIN_TRANSMISSION,
+      "Parallel adoptions from China",
+      "Korea and Japan both adopted the Chinese lunisolar calendar. Korea "
+      "kept closer to the Chinese model; Japan switched to Gregorian in 1873 "
+      "but retained cultural elements (rokuyo, sekki)." },
+
+    { CD_SYS_ISLAMIC, CD_SYS_PERSIAN, BR_EXPLAIN_TRANSMISSION,
+      "Persian calendar epoch from Islamic conquest",
+      "The Solar Hijri calendar uses the same epoch as the Islamic calendar "
+      "(622 CE, Muhammad's hijra) but counts solar years instead of lunar. "
+      "It replaced the Zoroastrian calendar after the Arab conquest." },
+
+    { CD_SYS_ISLAMIC, CD_SYS_COPTIC, BR_EXPLAIN_CONVERGENT,
+      "Different structures in the same region",
+      "Both are Middle Eastern calendars but structurally opposite: Islamic "
+      "is pure lunar (354 days), Coptic is solar (365 days). They share a "
+      "geographic region but not a mathematical relationship." },
+
+    { CD_SYS_ISLAMIC, CD_SYS_HINDU, BR_EXPLAIN_CONVERGENT,
+      "Coexistence in South Asia",
+      "Both calendars are used in South Asia — the Islamic Hijri and Hindu "
+      "Panchanga. Mughal rule brought them into administrative parallel, but "
+      "their structures (pure lunar vs lunisolar) are independent." },
+
+    { CD_SYS_ASTROLOGY, CD_SYS_HINDU, BR_EXPLAIN_SHARED_SOURCE,
+      "Both divide the ecliptic",
+      "Western tropical zodiac (12 signs x 30 degrees) and Hindu Jyotish "
+      "(12 rashis + 27 nakshatras) both divide the same ecliptic circle. "
+      "The split: Western uses the vernal equinox; Hindu uses sidereal stars." },
+
+    { CD_SYS_ASTROLOGY, CD_SYS_PERSIAN, BR_EXPLAIN_SHARED_SOURCE,
+      "Shared Mesopotamian roots",
+      "Western astrology and Persian astronomical tradition both trace to "
+      "Babylonian celestial observation. The zodiac, planetary hours, and "
+      "decan system were transmitted through the same Near Eastern lineage." },
+
+    { CD_SYS_ASTROLOGY, CD_SYS_CHINESE, BR_EXPLAIN_CONVERGENT,
+      "Independent zodiac traditions",
+      "Western zodiac divides the ecliptic into 12 tropical signs. Chinese "
+      "zodiac assigns 12 animals to a Jupiter-based yearly cycle. Same "
+      "number, different astronomical basis, no historical connection." },
+
+    { CD_SYS_ZOROASTRIAN, CD_SYS_BAHAI, BR_EXPLAIN_TRANSMISSION,
+      "Bahai inherits Zoroastrian calendar anchor",
+      "The Bahai calendar's Naw-Ruz (new year at vernal equinox) comes "
+      "directly from the Zoroastrian/Persian Nowruz tradition. The Bab "
+      "proclaimed his mission on Naw-Ruz 1844." },
+
+    { CD_SYS_ZOROASTRIAN, CD_SYS_EGYPTIAN, BR_EXPLAIN_CONVERGENT,
+      "Ancient solar calendars with epagomenal days",
+      "Both Zoroastrian and Egyptian calendars use twelve 30-day months "
+      "plus 5 epagomenal days (Gatha days / Epagomenai). Independent "
+      "inventions of the same efficient solar calendar structure." },
+
+    { CD_SYS_CELTIC, CD_SYS_FRENCH, BR_EXPLAIN_CONVERGENT,
+      "European calendar traditions, different philosophies",
+      "Celtic Sabbats mark the solar year through agricultural and spiritual "
+      "observation. The French Republican calendar reimagined the year through "
+      "Enlightenment rationalism. Same geography, opposite worldviews." },
+
+    { CD_SYS_HEBREW, CD_SYS_BAHAI, BR_EXPLAIN_CONVERGENT,
+      "Abrahamic heritage, distinct structures",
+      "Both emerge from Abrahamic religious tradition, but their calendars "
+      "are structurally different: Hebrew is lunisolar (Metonic 19-year), "
+      "Bahai is solar (19 months x 19 days = 361 + intercalary)." },
+
+    { CD_SYS_ICHING, CD_SYS_JAPANESE, BR_EXPLAIN_TRANSMISSION,
+      "I Ching transmitted to Japan via China",
+      "The I Ching reached Japan through Chinese cultural transmission. "
+      "The text influenced Japanese philosophy and divinatory practice "
+      "alongside indigenous Shinto traditions." },
+
+    { CD_SYS_ICHING, CD_SYS_KOREAN, BR_EXPLAIN_TRANSMISSION,
+      "I Ching foundational in Korean culture",
+      "The Korean national flag displays four I Ching trigrams (Heaven, "
+      "Earth, Water, Fire). The text has been central to Korean philosophy "
+      "and governance since the Three Kingdoms period." },
+
+    { CD_SYS_PERSIAN, CD_SYS_EGYPTIAN, BR_EXPLAIN_CONVERGENT,
+      "Both 12x30+5 solar calendars",
+      "The Persian and Egyptian calendars independently arrived at twelve "
+      "30-day months plus 5 epagomenal days. Persia later refined this with "
+      "a leap day system; Egypt's 365-day calendar drifted 1 day per 4 years." },
+
+    { CD_SYS_THAI, CD_SYS_JAPANESE, BR_EXPLAIN_CONVERGENT,
+      "Both blend imported and indigenous counting",
+      "Thai and Japanese calendars both adopted foreign systems (Indian and "
+      "Chinese respectively) while retaining local cultural overlays — Thai "
+      "Buddhist festivals and Japanese rokuyo/sekki." },
 };
 
 static const int EXPLANATION_COUNT =

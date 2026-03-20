@@ -245,6 +245,45 @@ void test_lookup_islamic_bahai(void) {
 }
 
 /* ===================================================================
+ * Batch 4: Under-connected systems
+ * =================================================================== */
+
+void test_lookup_tamil_hindu(void) {
+    const br_known_pair_t *p = br_lookup_pair(CD_SYS_TAMIL, CD_SYS_HINDU);
+    TEST_ASSERT_NOT_NULL(p);
+    TEST_ASSERT_EQUAL_INT(BR_CORR_STRUCTURAL, p->type);
+    TEST_ASSERT_EQUAL_FLOAT(0.95, p->base_confidence);
+}
+
+void test_lookup_myanmar_buddhist(void) {
+    const br_known_pair_t *p = br_lookup_pair(CD_SYS_MYANMAR, CD_SYS_BUDDHIST);
+    TEST_ASSERT_NOT_NULL(p);
+    TEST_ASSERT_EQUAL_INT(BR_CORR_HARMONIC, p->type);
+    TEST_ASSERT_EQUAL_FLOAT(0.90, p->base_confidence);
+}
+
+void test_lookup_coptic_egyptian(void) {
+    const br_known_pair_t *p = br_lookup_pair(CD_SYS_COPTIC, CD_SYS_EGYPTIAN);
+    TEST_ASSERT_NOT_NULL(p);
+    TEST_ASSERT_EQUAL_INT(BR_CORR_STRUCTURAL, p->type);
+    TEST_ASSERT_EQUAL_FLOAT(0.95, p->base_confidence);
+}
+
+void test_lookup_astrology_hindu(void) {
+    const br_known_pair_t *p = br_lookup_pair(CD_SYS_ASTROLOGY, CD_SYS_HINDU);
+    TEST_ASSERT_NOT_NULL(p);
+    TEST_ASSERT_EQUAL_INT(BR_CORR_HARMONIC, p->type);
+    TEST_ASSERT_EQUAL_FLOAT(0.80, p->base_confidence);
+}
+
+void test_lookup_iching_korean(void) {
+    const br_known_pair_t *p = br_lookup_pair(CD_SYS_ICHING, CD_SYS_KOREAN);
+    TEST_ASSERT_NOT_NULL(p);
+    TEST_ASSERT_EQUAL_INT(BR_CORR_HARMONIC, p->type);
+    TEST_ASSERT_EQUAL_FLOAT(0.85, p->base_confidence);
+}
+
+/* ===================================================================
  * Main
  * =================================================================== */
 
@@ -266,6 +305,13 @@ int main(void) {
     RUN_TEST(test_lookup_astronomy_persian);
     RUN_TEST(test_lookup_astronomy_bahai);
     RUN_TEST(test_lookup_islamic_bahai);
+
+    /* Batch 4: under-connected systems */
+    RUN_TEST(test_lookup_tamil_hindu);
+    RUN_TEST(test_lookup_myanmar_buddhist);
+    RUN_TEST(test_lookup_coptic_egyptian);
+    RUN_TEST(test_lookup_astrology_hindu);
+    RUN_TEST(test_lookup_iching_korean);
 
     /* br_score_correlation */
     RUN_TEST(test_score_known_pair_updates_type);

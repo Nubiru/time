@@ -13,7 +13,7 @@
 #include "brain_types.h"
 
 /* Maximum known system-pair relationships in the static database */
-#define BR_MAX_KNOWN_PAIRS 64
+#define BR_MAX_KNOWN_PAIRS 96
 
 /* Known relationship between two systems */
 typedef struct {

@@ -315,6 +315,52 @@ void test_lookup_buddhist_japanese_transmission(void) {
 }
 
 /* ===================================================================
+ * Batch 4: Under-connected systems
+ * =================================================================== */
+
+void test_lookup_tamil_hindu_transmission(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_TAMIL, CD_SYS_HINDU);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_TRANSMISSION, e->why);
+}
+
+void test_lookup_myanmar_buddhist_transmission(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_MYANMAR, CD_SYS_BUDDHIST);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_TRANSMISSION, e->why);
+}
+
+void test_lookup_astrology_hindu_shared(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ASTROLOGY, CD_SYS_HINDU);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_SHARED_SOURCE, e->why);
+}
+
+void test_lookup_iching_korean_transmission(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ICHING, CD_SYS_KOREAN);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_TRANSMISSION, e->why);
+}
+
+void test_lookup_islamic_persian_transmission(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ISLAMIC, CD_SYS_PERSIAN);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_TRANSMISSION, e->why);
+}
+
+void test_lookup_zoroastrian_bahai_transmission(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ZOROASTRIAN, CD_SYS_BAHAI);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_TRANSMISSION, e->why);
+}
+
+void test_lookup_celtic_french_convergent(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_CELTIC, CD_SYS_FRENCH);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_CONVERGENT, e->why);
+}
+
+/* ===================================================================
  * Main
  * =================================================================== */
 
@@ -380,6 +426,15 @@ int main(void) {
     RUN_TEST(test_lookup_coptic_french_shared);
     RUN_TEST(test_lookup_celtic_astrology_shared);
     RUN_TEST(test_lookup_buddhist_japanese_transmission);
+
+    /* Batch 4: under-connected systems */
+    RUN_TEST(test_lookup_tamil_hindu_transmission);
+    RUN_TEST(test_lookup_myanmar_buddhist_transmission);
+    RUN_TEST(test_lookup_astrology_hindu_shared);
+    RUN_TEST(test_lookup_iching_korean_transmission);
+    RUN_TEST(test_lookup_islamic_persian_transmission);
+    RUN_TEST(test_lookup_zoroastrian_bahai_transmission);
+    RUN_TEST(test_lookup_celtic_french_convergent);
 
     return UNITY_END();
 }
