@@ -82,6 +82,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/today_card.c
     ${CMAKE_CURRENT_SOURCE_DIR}/convergence_motion.c
     ${CMAKE_CURRENT_SOURCE_DIR}/transition_fx.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/card_flight.c
     PARENT_SCOPE
 )
 
@@ -165,5 +166,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_today_card    OBJECT today_card.c)
     add_library(time_convergence_motion OBJECT convergence_motion.c)
     add_library(time_transition_fx OBJECT transition_fx.c)
+    add_library(time_card_flight OBJECT card_flight.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
