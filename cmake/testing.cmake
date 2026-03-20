@@ -267,6 +267,7 @@ time_add_test(NAME test_thermo         TEST tests/systems/geology/test_thermo.c 
 time_add_test(NAME test_geology_interpret TEST tests/systems/geology/test_geology_interpret.c DEPS geology_interpret)
 time_add_test(NAME test_earth_voyage      TEST tests/systems/geology/test_earth_voyage.c      DEPS earth_voyage)
 time_add_test(NAME test_fossil_narrative  TEST tests/systems/geology/test_fossil_narrative.c  DEPS fossil_narrative)
+time_add_test(NAME test_earth_story      TEST tests/systems/geology/test_earth_story.c      DEPS earth_story)
 
 # Earth tests
 time_add_test(NAME test_biorhythm       TEST tests/systems/earth/test_biorhythm.c       DEPS biorhythm)
@@ -296,6 +297,7 @@ time_add_test(NAME test_settings_panel TEST tests/systems/earth/test_settings_pa
 time_add_test(NAME test_birth_entry TEST tests/systems/earth/test_birth_entry.c DEPS birth_entry)
 time_add_test(NAME test_author_card TEST tests/systems/earth/test_author_card.c DEPS author_card)
 time_add_test(NAME test_surf_display TEST tests/systems/earth/test_surf_display.c DEPS surf_display tide_predict tidal surf_spots lunar julian)
+time_add_test(NAME test_human_population TEST tests/systems/earth/test_human_population.c DEPS human_population)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
@@ -560,6 +562,8 @@ time_add_test(NAME test_kf_track TEST tests/ui/test_kf_track.c
     DEPS kf_track animation easing LABELS unit)
 time_add_test(NAME test_drama_seq TEST tests/ui/test_drama_seq.c
     DEPS drama_seq kf_track animation easing LABELS unit)
+time_add_test(NAME test_card_depth TEST tests/ui/test_card_depth.c
+    DEPS card_depth LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)

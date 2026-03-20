@@ -26,6 +26,7 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/birth_entry.c
     ${CMAKE_CURRENT_SOURCE_DIR}/author_card.c
     ${CMAKE_CURRENT_SOURCE_DIR}/surf_display.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/human_population.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -56,4 +57,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_birth_entry     OBJECT birth_entry.c)
     add_library(time_author_card     OBJECT author_card.c)
     add_library(time_surf_display    OBJECT surf_display.c)
+    add_library(time_human_population OBJECT human_population.c)
 endif()
