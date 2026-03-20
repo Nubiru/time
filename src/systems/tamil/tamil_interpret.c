@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "tamil_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -118,3 +119,72 @@ tamil_interp_t tmi_interpret(int month, int day, int jovian_year,
 
 int tmi_month_count(void) { return 12; }
 int tmi_festival_count(void) { return 4; }
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+tamil_interp_t tmi_interpret_locale(int month, int day, int jovian_year,
+                                    int festival, i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return tmi_interpret(month, day, jovian_year, festival);
+    }
+
+    tamil_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Month data */
+    snprintf(key, sizeof(key), "tamil.month.%d.tamil", month);
+    const char *tamil = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tamil.month.%d.rasi", month);
+    const char *rasi = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tamil.month.%d.season", month);
+    const char *season = content_get(key, locale);
+
+    /* Glyph: first 3 chars of Tamil month name */
+    size_t len = strlen(tamil);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, tamil, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    if (festival >= 1 && festival <= 4) {
+        snprintf(key, sizeof(key), "tamil.festival.%d.name", festival);
+        const char *fest_name = content_get(key, locale);
+
+        const char *tpl = content_get("tamil.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, tamil, day, fest_name);
+    } else {
+        const char *tpl = content_get("tamil.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, tamil, day, rasi);
+    }
+
+    /* Detail */
+    if (festival >= 1 && festival <= 4) {
+        snprintf(key, sizeof(key), "tamil.festival.%d.name", festival);
+        const char *fest_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "tamil.festival.%d.theme", festival);
+        const char *theme = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "tamil.festival.%d.practice", festival);
+        const char *practice = content_get(key, locale);
+
+        const char *tpl = content_get("tamil.tpl.detail_festival", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 tamil, rasi, season, jovian_year,
+                 fest_name, theme, practice);
+    } else {
+        const char *tpl = content_get("tamil.tpl.detail", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 tamil, rasi, season, jovian_year);
+    }
+
+    return r;
+}

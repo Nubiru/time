@@ -12,6 +12,8 @@
 #ifndef TIME_KOREAN_INTERPRET_H
 #define TIME_KOREAN_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-festival interpretation (7 festivals) */
 typedef struct {
     int festival;               /* 0-6 */
@@ -60,5 +62,12 @@ int ki_festival_count(void);
 
 /* Returns 5 (number of elements). */
 int ki_element_count(void);
+
+/* Locale-aware interpretation. Same as ki_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+korean_interp_t ki_interpret_locale(int dangun_year, int animal, int element,
+                                    int polarity, int festival,
+                                    i18n_locale_t locale);
 
 #endif /* TIME_KOREAN_INTERPRET_H */

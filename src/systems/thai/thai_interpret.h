@@ -11,6 +11,8 @@
 #ifndef TIME_THAI_INTERPRET_H
 #define TIME_THAI_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-month interpretation (12 months) */
 typedef struct {
     int month;                  /* 1-12 */
@@ -56,5 +58,11 @@ int tti_month_count(void);
 
 /* Returns 3 (number of festivals). */
 int tti_festival_count(void);
+
+/* Locale-aware interpretation. Same as tti_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+thai_interp_t tti_interpret_locale(int be_year, int month, int day,
+                                   int festival, i18n_locale_t locale);
 
 #endif /* TIME_THAI_INTERPRET_H */

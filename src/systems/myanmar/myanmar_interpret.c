@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "myanmar_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -106,3 +107,63 @@ myanmar_interp_t mmi_interpret(int month, int day, int is_thingyan,
 }
 
 int mmi_month_count(void) { return 12; }
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+myanmar_interp_t mmi_interpret_locale(int month, int day, int is_thingyan,
+                                      int year_type, i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return mmi_interpret(month, day, is_thingyan, year_type);
+    }
+
+    myanmar_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Month data */
+    snprintf(key, sizeof(key), "myanmar.month.%d.name", month);
+    const char *name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "myanmar.month.%d.season", month);
+    const char *season = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "myanmar.month.%d.festival", month);
+    const char *festival = content_get(key, locale);
+
+    /* Year type */
+    snprintf(key, sizeof(key), "myanmar.year_type.%d", year_type);
+    const char *yt = content_get(key, locale);
+
+    /* Glyph: first 3 chars of month name */
+    size_t len = strlen(name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    if (is_thingyan) {
+        const char *tpl = content_get("myanmar.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, name, day, "Thingyan");
+    } else {
+        const char *tpl = content_get("myanmar.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, name, day, season);
+    }
+
+    /* Detail */
+    if (is_thingyan) {
+        const char *tpl = content_get("myanmar.tpl.detail_thingyan", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 name, season, festival, yt);
+    } else {
+        const char *tpl = content_get("myanmar.tpl.detail", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 name, season, festival, yt);
+    }
+
+    return r;
+}

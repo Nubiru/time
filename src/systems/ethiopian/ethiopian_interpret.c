@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "ethiopian_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -163,4 +164,73 @@ int eti_month_count(void)
 int eti_feast_count(void)
 {
     return 4;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+ethiopian_interp_t eti_interpret_locale(int month, int day, int feast,
+                                        i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return eti_interpret(month, day, feast);
+    }
+
+    ethiopian_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Month data */
+    snprintf(key, sizeof(key), "ethiopian.month.%d.name", month);
+    const char *name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "ethiopian.month.%d.meaning", month);
+    const char *meaning = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "ethiopian.month.%d.season", month);
+    const char *season = content_get(key, locale);
+
+    /* Glyph: first 3 chars of month name */
+    size_t len = strlen(name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    if (feast >= 1 && feast <= 4) {
+        snprintf(key, sizeof(key), "ethiopian.feast.%d.name", feast);
+        const char *feast_name = content_get(key, locale);
+
+        const char *tpl = content_get("ethiopian.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, name, day, feast_name);
+    } else {
+        const char *tpl = content_get("ethiopian.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, name, day, meaning);
+    }
+
+    /* Detail */
+    if (feast >= 1 && feast <= 4) {
+        snprintf(key, sizeof(key), "ethiopian.feast.%d.name", feast);
+        const char *feast_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "ethiopian.feast.%d.theme", feast);
+        const char *theme = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "ethiopian.feast.%d.practice", feast);
+        const char *practice = content_get(key, locale);
+
+        const char *tpl = content_get("ethiopian.tpl.detail_feast", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 name, meaning, season,
+                 feast_name, theme, practice);
+    } else {
+        const char *tpl = content_get("ethiopian.tpl.detail", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 name, meaning, season);
+    }
+
+    return r;
 }

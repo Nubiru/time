@@ -13,6 +13,8 @@
 #ifndef TIME_BAHAI_INTERPRET_H
 #define TIME_BAHAI_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-month interpretation (19 months + intercalary) */
 typedef struct {
     int month;                  /* 1-19 (or 0 for Ayyam-i-Ha) */
@@ -53,5 +55,11 @@ bahai_interp_t bhi_interpret(int month, int day, int holy_day);
 
 int bhi_month_count(void);     /* Returns 20 (19 + intercalary) */
 int bhi_holy_day_count(void);  /* Returns 8 */
+
+/* Locale-aware interpretation. Same as bhi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+bahai_interp_t bhi_interpret_locale(int month, int day, int holy_day,
+                                    i18n_locale_t locale);
 
 #endif /* TIME_BAHAI_INTERPRET_H */

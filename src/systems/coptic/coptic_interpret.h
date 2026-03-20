@@ -11,6 +11,8 @@
 #ifndef TIME_COPTIC_INTERPRET_H
 #define TIME_COPTIC_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-month interpretation (13 months: 12 regular + Nasie) */
 typedef struct {
     int month;                  /* 1-13 (Thout=1 through Nasie=13) */
@@ -56,5 +58,11 @@ int cci_month_count(void);
 
 /* Returns 6 (number of major feasts). */
 int cci_feast_count(void);
+
+/* Locale-aware interpretation. Same as cci_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+coptic_interp_t cci_interpret_locale(int month, int day, int feast,
+                                     i18n_locale_t locale);
 
 #endif /* TIME_COPTIC_INTERPRET_H */

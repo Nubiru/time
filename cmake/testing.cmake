@@ -225,21 +225,26 @@ time_add_test(NAME test_tzolkin_interpret TEST tests/systems/tzolkin/test_tzolki
 time_add_test(NAME test_tzolkin_i18n TEST tests/systems/tzolkin/test_tzolkin_i18n.c DEPS tzolkin_interpret dreamspell content_i18n i18n)
 time_add_test(NAME test_tzolkin_today TEST tests/systems/tzolkin/test_tzolkin_today.c DEPS tzolkin_today tzolkin dreamspell tzolkin_board haab cr_cycle julian tzolkin_interpret content_i18n i18n)
 time_add_test(NAME test_coptic         TEST tests/systems/coptic/test_coptic.c        DEPS coptic calendar_fixed)
-time_add_test(NAME test_coptic_interpret TEST tests/systems/coptic/test_coptic_interpret.c DEPS coptic_interpret)
+time_add_test(NAME test_coptic_interpret TEST tests/systems/coptic/test_coptic_interpret.c DEPS coptic_interpret content_i18n i18n)
+time_add_test(NAME test_coptic_i18n TEST tests/systems/coptic/test_coptic_i18n.c DEPS coptic_interpret content_i18n i18n)
 time_add_test(NAME test_egyptian       TEST tests/systems/egyptian/test_egyptian.c    DEPS egyptian calendar_fixed)
 time_add_test(NAME test_egyptian_interpret TEST tests/systems/egyptian/test_egyptian_interpret.c DEPS egyptian_interpret)
 time_add_test(NAME test_ethiopian      TEST tests/systems/ethiopian/test_ethiopian.c  DEPS ethiopian calendar_fixed)
-time_add_test(NAME test_ethiopian_interpret TEST tests/systems/ethiopian/test_ethiopian_interpret.c DEPS ethiopian_interpret)
+time_add_test(NAME test_ethiopian_interpret TEST tests/systems/ethiopian/test_ethiopian_interpret.c DEPS ethiopian_interpret content_i18n i18n)
+time_add_test(NAME test_ethiopian_i18n TEST tests/systems/ethiopian/test_ethiopian_i18n.c DEPS ethiopian_interpret content_i18n i18n)
 time_add_test(NAME test_wheel_of_year  TEST tests/systems/celtic/test_wheel_of_year.c DEPS wheel_of_year)
 time_add_test(NAME test_chakra         TEST tests/systems/chakra/test_chakra.c        DEPS chakra)
 time_add_test(NAME test_chakra_interpret TEST tests/systems/chakra/test_chakra_interpret.c DEPS chakra_interpret chakra content_i18n i18n)
 time_add_test(NAME test_chakra_i18n TEST tests/systems/chakra/test_chakra_i18n.c DEPS chakra_interpret chakra content_i18n i18n)
 time_add_test(NAME test_myanmar        TEST tests/systems/myanmar/test_myanmar.c      DEPS myanmar)
-time_add_test(NAME test_myanmar_interpret TEST tests/systems/myanmar/test_myanmar_interpret.c DEPS myanmar_interpret)
+time_add_test(NAME test_myanmar_interpret TEST tests/systems/myanmar/test_myanmar_interpret.c DEPS myanmar_interpret content_i18n i18n)
+time_add_test(NAME test_myanmar_i18n TEST tests/systems/myanmar/test_myanmar_i18n.c DEPS myanmar_interpret content_i18n i18n)
 time_add_test(NAME test_lao_calendar   TEST tests/systems/lao/test_lao_calendar.c     DEPS lao_calendar)
-time_add_test(NAME test_lao_interpret  TEST tests/systems/lao/test_lao_interpret.c    DEPS lao_interpret)
+time_add_test(NAME test_lao_interpret  TEST tests/systems/lao/test_lao_interpret.c    DEPS lao_interpret content_i18n i18n)
+time_add_test(NAME test_lao_i18n TEST tests/systems/lao/test_lao_i18n.c DEPS lao_interpret content_i18n i18n)
 time_add_test(NAME test_thai_calendar  TEST tests/systems/thai/test_thai_calendar.c   DEPS thai_calendar)
-time_add_test(NAME test_thai_interpret TEST tests/systems/thai/test_thai_interpret.c  DEPS thai_interpret)
+time_add_test(NAME test_thai_interpret TEST tests/systems/thai/test_thai_interpret.c  DEPS thai_interpret content_i18n i18n)
+time_add_test(NAME test_thai_i18n TEST tests/systems/thai/test_thai_i18n.c DEPS thai_interpret content_i18n i18n)
 time_add_test(NAME test_cosmic_duality TEST tests/systems/zoroastrian/test_cosmic_duality.c DEPS cosmic_duality)
 time_add_test(NAME test_zoroastrian    TEST tests/systems/zoroastrian/test_zoroastrian.c   DEPS zoroastrian calendar_fixed)
 time_add_test(NAME test_zoroastrian_interpret TEST tests/systems/zoroastrian/test_zoroastrian_interpret.c DEPS zoroastrian_interpret zoroastrian calendar_fixed)
@@ -250,11 +255,13 @@ time_add_test(NAME test_tarot_interpret TEST tests/systems/tarot/test_tarot_inte
 
 # Persian tests
 time_add_test(NAME test_persian         TEST tests/systems/persian/test_persian.c DEPS persian)
-time_add_test(NAME test_persian_interpret TEST tests/systems/persian/test_persian_interpret.c DEPS persian_interpret)
+time_add_test(NAME test_persian_interpret TEST tests/systems/persian/test_persian_interpret.c DEPS persian_interpret content_i18n i18n)
+time_add_test(NAME test_persian_i18n TEST tests/systems/persian/test_persian_i18n.c DEPS persian_interpret content_i18n i18n)
 
 # Baha'i tests
 time_add_test(NAME test_bahai           TEST tests/systems/bahai/test_bahai.c     DEPS bahai)
-time_add_test(NAME test_bahai_interpret TEST tests/systems/bahai/test_bahai_interpret.c DEPS bahai_interpret)
+time_add_test(NAME test_bahai_interpret TEST tests/systems/bahai/test_bahai_interpret.c DEPS bahai_interpret content_i18n i18n)
+time_add_test(NAME test_bahai_i18n TEST tests/systems/bahai/test_bahai_i18n.c DEPS bahai_interpret content_i18n i18n)
 
 # Japanese tests
 time_add_test(NAME test_japanese        TEST tests/systems/japanese/test_japanese.c DEPS japanese)
@@ -266,7 +273,8 @@ time_add_test(NAME test_aztec_interpret TEST tests/systems/aztec/test_aztec_inte
 
 # Tamil tests
 time_add_test(NAME test_tamil_calendar  TEST tests/systems/tamil/test_tamil_calendar.c DEPS tamil_calendar)
-time_add_test(NAME test_tamil_interpret TEST tests/systems/tamil/test_tamil_interpret.c DEPS tamil_interpret)
+time_add_test(NAME test_tamil_interpret TEST tests/systems/tamil/test_tamil_interpret.c DEPS tamil_interpret content_i18n i18n)
+time_add_test(NAME test_tamil_i18n TEST tests/systems/tamil/test_tamil_i18n.c DEPS tamil_interpret content_i18n i18n)
 
 # Celtic Tree tests
 time_add_test(NAME test_celtic_tree     TEST tests/systems/celtic/test_celtic_tree.c   DEPS celtic_tree)
@@ -274,7 +282,8 @@ time_add_test(NAME test_celtic_interpret TEST tests/systems/celtic/test_celtic_i
 
 # Korean tests
 time_add_test(NAME test_korean_calendar  TEST tests/systems/korean/test_korean_calendar.c DEPS korean_calendar)
-time_add_test(NAME test_korean_interpret TEST tests/systems/korean/test_korean_interpret.c DEPS korean_interpret korean_calendar)
+time_add_test(NAME test_korean_interpret TEST tests/systems/korean/test_korean_interpret.c DEPS korean_interpret korean_calendar content_i18n i18n)
+time_add_test(NAME test_korean_i18n TEST tests/systems/korean/test_korean_i18n.c DEPS korean_interpret korean_calendar content_i18n i18n)
 
 # Balinese tests
 time_add_test(NAME test_pawukon         TEST tests/systems/balinese/test_pawukon.c       DEPS pawukon)

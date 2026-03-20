@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "bahai_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -158,3 +159,71 @@ bahai_interp_t bhi_interpret(int month, int day, int holy_day)
 
 int bhi_month_count(void) { return 20; }
 int bhi_holy_day_count(void) { return 8; }
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+bahai_interp_t bhi_interpret_locale(int month, int day, int holy_day,
+                                    i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return bhi_interpret(month, day, holy_day);
+    }
+
+    bahai_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Month data */
+    snprintf(key, sizeof(key), "bahai.month.%d.arabic", month);
+    const char *arabic = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "bahai.month.%d.english", month);
+    const char *english = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "bahai.month.%d.quality", month);
+    const char *quality = content_get(key, locale);
+
+    /* Glyph: first 3 chars of Arabic name */
+    size_t len = strlen(arabic);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, arabic, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    if (holy_day >= 1 && holy_day <= 8) {
+        snprintf(key, sizeof(key), "bahai.holy_day.%d.name", holy_day);
+        const char *hd_name = content_get(key, locale);
+
+        const char *tpl = content_get("bahai.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl,
+                 arabic, english, day, hd_name);
+    } else {
+        const char *tpl = content_get("bahai.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl,
+                 arabic, english, day, "");
+    }
+
+    /* Detail */
+    if (holy_day >= 1 && holy_day <= 8) {
+        snprintf(key, sizeof(key), "bahai.holy_day.%d.name", holy_day);
+        const char *hd_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "bahai.holy_day.%d.theme", holy_day);
+        const char *theme = content_get(key, locale);
+
+        const char *tpl = content_get("bahai.tpl.detail_holy_day", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 arabic, english, quality,
+                 hd_name, theme);
+    } else {
+        const char *tpl = content_get("bahai.tpl.detail", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 arabic, english, quality);
+    }
+
+    return r;
+}

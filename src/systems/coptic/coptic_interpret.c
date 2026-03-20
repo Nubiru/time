@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "coptic_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -173,4 +174,73 @@ int cci_month_count(void)
 int cci_feast_count(void)
 {
     return 6;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+coptic_interp_t cci_interpret_locale(int month, int day, int feast,
+                                     i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return cci_interpret(month, day, feast);
+    }
+
+    coptic_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Month data */
+    snprintf(key, sizeof(key), "coptic.month.%d.name", month);
+    const char *name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "coptic.month.%d.origin", month);
+    const char *origin = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "coptic.month.%d.liturgy", month);
+    const char *liturgy = content_get(key, locale);
+
+    /* Glyph: first 3 chars of month name */
+    size_t len = strlen(name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    if (feast >= 1 && feast <= 6) {
+        snprintf(key, sizeof(key), "coptic.feast.%d.name", feast);
+        const char *feast_name = content_get(key, locale);
+
+        const char *tpl = content_get("coptic.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, name, day, feast_name);
+    } else {
+        const char *tpl = content_get("coptic.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, name, day, origin);
+    }
+
+    /* Detail */
+    if (feast >= 1 && feast <= 6) {
+        snprintf(key, sizeof(key), "coptic.feast.%d.name", feast);
+        const char *feast_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "coptic.feast.%d.theme", feast);
+        const char *theme = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "coptic.feast.%d.practice", feast);
+        const char *practice = content_get(key, locale);
+
+        const char *tpl = content_get("coptic.tpl.detail_feast", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 name, origin, liturgy,
+                 feast_name, theme, practice);
+    } else {
+        const char *tpl = content_get("coptic.tpl.detail", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 name, origin, liturgy);
+    }
+
+    return r;
 }

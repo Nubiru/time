@@ -11,6 +11,8 @@
 #ifndef TIME_PERSIAN_INTERPRET_H
 #define TIME_PERSIAN_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-month interpretation (12 months) */
 typedef struct {
     int month;                  /* 1-12 */
@@ -56,5 +58,11 @@ int pi_month_count(void);
 
 /* Returns 4 (number of major festivals). */
 int pi_festival_count(void);
+
+/* Locale-aware interpretation. Same as pi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+persian_interp_t pi_interpret_locale(int month, int day, int festival,
+                                     i18n_locale_t locale);
 
 #endif /* TIME_PERSIAN_INTERPRET_H */

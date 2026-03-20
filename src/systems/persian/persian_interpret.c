@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "persian_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -172,4 +173,76 @@ int pi_month_count(void)
 int pi_festival_count(void)
 {
     return 4;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+persian_interp_t pi_interpret_locale(int month, int day, int festival,
+                                     i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return pi_interpret(month, day, festival);
+    }
+
+    persian_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Month data */
+    snprintf(key, sizeof(key), "persian.month.%d.name", month);
+    const char *name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "persian.month.%d.avestan", month);
+    const char *avestan = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "persian.month.%d.meaning", month);
+    const char *meaning = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "persian.month.%d.season", month);
+    const char *season = content_get(key, locale);
+
+    /* Glyph: first 3 chars of month name */
+    size_t len = strlen(name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    if (festival >= 1 && festival <= 4) {
+        snprintf(key, sizeof(key), "persian.festival.%d.name", festival);
+        const char *fest_name = content_get(key, locale);
+
+        const char *tpl = content_get("persian.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, name, day, fest_name);
+    } else {
+        const char *tpl = content_get("persian.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, name, day, meaning);
+    }
+
+    /* Detail */
+    if (festival >= 1 && festival <= 4) {
+        snprintf(key, sizeof(key), "persian.festival.%d.name", festival);
+        const char *fest_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "persian.festival.%d.theme", festival);
+        const char *theme = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "persian.festival.%d.practice", festival);
+        const char *practice = content_get(key, locale);
+
+        const char *tpl = content_get("persian.tpl.detail_festival", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 name, avestan, meaning, season,
+                 fest_name, theme, practice);
+    } else {
+        const char *tpl = content_get("persian.tpl.detail", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl,
+                 name, avestan, meaning, season);
+    }
+
+    return r;
 }

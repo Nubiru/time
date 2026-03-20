@@ -5,6 +5,7 @@
 
 #include "korean_interpret.h"
 #include "korean_calendar.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -154,4 +155,84 @@ int ki_festival_count(void)
 int ki_element_count(void)
 {
     return 5;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+korean_interp_t ki_interpret_locale(int dangun_year, int animal, int element,
+                                    int polarity, int festival,
+                                    i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return ki_interpret(dangun_year, animal, element, polarity, festival);
+    }
+
+    korean_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    /* Animal name from korean_calendar module (system-native, not translated) */
+    const char *animal_name = korean_animal_name(animal);
+    if (animal_name[0] == '?') {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    char key[64];
+
+    /* Element data */
+    snprintf(key, sizeof(key), "korean.element.%d.korean", element);
+    const char *el_korean = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "korean.element.%d.meaning", element);
+    const char *el_meaning = content_get(key, locale);
+
+    const char *pol_str = (polarity == 0) ? "Yang" : "Yin";
+
+    /* Glyph: first 3 chars of animal name */
+    size_t len = strlen(animal_name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, animal_name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    if (festival >= 0 && festival <= 6) {
+        snprintf(key, sizeof(key), "korean.festival.%d.name", festival);
+        const char *fest_name = content_get(key, locale);
+
+        const char *tpl = content_get("korean.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl,
+                 dangun_year, el_korean, animal_name, pol_str, fest_name);
+    } else {
+        const char *tpl = content_get("korean.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl,
+                 dangun_year, el_korean, animal_name, pol_str, "");
+    }
+
+    /* Detail — two-part: base + optional festival append */
+    const char *tpl_det = content_get("korean.tpl.detail", locale);
+    int pos = snprintf(r.detail, sizeof(r.detail), tpl_det,
+                       dangun_year, animal_name, el_korean, el_meaning, pol_str);
+
+    if (festival >= 0 && festival <= 6 &&
+        pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        snprintf(key, sizeof(key), "korean.festival.%d.name", festival);
+        const char *fest_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "korean.festival.%d.theme", festival);
+        const char *theme = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "korean.festival.%d.practice", festival);
+        const char *practice = content_get(key, locale);
+
+        const char *tpl_f = content_get("korean.tpl.detail_festival", locale);
+        snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                 tpl_f, fest_name, theme, practice);
+    }
+
+    return r;
 }
