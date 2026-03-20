@@ -77,6 +77,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_transition.c
     ${CMAKE_CURRENT_SOURCE_DIR}/motion_prefs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/enter_zoom.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/birth_flight.c
     PARENT_SCOPE
 )
 
@@ -155,5 +156,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_earth_transition OBJECT earth_transition.c)
     add_library(time_motion_prefs    OBJECT motion_prefs.c)
     add_library(time_enter_zoom     OBJECT enter_zoom.c)
+    add_library(time_birth_flight  OBJECT birth_flight.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
