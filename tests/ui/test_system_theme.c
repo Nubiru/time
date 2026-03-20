@@ -90,8 +90,8 @@ void test_system_count_equals_ct_system_count(void) {
     TEST_ASSERT_EQUAL_INT(CT_SYSTEM_COUNT, st_system_count());
 }
 
-void test_system_count_is_13(void) {
-    TEST_ASSERT_EQUAL_INT(13, st_system_count());
+void test_system_count_is_19(void) {
+    TEST_ASSERT_EQUAL_INT(19, st_system_count());
 }
 
 /* ================================================================
@@ -295,7 +295,7 @@ void test_css_vars_52_properties(void) {
     for (int i = 0; buf[i] != '\0'; i++) {
         if (buf[i] == '\n') count++;
     }
-    TEST_ASSERT_EQUAL_INT(52, count);
+    TEST_ASSERT_EQUAL_INT(76, count);  /* 19 systems * 4 properties */
 }
 
 /* ================================================================
@@ -327,7 +327,7 @@ int main(void) {
 
     /* st_system_count */
     RUN_TEST(test_system_count_equals_ct_system_count);
-    RUN_TEST(test_system_count_is_13);
+    RUN_TEST(test_system_count_is_19);
 
     /* st_system_colors — valid */
     RUN_TEST(test_astronomy_colors_nonzero);

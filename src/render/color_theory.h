@@ -122,6 +122,12 @@ typedef enum {
     CT_SYSTEM_HEBREW,          /* Torah: royal blue/gold/white */
     CT_SYSTEM_ISLAMIC,         /* geometric: emerald/gold/lapis */
     CT_SYSTEM_GEOLOGY,         /* Earth: sienna/amber/slate/jade */
+    CT_SYSTEM_COPTIC,          /* Coptic: desert gold/Nile teal/liturgical red */
+    CT_SYSTEM_ETHIOPIAN,       /* Ethiopian: highland green/imperial gold/sovereign red */
+    CT_SYSTEM_PERSIAN,         /* Persian: tile blue/turquoise/garden rose */
+    CT_SYSTEM_JAPANESE,        /* Japanese: sakura pink/matcha green/indigo */
+    CT_SYSTEM_KOREAN,          /* Korean: dancheong red/celadon green/hanbok blue */
+    CT_SYSTEM_THAI,            /* Thai: Buddhist yellow/democracy blue/royal pink */
     CT_SYSTEM_COUNT
 } ct_system_t;
 

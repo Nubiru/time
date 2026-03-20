@@ -23,6 +23,12 @@ int card_style_to_ct_system(int ts_system_id)
     case TS_SYS_ASTROLOGY:    return CT_SYSTEM_ASTROLOGY;
     case TS_SYS_HUMAN_DESIGN: return CT_SYSTEM_HUMAN_DESIGN;
     case TS_SYS_KABBALAH:     return CT_SYSTEM_KABBALAH;
+    case TS_SYS_COPTIC:       return CT_SYSTEM_COPTIC;
+    case TS_SYS_ETHIOPIAN:    return CT_SYSTEM_ETHIOPIAN;
+    case TS_SYS_PERSIAN:      return CT_SYSTEM_PERSIAN;
+    case TS_SYS_JAPANESE:     return CT_SYSTEM_JAPANESE;
+    case TS_SYS_KOREAN:       return CT_SYSTEM_KOREAN;
+    case TS_SYS_THAI:         return CT_SYSTEM_THAI;
     case TS_SYS_GEOLOGICAL:   return CT_SYSTEM_GEOLOGY;
     case TS_SYS_COSMIC:       return CT_SYSTEM_ASTRONOMY;
     default:                  return -1;

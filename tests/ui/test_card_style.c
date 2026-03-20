@@ -45,13 +45,13 @@ void test_mapping_all_direct(void) {
     TEST_ASSERT_EQUAL(CT_SYSTEM_GEOLOGY,      card_style_to_ct_system(TS_SYS_GEOLOGICAL));
 }
 
-void test_mapping_unmapped_returns_negative(void) {
-    TEST_ASSERT_EQUAL(-1, card_style_to_ct_system(TS_SYS_COPTIC));
-    TEST_ASSERT_EQUAL(-1, card_style_to_ct_system(TS_SYS_ETHIOPIAN));
-    TEST_ASSERT_EQUAL(-1, card_style_to_ct_system(TS_SYS_PERSIAN));
-    TEST_ASSERT_EQUAL(-1, card_style_to_ct_system(TS_SYS_JAPANESE));
-    TEST_ASSERT_EQUAL(-1, card_style_to_ct_system(TS_SYS_KOREAN));
-    TEST_ASSERT_EQUAL(-1, card_style_to_ct_system(TS_SYS_THAI));
+void test_mapping_world_calendars_mapped(void) {
+    TEST_ASSERT_EQUAL(CT_SYSTEM_COPTIC,    card_style_to_ct_system(TS_SYS_COPTIC));
+    TEST_ASSERT_EQUAL(CT_SYSTEM_ETHIOPIAN, card_style_to_ct_system(TS_SYS_ETHIOPIAN));
+    TEST_ASSERT_EQUAL(CT_SYSTEM_PERSIAN,   card_style_to_ct_system(TS_SYS_PERSIAN));
+    TEST_ASSERT_EQUAL(CT_SYSTEM_JAPANESE,  card_style_to_ct_system(TS_SYS_JAPANESE));
+    TEST_ASSERT_EQUAL(CT_SYSTEM_KOREAN,    card_style_to_ct_system(TS_SYS_KOREAN));
+    TEST_ASSERT_EQUAL(CT_SYSTEM_THAI,      card_style_to_ct_system(TS_SYS_THAI));
 }
 
 void test_mapping_invalid_ids(void) {
@@ -112,12 +112,15 @@ void test_systems_have_distinct_titles(void) {
     TEST_ASSERT_GREATER_THAN_FLOAT(0.01f, dist_sq);
 }
 
-void test_unmapped_uses_brand_primary(void) {
+void test_coptic_has_unique_accent(void) {
     card_style_t s = card_style_for_system(TS_SYS_COPTIC, 1.0f, THEME_COSMOS);
+    /* Coptic accent is liturgical red — distinct from brand_primary solar gold */
     theme_t t = theme_get(THEME_COSMOS);
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, t.brand_primary.r, s.title.r);
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, t.brand_primary.g, s.title.g);
-    TEST_ASSERT_FLOAT_WITHIN(0.01f, t.brand_primary.b, s.title.b);
+    float dr = s.title.r - t.brand_primary.r;
+    float dg = s.title.g - t.brand_primary.g;
+    float db = s.title.b - t.brand_primary.b;
+    float dist_sq = dr * dr + dg * dg + db * db;
+    TEST_ASSERT_GREATER_THAN_FLOAT(0.01f, dist_sq);
 }
 
 /* --- Style: text colors from theme --- */
@@ -206,7 +209,7 @@ int main(void) {
     RUN_TEST(test_mapping_haab_to_tzolkin);
     RUN_TEST(test_mapping_cosmic_to_astronomy);
     RUN_TEST(test_mapping_all_direct);
-    RUN_TEST(test_mapping_unmapped_returns_negative);
+    RUN_TEST(test_mapping_world_calendars_mapped);
     RUN_TEST(test_mapping_invalid_ids);
 
     /* Theme variation */
@@ -220,7 +223,7 @@ int main(void) {
 
     /* System distinction */
     RUN_TEST(test_systems_have_distinct_titles);
-    RUN_TEST(test_unmapped_uses_brand_primary);
+    RUN_TEST(test_coptic_has_unique_accent);
 
     /* Text from theme */
     RUN_TEST(test_body_from_theme);

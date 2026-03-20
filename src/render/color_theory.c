@@ -242,6 +242,12 @@ static const color_rgb_t SYSTEM_PRIMARY[CT_SYSTEM_COUNT] = {
     {0.15f, 0.25f, 0.65f},  /* HEBREW: tekhelet blue */
     {0.10f, 0.55f, 0.35f},  /* ISLAMIC: emerald */
     {0.55f, 0.35f, 0.20f},  /* GEOLOGY: sienna */
+    {0.70f, 0.50f, 0.20f},  /* COPTIC: desert gold */
+    {0.15f, 0.55f, 0.25f},  /* ETHIOPIAN: highland green */
+    {0.20f, 0.35f, 0.70f},  /* PERSIAN: tile blue */
+    {0.85f, 0.65f, 0.70f},  /* JAPANESE: sakura pink */
+    {0.80f, 0.30f, 0.20f},  /* KOREAN: dancheong red */
+    {0.90f, 0.75f, 0.20f},  /* THAI: Buddhist yellow */
 };
 
 static const color_rgb_t SYSTEM_SECONDARY[CT_SYSTEM_COUNT] = {
@@ -258,6 +264,12 @@ static const color_rgb_t SYSTEM_SECONDARY[CT_SYSTEM_COUNT] = {
     {0.85f, 0.75f, 0.25f},  /* HEBREW: gold */
     {0.85f, 0.72f, 0.18f},  /* ISLAMIC: gold */
     {0.75f, 0.60f, 0.25f},  /* GEOLOGY: amber */
+    {0.20f, 0.55f, 0.50f},  /* COPTIC: Nile teal */
+    {0.85f, 0.75f, 0.20f},  /* ETHIOPIAN: imperial gold */
+    {0.30f, 0.65f, 0.60f},  /* PERSIAN: turquoise */
+    {0.45f, 0.60f, 0.35f},  /* JAPANESE: matcha green */
+    {0.55f, 0.70f, 0.55f},  /* KOREAN: celadon green */
+    {0.20f, 0.35f, 0.60f},  /* THAI: democracy blue */
 };
 
 static const color_rgb_t SYSTEM_ACCENT[CT_SYSTEM_COUNT] = {
@@ -274,6 +286,12 @@ static const color_rgb_t SYSTEM_ACCENT[CT_SYSTEM_COUNT] = {
     {0.90f, 0.88f, 0.80f},  /* HEBREW: parchment */
     {0.15f, 0.25f, 0.55f},  /* ISLAMIC: lapis lazuli */
     {0.35f, 0.60f, 0.40f},  /* GEOLOGY: jade */
+    {0.75f, 0.25f, 0.20f},  /* COPTIC: liturgical red */
+    {0.80f, 0.25f, 0.15f},  /* ETHIOPIAN: sovereign red */
+    {0.80f, 0.40f, 0.45f},  /* PERSIAN: garden rose */
+    {0.20f, 0.25f, 0.55f},  /* JAPANESE: ai-zome indigo */
+    {0.30f, 0.40f, 0.65f},  /* KOREAN: hanbok blue */
+    {0.75f, 0.40f, 0.50f},  /* THAI: royal pink */
 };
 
 color_rgb_t ct_system_primary(ct_system_t system)
@@ -300,7 +318,8 @@ color_rgb_t ct_system_accent(ct_system_t system)
 static const char *SYSTEM_NAMES[CT_SYSTEM_COUNT] = {
     "Astronomy", "Astrology", "Tzolkin", "I Ching", "Chinese",
     "Human Design", "Gregorian", "Kabbalah", "Hindu", "Buddhist",
-    "Hebrew", "Islamic", "Geology"
+    "Hebrew", "Islamic", "Geology",
+    "Coptic", "Ethiopian", "Persian", "Japanese", "Korean", "Thai"
 };
 
 const char *ct_system_name(ct_system_t system)

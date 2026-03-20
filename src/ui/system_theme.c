@@ -24,7 +24,13 @@ static const char *s_slugs[CT_SYSTEM_COUNT] = {
     "buddhist",       /* CT_SYSTEM_BUDDHIST */
     "hebrew",         /* CT_SYSTEM_HEBREW */
     "islamic",        /* CT_SYSTEM_ISLAMIC */
-    "geology"         /* CT_SYSTEM_GEOLOGY */
+    "geology",        /* CT_SYSTEM_GEOLOGY */
+    "coptic",         /* CT_SYSTEM_COPTIC */
+    "ethiopian",      /* CT_SYSTEM_ETHIOPIAN */
+    "persian",        /* CT_SYSTEM_PERSIAN */
+    "japanese",       /* CT_SYSTEM_JAPANESE */
+    "korean",         /* CT_SYSTEM_KOREAN */
+    "thai"            /* CT_SYSTEM_THAI */
 };
 
 /* Convert a float channel (0.0-1.0) to integer (0-255) with rounding */
