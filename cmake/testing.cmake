@@ -261,6 +261,8 @@ time_add_test(NAME test_tectonic        TEST tests/systems/geology/test_tectonic
 time_add_test(NAME test_radiometric    TEST tests/systems/geology/test_radiometric.c   DEPS radiometric)
 time_add_test(NAME test_thermo         TEST tests/systems/geology/test_thermo.c        DEPS thermo)
 time_add_test(NAME test_geology_interpret TEST tests/systems/geology/test_geology_interpret.c DEPS geology_interpret)
+time_add_test(NAME test_earth_voyage      TEST tests/systems/geology/test_earth_voyage.c      DEPS earth_voyage)
+time_add_test(NAME test_fossil_narrative  TEST tests/systems/geology/test_fossil_narrative.c  DEPS fossil_narrative)
 
 # Earth tests
 time_add_test(NAME test_biorhythm       TEST tests/systems/earth/test_biorhythm.c       DEPS biorhythm)
@@ -289,6 +291,7 @@ time_add_test(NAME test_onboarding TEST tests/systems/earth/test_onboarding.c DE
 time_add_test(NAME test_settings_panel TEST tests/systems/earth/test_settings_panel.c DEPS settings_panel user_prefs interest_profile privacy_framework theme golden_layout color_theory color)
 time_add_test(NAME test_birth_entry TEST tests/systems/earth/test_birth_entry.c DEPS birth_entry)
 time_add_test(NAME test_author_card TEST tests/systems/earth/test_author_card.c DEPS author_card)
+time_add_test(NAME test_surf_display TEST tests/systems/earth/test_surf_display.c DEPS surf_display tide_predict tidal surf_spots lunar julian)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
@@ -374,6 +377,8 @@ time_add_test(NAME test_brain_predict TEST tests/systems/unified/test_brain_pred
     DEPS brain_predict brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_brain_cluster TEST tests/systems/unified/test_brain_cluster.c
     DEPS brain_cluster brain_types)
+time_add_test(NAME test_brain_archive TEST tests/systems/unified/test_brain_archive.c
+    DEPS brain_archive brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_brain_query TEST tests/systems/unified/test_brain_query.c
     DEPS brain_query brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_cal_terms TEST tests/systems/unified/test_cal_terms.c
