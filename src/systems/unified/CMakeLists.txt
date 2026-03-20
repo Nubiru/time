@@ -69,6 +69,7 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/profile_lens.c
     ${CMAKE_CURRENT_SOURCE_DIR}/annual_summary.c
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_archive.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/stored_convergences.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -142,4 +143,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_profile_lens        OBJECT profile_lens.c)
     add_library(time_annual_summary     OBJECT annual_summary.c)
     add_library(time_brain_archive     OBJECT brain_archive.c)
+    add_library(time_stored_convergences OBJECT stored_convergences.c)
 endif()

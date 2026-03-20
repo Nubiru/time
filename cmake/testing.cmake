@@ -415,6 +415,8 @@ time_add_test(NAME test_aha_moments TEST tests/systems/unified/test_aha_moments.
     DEPS aha_moments)
 time_add_test(NAME test_drama_narrator TEST tests/systems/unified/test_drama_narrator.c
     DEPS drama_narrator)
+time_add_test(NAME test_stored_convergences TEST tests/systems/unified/test_stored_convergences.c
+    DEPS stored_convergences convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
