@@ -1,18 +1,18 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 15)
+**Last refreshed**: 2026-03-20 (INFRA session 16)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 394 |
-| Header files (.h) | 395 |
-| Lines of code (src/) | 95,757 |
-| Lines of tests | 168,000+ |
-| Test suites (CTest) | 388 |
+| Source files (.c) | 401 |
+| Header files (.h) | 403 |
+| Lines of code (src/) | 97,162 |
+| Lines of tests | 171,000+ |
+| Test suites (CTest) | 392 |
 | Render pass files | 19 |
-| Pure modules | 367+ |
+| Pure modules | 374+ |
 | Stateful modules | 29 |
 | Contributors | 179 |
 
@@ -20,11 +20,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 388 |
-| Test functions (RUN_TEST) | 15,608 |
-| Test assertions (TEST_ASSERT) | 27,500+ |
+| Test suites (CTest) | 392 |
+| Test functions (RUN_TEST) | 15,925 |
+| Test assertions (TEST_ASSERT) | 28,000+ |
 | Failures | 0 |
-| CTest time | 3.06s (with benchmarks) |
+| CTest time | 5.00s (with benchmarks) |
 | E2E tests (Playwright) | 5 |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -186,9 +186,9 @@
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (394 .c files, 0 orphans) |
+| Build system sync | OK (401 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 11) |
-| Native build | PASS (388/388 tests) — use -j4 for clean builds (race at -j12 with 360+ OBJECT libs) |
+| Native build | PASS (392/392 tests) — use -j4 for clean builds (race at -j12 with 370+ OBJECT libs) |
 | WASM build | PASS (314 KB raw, 124 KB gzipped) — zero linker warnings |
 | E2E tests | PASS (5/5 Playwright) |
 | Coverage | 95.9% lines (30,315/31,615), 99.9% functions (3,710/3,712) |
