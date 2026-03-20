@@ -571,6 +571,8 @@ time_add_test(NAME test_earth_transition TEST tests/ui/test_earth_transition.c
     DEPS earth_transition camera_path spring vec_interp vec3 animation easing LABELS unit)
 time_add_test(NAME test_motion_prefs TEST tests/ui/test_motion_prefs.c
     DEPS motion_prefs LABELS unit)
+time_add_test(NAME test_enter_zoom TEST tests/ui/test_enter_zoom.c
+    DEPS enter_zoom camera_path spring vec_interp vec3 easing LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
