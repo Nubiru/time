@@ -188,6 +188,218 @@ void test_astrology_detail(void)
     TEST_ASSERT_TRUE(strstr(c.detail, "Aries") != NULL);
 }
 
+/* Hebrew: 24-25 */
+
+void test_card_format_hebrew(void)
+{
+    card_content_t c = card_format_hebrew(5786, 7, 15, "Tishrei");
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.title, "Hebrew") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Tishrei") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "15") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "5786") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_hebrew_null(void)
+{
+    card_content_t c = card_format_hebrew(5786, 1, 1, NULL);
+    TEST_ASSERT_TRUE(strlen(c.line1) > 0);
+    TEST_ASSERT_TRUE(strstr(c.line1, "?") != NULL);
+}
+
+/* Islamic: 26-27 */
+
+void test_card_format_islamic(void)
+{
+    card_content_t c = card_format_islamic(1448, 9, 1, "Ramadan");
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.title, "Islamic") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Ramadan") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "AH") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "1448") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_islamic_null(void)
+{
+    card_content_t c = card_format_islamic(1448, 1, 1, NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "?") != NULL);
+}
+
+/* Buddhist: 28-29 */
+
+void test_card_format_buddhist(void)
+{
+    card_content_t c = card_format_buddhist(2569, 2, "Full Moon", 1.0);
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.line1, "BE") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "2569") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "Full Moon") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_buddhist_no_observance(void)
+{
+    card_content_t c = card_format_buddhist(2569, 0, NULL, 0.45);
+    TEST_ASSERT_TRUE(strstr(c.line2, "No observance") != NULL);
+}
+
+/* Hindu: 30-31 */
+
+void test_card_format_hindu(void)
+{
+    card_content_t c = card_format_hindu(0, "Ashwini", 5, 2, "Vishkambha");
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.title, "Hindu") != NULL ||
+                     strstr(c.title, "Panchanga") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Ashwini") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line3, "Vishkambha") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_hindu_null(void)
+{
+    card_content_t c = card_format_hindu(0, NULL, 1, 0, NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "?") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line3, "?") != NULL);
+}
+
+/* Kabbalah: 32-33 */
+
+void test_card_format_kabbalah(void)
+{
+    card_content_t c = card_format_kabbalah(1, "Keter", "Crown", 0, "Aleph");
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.title, "Tree") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Keter") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "Crown") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line3, "Path 0") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_kabbalah_no_path(void)
+{
+    card_content_t c = card_format_kabbalah(9, "Malkuth", "Kingdom", -1, NULL);
+    TEST_ASSERT_TRUE(strlen(c.line3) == 0);
+}
+
+/* Geology: 34-35 */
+
+void test_card_format_geology(void)
+{
+    card_content_t c = card_format_geology("Phanerozoic", "Cenozoic",
+                                           "Quaternary", "Holocene");
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.title, "Geolog") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Phanerozoic") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "Cenozoic") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line3, "Quaternary") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line3, "Holocene") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_geology_null(void)
+{
+    card_content_t c = card_format_geology(NULL, NULL, NULL, NULL);
+    TEST_ASSERT_TRUE(strlen(c.line1) > 0);
+}
+
+/* Gregorian: 36-37 */
+
+void test_card_format_gregorian(void)
+{
+    card_content_t c = card_format_gregorian(2026, 3, 19, 2, "Spring");
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.title, "Gregorian") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Wed") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "2026-03-19") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line3, "Spring") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_gregorian_null_season(void)
+{
+    card_content_t c = card_format_gregorian(2026, 1, 1, 3, NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Thu") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.line3) == 0);
+}
+
+/* Coptic: 38-39 */
+
+void test_card_format_coptic(void)
+{
+    card_content_t c = card_format_coptic(1742, 7, 10, "Baramhat");
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.title, "Coptic") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Baramhat") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "AM") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "1742") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_coptic_null(void)
+{
+    card_content_t c = card_format_coptic(1742, 1, 1, NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "?") != NULL);
+}
+
+/* Ethiopian: 40-41 */
+
+void test_card_format_ethiopian(void)
+{
+    card_content_t c = card_format_ethiopian(2018, 7, 10, "Megabit");
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.title, "Ethiopian") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Megabit") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "2018") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_ethiopian_null(void)
+{
+    card_content_t c = card_format_ethiopian(2018, 1, 1, NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "?") != NULL);
+}
+
+/* Persian: 42-43 */
+
+void test_card_format_persian(void)
+{
+    card_content_t c = card_format_persian(1404, 12, 28, "Esfand");
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.title, "Hijri") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Esfand") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "SH") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "1404") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_persian_null(void)
+{
+    card_content_t c = card_format_persian(1404, 1, 1, NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "?") != NULL);
+}
+
+/* Thai: 44-45 */
+
+void test_card_format_thai(void)
+{
+    card_content_t c = card_format_thai(2569, 3, 19, "Minakhom");
+    TEST_ASSERT_TRUE(strlen(c.title) > 0);
+    TEST_ASSERT_TRUE(strstr(c.title, "Thai") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "Minakhom") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "BE") != NULL);
+    TEST_ASSERT_TRUE(strstr(c.line2, "2569") != NULL);
+    TEST_ASSERT_TRUE(strlen(c.detail) > 0);
+}
+
+void test_card_format_thai_null(void)
+{
+    card_content_t c = card_format_thai(2569, 1, 1, NULL);
+    TEST_ASSERT_TRUE(strstr(c.line1, "?") != NULL);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -214,5 +426,27 @@ int main(void)
     RUN_TEST(test_long_name_no_overflow);
     RUN_TEST(test_all_fields_null_terminated);
     RUN_TEST(test_astrology_detail);
+    RUN_TEST(test_card_format_hebrew);
+    RUN_TEST(test_card_format_hebrew_null);
+    RUN_TEST(test_card_format_islamic);
+    RUN_TEST(test_card_format_islamic_null);
+    RUN_TEST(test_card_format_buddhist);
+    RUN_TEST(test_card_format_buddhist_no_observance);
+    RUN_TEST(test_card_format_hindu);
+    RUN_TEST(test_card_format_hindu_null);
+    RUN_TEST(test_card_format_kabbalah);
+    RUN_TEST(test_card_format_kabbalah_no_path);
+    RUN_TEST(test_card_format_geology);
+    RUN_TEST(test_card_format_geology_null);
+    RUN_TEST(test_card_format_gregorian);
+    RUN_TEST(test_card_format_gregorian_null_season);
+    RUN_TEST(test_card_format_coptic);
+    RUN_TEST(test_card_format_coptic_null);
+    RUN_TEST(test_card_format_ethiopian);
+    RUN_TEST(test_card_format_ethiopian_null);
+    RUN_TEST(test_card_format_persian);
+    RUN_TEST(test_card_format_persian_null);
+    RUN_TEST(test_card_format_thai);
+    RUN_TEST(test_card_format_thai_null);
     return UNITY_END();
 }

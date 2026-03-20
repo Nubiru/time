@@ -41,4 +41,57 @@ card_content_t card_format_astrology(int sun_sign, double sun_deg,
                                      int moon_sign, double moon_deg,
                                      int asc_sign, double asc_deg);
 
+/* Format Hebrew calendar date for card display. */
+card_content_t card_format_hebrew(int year, int month, int day,
+                                  const char *month_name);
+
+/* Format Islamic (Hijri) date for card display. */
+card_content_t card_format_islamic(int year, int month, int day,
+                                   const char *month_name);
+
+/* Format Buddhist observance for card display.
+ * uposatha_type: 0=none, 1=new_moon, 2=full_moon, 3=first_quarter, 4=last_quarter
+ * era_year: Buddhist Era year */
+card_content_t card_format_buddhist(int era_year, int uposatha_type,
+                                    const char *uposatha_name,
+                                    double moon_illumination);
+
+/* Format Hindu/Vedic panchanga for card display.
+ * nakshatra: 0-26, tithi: 0-29, vara: 0-6 */
+card_content_t card_format_hindu(int nakshatra, const char *nakshatra_name,
+                                 int tithi, int vara,
+                                 const char *yoga_name);
+
+/* Format Kabbalah Tree of Life for card display.
+ * sefirah: 0-9, path: 0-21 (or -1 for none) */
+card_content_t card_format_kabbalah(int sefirah, const char *sefirah_name,
+                                    const char *sefirah_meaning,
+                                    int path, const char *path_letter);
+
+/* Format geological time for card display. */
+card_content_t card_format_geology(const char *eon_name, const char *era_name,
+                                   const char *period_name, const char *epoch_name);
+
+/* Format Gregorian date for card display.
+ * day_of_week: 0=Mon through 6=Sun */
+card_content_t card_format_gregorian(int year, int month, int day,
+                                     int day_of_week, const char *season);
+
+/* Format Coptic date for card display. */
+card_content_t card_format_coptic(int year, int month, int day,
+                                  const char *month_name);
+
+/* Format Ethiopian date for card display. */
+card_content_t card_format_ethiopian(int year, int month, int day,
+                                     const char *month_name);
+
+/* Format Persian (Solar Hijri) date for card display. */
+card_content_t card_format_persian(int year, int month, int day,
+                                   const char *month_name);
+
+/* Format Thai date for card display.
+ * be_year: Buddhist Era year used in Thailand */
+card_content_t card_format_thai(int be_year, int month, int day,
+                                const char *month_name);
+
 #endif
