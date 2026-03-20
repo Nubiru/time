@@ -1,18 +1,18 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 10)
+**Last refreshed**: 2026-03-20 (INFRA session 11)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 373 |
+| Source files (.c) | 374 |
 | Header files (.h) | 375 |
-| Lines of code (src/) | 90,160 |
-| Lines of tests | 159,935 |
-| Test suites (CTest) | 367 |
+| Lines of code (src/) | 90,200+ |
+| Lines of tests | 160,000+ |
+| Test suites (CTest) | 368 |
 | Render pass files | 19 |
-| Pure modules | 347 |
+| Pure modules | 348 |
 | Stateful modules | 29 |
 | Contributors | 179 |
 
@@ -20,11 +20,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 367 |
-| Test functions (RUN_TEST) | 14,727 |
-| Test assertions (TEST_ASSERT) | 25,978 |
+| Test suites (CTest) | 368 |
+| Test functions (RUN_TEST) | 14,789 |
+| Test assertions (TEST_ASSERT) | 26,000+ |
 | Failures | 0 |
-| CTest time | 1.32s |
+| CTest time | 1.07s |
 | E2E tests (Playwright) | 5 |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -181,19 +181,19 @@
 
 *13 functions >80L (5 over 100L). All domain-specific logic. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-20, session 10)
+## Health (INFRA sweep — 2026-03-20, session 11)
 
 | Check | Status |
 |-------|--------|
-| Git integrity | OK |
-| Build system sync | OK (373 .c files, all registered, 0 phantoms) |
-| Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (367/367 tests, 0.61s) |
+| Git integrity | OK (gc run this session) |
+| Build system sync | OK (374 .c files, all registered, 0 phantoms) |
+| Purity audit | CLEAN (P1-P5 all zones, 348 pure modules verified) |
+| Native build | PASS (368/368 tests, 1.07s) |
 | WASM build | PASS (307 KB raw, 121 KB gzipped) — zero linker warnings |
 | E2E tests | PASS (5/5 Playwright) |
 | Coverage | 95.9% lines (28,393/29,616), 99.9% functions (3,523/3,525) |
 | Git hooks | pre-commit (build safety) + commit-msg (stream domain) — both active |
-| STATE.md | SYNCED (347 pure + 29 stateful = 376 modules) |
+| STATE.md | SYNCED (348 pure + 29 stateful = 377 modules) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Render pipeline | 19/19 passes |
