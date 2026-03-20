@@ -87,9 +87,9 @@ MODULES = {
              ["name", "theme", "practice", "brief"], 1),
         ],
         "templates_en": {
-            "persian.tpl.glance": "%1$s %2$d \xe2\x80\x94 %3$s",
+            "persian.tpl.glance": "%1$s %2$d \u2014 %3$s",
             "persian.tpl.detail": "Month: %1$s (Avestan: %2$s). %3$s. %4$s.",
-            "persian.tpl.detail_festival": " Festival: %1$s \xe2\x80\x94 %2$s. %3$s.",
+            "persian.tpl.detail_festival": " Festival: %1$s \u2014 %2$s. %3$s.",
         },
     },
     "coptic": {
@@ -101,9 +101,9 @@ MODULES = {
              ["name", "theme", "practice", "brief"], 1),
         ],
         "templates_en": {
-            "coptic.tpl.glance": "%1$s %2$d \xe2\x80\x94 %3$s",
+            "coptic.tpl.glance": "%1$s %2$d \u2014 %3$s",
             "coptic.tpl.detail": "Month: %1$s. Origin: %2$s. Liturgy: %3$s.",
-            "coptic.tpl.detail_feast": " Feast: %1$s \xe2\x80\x94 %2$s. %3$s.",
+            "coptic.tpl.detail_feast": " Feast: %1$s \u2014 %2$s. %3$s.",
         },
     },
     "korean": {
@@ -115,9 +115,9 @@ MODULES = {
              ["korean", "meaning", "season", "brief"], 0),
         ],
         "templates_en": {
-            "korean.tpl.glance": "Dangun %1$d \xe2\x80\x94 %2$s %3$s (%4$s) \xe2\x80\x94 %5$s",
+            "korean.tpl.glance": "Dangun %1$d \u2014 %2$s %3$s (%4$s) \u2014 %5$s",
             "korean.tpl.detail": "Dangun year %1$d. Animal: %2$s. Element: %3$s (%4$s). Polarity: %5$s.",
-            "korean.tpl.detail_festival": " Festival: %1$s \xe2\x80\x94 %2$s. %3$s.",
+            "korean.tpl.detail_festival": " Festival: %1$s \u2014 %2$s. %3$s.",
         },
     },
     "thai": {
@@ -129,9 +129,9 @@ MODULES = {
              ["name", "theme", "practice", "brief"], 1),
         ],
         "templates_en": {
-            "thai.tpl.glance": "BE %1$d %2$s %3$d \xe2\x80\x94 %4$s",
+            "thai.tpl.glance": "BE %1$d %2$s %3$d \u2014 %4$s",
             "thai.tpl.detail": "BE %1$d. Month: %2$s (from Sanskrit %3$s). %4$s.",
-            "thai.tpl.detail_festival": " Festival: %1$s \xe2\x80\x94 %2$s. %3$s.",
+            "thai.tpl.detail_festival": " Festival: %1$s \u2014 %2$s. %3$s.",
         },
     },
     "ethiopian": {
@@ -143,9 +143,9 @@ MODULES = {
              ["name", "theme", "practice", "brief"], 1),
         ],
         "templates_en": {
-            "ethiopian.tpl.glance": "%1$s %2$d \xe2\x80\x94 %3$s",
+            "ethiopian.tpl.glance": "%1$s %2$d \u2014 %3$s",
             "ethiopian.tpl.detail": "Month: %1$s. Meaning: %2$s. %3$s.",
-            "ethiopian.tpl.detail_feast": " Feast: %1$s \xe2\x80\x94 %2$s. %3$s.",
+            "ethiopian.tpl.detail_feast": " Feast: %1$s \u2014 %2$s. %3$s.",
         },
     },
     "tamil": {
@@ -157,9 +157,9 @@ MODULES = {
              ["name", "theme", "practice", "brief"], 1),
         ],
         "templates_en": {
-            "tamil.tpl.glance": "%1$s %2$d \xe2\x80\x94 %3$s",
+            "tamil.tpl.glance": "%1$s %2$d \u2014 %3$s",
             "tamil.tpl.detail": "Month: %1$s (Rasi: %2$s). %3$s. Jovian year %4$d of 60.",
-            "tamil.tpl.detail_festival": " Festival: %1$s \xe2\x80\x94 %2$s. %3$s.",
+            "tamil.tpl.detail_festival": " Festival: %1$s \u2014 %2$s. %3$s.",
         },
     },
     "bahai": {
@@ -171,9 +171,9 @@ MODULES = {
              ["name", "theme", "brief"], 1),
         ],
         "templates_en": {
-            "bahai.tpl.glance": "%1$s (%2$s) day %3$d \xe2\x80\x94 %4$s",
+            "bahai.tpl.glance": "%1$s (%2$s) day %3$d \u2014 %4$s",
             "bahai.tpl.detail": "Month: %1$s (%2$s). %3$s.",
-            "bahai.tpl.detail_holy_day": " Holy Day: %1$s \xe2\x80\x94 %2$s.",
+            "bahai.tpl.detail_holy_day": " Holy Day: %1$s \u2014 %2$s.",
         },
     },
     "myanmar": {
@@ -183,7 +183,7 @@ MODULES = {
              ["name", "season", "festival", "brief"], 0),
         ],
         "templates_en": {
-            "myanmar.tpl.glance": "%1$s %2$d \xe2\x80\x94 %3$s",
+            "myanmar.tpl.glance": "%1$s %2$d \u2014 %3$s",
             "myanmar.tpl.detail": "Month: %1$s. %2$s. Festival: %3$s.",
             "myanmar.tpl.detail_thingyan": " THINGYAN: the great water festival.",
             "myanmar.year_type.0": "Common (354 days)",
@@ -200,9 +200,9 @@ MODULES = {
              ["name", "theme", "practice", "brief"], 1),
         ],
         "templates_en": {
-            "lao.tpl.glance": "BE %1$d %2$s %3$d \xe2\x80\x94 %4$s",
+            "lao.tpl.glance": "BE %1$d %2$s %3$d \u2014 %4$s",
             "lao.tpl.detail": "BE %1$d. Month: %2$s (from Sanskrit %3$s). %4$s.",
-            "lao.tpl.detail_festival": " Festival: %1$s \xe2\x80\x94 %2$s. %3$s.",
+            "lao.tpl.detail_festival": " Festival: %1$s \u2014 %2$s. %3$s.",
         },
     },
     # ============ BATCH 3: Complex modules ============
@@ -215,9 +215,9 @@ MODULES = {
              ["name", "theme", "practice", "reflection", "brief"], 0),
         ],
         "templates_en": {
-            "celtic.tpl.glance": "%1$s (%2$s) \xe2\x80\x94 %3$s",
+            "celtic.tpl.glance": "%1$s (%2$s) Day %3$d \u2014 %4$s",
             "celtic.tpl.detail": "Tree: %1$s (Ogham: %2$s). %3$s. %4$s. Strengths: %5$s. Challenges: %6$s.",
-            "celtic.tpl.detail_festival": " Festival: %1$s \xe2\x80\x94 %2$s. %3$s.",
+            "celtic.tpl.detail_festival": " Festival: %1$s \u2014 %2$s. %3$s.",
         },
     },
     "egyptian": {
@@ -231,9 +231,9 @@ MODULES = {
              ["deity", "archetype", "theme", "brief"], 0),
         ],
         "templates_en": {
-            "egyptian.tpl.glance": "%1$s %2$d \xe2\x80\x94 %3$s",
-            "egyptian.tpl.detail": "Month: %1$s. Deity: %2$s. Domain: %3$s.",
-            "egyptian.tpl.detail_season": " Season: %1$s \xe2\x80\x94 %2$s.",
+            "egyptian.tpl.glance": "%1$s %2$d \u2014 %3$s (%4$s)",
+            "egyptian.tpl.detail": "Month: %1$s. Deity: %2$s. Domain: %3$s. Sothic year %4$d.",
+            "egyptian.tpl.detail_season": " Season: %1$s \u2014 %2$s.",
         },
     },
     "zoroastrian": {
@@ -247,9 +247,9 @@ MODULES = {
              ["name", "theme", "practice", "brief"], 0),
         ],
         "templates_en": {
-            "zoroastrian.tpl.glance": "%1$s \xe2\x80\x94 %2$s",
-            "zoroastrian.tpl.detail": "Amesha Spenta: %1$s (%2$s). Domain: %3$s. Element: %4$s. Virtue: %5$s.",
-            "zoroastrian.tpl.detail_festival": " Festival: %1$s \xe2\x80\x94 %2$s. %3$s.",
+            "zoroastrian.tpl.glance": "%1$s Day %2$d \u2014 %3$s",
+            "zoroastrian.tpl.detail": "Month: %1$s. Day: %2$s. Day number %3$d.",
+            "zoroastrian.tpl.detail_festival": " Festival: %1$s \u2014 %2$s. %3$s.",
         },
     },
     "japanese": {
@@ -263,8 +263,8 @@ MODULES = {
              ["name", "kanji", "meaning", "nature", "brief"], 0),
         ],
         "templates_en": {
-            "japanese.tpl.glance": "%1$s %2$d %3$s \xe2\x80\x94 %4$s",
-            "japanese.tpl.detail": "Era: %1$s (%2$s). %3$s. Rokuyo: %4$s \xe2\x80\x94 %5$s. Sekki: %6$s \xe2\x80\x94 %7$s.",
+            "japanese.tpl.glance": "%1$s %2$d %3$s \u2014 %4$s",
+            "japanese.tpl.detail": "Era: %1$s (%2$s). %3$s. %4$s. Year %5$d. Rokuyo: %6$s \u2014 %7$s. %8$s. Sekki: %9$s (%10$s) \u2014 %11$s. %12$s.",
         },
     },
     "tarot": {
@@ -276,8 +276,8 @@ MODULES = {
              ["name", "element", "domain", "quality", "brief"], 0),
         ],
         "templates_en": {
-            "tarot.tpl.glance": "%1$s \xe2\x80\x94 %2$s",
-            "tarot.tpl.detail": "%1$s: %2$s. Keyword: %3$s. Light: %4$s. Shadow: %5$s.",
+            "tarot.tpl.glance": "%1$s \u2014 %2$s",
+            "tarot.tpl.detail": "%1$s: %2$s. Keyword: %3$s. %4$s. Light: %5$s. Shadow: %6$s.",
             "tarot.tpl.detail_suit": " Suit: %1$s (%2$s). %3$s. %4$s.",
         },
     },
@@ -290,8 +290,8 @@ MODULES = {
              ["nahuatl", "english", "direction", "quality", "brief"], 0),
         ],
         "templates_en": {
-            "aztec.tpl.glance": "%1$s (%2$s) \xe2\x80\x94 %3$s",
-            "aztec.tpl.detail": "Day Sign: %1$s (%2$s). Deity: %3$s. Direction: %4$s. %5$s.",
+            "aztec.tpl.glance": "%1$d %2$s \u2014 Year %3$d %4$s",
+            "aztec.tpl.detail": "Day %1$d Sign: %2$s (%3$s). Deity: %4$s. Direction: %5$s. %6$s.",
             "aztec.tpl.detail_bearer": " Year Bearer: %1$s (%2$s). Direction: %3$s. %4$s.",
         },
     },
@@ -304,9 +304,9 @@ MODULES = {
              ["french", "virtue", "brief"], 0),
         ],
         "templates_en": {
-            "french_republican.tpl.glance": "An %1$d %2$s %3$d \xe2\x80\x94 %4$s",
-            "french_republican.tpl.detail": "Month: %1$s (%2$s). %3$s. %4$s.",
-            "french_republican.tpl.detail_sans": " Sans-culottide: %1$s \xe2\x80\x94 %2$s.",
+            "french_republican.tpl.glance": "An %1$d %2$s %3$d \u2014 %4$s",
+            "french_republican.tpl.detail": "An %1$d. %2$s (%3$s). Day %4$d. %5$s. %6$s.",
+            "french_republican.tpl.detail_sans": "An %1$d Sans-culottide %2$d: %3$s \u2014 %4$s.",
         },
     },
     "pawukon": {
@@ -316,8 +316,8 @@ MODULES = {
              ["name", "deity", "quality", "brief"], 0),
         ],
         "templates_en": {
-            "pawukon.tpl.glance": "%1$s \xe2\x80\x94 %2$s . %3$s",
-            "pawukon.tpl.detail": "Wuku: %1$s. Deity: %2$s. %3$s.",
+            "pawukon.tpl.glance": "%1$s Day %2$d \u2014 %3$s",
+            "pawukon.tpl.detail": "Wuku: %1$s. Deity: %2$s. %3$s. Urip: %4$d.",
         },
     },
     "convergence": {
@@ -331,8 +331,8 @@ MODULES = {
              ["name", "description"], 0),
         ],
         "templates_en": {
-            "convergence.tpl.glance": "%1$s \xe2\x80\x94 %2$s systems aligning",
-            "convergence.tpl.detail": "Convergence: %1$s. %2$s.",
+            "convergence.tpl.glance": "%1$s \u2014 %2$d systems aligning",
+            "convergence.tpl.detail": "%1$s.",
         },
     },
 }
@@ -340,11 +340,13 @@ MODULES = {
 
 def decode_c_string(s):
     """Decode C escape sequences in a string."""
-    # Handle \xHH hex escapes
-    def hex_replace(m):
-        return bytes([int(m.group(1), 16)]).decode('utf-8', errors='replace')
+    # Collect consecutive \xHH sequences into byte groups and decode as UTF-8
+    def hex_group_replace(m):
+        hex_str = m.group(0)
+        byte_vals = [int(b, 16) for b in re.findall(r'\\x([0-9a-fA-F]{2})', hex_str)]
+        return bytes(byte_vals).decode('utf-8', errors='replace')
 
-    s = re.sub(r'\\x([0-9a-fA-F]{2})', hex_replace, s)
+    s = re.sub(r'(?:\\x[0-9a-fA-F]{2})+', hex_group_replace, s)
     s = s.replace('\\n', '\n').replace('\\t', '\t').replace('\\"', '"')
     s = s.replace("\\'", "'").replace('\\\\', '\\')
     return s
