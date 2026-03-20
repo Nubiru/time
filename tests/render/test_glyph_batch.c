@@ -2,6 +2,7 @@
 #include "../../src/render/glyph_batch.h"
 
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define TOL 0.0001f
@@ -148,15 +149,20 @@ void test_create_empty(void)
 void test_create_clamped(void)
 {
     glyph_atlas_t atlas = {16, 16, 0, 255};
-    glyph_instance_t insts[200];
-    for (int i = 0; i < 200; i++)
+    /* Use count larger than GLYPH_BATCH_MAX to verify clamping */
+    int over = GLYPH_BATCH_MAX + 100;
+    glyph_instance_t *insts = (glyph_instance_t *)malloc(
+        (size_t)over * sizeof(glyph_instance_t));
+    TEST_ASSERT_NOT_NULL(insts);
+    for (int i = 0; i < over; i++)
         insts[i] = make_inst(i % 256, (float)i, 0.0f, 0.0f,
                               1.0f, 1.0f, 1.0f, 1.0f, 1.0f);
-    glyph_batch_t batch = glyph_batch_create(insts, 200, atlas,
+    glyph_batch_t batch = glyph_batch_create(insts, over, atlas,
                                               CAM_RIGHT, CAM_UP, 1.0f, 1.0f);
     TEST_ASSERT_EQUAL_INT(GLYPH_BATCH_MAX, batch.glyph_count);
     TEST_ASSERT_EQUAL_INT(GLYPH_BATCH_MAX * 4, batch.vertex_count);
     TEST_ASSERT_EQUAL_INT(GLYPH_BATCH_MAX * 6, batch.index_count);
+    free(insts);
 }
 
 /* 11. Single glyph at origin — billboard quad positions */

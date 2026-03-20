@@ -158,7 +158,7 @@ int text_pass_init(void) {
 /* --- Card text helpers --- */
 
 /* Maximum characters per card text line to keep within GLYPH_BATCH_MAX */
-#define CARD_TEXT_LINE_MAX 20
+#define CARD_TEXT_LINE_MAX 32
 
 /* Append characters from a string as glyph instances at a given pixel position.
  * Advances px_x by character spacing. Returns updated glyph count. */

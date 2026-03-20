@@ -3,7 +3,7 @@
 
 #include "../math/vec3.h"
 
-#define GLYPH_BATCH_MAX 128
+#define GLYPH_BATCH_MAX 512
 
 /* Interleaved vertex stride: x,y,z, u,v, r,g,b,a = 9 floats */
 #define GLYPH_VERTEX_STRIDE 9
