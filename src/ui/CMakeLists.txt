@@ -74,6 +74,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/drama_seq.c
     ${CMAKE_CURRENT_SOURCE_DIR}/seasonal_greeting.c
     ${CMAKE_CURRENT_SOURCE_DIR}/card_depth.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/card_selector.c
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_transition.c
     ${CMAKE_CURRENT_SOURCE_DIR}/motion_prefs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/enter_zoom.c
@@ -153,6 +154,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_drama_seq       OBJECT drama_seq.c)
     add_library(time_seasonal_greeting OBJECT seasonal_greeting.c)
     add_library(time_card_depth      OBJECT card_depth.c)
+    add_library(time_card_selector   OBJECT card_selector.c)
     add_library(time_earth_transition OBJECT earth_transition.c)
     add_library(time_motion_prefs    OBJECT motion_prefs.c)
     add_library(time_enter_zoom     OBJECT enter_zoom.c)

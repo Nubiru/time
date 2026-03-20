@@ -567,6 +567,8 @@ time_add_test(NAME test_drama_seq TEST tests/ui/test_drama_seq.c
     DEPS drama_seq kf_track animation easing LABELS unit)
 time_add_test(NAME test_card_depth TEST tests/ui/test_card_depth.c
     DEPS card_depth LABELS unit)
+time_add_test(NAME test_card_selector TEST tests/ui/test_card_selector.c
+    DEPS card_selector card_depth LABELS unit)
 time_add_test(NAME test_earth_transition TEST tests/ui/test_earth_transition.c
     DEPS earth_transition camera_path spring vec_interp vec3 animation easing LABELS unit)
 time_add_test(NAME test_motion_prefs TEST tests/ui/test_motion_prefs.c
