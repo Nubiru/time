@@ -46,7 +46,7 @@ case "$STREAM" in
         ALLOWED="src/systems/unified/"
         ;;
     INFRA)
-        ALLOWED="scripts/ tools/ docs/ cmake/ tests/ .githooks/ .gitignore CMakeLists.txt Makefile"
+        ALLOWED="scripts/ tools/ docs/ cmake/ tests/ .githooks/ .gitignore CMakeLists.txt Makefile src/"
         ;;
     PERSONA)
         ALLOWED="src/systems/ src/ui/"

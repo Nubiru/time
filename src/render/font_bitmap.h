@@ -1,5 +1,5 @@
-#ifndef FONT_BITMAP_H
-#define FONT_BITMAP_H
+#ifndef TIME_FONT_BITMAP_H
+#define TIME_FONT_BITMAP_H
 
 #include <stdint.h>
 
