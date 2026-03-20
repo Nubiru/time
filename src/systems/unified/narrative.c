@@ -40,50 +40,66 @@ static const char *const DEPTH_NAMES[NARR_DEPTH_COUNT] = {
  *   %T = thread type
  * =================================================================== */
 
-#define NARR_VARIANTS_PER_THREAD 3
+#define NARR_VARIANTS_PER_THREAD 5
 #define NARR_TEMPLATE_MAX 256
 
 typedef struct {
     char text[NARR_TEMPLATE_MAX];
 } narr_template_t;
 
-/* Templates indexed by [thread_index][variant] */
+/* Templates indexed by [thread_index][variant]
+ * Variants 0-2: original. Variants 3-4: voice-enriched.
+ * Voice assignments from wisdom-voice-guide.md:
+ *   convergence -> Rumi, festival -> Jesus, number -> Tesla,
+ *   cycle -> Mandela/Lao Tzu, astronomical -> Newton, quiet -> Lao Tzu */
 static const narr_template_t TEMPLATES[NARR_THREAD_COUNT][NARR_VARIANTS_PER_THREAD] = {
-    /* convergence */
+    /* convergence (+ Rumi voice) */
     {
         { "A %A convergence unfolds — %H. %S speak as one." },
         { "Today, %S align in a %A moment. %H." },
-        { "%H — a %A alignment across %S." }
+        { "%H — a %A alignment across %S." },
+        { "Do you hear it? %S whispering the same truth — %H." },
+        { "What you seek today, today seeks you. %H — a %A resonance." }
     },
-    /* festival */
+    /* festival (+ Jesus parable voice) */
     {
         { "A celebration ripples through the calendar — %H." },
         { "Today marks a turning point. %H." },
-        { "%H — the calendar remembers what matters." }
+        { "%H — the calendar remembers what matters." },
+        { "Consider: %H. The smallest observance holds the largest truth." },
+        { "They kept this day for a thousand years. %H. The keeping continues." }
     },
-    /* number */
+    /* number (+ Tesla precision-awe voice) */
     {
         { "A pattern emerges in the numbers — %H." },
         { "%H. The mathematics of time reveals a hidden thread." },
-        { "Across %S, a shared number speaks — %H." }
+        { "Across %S, a shared number speaks — %H." },
+        { "The frequency is unmistakable — %H. %S vibrate at the same harmonic." },
+        { "%H. The numbers do not lie; they reveal what was always there." }
     },
-    /* cycle */
+    /* cycle (+ Mandela patience / Lao Tzu paradox voice) */
     {
         { "A cycle turns — %H." },
         { "%H. What was old begins again." },
-        { "The wheel completes a revolution. %H." }
+        { "The wheel completes a revolution. %H." },
+        { "The wheel has turned before. It will turn again. %H." },
+        { "%H. What ends is also what begins — the cycle knows no difference." }
     },
-    /* astronomical */
+    /* astronomical (+ Newton empirical wonder voice) */
     {
         { "The sky shifts — %H." },
         { "%H. The cosmos rearranges." },
-        { "Above, a %A celestial event. %H." }
+        { "Above, a %A celestial event. %H." },
+        { "%H. The mathematics is precise, but the beauty is beyond calculation." },
+        { "Measured to the second, predicted for centuries — and still, %H." }
     },
-    /* quiet */
+    /* quiet (+ Lao Tzu voice) */
     {
         { "An ordinary day unfolds. %H." },
         { "%H. The cycles continue their quiet work." },
-        { "Between the landmarks, the river still flows. %H." }
+        { "Between the landmarks, the river still flows. %H." },
+        { "%H. No convergence required. The ordinary is already enough." },
+        { "The systems turn. None demand attention today. %H. This is enough." }
     }
 };
 
