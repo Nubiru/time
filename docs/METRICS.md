@@ -37,15 +37,15 @@
 | unlabeled | 284 | Functional tests without explicit labels |
 | e2e | 5 | Playwright (WASM load, canvas, help, pause) |
 
-## Code Coverage (refreshed — 2026-03-19)
+## Code Coverage (refreshed — 2026-03-20, session 9)
 
 | Metric | Value |
 |--------|-------|
-| **Overall line coverage** | **95.8%** (25,773 / 26,907 lines) |
-| **Overall function coverage** | **99.9%** (3,181 / 3,183 functions) |
+| **Overall line coverage** | **95.9%** (28,393 / 29,616 lines) |
+| **Overall function coverage** | **99.9%** (3,523 / 3,525 functions) |
 | Uncovered functions | `spring_vec3_velocity`, `headline_cycle` |
 
-*Coverage includes 80+ new stream-era modules. 95.8% across 26,907 lines is excellent.*
+*Coverage maintained at 95.9% despite +2,709 new lines since last run. 373 source files, 367 test suites.*
 
 ### Foundational Math Modules
 
@@ -69,16 +69,16 @@
 
 | Module | Coverage | Lines | Notes |
 |--------|----------|-------|-------|
-| bezier.c | 83.2% | 89/107 | Uncovered: edge cases, degenerate inputs |
+| brain_depth.c | 67.2% | 90/134 | New — depth tier selection logic |
+| vec_interp.c | 70.9% | 61/86 | 1 uncovered fn: spring_vec3_velocity |
+| timeline_data.c | 78.6% | 228/290 | Large module, many edge paths |
+| text_lod.c | 78.6% | 81/103 | LOD text tier selection |
+| camera_path.c | 80.5% | 91/113 | Camera interpolation paths |
+| input_dispatch.c | 80.6% | 100/124 | New — keyboard dispatch |
+| audio_event.c | 83.1% | 54/65 | Audio event triggers |
+| bezier.c | 83.2% | 89/107 | Edge cases, degenerate inputs |
 | planetary_hours.c | 84.6% | 22/26 | 4 uncovered lines |
-| tzolkin_board.c | 87.0% | 60/69 | 9 uncovered lines |
-| megalithic.c | 87.0% | 87/100 | 13 uncovered lines |
-| numerology.c | 87.3% | 69/79 | 10 uncovered lines |
-| rtl_layout.c | 88.0% | 132/150 | 18 uncovered lines |
-| fun_facts.c | 88.5% | 100/113 | 13 uncovered lines |
-| star_catalog.c | 88.5% | 54/61 | 7 uncovered lines |
-| earth_atmosphere.c | 88.7% | 133/150 | 17 uncovered lines |
-| seasons.c | 88.8% | 127/143 | 16 uncovered lines |
+| brain_surprise.c | 84.6% | 33/39 | New — surprise detection |
 
 ## Build
 

@@ -1,0 +1,115 @@
+#!/bin/bash
+# commit-msg hook — Validate stream domain in stream commits
+#
+# Checks that files in a stream commit belong to that stream's domain.
+# Prevents cross-stream contamination from git stash/push cycles.
+#
+# Only activates on commits matching: feat(stream-{NAME}):
+# Non-stream commits (manual, MEGA) are not checked.
+
+set -e
+
+cd "$(git rev-parse --show-toplevel)"
+
+COMMIT_MSG_FILE="$1"
+MSG=$(head -1 "$COMMIT_MSG_FILE")
+
+# Extract stream name from commit message
+STREAM=$(echo "$MSG" | grep -oP 'feat\(stream-\K[A-Z]+' || true)
+
+# Only check stream commits
+if [ -z "$STREAM" ]; then
+    exit 0
+fi
+
+echo "=== Stream Domain Check: $STREAM ==="
+
+# Define domain mappings: which src/ prefixes each stream owns
+# Format: space-separated list of allowed path prefixes (relative to repo root)
+case "$STREAM" in
+    VISUALS)
+        ALLOWED="src/render/ shaders/ web/ src/core/main.c"
+        ;;
+    LANGUAGE)
+        ALLOWED="src/ui/ data/translations/"
+        ;;
+    MOTION)
+        ALLOWED="src/ui/"
+        ;;
+    AUDIO)
+        ALLOWED="src/ui/"
+        ;;
+    DEPTH)
+        ALLOWED="src/systems/"
+        ;;
+    BRAIN)
+        ALLOWED="src/systems/unified/"
+        ;;
+    INFRA)
+        ALLOWED="scripts/ tools/ docs/ cmake/ tests/ .githooks/ .gitignore CMakeLists.txt Makefile"
+        ;;
+    PERSONA)
+        ALLOWED="src/systems/ src/ui/"
+        ;;
+    *)
+        # Unknown stream — skip check
+        exit 0
+        ;;
+esac
+
+# Always allowed for any stream (build registration, tests for their modules)
+ALWAYS_ALLOWED="cmake/ CMakeLists.txt tests/ docs/"
+
+# Get staged files
+STAGED=$(git diff --cached --name-only)
+
+VIOLATIONS=0
+VIOLATION_FILES=""
+
+while IFS= read -r file; do
+    [ -z "$file" ] && continue
+
+    # Check if file is in always-allowed list
+    ALLOWED_BY_DEFAULT=false
+    for prefix in $ALWAYS_ALLOWED; do
+        case "$file" in
+            ${prefix}*) ALLOWED_BY_DEFAULT=true; break ;;
+        esac
+    done
+    [ "$ALLOWED_BY_DEFAULT" = true ] && continue
+
+    # Check if file is in stream's allowed directories (or matches exact path)
+    IN_DOMAIN=false
+    for prefix in $ALLOWED; do
+        case "$file" in
+            ${prefix}*) IN_DOMAIN=true; break ;;
+        esac
+        # Exact match for specific files (e.g., src/core/main.c)
+        if [ "$file" = "$prefix" ]; then
+            IN_DOMAIN=true
+            break
+        fi
+    done
+
+    if [ "$IN_DOMAIN" = false ]; then
+        VIOLATIONS=$((VIOLATIONS + 1))
+        VIOLATION_FILES="$VIOLATION_FILES\n  $file"
+    fi
+done <<< "$STAGED"
+
+if [ "$VIOLATIONS" -gt 0 ]; then
+    echo ""
+    echo "  WARNING: $VIOLATIONS file(s) outside $STREAM's domain:"
+    echo -e "$VIOLATION_FILES"
+    echo ""
+    echo "  Stream $STREAM owns: $ALLOWED"
+    echo "  These files may be contamination from git stash/push."
+    echo ""
+    echo "  To fix: unstage foreign files with 'git reset HEAD <file>'"
+    echo "  To override: git commit --no-verify"
+    echo ""
+    echo "  RESULT: BLOCKED — remove foreign files or use --no-verify"
+    exit 1
+else
+    echo "  PASS: All staged files within $STREAM domain"
+fi

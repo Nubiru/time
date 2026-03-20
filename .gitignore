@@ -6,6 +6,12 @@ build*/
 # Coverage artifacts
 coverage*.info
 coverage-report/
+*.gcov
+
+# Python artifacts
+__pycache__/
+*.pyc
+.pytest_cache/
 emsdk/
 .vscode/
 *.swp
@@ -15,3 +21,4 @@ emsdk/
 # Claude/AI collaboration artifacts
 .context/
 .claude/
+.assets/
