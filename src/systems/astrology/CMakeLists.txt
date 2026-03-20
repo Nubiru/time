@@ -7,6 +7,7 @@ set(ASTROLOGY_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/planetary_hours.c
     ${CMAKE_CURRENT_SOURCE_DIR}/wheel_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/astrology_interpret.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/astrology_today.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -18,4 +19,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_planetary_hours OBJECT planetary_hours.c)
     add_library(time_astro_wheel     OBJECT wheel_layout.c)
     add_library(time_astrology_interpret OBJECT astrology_interpret.c)
+    add_library(time_astrology_today    OBJECT astrology_today.c)
 endif()

@@ -164,6 +164,7 @@ time_add_test(NAME test_dignity         TEST tests/systems/test_dignity.c       
 time_add_test(NAME test_planetary_hours TEST tests/systems/test_planetary_hours.c DEPS planetary_hours)
 time_add_test(NAME test_astro_wheel     TEST tests/systems/test_wheel_layout.c   DEPS astro_wheel vec3)
 time_add_test(NAME test_astrology_interpret TEST tests/systems/astrology/test_astrology_interpret.c DEPS astrology_interpret zodiac)
+time_add_test(NAME test_astrology_today TEST tests/systems/astrology/test_astrology_today.c DEPS astrology_today zodiac astrology_interpret planetary_hours aspects dignity)
 
 # Calendar tests
 time_add_test(NAME test_gregorian       TEST tests/systems/test_gregorian.c      DEPS gregorian julian)
@@ -196,10 +197,12 @@ time_add_test(NAME test_tree_geometry   TEST tests/systems/kabbalah/test_tree_ge
 time_add_test(NAME test_kabbalah_interpret TEST tests/systems/kabbalah/test_kabbalah_interpret.c DEPS kabbalah_interpret)
 time_add_test(NAME test_sabbatical     TEST tests/systems/hebrew/test_sabbatical.c    DEPS sabbatical hebrew)
 time_add_test(NAME test_hebrew_interpret TEST tests/systems/hebrew/test_hebrew_interpret.c DEPS hebrew_interpret hebrew)
+time_add_test(NAME test_hebrew_today TEST tests/systems/hebrew/test_hebrew_today.c DEPS hebrew_today hebrew sabbatical hebrew_interpret)
 time_add_test(NAME test_dreamspell     TEST tests/systems/tzolkin/test_dreamspell.c   DEPS dreamspell)
 time_add_test(NAME test_tzolkin_board  TEST tests/systems/tzolkin/test_tzolkin_board.c DEPS tzolkin_board)
 time_add_test(NAME test_kin_social    TEST tests/systems/tzolkin/test_kin_social.c   DEPS kin_social dreamspell)
 time_add_test(NAME test_tzolkin_interpret TEST tests/systems/tzolkin/test_tzolkin_interpret.c DEPS tzolkin_interpret dreamspell)
+time_add_test(NAME test_tzolkin_today TEST tests/systems/tzolkin/test_tzolkin_today.c DEPS tzolkin_today tzolkin dreamspell tzolkin_board haab cr_cycle julian)
 time_add_test(NAME test_coptic         TEST tests/systems/coptic/test_coptic.c        DEPS coptic calendar_fixed)
 time_add_test(NAME test_coptic_interpret TEST tests/systems/coptic/test_coptic_interpret.c DEPS coptic_interpret)
 time_add_test(NAME test_egyptian       TEST tests/systems/egyptian/test_egyptian.c    DEPS egyptian calendar_fixed)
