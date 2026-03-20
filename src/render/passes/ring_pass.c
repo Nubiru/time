@@ -10,10 +10,14 @@
 
 #include "ring_pass.h"
 #include <stdio.h>
+#include <math.h>
 #include <GLES3/gl3.h>
 #include "../concentric_ring.h"
 #include "../system_rings.h"
+#include "../ring_today.h"
 #include "../shader.h"
+#include "../../systems/astronomy/planets.h"
+#include "../../systems/astronomy/lunar.h"
 
 /* Ring placement: outside the zodiac ring (which is at ~4.2-4.8).
  * Concentric rings start at radius 5.5, extending outward. */
@@ -91,8 +95,16 @@ void ring_pass_draw(const render_frame_t *frame) {
     if (!s_initialized) return;
     if (!layer_is_visible(frame->layers, LAYER_ZODIAC_RING)) return;
 
-    /* Build ring layout from system data (no "today" highlighting for now) */
-    cr_layout_t layout = sr_depth_layout(NULL, RING_INNERMOST, RING_GAP);
+    /* Compute today's active segment for each knowledge system */
+    solar_system_t ss = planets_at(frame->simulation_jd);
+    double sun_lon = fmod(ss.positions[PLANET_EARTH].longitude + 180.0, 360.0);
+    double moon_lon = lunar_phase(frame->simulation_jd).moon_longitude;
+    ring_today_t rt = ring_today_compute(frame->simulation_jd, sun_lon, moon_lon);
+
+    /* Extract depth-representative indices and build ring layout */
+    int today_indices[6];
+    ring_today_for_depth(&rt, today_indices);
+    cr_layout_t layout = sr_depth_layout(today_indices, RING_INNERMOST, RING_GAP);
 
     /* Check buffer capacity */
     int needed_verts = cr_total_verts(&layout);
