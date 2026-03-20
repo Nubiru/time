@@ -72,9 +72,22 @@ static const sc_date_def_t DATE_LIST[] = {
     { 2026, 11, 24, "Full Moon Nov 2026",               "2026" },
     { 2026, 12, 24, "Full Moon Dec 2026",               "2026" },
 
+    /* Scientific milestones */
+    { 1687,  7,  5, "Newton's Principia published",         "historical" },
+    { 1905,  6, 30, "Einstein's special relativity paper",  "historical" },
+    { 1543,  5, 24, "Copernicus De Revolutionibus",         "historical" },
+    { 1859, 11, 24, "Darwin's Origin of Species",           "historical" },
+    { 1953,  4, 25, "Watson & Crick DNA structure",         "historical" },
+
+    /* Ancient world events */
+    { 1582, 10, 15, "Gregorian calendar adopted",           "historical" },
+    { 1799,  7, 15, "Rosetta Stone discovered",             "historical" },
+
     /* Astronomical events */
     { 1066, 10, 14, "Battle of Hastings (Halley's Comet)", "astronomical" },
     { 1054,  7,  4, "Crab Nebula supernova recorded",       "astronomical" },
+    { 1919,  5, 29, "Solar eclipse confirms general relativity", "astronomical" },
+    { 2017,  8, 21, "Great American Solar Eclipse",         "astronomical" },
 };
 
 static const int DATE_COUNT = (int)(sizeof(DATE_LIST) / sizeof(DATE_LIST[0]));
