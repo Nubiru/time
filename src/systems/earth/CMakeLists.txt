@@ -34,6 +34,7 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/heartbeat_counter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/pop_counter.c
     ${CMAKE_CURRENT_SOURCE_DIR}/persona_card.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/usage_interest.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -72,4 +73,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_heartbeat_counter OBJECT heartbeat_counter.c)
     add_library(time_pop_counter      OBJECT pop_counter.c)
     add_library(time_persona_card    OBJECT persona_card.c)
+    add_library(time_usage_interest  OBJECT usage_interest.c)
 endif()
