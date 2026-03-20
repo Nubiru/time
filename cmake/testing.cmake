@@ -316,6 +316,7 @@ time_add_test(NAME test_moment_snapshot TEST tests/systems/earth/test_moment_sna
 time_add_test(NAME test_earth_stats TEST tests/systems/earth/test_earth_stats.c DEPS earth_stats human_population)
 time_add_test(NAME test_heartbeat_counter TEST tests/systems/earth/test_heartbeat_counter.c DEPS heartbeat_counter human_population)
 time_add_test(NAME test_pop_counter TEST tests/systems/earth/test_pop_counter.c DEPS pop_counter human_population)
+time_add_test(NAME test_persona_card TEST tests/systems/earth/test_persona_card.c DEPS persona_card card_data)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
@@ -385,6 +386,12 @@ time_add_test(NAME test_brain_explain TEST tests/systems/unified/test_brain_expl
     DEPS brain_explain brain_types)
 time_add_test(NAME test_depth_ring TEST tests/systems/unified/test_depth_ring.c
     DEPS depth_ring)
+time_add_test(NAME test_depth_integration TEST tests/systems/unified/test_depth_integration.c
+    DEPS today_summary depth_tier depth_ring depth_selector
+    gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar
+    panchanga nakshatra iching zodiac human_design sefirot coptic ethiopian persian
+    japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed
+    LABELS integration)
 time_add_test(NAME test_brain_narrative TEST tests/systems/unified/test_brain_narrative.c
     DEPS brain_narrative brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_brain_temporal TEST tests/systems/unified/test_brain_temporal.c
