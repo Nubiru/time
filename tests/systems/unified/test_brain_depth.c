@@ -168,6 +168,49 @@ void test_iching_board_mentions_64(void) {
 }
 
 /* ===================================================================
+ * Glyph refinement — system-specific symbol extraction
+ * =================================================================== */
+
+void test_tzolkin_glyph_is_kin_number(void) {
+    br_depth_content_t out;
+    br_depth_get(TEST_JD, TS_SYS_TZOLKIN, DEPTH_TIER_GLYPH, &out);
+    /* Should be a kin number (1-260), not "Kin" */
+    TEST_ASSERT_TRUE(out.content[0] >= '1' && out.content[0] <= '9');
+}
+
+void test_iching_glyph_is_number(void) {
+    br_depth_content_t out;
+    br_depth_get(TEST_JD, TS_SYS_ICHING, DEPTH_TIER_GLYPH, &out);
+    /* Should be a hexagram number (1-64), not "64." */
+    TEST_ASSERT_TRUE(out.content[0] >= '1' && out.content[0] <= '9');
+    /* Should NOT contain a period */
+    TEST_ASSERT_NULL(strstr(out.content, "."));
+}
+
+void test_astrology_glyph_is_sign_name(void) {
+    br_depth_content_t out;
+    br_depth_get(TEST_JD, TS_SYS_ASTROLOGY, DEPTH_TIER_GLYPH, &out);
+    /* Should be a zodiac sign name, not "Sun" */
+    TEST_ASSERT_TRUE(strlen(out.content) >= 3);
+    /* "Sun" would mean the generic extraction failed */
+    TEST_ASSERT_NULL(strstr(out.content, "Sun"));
+}
+
+void test_hebrew_glyph_is_month(void) {
+    br_depth_content_t out;
+    br_depth_get(TEST_JD, TS_SYS_HEBREW, DEPTH_TIER_GLYPH, &out);
+    /* Should be a month name, not a day number */
+    TEST_ASSERT_TRUE(out.content[0] >= 'A' && out.content[0] <= 'Z');
+}
+
+void test_islamic_glyph_is_month(void) {
+    br_depth_content_t out;
+    br_depth_get(TEST_JD, TS_SYS_ISLAMIC, DEPTH_TIER_GLYPH, &out);
+    /* Should be a month name, not a day number */
+    TEST_ASSERT_TRUE(strlen(out.content) >= 3);
+}
+
+/* ===================================================================
  * Main
  * =================================================================== */
 
@@ -210,6 +253,13 @@ int main(void) {
 
     /* I Ching */
     RUN_TEST(test_iching_board_mentions_64);
+
+    /* Glyph refinement */
+    RUN_TEST(test_tzolkin_glyph_is_kin_number);
+    RUN_TEST(test_iching_glyph_is_number);
+    RUN_TEST(test_astrology_glyph_is_sign_name);
+    RUN_TEST(test_hebrew_glyph_is_month);
+    RUN_TEST(test_islamic_glyph_is_month);
 
     return UNITY_END();
 }

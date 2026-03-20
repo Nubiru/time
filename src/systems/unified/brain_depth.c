@@ -18,20 +18,75 @@
  * Islamic, Chinese, Astrology, I Ching, Buddhist.
  * =================================================================== */
 
-static int fmt_glyph(const ts_entry_t *entry, char *buf, int buf_size) {
+/* Extract Nth word from a string (0-based). Returns chars written. */
+static int extract_word(const char *src, int word_idx, char *buf, int buf_size) {
+    int w = 0;
+    int i = 0;
+    /* Skip to the Nth word */
+    while (w < word_idx && src[i] != '\0') {
+        if (src[i] == ' ') {
+            w++;
+            while (src[i] == ' ') i++;
+        } else {
+            i++;
+        }
+    }
+    /* Copy the word */
+    int j = 0;
+    while (j < buf_size - 1 && src[i] != '\0' && src[i] != ' ') {
+        buf[j++] = src[i++];
+    }
+    buf[j] = '\0';
+    return j;
+}
+
+/* System-specific glyph extraction.
+ * Returns the most meaningful symbol for a given system. */
+static int fmt_glyph(const ts_entry_t *entry, ts_system_t system,
+                     char *buf, int buf_size) {
     if (!entry || !entry->active) {
         return snprintf(buf, (size_t)buf_size, "-");
     }
-    /* Extract first word/symbol from date_str */
-    const char *src = entry->date_str;
-    int i = 0;
-    while (i < buf_size - 1 && src[i] != '\0' && src[i] != ' ' &&
-           i < BR_DEPTH_GLYPH_MAX - 1) {
-        buf[i] = src[i];
-        i++;
+
+    switch (system) {
+        case TS_SYS_TZOLKIN:
+            /* "Kin 101 Red Planetary ..." → extract "101" (word 1) */
+            return extract_word(entry->date_str, 1, buf, buf_size);
+
+        case TS_SYS_ICHING: {
+            /* "64. Wei Ji (Li/Kan)" → extract "64" (digits before ".") */
+            int j = 0;
+            const char *src = entry->date_str;
+            while (j < buf_size - 1 && src[j] >= '0' && src[j] <= '9') {
+                buf[j] = src[j];
+                j++;
+            }
+            buf[j] = '\0';
+            return j > 0 ? j : extract_word(entry->date_str, 0, buf, buf_size);
+        }
+
+        case TS_SYS_ASTROLOGY:
+            /* "Sun in Pisces (27.5)" → extract "Pisces" (word 2) */
+            return extract_word(entry->date_str, 2, buf, buf_size);
+
+        case TS_SYS_HEBREW:
+        case TS_SYS_ISLAMIC:
+            /* "2 Nisan 5786" / "1 Shawwal 1447" → extract month (word 1) */
+            return extract_word(entry->date_str, 1, buf, buf_size);
+
+        case TS_SYS_CHINESE:
+            /* "Fire Horse Yang (43/60)" → extract animal (word 1) */
+            return extract_word(entry->date_str, 1, buf, buf_size);
+
+        case TS_SYS_BUDDHIST:
+            /* "BE 2569, Citta" → extract year (word 1) */
+            return extract_word(entry->date_str, 1, buf, buf_size);
+
+        default: {
+            /* Fallback: first word */
+            return extract_word(entry->date_str, 0, buf, buf_size);
+        }
     }
-    buf[i] = '\0';
-    return i;
 }
 
 static int fmt_glance(const ts_entry_t *entry, char *buf, int buf_size) {
@@ -238,7 +293,7 @@ int br_depth_get(double jd, ts_system_t system, depth_tier_t tier,
     int len = 0;
     switch (tier) {
         case DEPTH_TIER_GLYPH:
-            len = fmt_glyph(&entry, out->content, BR_DEPTH_GLYPH_MAX);
+            len = fmt_glyph(&entry, system, out->content, BR_DEPTH_GLYPH_MAX);
             break;
         case DEPTH_TIER_GLANCE:
             len = fmt_glance(&entry, out->content, BR_DEPTH_GLANCE_MAX);
