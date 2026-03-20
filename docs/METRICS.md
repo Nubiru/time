@@ -39,15 +39,15 @@
 | unlabeled | 284 | Functional tests without explicit labels |
 | e2e | 5 | Playwright (WASM load, canvas, help, pause) |
 
-## Code Coverage (refreshed — 2026-03-20, session 9)
+## Code Coverage (refreshed — 2026-03-20, session 14)
 
 | Metric | Value |
 |--------|-------|
-| **Overall line coverage** | **95.9%** (28,393 / 29,616 lines) |
-| **Overall function coverage** | **99.9%** (3,523 / 3,525 functions) |
+| **Overall line coverage** | **95.9%** (30,315 / 31,615 lines) |
+| **Overall function coverage** | **99.9%** (3,710 / 3,712 functions) |
 | Uncovered functions | `spring_vec3_velocity`, `headline_cycle` |
 
-*Coverage maintained at 95.9% despite +2,709 new lines since last run. 373 source files, 367 test suites.*
+*Coverage maintained at 95.9% across 31,615 lines (up from 29,616). 385 source files, 385 test suites.*
 
 ### Foundational Math Modules
 
@@ -188,10 +188,10 @@
 | Git integrity | OK |
 | Build system sync | OK (385 .c files, 1 orphan — human_population.c WIP) |
 | Purity audit | CLEAN (P1-P5 all zones, session 11) |
-| Native build | PASS (378/378 tests, 1.19s) |
+| Native build | PASS (385/385 tests, 1.19s) — use -j4 for clean builds (race at -j12 with 360 OBJECT libs) |
 | WASM build | PASS (307 KB raw, 121 KB gzipped) — zero linker warnings |
 | E2E tests | PASS (5/5 Playwright) |
-| Coverage | 95.9% lines (28,393/29,616), 99.9% functions (session 9 — needs rerun) |
+| Coverage | 95.9% lines (30,315/31,615), 99.9% functions (3,710/3,712) |
 | Git hooks | pre-commit (build safety) + commit-msg (stream domain) — both active |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
