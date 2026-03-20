@@ -75,6 +75,8 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/time_entropy.c
     ${CMAKE_CURRENT_SOURCE_DIR}/system_correlation.c
     ${CMAKE_CURRENT_SOURCE_DIR}/red_thread.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/sacred_scan.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/decade_heatmap.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -154,4 +156,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_time_entropy OBJECT time_entropy.c)
     add_library(time_system_correlation OBJECT system_correlation.c)
     add_library(time_red_thread OBJECT red_thread.c)
+    add_library(time_sacred_scan OBJECT sacred_scan.c)
+    add_library(time_decade_heatmap OBJECT decade_heatmap.c)
 endif()

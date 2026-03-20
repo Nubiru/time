@@ -44,7 +44,8 @@ static void fill_slot(br_lang_context_t *ctx, br_lang_slot_type_t type,
                        const char *value) {
     if (type < 0 || type >= BR_LANG_SLOT_COUNT) return;
     ctx->slots[type].type = type;
-    snprintf(ctx->slots[type].value, BR_LANG_SLOT_MAX, "%s", value);
+    snprintf(ctx->slots[type].value, BR_LANG_SLOT_MAX, "%.*s",
+             (int)(BR_LANG_SLOT_MAX - 1), value);
     ctx->slots[type].filled = 1;
     ctx->slot_count++;
 }

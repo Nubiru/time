@@ -457,6 +457,10 @@ time_add_test(NAME test_system_correlation TEST tests/systems/unified/test_syste
 set_tests_properties(test_system_correlation PROPERTIES TIMEOUT 30)
 time_add_test(NAME test_red_thread TEST tests/systems/unified/test_red_thread.c
     DEPS red_thread brain_explain brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+time_add_test(NAME test_sacred_scan TEST tests/systems/unified/test_sacred_scan.c
+    DEPS sacred_scan sacred_numbers julian tzolkin iching hebrew hijri chinese)
+time_add_test(NAME test_decade_heatmap TEST tests/systems/unified/test_decade_heatmap.c
+    DEPS decade_heatmap brain_archive brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

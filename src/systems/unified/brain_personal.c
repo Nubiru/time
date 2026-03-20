@@ -30,8 +30,7 @@ static void add_event(br_personal_result_t *out, br_personal_type_t type,
     br_personal_event_t *e = &out->events[out->count];
     e->type = type;
     e->score = score;
-    strncpy(e->headline, headline, BR_HEADLINE_MAX - 1);
-    e->headline[BR_HEADLINE_MAX - 1] = '\0';
+    snprintf(e->headline, BR_HEADLINE_MAX, "%s", headline);
     out->count++;
 }
 
