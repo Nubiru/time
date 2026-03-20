@@ -11,6 +11,8 @@
 #ifndef TIME_ASTROLOGY_INTERPRET_H
 #define TIME_ASTROLOGY_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-sign archetype */
 typedef struct {
     int sign;                   /* 0-11 (Aries-Pisces) */
@@ -70,5 +72,11 @@ int ai_element_count(void);
 
 /* Returns 3 (total modalities). */
 int ai_modality_count(void);
+
+/* Locale-aware interpretation. Same as ai_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+astrology_interp_t ai_interpret_locale(int sun_sign, int moon_sign,
+                                       int asc_sign, i18n_locale_t locale);
 
 #endif /* TIME_ASTROLOGY_INTERPRET_H */

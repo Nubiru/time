@@ -4,6 +4,7 @@
  * Month data from classical Islamic tradition. */
 
 #include "islamic_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -141,6 +142,75 @@ islamic_interp_t isi_interpret(hijri_date_t date)
         snprintf(result.detail + written,
                  sizeof(result.detail) - (size_t)written,
                  " %s.", m.event);
+    }
+
+    return result;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+islamic_interp_t isi_interpret_locale(hijri_date_t date,
+                                      i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return isi_interpret(date);
+    }
+
+    islamic_interp_t result;
+    memset(&result, 0, sizeof(result));
+
+    char key[64];
+
+    /* Month name (Arabic names preserved across locales) */
+    snprintf(key, sizeof(key), "islamic.month.%d.name", date.month);
+    const char *month_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "islamic.month.%d.significance", date.month);
+    const char *significance = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "islamic.month.%d.brief", date.month);
+    const char *brief = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "islamic.month.%d.event", date.month);
+    const char *event = content_get(key, locale);
+
+    /* T0: glyph -- month number as string */
+    snprintf(result.glyph, sizeof(result.glyph), "%d", date.month);
+
+    /* T1: glance */
+    const char *tpl_glance = content_get("islamic.tpl.glance", locale);
+    snprintf(result.glance, sizeof(result.glance), tpl_glance,
+             date.year, month_name, date.day, significance);
+
+    /* T3: detail */
+    const char *tpl_detail = content_get("islamic.tpl.detail", locale);
+    int written = snprintf(result.detail, sizeof(result.detail),
+                           tpl_detail, month_name, brief);
+
+    /* Append sacred status if applicable */
+    isi_month_t m = isi_month_data(date.month);
+    if (m.is_sacred && written > 0 && (size_t)written < sizeof(result.detail)) {
+        const char *tpl_sacred = content_get("islamic.tpl.detail_sacred",
+                                             locale);
+        int added = snprintf(result.detail + written,
+                             sizeof(result.detail) - (size_t)written,
+                             "%s", tpl_sacred);
+        if (added > 0) {
+            written += added;
+        }
+    }
+
+    /* Append event if present */
+    if (event != NULL && event[0] != '\0' &&
+        written > 0 && (size_t)written < sizeof(result.detail)) {
+        const char *tpl_event = content_get("islamic.tpl.detail_event",
+                                            locale);
+        snprintf(result.detail + written,
+                 sizeof(result.detail) - (size_t)written,
+                 tpl_event, event);
     }
 
     return result;

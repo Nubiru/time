@@ -10,6 +10,7 @@
 
 #include "buddhist.h"
 #include "kalpa.h"
+#include "../../ui/i18n.h"  /* i18n_locale_t */
 
 /* Per-Uposatha-type interpretation */
 typedef struct {
@@ -72,5 +73,13 @@ int bi_kalpa_phase_count(void);
 
 /* Returns 12. */
 int bi_month_count(void);
+
+/* Locale-aware interpretation. Same as bi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+buddhist_interp_t bi_interpret_locale(int be_year, int month,
+                                      uposatha_type_t uposatha,
+                                      kalpa_phase_t kalpa_phase,
+                                      i18n_locale_t locale);
 
 #endif /* TIME_BUDDHIST_INTERPRET_H */

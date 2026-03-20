@@ -9,6 +9,7 @@
 #define TIME_ISLAMIC_INTERPRET_H
 
 #include "hijri.h"
+#include "../../ui/i18n.h"  /* i18n_locale_t */
 
 /* Per-month interpretation data */
 typedef struct {
@@ -48,6 +49,12 @@ isi_prayer_t isi_prayer_data(int index);
  * Glyph: month number. Glance: year + month + day + significance.
  * Detail: brief + sacred status + event if present. */
 islamic_interp_t isi_interpret(hijri_date_t date);
+
+/* Locale-aware interpretation. Same as isi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+islamic_interp_t isi_interpret_locale(hijri_date_t date,
+                                      i18n_locale_t locale);
 
 /* Returns 12 (total number of Hijri months). */
 int isi_month_count(void);

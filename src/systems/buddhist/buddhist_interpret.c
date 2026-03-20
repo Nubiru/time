@@ -4,6 +4,7 @@
  * Uposatha, kalpa, and month data from Theravada Buddhist tradition. */
 
 #include "buddhist_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -160,6 +161,99 @@ buddhist_interp_t bi_interpret(int be_year, int month,
                  sizeof(result.detail) - (size_t)written,
                  " %s phase (%s): %s.",
                  k.name, k.pali, k.meaning);
+    }
+
+    return result;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+buddhist_interp_t bi_interpret_locale(int be_year, int month,
+                                      uposatha_type_t uposatha,
+                                      kalpa_phase_t kalpa_phase,
+                                      i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return bi_interpret(be_year, month, uposatha, kalpa_phase);
+    }
+
+    buddhist_interp_t result;
+    memset(&result, 0, sizeof(result));
+
+    char key[64];
+
+    /* Month data */
+    snprintf(key, sizeof(key), "buddhist.month.%d.pali_name", month);
+    const char *pali_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "buddhist.month.%d.season", month);
+    const char *season = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "buddhist.month.%d.meaning", month);
+    const char *meaning = content_get(key, locale);
+
+    /* Uposatha data */
+    snprintf(key, sizeof(key), "buddhist.uposatha.%d.name", (int)uposatha);
+    const char *u_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "buddhist.uposatha.%d.practice", (int)uposatha);
+    const char *u_practice = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "buddhist.uposatha.%d.meaning", (int)uposatha);
+    const char *u_meaning = content_get(key, locale);
+
+    /* Kalpa data */
+    snprintf(key, sizeof(key), "buddhist.kalpa.%d.name", (int)kalpa_phase);
+    const char *k_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "buddhist.kalpa.%d.pali", (int)kalpa_phase);
+    const char *k_pali = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "buddhist.kalpa.%d.meaning", (int)kalpa_phase);
+    const char *k_meaning = content_get(key, locale);
+
+    /* T0: glyph — Buddhist Era marker */
+    snprintf(result.glyph, sizeof(result.glyph), "BE");
+
+    /* T1: glance */
+    if (uposatha != UPOSATHA_NONE) {
+        const char *tpl = content_get("buddhist.tpl.glance_uposatha", locale);
+        snprintf(result.glance, sizeof(result.glance), tpl,
+                 be_year, pali_name, u_name);
+    } else {
+        const char *tpl = content_get("buddhist.tpl.glance", locale);
+        snprintf(result.glance, sizeof(result.glance), tpl,
+                 be_year, pali_name, season);
+    }
+
+    /* T3: detail — month meaning */
+    const char *tpl_detail = content_get("buddhist.tpl.detail", locale);
+    int written = snprintf(result.detail, sizeof(result.detail),
+                           tpl_detail, pali_name, meaning);
+
+    /* Append uposatha practice if observance day */
+    if (uposatha != UPOSATHA_NONE && written > 0 &&
+        (size_t)written < sizeof(result.detail)) {
+        const char *tpl_upo = content_get("buddhist.tpl.detail_uposatha",
+                                          locale);
+        int added = snprintf(result.detail + written,
+                             sizeof(result.detail) - (size_t)written,
+                             tpl_upo, u_practice, u_meaning);
+        if (added > 0) {
+            written += added;
+        }
+    }
+
+    /* Append kalpa context */
+    if (written > 0 && (size_t)written < sizeof(result.detail)) {
+        const char *tpl_kalpa = content_get("buddhist.tpl.detail_kalpa",
+                                            locale);
+        snprintf(result.detail + written,
+                 sizeof(result.detail) - (size_t)written,
+                 tpl_kalpa, k_name, k_pali, k_meaning);
     }
 
     return result;

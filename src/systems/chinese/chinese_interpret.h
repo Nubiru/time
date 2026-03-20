@@ -12,6 +12,8 @@
 #ifndef TIME_CHINESE_INTERPRET_H
 #define TIME_CHINESE_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-animal archetype (12 animals) */
 typedef struct {
     int animal;                 /* 0-11 */
@@ -52,6 +54,13 @@ ci_element_t ci_element_data(int element);
  * Invalid animal or element: "?" strings in result. */
 chinese_interp_t ci_interpret(int animal, int element,
                               int polarity, int cycle_year);
+
+/* Locale-aware interpretation. Same as ci_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+chinese_interp_t ci_interpret_locale(int animal, int element,
+                                     int polarity, int cycle_year,
+                                     i18n_locale_t locale);
 
 /* Returns 12 (number of zodiac animals). */
 int ci_animal_count(void);

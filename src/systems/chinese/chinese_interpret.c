@@ -1,4 +1,5 @@
 #include "chinese_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -139,4 +140,86 @@ int ci_animal_count(void) {
 
 int ci_element_count(void) {
     return 5;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+chinese_interp_t ci_interpret_locale(int animal, int element,
+                                     int polarity, int cycle_year,
+                                     i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return ci_interpret(animal, element, polarity, cycle_year);
+    }
+
+    chinese_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    if (animal < 0 || animal > 11 || element < 0 || element > 4) {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    char key[64];
+
+    /* Animal fields */
+    snprintf(key, sizeof(key), "chinese.animal.%d.name", animal);
+    const char *a_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chinese.animal.%d.archetype", animal);
+    const char *a_arch = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chinese.animal.%d.strengths", animal);
+    const char *a_strengths = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chinese.animal.%d.challenges", animal);
+    const char *a_challenges = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chinese.animal.%d.compatibility", animal);
+    const char *a_compat = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chinese.animal.%d.brief", animal);
+    const char *a_brief = content_get(key, locale);
+
+    /* Element fields */
+    snprintf(key, sizeof(key), "chinese.element.%d.name", element);
+    const char *e_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chinese.element.%d.nature", element);
+    const char *e_nature = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chinese.element.%d.expression", element);
+    const char *e_expr = content_get(key, locale);
+
+    /* Polarity */
+    const char *pol_key = (polarity == 0)
+        ? "chinese.polarity.yang"
+        : "chinese.polarity.yin";
+    const char *pol_str = content_get(pol_key, locale);
+
+    /* Glyph: first 3 chars of localized animal name */
+    size_t len = strlen(a_name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, a_name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    const char *tpl_glance = content_get("chinese.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             e_name, a_name, pol_str, a_brief);
+
+    /* Detail */
+    const char *tpl_detail = content_get("chinese.tpl.detail", locale);
+    snprintf(r.detail, sizeof(r.detail), tpl_detail,
+             e_name, a_name, a_arch,
+             a_strengths, a_challenges, a_compat,
+             e_name, e_nature, e_expr,
+             cycle_year);
+
+    return r;
 }
