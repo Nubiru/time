@@ -1,5 +1,6 @@
 #include "app_state.h"
 #include "../math/julian.h"
+#include "../systems/unified/birth_profile.h"
 
 app_state_t app_state_create(float aspect_ratio) {
     app_state_t state = {0};
@@ -30,6 +31,14 @@ app_state_t app_state_create(float aspect_ratio) {
     /* Auto-theme: enabled by default */
     state.auto_theme = at_from_sun_elevation(0.0);
     state.auto_theme_enabled = 1;
+
+    /* Birth sky: default to Jan 1, 2000 — user replaces via birth entry UI */
+    {
+        birth_profile_t bp = bp_compute(2000, 1, 1);
+        state.birth_sky = birth_sky_from_profile(&bp);
+        state.birth_sky.active = false; /* not viewing birth by default */
+        state.saved_jd = 0.0;
+    }
 
     /* Toggles */
     state.show_trails = 1; /* on by default */

@@ -9,6 +9,7 @@
 #include "../render/view_state.h"
 #include "../render/render_lod.h"
 #include "../ui/auto_theme.h"
+#include "../render/birth_sky.h"
 
 /* All mutable application state in one place.
  * Pure functions never touch this — they receive data and return data.
@@ -48,6 +49,10 @@ typedef struct {
     /* Auto-theme (time-of-day Cosmos↔Dawn) */
     auto_theme_state_t auto_theme;
     int auto_theme_enabled;    /* 1=auto, 0=manual */
+
+    /* Birth sky (natal chart view) */
+    birth_sky_t birth_sky;   /* pre-computed natal data */
+    double saved_jd;         /* real simulation_jd to restore when exiting birth view */
 
     /* Visual toggles */
     int show_trails;       /* orbit trail lines */

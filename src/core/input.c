@@ -158,6 +158,22 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         return EM_TRUE;
     }
 
+    /* B (no shift): toggle birth sky view */
+    if (!e->shiftKey && (e->key[0] == 'b' || e->key[0] == 'B') && e->key[1] == '\0') {
+        if (g_input_state->birth_sky.active) {
+            /* Exit birth view: restore real simulation time */
+            g_input_state->birth_sky.active = false;
+            if (g_input_state->saved_jd > 0.0)
+                g_input_state->simulation_jd = g_input_state->saved_jd;
+        } else {
+            /* Enter birth view: save current JD and jump to birth moment */
+            g_input_state->saved_jd = g_input_state->simulation_jd;
+            g_input_state->simulation_jd = g_input_state->birth_sky.jd;
+            g_input_state->birth_sky.active = true;
+        }
+        return EM_TRUE;
+    }
+
     /* Shift + T: toggle auto-theme on/off (manual Cosmos↔Dawn) */
     if (e->shiftKey && e->key[0] == 'T' && e->key[1] == '\0') {
         g_input_state->auto_theme_enabled = !g_input_state->auto_theme_enabled;

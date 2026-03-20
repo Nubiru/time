@@ -51,7 +51,9 @@ void main_loop(void) {
     double now_ms = emscripten_get_now();
     double dt_sec = (now_ms - g_state.prev_time_ms) / 1000.0;
     g_state.prev_time_ms = now_ms;
-    g_state.simulation_jd += g_state.time_speed * dt_sec;
+    /* In birth sky mode, hold time at birth JD (don't advance) */
+    if (!g_state.birth_sky.active)
+        g_state.simulation_jd += g_state.time_speed * dt_sec;
 
     /* Advance scale transition (smooth camera zoom between levels) */
     if (g_state.scale_transition.active) {
