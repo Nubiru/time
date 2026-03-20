@@ -137,16 +137,21 @@ void card_pass_draw(const render_frame_t *frame) {
     cp_quad_data_t qdata = cp_pack_quads(&layout, vw, vh,
                                           0.0f, 0.0f, 0.0f, 0.0f);
 
-    /* Overwrite per-card vertex colors from card_style */
+    /* Overwrite per-card vertex colors from card_style.
+     * Phi gradient: top vertices full alpha, bottom fades to phi^-1.
+     * Vertex order: 0=BL, 1=BR, 2=TR, 3=TL */
     for (int i = 0; i < qdata.card_count && i < sel.filled_count; i++) {
         card_style_t style = card_style_for_system(
             sel.slots[i].system_id, sel.slots[i].opacity, (theme_id_t)frame->theme_id);
+        float top_alpha = style.background.a;
+        float bot_alpha = style.background.a * 0.618f; /* phi^-1 fade */
         for (int v = 0; v < CP_VERTS_PER_QUAD; v++) {
             int base = (i * CP_VERTS_PER_QUAD + v) * CP_VERTEX_FLOATS;
             qdata.vertices[base + 4] = style.background.r;
             qdata.vertices[base + 5] = style.background.g;
             qdata.vertices[base + 6] = style.background.b;
-            qdata.vertices[base + 7] = style.background.a;
+            /* v=0,1 (bottom): faded. v=2,3 (top): full. */
+            qdata.vertices[base + 7] = (v < 2) ? bot_alpha : top_alpha;
         }
     }
 
