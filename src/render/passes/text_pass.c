@@ -27,6 +27,7 @@
 #include "../../ui/card_data.h"
 #include "../../ui/card_layout.h"
 #include "../../ui/card_selector.h"
+#include "../../ui/card_style.h"
 #include "../../ui/today_card.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
@@ -235,10 +236,6 @@ static void draw_card_text(const render_frame_t *frame)
     glyph_instance_t instances[GLYPH_BATCH_MAX];
     int len = 0;
 
-    /* Colors: solar gold for titles, white for content */
-    glyph_color_t title_color = {1.0f, 0.85f, 0.55f, 1.0f};
-    glyph_color_t body_color  = {0.9f, 0.92f, 0.95f, 0.9f};
-
     /* Scale: title slightly larger than body */
     float title_scale = 1.8f;
     float body_scale  = 1.4f;
@@ -253,6 +250,16 @@ static void draw_card_text(const render_frame_t *frame)
         if (!r->visible) continue;
 
         const card_content_t *content = contents[c];
+
+        /* Per-card themed colors from card_style */
+        int sys_id = (c < sel.filled_count) ? sel.slots[c].system_id : -1;
+        card_style_t style = (sys_id >= 0)
+            ? card_style_for_system(sys_id, r->opacity, THEME_COSMOS)
+            : card_style_default(r->opacity, THEME_COSMOS);
+        glyph_color_t title_color = {style.title.r, style.title.g,
+                                     style.title.b, style.title.a};
+        glyph_color_t body_color  = {style.body.r, style.body.g,
+                                     style.body.b, style.body.a};
 
         /* Convert normalized card position to pixel coordinates */
         float px = r->x * (float)vw + margin_x;

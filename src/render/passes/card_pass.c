@@ -14,6 +14,8 @@
 #include "../shader.h"
 #include "../card_pack.h"
 #include "../../ui/card_layout.h"
+#include "../../ui/card_selector.h"
+#include "../../ui/card_style.h"
 
 /* --- Module-static GL handles --- */
 
@@ -111,15 +113,36 @@ void card_pass_draw(const render_frame_t *frame) {
     float vh = (float)viewport[3];
     if (vw < 1.0f) vw = 1920.0f;  /* fallback */
     if (vh < 1.0f) vh = 1080.0f;
+    float aspect = vw / vh;
 
-    /* Get card layout (defaults to no visible cards if none toggled) */
-    card_layout_t layout = card_layout_compute(card_default_mask(), vw / vh);
-    int visible = cp_visible_count(&layout);
-    if (visible == 0) return;
+    /* Select top cards for current zoom depth (same as text_pass) */
+    cs_selection_t sel = cs_select(frame->log_zoom, aspect);
+    if (sel.filled_count == 0) return;
 
-    /* Pack card background quads */
+    /* Build layout with selected cards visible */
+    card_layout_t layout = card_layout_compute(card_all_mask(), aspect);
+    for (int i = 0; i < CARD_TYPE_COUNT; i++) {
+        layout.cards[i].visible = (i < sel.filled_count);
+        layout.cards[i].opacity = (i < sel.filled_count)
+            ? sel.slots[i].opacity : 0.0f;
+    }
+
+    /* Pack card background quads (dummy color — overwritten below) */
     cp_quad_data_t qdata = cp_pack_quads(&layout, vw, vh,
-                                          0.06f, 0.07f, 0.09f, 0.85f);
+                                          0.0f, 0.0f, 0.0f, 0.0f);
+
+    /* Overwrite per-card vertex colors from card_style */
+    for (int i = 0; i < qdata.card_count && i < sel.filled_count; i++) {
+        card_style_t style = card_style_for_system(
+            sel.slots[i].system_id, sel.slots[i].opacity, THEME_COSMOS);
+        for (int v = 0; v < CP_VERTS_PER_QUAD; v++) {
+            int base = (i * CP_VERTS_PER_QUAD + v) * CP_VERTEX_FLOATS;
+            qdata.vertices[base + 4] = style.background.r;
+            qdata.vertices[base + 5] = style.background.g;
+            qdata.vertices[base + 6] = style.background.b;
+            qdata.vertices[base + 7] = style.background.a;
+        }
+    }
 
     if (qdata.vertex_count > 0) {
         glUseProgram(s_quad_program);
@@ -145,9 +168,13 @@ void card_pass_draw(const render_frame_t *frame) {
         glBindVertexArray(0);
     }
 
-    /* Pack card border lines */
+    /* Pack card border lines with theme border color */
+    card_style_t border_style = card_style_default(1.0f, THEME_COSMOS);
     cp_line_data_t ldata = cp_pack_lines(&layout, vw, vh,
-                                          0.3f, 0.35f, 0.4f, 0.6f, 2);
+                                          border_style.border.r,
+                                          border_style.border.g,
+                                          border_style.border.b,
+                                          border_style.border.a, 2);
 
     if (ldata.vertex_count > 0) {
         glUseProgram(s_line_program);
