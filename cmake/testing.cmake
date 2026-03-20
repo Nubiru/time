@@ -169,6 +169,7 @@ time_add_test(NAME test_astrology_today TEST tests/systems/astrology/test_astrol
 # Calendar tests
 time_add_test(NAME test_gregorian       TEST tests/systems/test_gregorian.c      DEPS gregorian julian)
 time_add_test(NAME test_gregorian_interpret TEST tests/systems/gregorian/test_gregorian_interpret.c DEPS gregorian_interpret)
+time_add_test(NAME test_gregorian_today TEST tests/systems/gregorian/test_gregorian_today.c DEPS gregorian_today gregorian gregorian_interpret julian)
 time_add_test(NAME test_tzolkin         TEST tests/systems/test_tzolkin.c        DEPS tzolkin julian)
 time_add_test(NAME test_haab            TEST tests/systems/test_haab.c           DEPS haab tzolkin julian)
 time_add_test(NAME test_chinese         TEST tests/systems/test_chinese.c        DEPS chinese julian)
@@ -182,6 +183,7 @@ time_add_test(NAME test_numerology_interpret TEST tests/systems/numerology/test_
 time_add_test(NAME test_human_design    TEST tests/systems/test_human_design.c   DEPS human_design)
 time_add_test(NAME test_bodygraph       TEST tests/systems/test_bodygraph.c      DEPS bodygraph)
 time_add_test(NAME test_human_design_interpret TEST tests/systems/human_design/test_human_design_interpret.c DEPS human_design_interpret human_design)
+time_add_test(NAME test_human_design_today TEST tests/systems/human_design/test_human_design_today.c DEPS human_design_today human_design human_design_interpret bodygraph)
 time_add_test(NAME test_hebrew          TEST tests/systems/hebrew/test_hebrew.c  DEPS hebrew)
 time_add_test(NAME test_hijri           TEST tests/systems/islamic/test_hijri.c  DEPS hijri)
 time_add_test(NAME test_prayer_times    TEST tests/systems/islamic/test_prayer_times.c DEPS prayer_times solar_events julian)
@@ -277,6 +279,7 @@ time_add_test(NAME test_geology_interpret TEST tests/systems/geology/test_geolog
 time_add_test(NAME test_earth_voyage      TEST tests/systems/geology/test_earth_voyage.c      DEPS earth_voyage)
 time_add_test(NAME test_fossil_narrative  TEST tests/systems/geology/test_fossil_narrative.c  DEPS fossil_narrative)
 time_add_test(NAME test_earth_story      TEST tests/systems/geology/test_earth_story.c      DEPS earth_story)
+time_add_test(NAME test_geology_today    TEST tests/systems/geology/test_geology_today.c    DEPS geology_today geo_time geology_interpret)
 
 # Earth tests
 time_add_test(NAME test_biorhythm       TEST tests/systems/earth/test_biorhythm.c       DEPS biorhythm)
@@ -588,6 +591,8 @@ time_add_test(NAME test_enter_zoom TEST tests/ui/test_enter_zoom.c
     DEPS enter_zoom camera_path spring vec_interp vec3 easing LABELS unit)
 time_add_test(NAME test_birth_flight TEST tests/ui/test_birth_flight.c
     DEPS birth_flight camera_path spring vec_interp vec3 easing LABELS unit)
+time_add_test(NAME test_convergence_motion TEST tests/ui/test_convergence_motion.c
+    DEPS convergence_motion spring LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)

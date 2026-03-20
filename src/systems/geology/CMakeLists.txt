@@ -9,6 +9,7 @@ set(GEOLOGY_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_voyage.c
     ${CMAKE_CURRENT_SOURCE_DIR}/fossil_narrative.c
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_story.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/geology_today.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -22,4 +23,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_earth_voyage      OBJECT earth_voyage.c)
     add_library(time_fossil_narrative  OBJECT fossil_narrative.c)
     add_library(time_earth_story      OBJECT earth_story.c)
+    add_library(time_geology_today    OBJECT geology_today.c)
 endif()
