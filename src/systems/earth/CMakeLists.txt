@@ -30,6 +30,9 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/today_for_you.c
     ${CMAKE_CURRENT_SOURCE_DIR}/notification_data.c
     ${CMAKE_CURRENT_SOURCE_DIR}/moment_snapshot.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/earth_stats.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/heartbeat_counter.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/pop_counter.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -64,4 +67,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_today_for_you    OBJECT today_for_you.c)
     add_library(time_notification_data OBJECT notification_data.c)
     add_library(time_moment_snapshot  OBJECT moment_snapshot.c)
+    add_library(time_earth_stats      OBJECT earth_stats.c)
+    add_library(time_heartbeat_counter OBJECT heartbeat_counter.c)
+    add_library(time_pop_counter      OBJECT pop_counter.c)
 endif()

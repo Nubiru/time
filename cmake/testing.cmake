@@ -313,6 +313,9 @@ time_add_test(NAME test_human_population TEST tests/systems/earth/test_human_pop
 time_add_test(NAME test_today_for_you TEST tests/systems/earth/test_today_for_you.c DEPS today_for_you)
 time_add_test(NAME test_notification_data TEST tests/systems/earth/test_notification_data.c DEPS notification_data)
 time_add_test(NAME test_moment_snapshot TEST tests/systems/earth/test_moment_snapshot.c DEPS moment_snapshot)
+time_add_test(NAME test_earth_stats TEST tests/systems/earth/test_earth_stats.c DEPS earth_stats human_population)
+time_add_test(NAME test_heartbeat_counter TEST tests/systems/earth/test_heartbeat_counter.c DEPS heartbeat_counter human_population)
+time_add_test(NAME test_pop_counter TEST tests/systems/earth/test_pop_counter.c DEPS pop_counter human_population)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
