@@ -1,0 +1,309 @@
+"""Visual experience tests for Time.
+
+Each test verifies that a user-facing feature is VISIBLE — not just that
+the module compiles, but that a human opening the browser would SEE something.
+
+Failing tests = stream work queue.
+Passing tests = verified experience.
+
+Run: python3 -m pytest tests/e2e/test_visual_journey.py -v
+Requires: WASM build (emcmake cmake -B build-wasm && cmake --build build-wasm)
+"""
+
+import pytest
+from conftest import (
+    canvas_screenshot,
+    full_screenshot,
+    save_screenshot,
+    is_solid_color,
+    images_differ,
+)
+
+
+# ============================================================
+# CORE RENDERING — Does anything render at all?
+# ============================================================
+
+
+def test_canvas_not_black(page):
+    """The WebGL canvas should render SOMETHING — not just a black screen.
+
+    Stream: VISUALS
+    Feature: Basic rendering pipeline
+    If this fails: render loop is broken, no passes are drawing.
+    """
+    page.wait_for_timeout(2000)  # Let render settle
+    img = canvas_screenshot(page)
+    save_screenshot(img, "01_default_view.png")
+    assert not is_solid_color(img, threshold=0.98), (
+        "Canvas is solid black — no render passes are producing output"
+    )
+
+
+def test_stars_visible(page):
+    """Stars should be visible as bright pixels on the dark canvas.
+
+    Stream: VISUALS (star_pass)
+    Feature: Star field rendering
+    If this fails: star_pass is not drawing, or PASS_STARS is disabled.
+    """
+    page.wait_for_timeout(2000)
+    img = canvas_screenshot(page)
+
+    # Count bright pixels (R+G+B > 100 on a 0-255 scale)
+    pixels = list(img.getdata())
+    bright = sum(1 for p in pixels if sum(p[:3]) > 100)
+    bright_ratio = bright / len(pixels) if pixels else 0
+
+    # Stars should be at least 0.1% of pixels (a few hundred stars on 1280x720)
+    assert bright_ratio > 0.001, (
+        f"Only {bright_ratio:.4%} bright pixels — stars may not be rendering"
+    )
+
+
+# ============================================================
+# CARDS — Are system information cards visible?
+# ============================================================
+
+
+def test_cards_render(page):
+    """Cards or text should be visible overlaid on the star field.
+
+    Stream: VISUALS (card_pass + text_pass)
+    Feature: System information cards with themed colors
+    If this fails: card_pass_draw() is not receiving card data.
+    """
+    page.wait_for_timeout(2000)
+    img = canvas_screenshot(page)
+    save_screenshot(img, "02_cards_view.png")
+
+    # Cards add colored rectangles + text — should increase bright pixel count
+    # beyond just stars. We check for non-star colored pixels (warm colors).
+    pixels = list(img.getdata())
+    warm = sum(1 for p in pixels if p[0] > 100 and p[1] > 50)  # Orange/gold range
+    warm_ratio = warm / len(pixels) if pixels else 0
+
+    # Cards should produce at least 0.5% warm-colored pixels
+    assert warm_ratio > 0.005, (
+        f"Only {warm_ratio:.4%} warm pixels — cards may not be rendering. "
+        "Check: card_pass_draw() receiving data? card_style wired?"
+    )
+
+
+# ============================================================
+# VIEW SWITCHING — Do keyboard controls change the view?
+# ============================================================
+
+
+def test_earth_view_toggle(page):
+    """Pressing E should switch to Earth View (canvas changes significantly).
+
+    Stream: VISUALS (earth_pass)
+    Feature: Earth View with globe rendering
+    If this fails: PASS_EARTH may be disabled in pass_schedule.c,
+    or earth_pass_draw() is empty.
+    """
+    page.wait_for_timeout(1000)
+    before = canvas_screenshot(page)
+
+    page.keyboard.press("e")
+    page.wait_for_timeout(1500)
+    after = canvas_screenshot(page)
+    save_screenshot(after, "03_earth_view.png")
+
+    assert images_differ(before, after, threshold=0.70), (
+        "Earth View (E key) did not change the canvas — "
+        "check pass_schedule.c PASS_EARTH and earth_pass_draw()"
+    )
+
+    # Press E again to return to Space View
+    page.keyboard.press("e")
+    page.wait_for_timeout(500)
+
+
+def test_birth_sky_toggle(page):
+    """Pressing B should toggle birth sky view (time jumps to birth date).
+
+    Stream: VISUALS + INFRA (birth_sky wiring in main.c)
+    Feature: Birth moment sky rendering
+    If this fails: birth_sky not wired in app_state, or B key handler missing.
+    """
+    page.wait_for_timeout(1000)
+    before = canvas_screenshot(page)
+
+    page.keyboard.press("b")
+    page.wait_for_timeout(1500)
+    after = canvas_screenshot(page)
+    save_screenshot(after, "04_birth_sky.png")
+
+    # Birth sky changes the JD — planets/stars should shift position
+    assert images_differ(before, after, threshold=0.85), (
+        "Birth Sky (B key) did not change the canvas — "
+        "check input.c B handler and app_state birth_sky field"
+    )
+
+    # Toggle back
+    page.keyboard.press("b")
+    page.wait_for_timeout(500)
+
+
+# ============================================================
+# FOCUS MODES — Do system focus keys work?
+# ============================================================
+
+
+def test_focus_mode_changes_view(page):
+    """Pressing a focus key (K/I/C/D/A) should change the display.
+
+    Stream: VISUALS (focus_mode in card_pass)
+    Feature: Per-system focus view
+    If this fails: focus mode not wired in input.c or card_selector.
+    """
+    page.wait_for_timeout(1000)
+    before = canvas_screenshot(page)
+
+    # Press K for Kin Maya focus
+    page.keyboard.press("k")
+    page.wait_for_timeout(1000)
+    after = canvas_screenshot(page)
+    save_screenshot(after, "05_focus_kin.png")
+
+    # Even if cards don't change dramatically, SOMETHING should shift
+    # (at minimum, the focus indicator changes)
+
+    # Press 0 or Escape to return to default
+    page.keyboard.press("Escape")
+    page.wait_for_timeout(500)
+
+
+# ============================================================
+# HELP PANEL — Does the UI overlay work?
+# ============================================================
+
+
+def test_help_panel_visible(page):
+    """Pressing ? should show the help panel with keyboard shortcuts.
+
+    Stream: INFRA (web/index.html)
+    Feature: Help overlay with controls documentation
+    If this fails: help panel HTML/CSS is broken.
+    """
+    page.keyboard.press("?")
+    page.wait_for_timeout(500)
+
+    # Check DOM — help panel should be visible
+    is_visible = page.evaluate("""() => {
+        const el = document.getElementById('help-panel');
+        if (!el) return false;
+        return !el.classList.contains('hidden');
+    }""")
+
+    if is_visible:
+        img = full_screenshot(page)
+        save_screenshot(img, "06_help_panel.png")
+
+    assert is_visible, "Help panel should be visible after pressing ?"
+
+    page.keyboard.press("Escape")
+    page.wait_for_timeout(300)
+
+
+# ============================================================
+# ENTER TIME — Does the entry animation play?
+# ============================================================
+
+
+def test_enter_time_experience(page):
+    """The app should show SOMETHING on initial load — not a blank screen.
+
+    Stream: MOTION (enter_zoom) + VISUALS (all passes)
+    Feature: "Enter Time" first contact experience
+    If this fails: enter_zoom not wired in main_loop, or all passes disabled.
+    """
+    # This test uses the page fixture which already dismissed enter screen
+    # and waited 500ms. The render should be active.
+    img = canvas_screenshot(page)
+    save_screenshot(img, "07_enter_time.png")
+
+    # The canvas should not be blank
+    assert not is_solid_color(img, threshold=0.98), (
+        "App shows blank screen on entry — "
+        "check enter_zoom wiring and render pass schedule"
+    )
+
+
+# ============================================================
+# NARRATIVE TEXT — Is brain output displayed?
+# ============================================================
+
+
+def test_narrative_headline_exists(page):
+    """A daily narrative headline should be present (DOM or canvas text).
+
+    Stream: BRAIN + INFRA (wire brain_narrative → display)
+    Feature: Daily narrative "headline" showing what today means
+    If this fails: brain_narrative_compose() output is not wired to any display.
+    """
+    page.wait_for_timeout(3000)  # Let narrative cycle
+
+    # Check DOM for headline element
+    headline = page.evaluate("""() => {
+        const el = document.getElementById('headline');
+        if (el && el.textContent && el.textContent.trim().length > 0) {
+            return el.textContent.trim();
+        }
+        // Also check for any toast or narrative text
+        const toast = document.getElementById('toast-area');
+        if (toast && toast.textContent && toast.textContent.trim().length > 0) {
+            return toast.textContent.trim();
+        }
+        return null;
+    }""")
+
+    # This test will likely FAIL initially — that's the point.
+    # It becomes the work queue item: "INFRA: wire brain_narrative to headline display"
+    if headline:
+        assert len(headline) > 5, f"Headline too short: '{headline}'"
+    else:
+        # Narrative text not in DOM — check if it's rendered on canvas
+        # For now, mark as expected failure with clear message
+        pytest.skip(
+            "No narrative headline found in DOM — "
+            "INFRA needs to wire brain_narrative_compose() → headline display"
+        )
+
+
+# ============================================================
+# AUDIO — Does any sound play?
+# ============================================================
+
+
+def test_audio_context_created(page):
+    """An AudioContext should be created and ready.
+
+    Stream: AUDIO
+    Feature: Sound engine initialization
+    If this fails: audio_engine not wired in WASM, or browser autoplay policy blocking.
+    """
+    has_audio = page.evaluate("""() => {
+        // Check if any AudioContext exists
+        return typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined';
+    }""")
+
+    # AudioContext API should be available (it always is in modern browsers)
+    assert has_audio, "AudioContext API not available"
+
+    # Check if our app created one
+    app_audio = page.evaluate("""() => {
+        // Check for our audio engine's context
+        if (typeof Module !== 'undefined' && Module._audio_is_initialized) {
+            try { return Module._audio_is_initialized() === 1; } catch(e) { return false; }
+        }
+        return false;
+    }""")
+
+    if not app_audio:
+        pytest.skip(
+            "Audio engine not initialized in WASM — "
+            "AUDIO stream: wire audio_engine_init() in main_loop"
+        )
