@@ -593,6 +593,8 @@ time_add_test(NAME test_birth_flight TEST tests/ui/test_birth_flight.c
     DEPS birth_flight camera_path spring vec_interp vec3 easing LABELS unit)
 time_add_test(NAME test_convergence_motion TEST tests/ui/test_convergence_motion.c
     DEPS convergence_motion spring LABELS unit)
+time_add_test(NAME test_transition_fx TEST tests/ui/test_transition_fx.c
+    DEPS transition_fx LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
