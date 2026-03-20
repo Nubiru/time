@@ -72,6 +72,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/input_dispatch.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kf_track.c
     ${CMAKE_CURRENT_SOURCE_DIR}/drama_seq.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/seasonal_greeting.c
     PARENT_SCOPE
 )
 
@@ -145,5 +146,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_input_dispatch  OBJECT input_dispatch.c)
     add_library(time_kf_track        OBJECT kf_track.c)
     add_library(time_drama_seq       OBJECT drama_seq.c)
+    add_library(time_seasonal_greeting OBJECT seasonal_greeting.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()

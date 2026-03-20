@@ -438,6 +438,7 @@ time_add_test(NAME test_i18n_locales   TEST tests/ui/test_i18n_locales.c    DEPS
 time_add_test(NAME test_i18n_p1        TEST tests/ui/test_i18n_p1.c         DEPS i18n)
 time_add_test(NAME test_greeting       TEST tests/ui/test_greeting.c        DEPS greeting)
 time_add_test(NAME test_share_template TEST tests/ui/test_share_template.c  DEPS share_template)
+time_add_test(NAME test_seasonal_greeting TEST tests/ui/test_seasonal_greeting.c DEPS seasonal_greeting)
 time_add_test(NAME test_iching_card    TEST tests/ui/test_iching_card.c     DEPS iching_card hexagram_visual iching)
 time_add_test(NAME test_lunar_display  TEST tests/ui/test_lunar_display.c   DEPS lunar_display lunar julian zodiac)
 time_add_test(NAME test_rtl_layout     TEST tests/ui/test_rtl_layout.c      DEPS rtl_layout)
