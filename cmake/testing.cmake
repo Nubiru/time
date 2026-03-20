@@ -286,6 +286,9 @@ time_add_test(NAME test_content_curator TEST tests/systems/earth/test_content_cu
 time_add_test(NAME test_persona_persist TEST tests/systems/earth/test_persona_persist.c DEPS persona_persist user_prefs interest_profile personal_space privacy_framework theme golden_layout color_theory color)
 time_add_test(NAME test_persona_io TEST tests/systems/earth/test_persona_io.c DEPS persona_io persona_persist storage_bridge user_prefs interest_profile personal_space privacy_framework theme golden_layout color_theory color)
 time_add_test(NAME test_onboarding TEST tests/systems/earth/test_onboarding.c DEPS onboarding)
+time_add_test(NAME test_settings_panel TEST tests/systems/earth/test_settings_panel.c DEPS settings_panel user_prefs interest_profile privacy_framework theme golden_layout color_theory color)
+time_add_test(NAME test_birth_entry TEST tests/systems/earth/test_birth_entry.c DEPS birth_entry)
+time_add_test(NAME test_author_card TEST tests/systems/earth/test_author_card.c DEPS author_card)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)

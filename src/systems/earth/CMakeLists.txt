@@ -22,6 +22,9 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/persona_persist.c
     ${CMAKE_CURRENT_SOURCE_DIR}/persona_io.c
     ${CMAKE_CURRENT_SOURCE_DIR}/onboarding.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/settings_panel.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/birth_entry.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/author_card.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -48,4 +51,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_persona_persist  OBJECT persona_persist.c)
     add_library(time_persona_io      OBJECT persona_io.c)
     add_library(time_onboarding      OBJECT onboarding.c)
+    add_library(time_settings_panel  OBJECT settings_panel.c)
+    add_library(time_birth_entry     OBJECT birth_entry.c)
+    add_library(time_author_card     OBJECT author_card.c)
 endif()
