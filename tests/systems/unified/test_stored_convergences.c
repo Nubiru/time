@@ -328,6 +328,76 @@ void test_filter_respects_max_out(void) {
 }
 
 /* ===================================================================
+ * sc_compute — systems array + sc_narrative
+ * =================================================================== */
+
+void test_compute_fills_systems_array(void) {
+    sc_result_t res;
+    sc_list(&res);
+    sc_compute(&res);
+    /* Spring Equinox 2026 should have systems filled */
+    for (int i = 0; i < res.count; i++) {
+        if (res.entries[i].system_count >= 2) {
+            TEST_ASSERT_TRUE(res.entries[i].systems[0] >= 0);
+            TEST_ASSERT_TRUE(res.entries[i].systems[0] < CD_SYS_COUNT);
+            return; /* found at least one valid */
+        }
+    }
+    /* If no convergences at all, just pass (unlikely) */
+}
+
+void test_narrative_null_returns_zero(void) {
+    TEST_ASSERT_EQUAL_INT(0, sc_narrative(NULL, NULL, 0));
+}
+
+void test_narrative_quiet_day(void) {
+    sc_entry_t e;
+    memset(&e, 0, sizeof(e));
+    e.name = "Test Day";
+    e.system_count = 0;
+    char buf[SC_NARRATIVE_MAX];
+    int n = sc_narrative(&e, buf, sizeof(buf));
+    TEST_ASSERT_TRUE(n > 0);
+    TEST_ASSERT_NOT_NULL(strstr(buf, "quiet"));
+}
+
+void test_narrative_convergence_has_name(void) {
+    sc_result_t res;
+    sc_list(&res);
+    sc_compute(&res);
+    /* Find an entry with convergence */
+    for (int i = 0; i < res.count; i++) {
+        if (res.entries[i].system_count >= 2) {
+            char buf[SC_NARRATIVE_MAX];
+            sc_narrative(&res.entries[i], buf, sizeof(buf));
+            /* Should contain the entry name */
+            TEST_ASSERT_NOT_NULL(strstr(buf, res.entries[i].name));
+            return;
+        }
+    }
+}
+
+void test_narrative_convergence_has_system_names(void) {
+    sc_result_t res;
+    sc_list(&res);
+    sc_compute(&res);
+    /* Find an entry with convergence */
+    for (int i = 0; i < res.count; i++) {
+        if (res.entries[i].system_count >= 2) {
+            char buf[SC_NARRATIVE_MAX];
+            sc_narrative(&res.entries[i], buf, sizeof(buf));
+            /* Should contain "converge" */
+            TEST_ASSERT_NOT_NULL(strstr(buf, "converge"));
+            /* Should contain at least one system name */
+            const char *sname = cd_system_name(
+                (cd_system_t)res.entries[i].systems[0]);
+            TEST_ASSERT_NOT_NULL(strstr(buf, sname));
+            return;
+        }
+    }
+}
+
+/* ===================================================================
  * Main
  * =================================================================== */
 
@@ -378,6 +448,13 @@ int main(void) {
     RUN_TEST(test_filter_astronomical_finds_entries);
     RUN_TEST(test_filter_unknown_category_returns_zero);
     RUN_TEST(test_filter_respects_max_out);
+
+    /* sc_narrative + systems array */
+    RUN_TEST(test_compute_fills_systems_array);
+    RUN_TEST(test_narrative_null_returns_zero);
+    RUN_TEST(test_narrative_quiet_day);
+    RUN_TEST(test_narrative_convergence_has_name);
+    RUN_TEST(test_narrative_convergence_has_system_names);
 
     return UNITY_END();
 }

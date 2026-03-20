@@ -14,6 +14,12 @@
 /* Maximum stored entries */
 #define SC_MAX_ENTRIES 128
 
+/* Maximum systems stored per entry */
+#define SC_MAX_SYSTEMS 8
+
+/* Narrative buffer size */
+#define SC_NARRATIVE_MAX 128
+
 /* A stored convergence entry */
 typedef struct {
     double          jd;
@@ -22,6 +28,7 @@ typedef struct {
     int             system_count;   /* filled by sc_compute */
     cd_strength_t   strength;       /* filled by sc_compute */
     double          significance;   /* filled by sc_compute */
+    int             systems[SC_MAX_SYSTEMS]; /* cd_system_t IDs, filled by sc_compute */
 } sc_entry_t;
 
 /* Result of a stored convergence query */
@@ -54,5 +61,11 @@ int sc_count_above(const sc_result_t *result, int min_systems);
  * Returns number of matches. */
 int sc_filter_category(const sc_result_t *result, const char *category,
                        sc_entry_t *out, int max_out);
+
+/* Generate a one-line narrative for a computed entry.
+ * e.g. "Moon Landing: Astronomy, Islamic, and Buddhist converge"
+ * Requires sc_compute to have been called first.
+ * Returns chars written (excluding null). */
+int sc_narrative(const sc_entry_t *entry, char *buf, int buf_size);
 
 #endif /* TIME_STORED_CONVERGENCES_H */

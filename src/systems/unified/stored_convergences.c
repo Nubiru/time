@@ -9,6 +9,7 @@
 #include "../../math/julian.h"
 #include <string.h>
 #include <math.h>
+#include <stdio.h>
 
 /* ===================================================================
  * Notable date definitions
@@ -109,9 +110,16 @@ int sc_compute(sc_result_t *out) {
     for (int i = 0; i < out->count; i++) {
         cd_result_t cd = cd_scan(out->entries[i].jd);
         if (cd.count > 0) {
-            out->entries[i].system_count = cd.events[0].system_count;
-            out->entries[i].strength = cd.events[0].strength;
-            out->entries[i].significance = cd.events[0].significance;
+            const cd_event_t *ev = &cd.events[0];
+            out->entries[i].system_count = ev->system_count;
+            out->entries[i].strength = ev->strength;
+            out->entries[i].significance = ev->significance;
+            /* Store system IDs */
+            int sc = ev->system_count;
+            if (sc > SC_MAX_SYSTEMS) sc = SC_MAX_SYSTEMS;
+            for (int s = 0; s < sc; s++) {
+                out->entries[i].systems[s] = (int)ev->systems[s];
+            }
         }
     }
     return out->count;
@@ -154,4 +162,41 @@ int sc_filter_category(const sc_result_t *result, const char *category,
         }
     }
     return found;
+}
+
+int sc_narrative(const sc_entry_t *entry, char *buf, int buf_size) {
+    if (!entry || !buf || buf_size <= 0) return 0;
+    buf[0] = '\0';
+
+    if (entry->system_count == 0) {
+        return snprintf(buf, (size_t)buf_size, "%s: a quiet day", entry->name);
+    }
+
+    /* Build: "Moon Landing: Astronomy, Islamic, and Buddhist converge" */
+    int pos = 0;
+    int remaining = buf_size;
+
+    int n = snprintf(buf, (size_t)remaining, "%s: ", entry->name);
+    if (n > 0) { int u = n < remaining ? n : remaining - 1; pos += u; remaining -= u; }
+
+    int sc = entry->system_count;
+    if (sc > SC_MAX_SYSTEMS) sc = SC_MAX_SYSTEMS;
+
+    for (int i = 0; i < sc && remaining > 1; i++) {
+        const char *sname = cd_system_name((cd_system_t)entry->systems[i]);
+        if (i == 0) {
+            n = snprintf(buf + pos, (size_t)remaining, "%s", sname);
+        } else if (i == sc - 1) {
+            n = snprintf(buf + pos, (size_t)remaining,
+                         sc == 2 ? " and %s" : ", and %s", sname);
+        } else {
+            n = snprintf(buf + pos, (size_t)remaining, ", %s", sname);
+        }
+        if (n > 0) { int u = n < remaining ? n : remaining - 1; pos += u; remaining -= u; }
+    }
+
+    n = snprintf(buf + pos, (size_t)remaining, " converge");
+    if (n > 0) { int u = n < remaining ? n : remaining - 1; pos += u; }
+
+    return pos;
 }
