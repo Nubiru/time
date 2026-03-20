@@ -452,6 +452,11 @@ time_add_test(NAME test_grand_cycle TEST tests/systems/unified/test_grand_cycle.
     DEPS grand_cycle)
 time_add_test(NAME test_time_entropy TEST tests/systems/unified/test_time_entropy.c
     DEPS time_entropy convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+time_add_test(NAME test_system_correlation TEST tests/systems/unified/test_system_correlation.c
+    DEPS system_correlation convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+set_tests_properties(test_system_correlation PROPERTIES TIMEOUT 30)
+time_add_test(NAME test_red_thread TEST tests/systems/unified/test_red_thread.c
+    DEPS red_thread brain_explain brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c

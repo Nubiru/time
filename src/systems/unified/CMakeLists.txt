@@ -73,6 +73,8 @@ set(UNIFIED_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/brain_stats.c
     ${CMAKE_CURRENT_SOURCE_DIR}/grand_cycle.c
     ${CMAKE_CURRENT_SOURCE_DIR}/time_entropy.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/system_correlation.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/red_thread.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -150,4 +152,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_brain_stats OBJECT brain_stats.c)
     add_library(time_grand_cycle OBJECT grand_cycle.c)
     add_library(time_time_entropy OBJECT time_entropy.c)
+    add_library(time_system_correlation OBJECT system_correlation.c)
+    add_library(time_red_thread OBJECT red_thread.c)
 endif()
