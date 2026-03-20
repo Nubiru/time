@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "japanese_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -236,6 +237,80 @@ japanese_interp_t ji_interpret(int era, int era_year, int rokuyo, int sekki)
                  " Sekki: %s (%s) \xe2\x80\x94 %s.",
                  sk.name, sk.meaning, sk.nature);
     }
+
+    return r;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+japanese_interp_t ji_interpret_locale(int era, int era_year, int rokuyo,
+                                      int sekki, i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return ji_interpret(era, era_year, rokuyo, sekki);
+    }
+
+    japanese_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Era lookups */
+    snprintf(key, sizeof(key), "japanese.era.%d.name", era);
+    const char *era_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "japanese.era.%d.kanji", era);
+    const char *era_kanji = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "japanese.era.%d.meaning", era);
+    const char *era_meaning = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "japanese.era.%d.spirit", era);
+    const char *era_spirit = content_get(key, locale);
+
+    /* Rokuyo lookups */
+    snprintf(key, sizeof(key), "japanese.rokuyo.%d.name", rokuyo);
+    const char *rokuyo_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "japanese.rokuyo.%d.meaning", rokuyo);
+    const char *rokuyo_meaning = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "japanese.rokuyo.%d.guidance", rokuyo);
+    const char *rokuyo_guidance = content_get(key, locale);
+
+    /* Sekki lookups */
+    snprintf(key, sizeof(key), "japanese.sekki.%d.name", sekki);
+    const char *sekki_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "japanese.sekki.%d.kanji", sekki);
+    const char *sekki_kanji = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "japanese.sekki.%d.meaning", sekki);
+    const char *sekki_meaning = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "japanese.sekki.%d.nature", sekki);
+    const char *sekki_nature = content_get(key, locale);
+
+    /* T0: glyph — first 3 chars of era name */
+    size_t len = strlen(era_name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, era_name, copy);
+    r.glyph[copy] = '\0';
+
+    /* T1: glance */
+    const char *tpl_glance = content_get("japanese.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             era_name, era_year, sekki_name, sekki_meaning);
+
+    /* T3: detail — includes kanji for era and sekki */
+    const char *tpl_detail = content_get("japanese.tpl.detail", locale);
+    snprintf(r.detail, sizeof(r.detail), tpl_detail,
+             era_name, era_kanji, era_meaning, era_spirit, era_year,
+             rokuyo_name, rokuyo_meaning, rokuyo_guidance,
+             sekki_name, sekki_kanji, sekki_meaning, sekki_nature);
 
     return r;
 }

@@ -9,6 +9,7 @@
 #define TIME_CONVERGENCE_INTERPRET_H
 
 #include "convergence_detect.h"
+#include "../../ui/i18n.h"  /* i18n_locale_t */
 
 /* Per-strength-level interpretation */
 typedef struct {
@@ -66,5 +67,13 @@ int cvi_system_count(void);
 
 /* Number of named patterns (always 8). */
 int cvi_pattern_count(void);
+
+/* Locale-aware interpretation. Same as cvi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+convergence_interp_t cvi_interpret_locale(cd_strength_t strength,
+                                          const cd_system_t *systems,
+                                          int system_count,
+                                          i18n_locale_t locale);
 
 #endif /* TIME_CONVERGENCE_INTERPRET_H */

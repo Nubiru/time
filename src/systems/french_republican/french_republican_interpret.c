@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "french_republican_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -127,3 +128,74 @@ french_republican_interp_t fri_interpret(int rep_year, int month, int day)
 
 int fri_month_count(void) { return 12; }
 int fri_sans_count(void) { return 6; }
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+french_republican_interp_t fri_interpret_locale(int rep_year, int month,
+                                                int day,
+                                                i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return fri_interpret(rep_year, month, day);
+    }
+
+    french_republican_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Sansculottides (month 0) */
+    if (month == 0) {
+        snprintf(key, sizeof(key), "french_republican.sans.%d.french", day - 1);
+        const char *french = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "french_republican.sans.%d.virtue", day - 1);
+        const char *virtue = content_get(key, locale);
+
+        snprintf(r.glyph, sizeof(r.glyph), "San");
+
+        const char *tpl_glance = content_get("french_republican.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl_glance,
+                 rep_year, french, day, virtue);
+
+        const char *tpl_detail = content_get("french_republican.tpl.detail_sans", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                 rep_year, day, french, virtue);
+
+        return r;
+    }
+
+    /* Month data */
+    snprintf(key, sizeof(key), "french_republican.month.%d.french", month);
+    const char *french = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "french_republican.month.%d.english", month);
+    const char *english = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "french_republican.month.%d.season", month);
+    const char *season = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "french_republican.month.%d.nature", month);
+    const char *nature = content_get(key, locale);
+
+    /* Glyph: first 3 chars of French name */
+    size_t len = strlen(french);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, french, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    const char *tpl_glance = content_get("french_republican.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             rep_year, french, day, english);
+
+    /* Detail */
+    const char *tpl_detail = content_get("french_republican.tpl.detail", locale);
+    snprintf(r.detail, sizeof(r.detail), tpl_detail,
+             rep_year, french, english, day, season, nature);
+
+    return r;
+}

@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "aztec_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -171,3 +172,79 @@ aztec_interp_t azi_interpret(int day_sign, int day_number,
 
 int azi_sign_count(void) { return 20; }
 int azi_bearer_count(void) { return 4; }
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+aztec_interp_t azi_interpret_locale(int day_sign, int day_number,
+                                    int year_bearer, int year_number,
+                                    i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return azi_interpret(day_sign, day_number, year_bearer, year_number);
+    }
+
+    aztec_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Day sign data */
+    snprintf(key, sizeof(key), "aztec.sign.%d.nahuatl", day_sign);
+    const char *nahuatl = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "aztec.sign.%d.english", day_sign);
+    const char *english = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "aztec.sign.%d.deity", day_sign);
+    const char *deity = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "aztec.sign.%d.direction", day_sign);
+    const char *direction = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "aztec.sign.%d.quality", day_sign);
+    const char *quality = content_get(key, locale);
+
+    /* Glyph: first 3 chars of Nahuatl name */
+    size_t len = strlen(nahuatl);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, nahuatl, copy);
+    r.glyph[copy] = '\0';
+
+    /* Bearer data */
+    snprintf(key, sizeof(key), "aztec.bearer.%d.nahuatl", year_bearer);
+    const char *b_nahuatl = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "aztec.bearer.%d.english", year_bearer);
+    const char *b_english = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "aztec.bearer.%d.direction", year_bearer);
+    const char *b_direction = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "aztec.bearer.%d.quality", year_bearer);
+    const char *b_quality = content_get(key, locale);
+
+    /* Glance */
+    const char *tpl_glance = content_get("aztec.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             day_number, english, year_number, b_english);
+
+    /* Detail: two-part (base sign + bearer append) */
+    const char *tpl_detail = content_get("aztec.tpl.detail", locale);
+    int written = snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                           day_number, nahuatl, english, deity, direction,
+                           quality);
+
+    if (year_bearer >= 0 && year_bearer <= 3 &&
+        written > 0 && (size_t)written < sizeof(r.detail)) {
+        const char *tpl_bearer = content_get("aztec.tpl.detail_bearer", locale);
+        snprintf(r.detail + written,
+                 sizeof(r.detail) - (size_t)written,
+                 tpl_bearer,
+                 b_nahuatl, b_english, b_direction, b_quality);
+    }
+
+    return r;
+}

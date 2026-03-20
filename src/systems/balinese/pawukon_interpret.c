@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "pawukon_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -131,3 +132,66 @@ pawukon_interp_t pwi_interpret(int wuku, int wuku_day, int urip,
 }
 
 int pwi_wuku_count(void) { return 30; }
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+pawukon_interp_t pwi_interpret_locale(int wuku, int wuku_day, int urip,
+                                      int is_tumpek, int is_kajeng_kliwon,
+                                      i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return pwi_interpret(wuku, wuku_day, urip, is_tumpek, is_kajeng_kliwon);
+    }
+
+    pawukon_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Wuku data */
+    snprintf(key, sizeof(key), "pawukon.wuku.%d.name", wuku);
+    const char *name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "pawukon.wuku.%d.deity", wuku);
+    const char *deity = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "pawukon.wuku.%d.quality", wuku);
+    const char *quality = content_get(key, locale);
+
+    /* Glyph: first 3 chars of wuku name */
+    size_t len = strlen(name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    const char *tpl_glance = content_get("pawukon.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             name, wuku_day, quality);
+
+    /* Detail */
+    const char *tpl_detail = content_get("pawukon.tpl.detail", locale);
+    int written = snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                           name, deity, quality, urip);
+
+    if (is_kajeng_kliwon &&
+        written > 0 && (size_t)written < sizeof(r.detail)) {
+        const char *kk = content_get("pawukon.tpl.kajeng_kliwon", locale);
+        int n = snprintf(r.detail + written,
+                         sizeof(r.detail) - (size_t)written,
+                         " %s", kk);
+        if (n > 0) written += n;
+    }
+    if (is_tumpek &&
+        written > 0 && (size_t)written < sizeof(r.detail)) {
+        const char *tp = content_get("pawukon.tpl.tumpek", locale);
+        snprintf(r.detail + written,
+                 sizeof(r.detail) - (size_t)written,
+                 " %s", tp);
+    }
+
+    return r;
+}

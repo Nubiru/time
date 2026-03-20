@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "celtic_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -239,6 +240,77 @@ celtic_interp_t cti_interpret(int tree_month, int tree_day, int festival)
                      "Reflection: %s",
                      f.name, f.theme, f.practice, f.reflection);
         }
+    }
+
+    return r;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+celtic_interp_t cti_interpret_locale(int tree_month, int tree_day,
+                                     int festival,
+                                     i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return cti_interpret(tree_month, tree_day, festival);
+    }
+
+    celtic_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Tree data lookups */
+    snprintf(key, sizeof(key), "celtic.tree.%d.tree", tree_month);
+    const char *tree = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "celtic.tree.%d.ogham", tree_month);
+    const char *ogham = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "celtic.tree.%d.archetype", tree_month);
+    const char *archetype = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "celtic.tree.%d.personality", tree_month);
+    const char *personality = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "celtic.tree.%d.strengths", tree_month);
+    const char *strengths = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "celtic.tree.%d.challenges", tree_month);
+    const char *challenges = content_get(key, locale);
+
+    /* T0: glyph — Ogham letter(s) */
+    snprintf(r.glyph, sizeof(r.glyph), "%s", ogham);
+
+    /* T1: glance */
+    const char *tpl_glance = content_get("celtic.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             tree, ogham, tree_day, archetype);
+
+    /* T3: detail — base tree narrative */
+    const char *tpl_detail = content_get("celtic.tpl.detail", locale);
+    int pos = snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                       tree, ogham, archetype,
+                       personality, strengths, challenges);
+
+    /* Append festival data if active */
+    if (festival >= 0 && festival <= 7 &&
+        pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        snprintf(key, sizeof(key), "celtic.festival.%d.name", festival);
+        const char *fest_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "celtic.festival.%d.theme", festival);
+        const char *fest_theme = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "celtic.festival.%d.practice", festival);
+        const char *fest_practice = content_get(key, locale);
+
+        const char *tpl_fest = content_get("celtic.tpl.detail_festival", locale);
+        snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                 tpl_fest, fest_name, fest_theme, fest_practice);
     }
 
     return r;

@@ -15,6 +15,8 @@
 #ifndef TIME_ZOROASTRIAN_INTERPRET_H
 #define TIME_ZOROASTRIAN_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-Amesha Spenta interpretation (7 Holy Immortals) */
 typedef struct {
     int index;                  /* 0-6 */
@@ -70,6 +72,12 @@ zi_festival_t zi_festival_data(int festival);
  * festival: 1-9 if a festival is active, 0 if none.
  * Invalid month: "?" strings in result. */
 zoroastrian_interp_t zi_interpret(int month, int day, int festival);
+
+/* Locale-aware interpretation. Same as zi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+zoroastrian_interp_t zi_interpret_locale(int month, int day, int festival,
+                                         i18n_locale_t locale);
 
 /* Returns 7 (number of Amesha Spentas). */
 int zi_amesha_count(void);

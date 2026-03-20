@@ -11,6 +11,8 @@
 #ifndef TIME_PAWUKON_INTERPRET_H
 #define TIME_PAWUKON_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-wuku interpretation (30 wuku) */
 typedef struct {
     int wuku;                   /* 0-29 */
@@ -39,5 +41,12 @@ pawukon_interp_t pwi_interpret(int wuku, int wuku_day, int urip,
                                int is_tumpek, int is_kajeng_kliwon);
 
 int pwi_wuku_count(void);      /* Returns 30 */
+
+/* Locale-aware interpretation. Same as pwi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+pawukon_interp_t pwi_interpret_locale(int wuku, int wuku_day, int urip,
+                                      int is_tumpek, int is_kajeng_kliwon,
+                                      i18n_locale_t locale);
 
 #endif /* TIME_PAWUKON_INTERPRET_H */

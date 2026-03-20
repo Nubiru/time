@@ -14,6 +14,8 @@
 #ifndef TIME_TAROT_INTERPRET_H
 #define TIME_TAROT_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-Major Arcanum interpretation (22 cards, 0-21) */
 typedef struct {
     int number;                 /* 0-21 (Fool through Universe) */
@@ -57,6 +59,13 @@ trt_suit_t trt_suit_data(int suit);
  * decan_rank: 2-10 (rank of the decan card), or -1 if no decan.
  * Invalid major_number: "?" strings in result. */
 tarot_interp_t trt_interpret(int major_number, int decan_suit, int decan_rank);
+
+/* Locale-aware interpretation. Same as trt_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+tarot_interp_t trt_interpret_locale(int major_number, int decan_suit,
+                                    int decan_rank,
+                                    i18n_locale_t locale);
 
 /* Returns 22 (number of Major Arcana). */
 int trt_major_count(void);

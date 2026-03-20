@@ -205,6 +205,136 @@ MODULES = {
             "lao.tpl.detail_festival": " Festival: %1$s \xe2\x80\x94 %2$s. %3$s.",
         },
     },
+    # ============ BATCH 3: Complex modules ============
+    "celtic": {
+        "file": "celtic/celtic_interpret.c",
+        "arrays": [
+            ("celtic.tree", r'static const \w+ TREES\[14\]',
+             ["tree", "ogham", "archetype", "personality", "strengths", "challenges", "brief"], 0),
+            ("celtic.festival", r'static const \w+ FESTIVALS\[8\]',
+             ["name", "theme", "practice", "reflection", "brief"], 0),
+        ],
+        "templates_en": {
+            "celtic.tpl.glance": "%1$s (%2$s) \xe2\x80\x94 %3$s",
+            "celtic.tpl.detail": "Tree: %1$s (Ogham: %2$s). %3$s. %4$s. Strengths: %5$s. Challenges: %6$s.",
+            "celtic.tpl.detail_festival": " Festival: %1$s \xe2\x80\x94 %2$s. %3$s.",
+        },
+    },
+    "egyptian": {
+        "file": "egyptian/egyptian_interpret.c",
+        "arrays": [
+            ("egyptian.season", r'static const \w+ SEASONS\[4\]',
+             ["name", "meaning", "theme", "reflection", "brief"], 0),
+            ("egyptian.month", r'static const \w+ MONTHS\[12\]',
+             ["name", "deity", "domain", "brief"], 1),
+            ("egyptian.epag", r'static const \w+ EPAGS\[5\]',
+             ["deity", "archetype", "theme", "brief"], 0),
+        ],
+        "templates_en": {
+            "egyptian.tpl.glance": "%1$s %2$d \xe2\x80\x94 %3$s",
+            "egyptian.tpl.detail": "Month: %1$s. Deity: %2$s. Domain: %3$s.",
+            "egyptian.tpl.detail_season": " Season: %1$s \xe2\x80\x94 %2$s.",
+        },
+    },
+    "zoroastrian": {
+        "file": "zoroastrian/zoroastrian_interpret.c",
+        "arrays": [
+            ("zoroastrian.amesha", r'static const \w+ AMESHAS\[7\]',
+             ["avestan", "meaning", "domain", "element", "virtue", "brief"], 0),
+            ("zoroastrian.gatha", r'static const \w+ GATHAS\[5\]',
+             ["name", "theme", "practice", "brief"], 0),
+            ("zoroastrian.festival", r'static const \w+ FESTIVALS\[9\]',
+             ["name", "theme", "practice", "brief"], 0),
+        ],
+        "templates_en": {
+            "zoroastrian.tpl.glance": "%1$s \xe2\x80\x94 %2$s",
+            "zoroastrian.tpl.detail": "Amesha Spenta: %1$s (%2$s). Domain: %3$s. Element: %4$s. Virtue: %5$s.",
+            "zoroastrian.tpl.detail_festival": " Festival: %1$s \xe2\x80\x94 %2$s. %3$s.",
+        },
+    },
+    "japanese": {
+        "file": "japanese/japanese_interpret.c",
+        "arrays": [
+            ("japanese.era", r'static const \w+ ERAS\[5\]',
+             ["name", "kanji", "meaning", "spirit", "brief"], 0),
+            ("japanese.rokuyo", r'static const \w+ ROKUYO\[6\]',
+             ["name", "meaning", "guidance", "brief"], 0),
+            ("japanese.sekki", r'static const \w+ SEKKI\[24\]',
+             ["name", "kanji", "meaning", "nature", "brief"], 0),
+        ],
+        "templates_en": {
+            "japanese.tpl.glance": "%1$s %2$d %3$s \xe2\x80\x94 %4$s",
+            "japanese.tpl.detail": "Era: %1$s (%2$s). %3$s. Rokuyo: %4$s \xe2\x80\x94 %5$s. Sekki: %6$s \xe2\x80\x94 %7$s.",
+        },
+    },
+    "tarot": {
+        "file": "tarot/tarot_interpret.c",
+        "arrays": [
+            ("tarot.major", r'static const \w+ MAJORS\[22\]',
+             ["name", "archetype", "keyword", "light", "shadow", "brief"], 0),
+            ("tarot.suit", r'static const \w+ SUITS\[4\]',
+             ["name", "element", "domain", "quality", "brief"], 0),
+        ],
+        "templates_en": {
+            "tarot.tpl.glance": "%1$s \xe2\x80\x94 %2$s",
+            "tarot.tpl.detail": "%1$s: %2$s. Keyword: %3$s. Light: %4$s. Shadow: %5$s.",
+            "tarot.tpl.detail_suit": " Suit: %1$s (%2$s). %3$s. %4$s.",
+        },
+    },
+    "aztec": {
+        "file": "aztec/aztec_interpret.c",
+        "arrays": [
+            ("aztec.sign", r'static const \w+ SIGNS\[20\]',
+             ["nahuatl", "english", "deity", "direction", "quality", "brief"], 0),
+            ("aztec.bearer", r'static const \w+ BEARERS\[4\]',
+             ["nahuatl", "english", "direction", "quality", "brief"], 0),
+        ],
+        "templates_en": {
+            "aztec.tpl.glance": "%1$s (%2$s) \xe2\x80\x94 %3$s",
+            "aztec.tpl.detail": "Day Sign: %1$s (%2$s). Deity: %3$s. Direction: %4$s. %5$s.",
+            "aztec.tpl.detail_bearer": " Year Bearer: %1$s (%2$s). Direction: %3$s. %4$s.",
+        },
+    },
+    "french_republican": {
+        "file": "french_republican/french_republican_interpret.c",
+        "arrays": [
+            ("french_republican.month", r'static const \w+ MONTHS\[12\]',
+             ["french", "english", "season", "nature", "brief"], 1),
+            ("french_republican.sans", r'static const \w+ SANS\[6\]',
+             ["french", "virtue", "brief"], 0),
+        ],
+        "templates_en": {
+            "french_republican.tpl.glance": "An %1$d %2$s %3$d \xe2\x80\x94 %4$s",
+            "french_republican.tpl.detail": "Month: %1$s (%2$s). %3$s. %4$s.",
+            "french_republican.tpl.detail_sans": " Sans-culottide: %1$s \xe2\x80\x94 %2$s.",
+        },
+    },
+    "pawukon": {
+        "file": "balinese/pawukon_interpret.c",
+        "arrays": [
+            ("pawukon.wuku", r'static const \w+ WUKUS\[30\]',
+             ["name", "deity", "quality", "brief"], 0),
+        ],
+        "templates_en": {
+            "pawukon.tpl.glance": "%1$s \xe2\x80\x94 %2$s . %3$s",
+            "pawukon.tpl.detail": "Wuku: %1$s. Deity: %2$s. %3$s.",
+        },
+    },
+    "convergence": {
+        "file": "unified/convergence_interpret.c",
+        "arrays": [
+            ("convergence.strength", r'static const \w+ s_strengths\[4\]',
+             ["name", "description", "significance"], 0),
+            ("convergence.system", r'static const \w+ s_systems\[21\]',
+             ["system_name", "tradition", "what_aligns"], 0),
+            ("convergence.pattern", r'static const \w+ s_patterns\[8\]',
+             ["name", "description"], 0),
+        ],
+        "templates_en": {
+            "convergence.tpl.glance": "%1$s \xe2\x80\x94 %2$s systems aligning",
+            "convergence.tpl.detail": "Convergence: %1$s. %2$s.",
+        },
+    },
 }
 
 

@@ -11,6 +11,8 @@
 #ifndef TIME_JAPANESE_INTERPRET_H
 #define TIME_JAPANESE_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-era interpretation (5 modern eras) */
 typedef struct {
     int era;                    /* 0-4 (Meiji through Reiwa) */
@@ -63,6 +65,12 @@ ji_sekki_t ji_sekki_data(int sekki);
  * era: 0-4, era_year: year within era, rokuyo: 0-5, sekki: 0-23.
  * Invalid era: "?" strings in result. */
 japanese_interp_t ji_interpret(int era, int era_year, int rokuyo, int sekki);
+
+/* Locale-aware interpretation. Same as ji_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+japanese_interp_t ji_interpret_locale(int era, int era_year, int rokuyo,
+                                      int sekki, i18n_locale_t locale);
 
 /* Returns 5 (number of modern eras). */
 int ji_era_count(void);

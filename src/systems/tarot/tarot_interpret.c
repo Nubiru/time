@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "tarot_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -276,6 +277,85 @@ tarot_interp_t trt_interpret(int major_number, int decan_suit, int decan_rank)
                      " Decan: %d of %s (%s). Domain: %s. %s",
                      decan_rank, s.name, s.element, s.domain, s.quality);
         }
+    }
+
+    return r;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+tarot_interp_t trt_interpret_locale(int major_number, int decan_suit,
+                                    int decan_rank,
+                                    i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return trt_interpret(major_number, decan_suit, decan_rank);
+    }
+
+    tarot_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Major Arcanum lookups */
+    snprintf(key, sizeof(key), "tarot.major.%d.name", major_number);
+    const char *name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tarot.major.%d.archetype", major_number);
+    const char *archetype = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tarot.major.%d.keyword", major_number);
+    const char *keyword = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tarot.major.%d.light", major_number);
+    const char *light = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tarot.major.%d.shadow", major_number);
+    const char *shadow = content_get(key, locale);
+
+    /* T0: glyph — Roman numeral */
+    if (major_number < 0 || major_number > 21) {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+    snprintf(r.glyph, sizeof(r.glyph), "%s", ROMAN[major_number]);
+
+    /* T1: glance */
+    const char *tpl_glance = content_get("tarot.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             name, keyword);
+
+    /* T3: detail — base major arcanum narrative */
+    const char *tpl_detail = content_get("tarot.tpl.detail", locale);
+    int pos = snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                       ROMAN[major_number], name, keyword, archetype,
+                       light, shadow);
+
+    /* Append suit/decan data if active */
+    if (decan_suit >= 0 && decan_suit <= 3 &&
+        decan_rank >= 2 && decan_rank <= 10 &&
+        pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        snprintf(key, sizeof(key), "tarot.suit.%d.name", decan_suit);
+        const char *suit_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "tarot.suit.%d.element", decan_suit);
+        const char *suit_element = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "tarot.suit.%d.domain", decan_suit);
+        const char *suit_domain = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "tarot.suit.%d.quality", decan_suit);
+        const char *suit_quality = content_get(key, locale);
+
+        const char *tpl_suit = content_get("tarot.tpl.detail_suit", locale);
+        snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                 tpl_suit, suit_name, suit_element,
+                 suit_domain, suit_quality);
     }
 
     return r;

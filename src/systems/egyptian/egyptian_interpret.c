@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "egyptian_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -185,6 +186,107 @@ egyptian_interp_t ei_interpret(int month, int day, int sothic_year)
              m.name, m.deity, m.domain, m.brief,
              s.name, s.meaning, s.theme, s.reflection,
              sothic_year);
+
+    return r;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+egyptian_interp_t ei_interpret_locale(int month, int day, int sothic_year,
+                                      i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return ei_interpret(month, day, sothic_year);
+    }
+
+    egyptian_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Epagomenal days (month 13) */
+    if (month == 13) {
+        int epag_idx = day - 1;
+        if (epag_idx < 0 || epag_idx > 4) {
+            snprintf(r.glyph, sizeof(r.glyph), "?");
+            snprintf(r.glance, sizeof(r.glance), "?");
+            snprintf(r.detail, sizeof(r.detail), "?");
+            return r;
+        }
+
+        snprintf(key, sizeof(key), "egyptian.epag.%d.deity", epag_idx);
+        const char *deity = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "egyptian.epag.%d.archetype", epag_idx);
+        const char *archetype = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "egyptian.epag.%d.theme", epag_idx);
+        const char *theme = content_get(key, locale);
+
+        snprintf(r.glyph, sizeof(r.glyph), "Epg");
+
+        const char *tpl_glance = content_get("egyptian.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl_glance,
+                 "Epagomenal", day, deity, archetype);
+
+        const char *tpl_detail = content_get("egyptian.tpl.detail", locale);
+        snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                 deity, archetype, theme, sothic_year);
+
+        return r;
+    }
+
+    /* Regular months (1-12) */
+    if (month < 1 || month > 12) {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    snprintf(key, sizeof(key), "egyptian.month.%d.name", month);
+    const char *month_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "egyptian.month.%d.deity", month);
+    const char *deity = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "egyptian.month.%d.domain", month);
+    const char *domain = content_get(key, locale);
+
+    /* Season: months 1-4 = Akhet(0), 5-8 = Peret(1), 9-12 = Shemu(2) */
+    int season_idx = (month - 1) / 4;
+
+    snprintf(key, sizeof(key), "egyptian.season.%d.name", season_idx);
+    const char *season_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "egyptian.season.%d.meaning", season_idx);
+    const char *season_meaning = content_get(key, locale);
+
+    /* Glyph: first 3 chars of month name */
+    size_t len = strlen(month_name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, month_name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance */
+    const char *tpl_glance = content_get("egyptian.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             month_name, day, season_name, season_meaning);
+
+    /* Detail — base month narrative */
+    const char *tpl_detail = content_get("egyptian.tpl.detail", locale);
+    int pos = snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                       month_name, deity, domain, sothic_year);
+
+    /* Append season data */
+    if (pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        const char *tpl_season = content_get("egyptian.tpl.detail_season", locale);
+        snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                 tpl_season, season_name, season_meaning);
+    }
 
     return r;
 }

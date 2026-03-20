@@ -15,6 +15,8 @@
 #ifndef TIME_CELTIC_INTERPRET_H
 #define TIME_CELTIC_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-tree archetype (14 entries: 0=intercalary Yew, 1-13=months) */
 typedef struct {
     int month;                  /* 0-13 (0=Yew intercalary, 1-13=months) */
@@ -61,6 +63,13 @@ cti_festival_t cti_festival_data(int festival);
  * festival: 0-7 if a festival is active, -1 if none.
  * Invalid tree_month: "?" strings in result. */
 celtic_interp_t cti_interpret(int tree_month, int tree_day, int festival);
+
+/* Locale-aware interpretation. Same as cti_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+celtic_interp_t cti_interpret_locale(int tree_month, int tree_day,
+                                     int festival,
+                                     i18n_locale_t locale);
 
 /* Returns 14 (number of tree entries: 1 intercalary + 13 months). */
 int cti_tree_count(void);

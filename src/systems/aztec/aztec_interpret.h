@@ -11,6 +11,8 @@
 #ifndef TIME_AZTEC_INTERPRET_H
 #define TIME_AZTEC_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-day-sign interpretation (20 signs) */
 typedef struct {
     int sign;                   /* 0-19 */
@@ -59,5 +61,12 @@ int azi_sign_count(void);
 
 /* Returns 4 (number of year bearers). */
 int azi_bearer_count(void);
+
+/* Locale-aware interpretation. Same as azi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+aztec_interp_t azi_interpret_locale(int day_sign, int day_number,
+                                    int year_bearer, int year_number,
+                                    i18n_locale_t locale);
 
 #endif /* TIME_AZTEC_INTERPRET_H */

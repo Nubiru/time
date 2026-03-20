@@ -228,7 +228,8 @@ time_add_test(NAME test_coptic         TEST tests/systems/coptic/test_coptic.c  
 time_add_test(NAME test_coptic_interpret TEST tests/systems/coptic/test_coptic_interpret.c DEPS coptic_interpret content_i18n i18n)
 time_add_test(NAME test_coptic_i18n TEST tests/systems/coptic/test_coptic_i18n.c DEPS coptic_interpret content_i18n i18n)
 time_add_test(NAME test_egyptian       TEST tests/systems/egyptian/test_egyptian.c    DEPS egyptian calendar_fixed)
-time_add_test(NAME test_egyptian_interpret TEST tests/systems/egyptian/test_egyptian_interpret.c DEPS egyptian_interpret)
+time_add_test(NAME test_egyptian_interpret TEST tests/systems/egyptian/test_egyptian_interpret.c DEPS egyptian_interpret content_i18n i18n)
+time_add_test(NAME test_egyptian_i18n TEST tests/systems/egyptian/test_egyptian_i18n.c DEPS egyptian_interpret content_i18n i18n)
 time_add_test(NAME test_ethiopian      TEST tests/systems/ethiopian/test_ethiopian.c  DEPS ethiopian calendar_fixed)
 time_add_test(NAME test_ethiopian_interpret TEST tests/systems/ethiopian/test_ethiopian_interpret.c DEPS ethiopian_interpret content_i18n i18n)
 time_add_test(NAME test_ethiopian_i18n TEST tests/systems/ethiopian/test_ethiopian_i18n.c DEPS ethiopian_interpret content_i18n i18n)
@@ -247,11 +248,13 @@ time_add_test(NAME test_thai_interpret TEST tests/systems/thai/test_thai_interpr
 time_add_test(NAME test_thai_i18n TEST tests/systems/thai/test_thai_i18n.c DEPS thai_interpret content_i18n i18n)
 time_add_test(NAME test_cosmic_duality TEST tests/systems/zoroastrian/test_cosmic_duality.c DEPS cosmic_duality)
 time_add_test(NAME test_zoroastrian    TEST tests/systems/zoroastrian/test_zoroastrian.c   DEPS zoroastrian calendar_fixed)
-time_add_test(NAME test_zoroastrian_interpret TEST tests/systems/zoroastrian/test_zoroastrian_interpret.c DEPS zoroastrian_interpret zoroastrian calendar_fixed)
+time_add_test(NAME test_zoroastrian_interpret TEST tests/systems/zoroastrian/test_zoroastrian_interpret.c DEPS zoroastrian_interpret zoroastrian calendar_fixed content_i18n i18n)
+time_add_test(NAME test_zoroastrian_i18n TEST tests/systems/zoroastrian/test_zoroastrian_i18n.c DEPS zoroastrian_interpret zoroastrian calendar_fixed content_i18n i18n)
 
 # Tarot tests
 time_add_test(NAME test_tarot           TEST tests/systems/tarot/test_tarot.c   DEPS tarot)
-time_add_test(NAME test_tarot_interpret TEST tests/systems/tarot/test_tarot_interpret.c DEPS tarot_interpret)
+time_add_test(NAME test_tarot_interpret TEST tests/systems/tarot/test_tarot_interpret.c DEPS tarot_interpret content_i18n i18n)
+time_add_test(NAME test_tarot_i18n TEST tests/systems/tarot/test_tarot_i18n.c DEPS tarot_interpret content_i18n i18n)
 
 # Persian tests
 time_add_test(NAME test_persian         TEST tests/systems/persian/test_persian.c DEPS persian)
@@ -265,11 +268,13 @@ time_add_test(NAME test_bahai_i18n TEST tests/systems/bahai/test_bahai_i18n.c DE
 
 # Japanese tests
 time_add_test(NAME test_japanese        TEST tests/systems/japanese/test_japanese.c DEPS japanese)
-time_add_test(NAME test_japanese_interpret TEST tests/systems/japanese/test_japanese_interpret.c DEPS japanese_interpret)
+time_add_test(NAME test_japanese_interpret TEST tests/systems/japanese/test_japanese_interpret.c DEPS japanese_interpret content_i18n i18n)
+time_add_test(NAME test_japanese_i18n TEST tests/systems/japanese/test_japanese_i18n.c DEPS japanese_interpret content_i18n i18n)
 
 # Aztec tests
 time_add_test(NAME test_aztec           TEST tests/systems/aztec/test_aztec.c      DEPS aztec)
-time_add_test(NAME test_aztec_interpret TEST tests/systems/aztec/test_aztec_interpret.c DEPS aztec_interpret)
+time_add_test(NAME test_aztec_interpret TEST tests/systems/aztec/test_aztec_interpret.c DEPS aztec_interpret content_i18n i18n)
+time_add_test(NAME test_aztec_i18n TEST tests/systems/aztec/test_aztec_i18n.c DEPS aztec_interpret content_i18n i18n)
 
 # Tamil tests
 time_add_test(NAME test_tamil_calendar  TEST tests/systems/tamil/test_tamil_calendar.c DEPS tamil_calendar)
@@ -278,7 +283,8 @@ time_add_test(NAME test_tamil_i18n TEST tests/systems/tamil/test_tamil_i18n.c DE
 
 # Celtic Tree tests
 time_add_test(NAME test_celtic_tree     TEST tests/systems/celtic/test_celtic_tree.c   DEPS celtic_tree)
-time_add_test(NAME test_celtic_interpret TEST tests/systems/celtic/test_celtic_interpret.c DEPS celtic_interpret)
+time_add_test(NAME test_celtic_interpret TEST tests/systems/celtic/test_celtic_interpret.c DEPS celtic_interpret content_i18n i18n)
+time_add_test(NAME test_celtic_i18n TEST tests/systems/celtic/test_celtic_i18n.c DEPS celtic_interpret content_i18n i18n)
 
 # Korean tests
 time_add_test(NAME test_korean_calendar  TEST tests/systems/korean/test_korean_calendar.c DEPS korean_calendar)
@@ -287,11 +293,13 @@ time_add_test(NAME test_korean_i18n TEST tests/systems/korean/test_korean_i18n.c
 
 # Balinese tests
 time_add_test(NAME test_pawukon         TEST tests/systems/balinese/test_pawukon.c       DEPS pawukon)
-time_add_test(NAME test_pawukon_interpret TEST tests/systems/balinese/test_pawukon_interpret.c DEPS pawukon_interpret)
+time_add_test(NAME test_pawukon_interpret TEST tests/systems/balinese/test_pawukon_interpret.c DEPS pawukon_interpret content_i18n i18n)
+time_add_test(NAME test_pawukon_i18n TEST tests/systems/balinese/test_pawukon_i18n.c DEPS pawukon_interpret content_i18n i18n)
 
 # French Republican tests
 time_add_test(NAME test_french_republican TEST tests/systems/french_republican/test_french_republican.c DEPS french_republican)
-time_add_test(NAME test_french_republican_interpret TEST tests/systems/french_republican/test_french_republican_interpret.c DEPS french_republican_interpret)
+time_add_test(NAME test_french_republican_interpret TEST tests/systems/french_republican/test_french_republican_interpret.c DEPS french_republican_interpret content_i18n i18n)
+time_add_test(NAME test_french_republican_i18n TEST tests/systems/french_republican/test_french_republican_i18n.c DEPS french_republican_interpret content_i18n i18n)
 
 # Geology tests
 time_add_test(NAME test_geo_time        TEST tests/systems/test_geo_time.c              DEPS geo_time)
@@ -355,7 +363,8 @@ time_add_test(NAME test_calendar_epoch  TEST tests/systems/unified/test_calendar
 time_add_test(NAME test_calendar_politics TEST tests/systems/unified/test_calendar_politics.c DEPS calendar_politics)
 time_add_test(NAME test_convergence     TEST tests/systems/unified/test_convergence.c     DEPS convergence)
 time_add_test(NAME test_convergence_detect TEST tests/systems/unified/test_convergence_detect.c DEPS convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
-time_add_test(NAME test_convergence_interpret TEST tests/systems/unified/test_convergence_interpret.c DEPS convergence_interpret)
+time_add_test(NAME test_convergence_interpret TEST tests/systems/unified/test_convergence_interpret.c DEPS convergence_interpret content_i18n i18n)
+time_add_test(NAME test_convergence_i18n TEST tests/systems/unified/test_convergence_i18n.c DEPS convergence_interpret content_i18n i18n)
 time_add_test(NAME test_earth_drama     TEST tests/systems/unified/test_earth_drama.c     DEPS earth_drama climate_history fossil_milestones geo_time)
 time_add_test(NAME test_frequency       TEST tests/systems/unified/test_frequency.c       DEPS frequency)
 time_add_test(NAME test_precession_detect TEST tests/systems/unified/test_precession_detect.c DEPS precession_detect)

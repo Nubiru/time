@@ -11,6 +11,8 @@
 #ifndef TIME_EGYPTIAN_INTERPRET_H
 #define TIME_EGYPTIAN_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-season interpretation (3 seasons + epagomenal) */
 typedef struct {
     int season;                 /* 0-3 (Akhet, Peret, Shemu, Epagomenal) */
@@ -65,6 +67,12 @@ ei_epag_t ei_epag_data(int day);
  * sothic_year: 0-1460 (year within Sothic cycle, from egypt_sothic_t).
  * Invalid month: "?" strings in result. */
 egyptian_interp_t ei_interpret(int month, int day, int sothic_year);
+
+/* Locale-aware interpretation. Same as ei_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+egyptian_interp_t ei_interpret_locale(int month, int day, int sothic_year,
+                                      i18n_locale_t locale);
 
 /* Returns 4 (3 seasons + epagomenal). */
 int ei_season_count(void);

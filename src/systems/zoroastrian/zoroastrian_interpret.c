@@ -5,6 +5,7 @@
 
 #include "zoroastrian_interpret.h"
 #include "zoroastrian.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -264,6 +265,134 @@ zoroastrian_interp_t zi_interpret(int month, int day, int festival)
         snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
                  " Festival: %s \xe2\x80\x94 %s. %s",
                  f.name, f.theme, f.practice);
+    }
+
+    return r;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+zoroastrian_interp_t zi_interpret_locale(int month, int day, int festival,
+                                         i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return zi_interpret(month, day, festival);
+    }
+
+    zoroastrian_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    char key[64];
+
+    /* Gatha days (month 13) — handled separately */
+    if (month == 13) {
+        if (day < 1 || day > 5) {
+            snprintf(r.glyph, sizeof(r.glyph), "?");
+            snprintf(r.glance, sizeof(r.glance), "?");
+            snprintf(r.detail, sizeof(r.detail), "?");
+            return r;
+        }
+
+        snprintf(r.glyph, sizeof(r.glyph), "Gth");
+
+        const char *tpl_glance = content_get("zoroastrian.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl_glance,
+                 "Gatha", day, "");
+
+        const char *tpl_detail = content_get("zoroastrian.tpl.detail", locale);
+        int pos = snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                           "", "", day);
+
+        /* Append festival data if active */
+        if (festival >= 1 && festival <= 9 &&
+            pos > 0 && (size_t)pos < sizeof(r.detail)) {
+            snprintf(key, sizeof(key), "zoroastrian.festival.%d.name", festival);
+            const char *fest_name = content_get(key, locale);
+
+            snprintf(key, sizeof(key), "zoroastrian.festival.%d.theme", festival);
+            const char *fest_theme = content_get(key, locale);
+
+            snprintf(key, sizeof(key), "zoroastrian.festival.%d.practice", festival);
+            const char *fest_practice = content_get(key, locale);
+
+            const char *tpl_fest = content_get("zoroastrian.tpl.detail_festival", locale);
+            snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                     tpl_fest, fest_name, fest_theme, fest_practice);
+        }
+
+        return r;
+    }
+
+    /* Regular months (1-12) */
+    if (month < 1 || month > 12) {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    const char *month_name = zoro_month_name(month);
+    const char *day_name = zoro_day_name(day);
+
+    /* Glyph: first 3 chars of month name */
+    size_t len = strlen(month_name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, month_name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Amesha Spenta lookup for days 1-7 */
+    int amesha_idx = (day >= 1 && day <= 7) ? day - 1 : -1;
+
+    /* Glance */
+    const char *tpl_glance = content_get("zoroastrian.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             month_name, day, day_name);
+
+    /* Detail — base month/day narrative */
+    const char *tpl_detail = content_get("zoroastrian.tpl.detail", locale);
+    int pos = snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                       month_name, day_name, day);
+
+    /* Append Amesha Spenta data for days 1-7 */
+    if (amesha_idx >= 0 && pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        snprintf(key, sizeof(key), "zoroastrian.amesha.%d.avestan", amesha_idx);
+        const char *avestan = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "zoroastrian.amesha.%d.meaning", amesha_idx);
+        const char *meaning = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "zoroastrian.amesha.%d.domain", amesha_idx);
+        const char *domain = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "zoroastrian.amesha.%d.element", amesha_idx);
+        const char *element = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "zoroastrian.amesha.%d.virtue", amesha_idx);
+        const char *virtue = content_get(key, locale);
+
+        pos += snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                        " %s (%s). %s. %s. %s.",
+                        avestan, meaning, domain, element, virtue);
+    }
+
+    /* Append festival data if active */
+    if (festival >= 1 && festival <= 9 &&
+        pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        snprintf(key, sizeof(key), "zoroastrian.festival.%d.name", festival);
+        const char *fest_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "zoroastrian.festival.%d.theme", festival);
+        const char *fest_theme = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "zoroastrian.festival.%d.practice", festival);
+        const char *fest_practice = content_get(key, locale);
+
+        const char *tpl_fest = content_get("zoroastrian.tpl.detail_festival", locale);
+        snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                 tpl_fest, fest_name, fest_theme, fest_practice);
     }
 
     return r;

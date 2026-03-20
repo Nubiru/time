@@ -3,6 +3,7 @@
  * Pure functions: no GL, no malloc, no globals, no side effects. */
 
 #include "convergence_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -224,4 +225,85 @@ int cvi_system_count(void)
 int cvi_pattern_count(void)
 {
     return 8;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+convergence_interp_t cvi_interpret_locale(cd_strength_t strength,
+                                          const cd_system_t *systems,
+                                          int system_count,
+                                          i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return cvi_interpret(strength, systems, system_count);
+    }
+
+    convergence_interp_t result;
+    memset(&result, 0, sizeof(result));
+
+    char key[64];
+
+    /* Strength data */
+    snprintf(key, sizeof(key), "convergence.strength.%d.name", (int)strength);
+    const char *name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "convergence.strength.%d.description", (int)strength);
+    const char *description = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "convergence.strength.%d.significance", (int)strength);
+    const char *significance = content_get(key, locale);
+
+    /* Glyph: one star per strength level */
+    int stars = (int)strength;
+    if (stars < 1) stars = 1;
+    if (stars > 4) stars = 4;
+    for (int i = 0; i < stars; i++) {
+        result.glyph[i] = '*';
+    }
+    result.glyph[stars] = '\0';
+
+    /* Handle NULL/empty systems */
+    if (systems == NULL || system_count <= 0) {
+        snprintf(result.glance, sizeof(result.glance), "%s", name);
+        snprintf(result.detail, sizeof(result.detail), "%s.", description);
+        return result;
+    }
+
+    /* Glance */
+    const char *tpl_glance = content_get("convergence.tpl.glance", locale);
+    snprintf(result.glance, sizeof(result.glance), tpl_glance,
+             name, system_count);
+
+    /* Detail */
+    const char *tpl_detail = content_get("convergence.tpl.detail", locale);
+    int pos = snprintf(result.detail, sizeof(result.detail), tpl_detail,
+                       description);
+    int remaining = (int)sizeof(result.detail) - pos;
+
+    for (int i = 0; i < system_count && remaining > 1; i++) {
+        cvi_system_t sys = cvi_system_data(systems[i]);
+        int n;
+        if (i > 0) {
+            n = snprintf(result.detail + pos, (size_t)remaining, ", ");
+            if (n > 0 && n < remaining) {
+                pos += n;
+                remaining -= n;
+            }
+        }
+        n = snprintf(result.detail + pos, (size_t)remaining,
+                     "%s (%s)", sys.system_name, sys.what_aligns);
+        if (n > 0 && n < remaining) {
+            pos += n;
+            remaining -= n;
+        }
+    }
+
+    /* Append significance */
+    snprintf(result.detail + pos, (size_t)remaining,
+             ". %s.", significance);
+
+    return result;
 }
