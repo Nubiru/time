@@ -26,6 +26,7 @@
 #include "../../systems/human_design/human_design.h"
 #include "../../ui/card_data.h"
 #include "../../ui/card_layout.h"
+#include "../../ui/today_card.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
 static const float TEXT_ORBIT_SCALE = 3.0f;
@@ -207,57 +208,28 @@ static void draw_card_text(const render_frame_t *frame)
     float aspect = (float)vw / (float)vh;
     card_layout_t layout = card_layout_compute(card_all_mask(), aspect);
 
-    /* Compute system data from simulation JD */
+    /* Compute system data via universal dispatcher */
     double jd = frame->simulation_jd;
-
-    /* Tzolkin */
-    tzolkin_day_t tz = tzolkin_from_jd(jd);
-    card_content_t c_tz = card_format_tzolkin(
-        tz.seal, tz.tone, tz.kin, tzolkin_seal_name(tz.seal));
-
-    /* I Ching */
-    hexagram_t hex = iching_from_jd(jd);
-    card_content_t c_ic = card_format_iching(
-        hex.king_wen, iching_hexagram_name(hex.king_wen),
-        iching_trigram_name(hex.upper_trigram),
-        iching_trigram_name(hex.lower_trigram),
-        hex.lines);
-
-    /* Chinese */
-    chinese_year_t cy = chinese_year_from_jd(jd);
-    card_content_t c_ch = card_format_chinese(
-        chinese_animal_symbol(cy.animal),
-        chinese_element_name(cy.element),
-        chinese_animal_name(cy.animal),
-        chinese_polarity_name(cy.polarity),
-        cy.stem, cy.branch);
-
-    /* Human Design */
     double sun_lon = approx_sun_longitude(jd);
-    hd_incarnation_t inc = hd_incarnation(sun_lon);
-    card_content_t c_hd = card_format_human_design(
-        inc.sun.gate, inc.sun.line,
-        inc.earth.gate, inc.earth.line,
-        hd_gate_name(inc.sun.gate),
-        hd_gate_keyword(inc.sun.gate));
-
-    /* Astrology */
-    int sun_sign = zodiac_sign(sun_lon);
-    double sun_deg = zodiac_degree(sun_lon);
     lunar_info_t moon = lunar_phase(jd);
-    int moon_sign = zodiac_sign(moon.moon_longitude);
-    double moon_deg = zodiac_degree(moon.moon_longitude);
-    /* Ascendant requires location/time; use 0 as placeholder */
-    card_content_t c_as = card_format_astrology(
-        sun_sign, sun_deg, moon_sign, moon_deg, 0, 0.0);
+    double moon_lon = moon.moon_longitude;
 
-    /* Map card types to content */
+    /* System IDs for the 5 card slots (ts_system_t values) */
+    static const int SLOT_SYSTEMS[CARD_TYPE_COUNT] = {
+        1,  /* CARD_TZOLKIN   → TS_SYS_TZOLKIN */
+        8,  /* CARD_ICHING    → TS_SYS_ICHING */
+        3,  /* CARD_CHINESE   → TS_SYS_CHINESE */
+        10, /* CARD_HD        → TS_SYS_HUMAN_DESIGN */
+        9   /* CARD_ASTROLOGY → TS_SYS_ASTROLOGY */
+    };
+
+    card_content_t card_contents[CARD_TYPE_COUNT];
     const card_content_t *contents[CARD_TYPE_COUNT];
-    contents[CARD_TZOLKIN]   = &c_tz;
-    contents[CARD_ICHING]    = &c_ic;
-    contents[CARD_CHINESE]   = &c_ch;
-    contents[CARD_HD]        = &c_hd;
-    contents[CARD_ASTROLOGY] = &c_as;
+    for (int i = 0; i < CARD_TYPE_COUNT; i++) {
+        card_contents[i] = today_card_for_system(
+            SLOT_SYSTEMS[i], jd, sun_lon, moon_lon);
+        contents[i] = &card_contents[i];
+    }
 
     /* Build glyph instances for card text */
     glyph_instance_t instances[GLYPH_BATCH_MAX];
