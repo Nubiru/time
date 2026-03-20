@@ -1,18 +1,18 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 17)
+**Last refreshed**: 2026-03-20 (INFRA session 18)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 408 |
-| Header files (.h) | 409 |
-| Lines of code (src/) | 98,487 |
-| Lines of tests | 174,000+ |
-| Test suites (CTest) | 399 |
+| Source files (.c) | 416 |
+| Header files (.h) | 418+ |
+| Lines of code (src/) | 99,912 |
+| Lines of tests | 178,000+ |
+| Test suites (CTest) | 413 (+ 1 WIP broken) |
 | Render pass files | 19 |
-| Pure modules | 381+ |
+| Pure modules | 389+ |
 | Stateful modules | 29 |
 | Contributors | 179 |
 
@@ -20,9 +20,9 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 399 |
-| Test functions (RUN_TEST) | 16,178 |
-| Test assertions (TEST_ASSERT) | 28,500+ |
+| Test suites (CTest) | 413 |
+| Test functions (RUN_TEST) | 16,500+ |
+| Test assertions (TEST_ASSERT) | 29,000+ |
 | Failures | 0 |
 | CTest time | 5.00s (with benchmarks) |
 | E2E tests (Playwright) | 5 |
@@ -181,14 +181,14 @@
 
 *13 functions >80L (5 over 100L). All domain-specific logic. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-20, session 17)
+## Health (INFRA sweep — 2026-03-20, session 18)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (408 .c files, 0 orphans) |
+| Build system sync | OK (416 .c files committed, WIP test_system_correlation has -Werror bug) |
 | Purity audit | CLEAN (P1-P5 all zones, session 11) |
-| Native build | PASS (399/399 tests) — use -j4 for clean builds (race at -j12 with 380+ OBJECT libs) |
+| Native build | PASS (413/413 tests) — use -j4 for clean builds (race at higher parallelism with 390+ OBJECT libs) |
 | WASM build | PASS (330 KB raw, 129 KB gzipped) — zero linker warnings |
 | E2E tests | PASS (5/5 Playwright) |
 | Coverage | 95.9% lines (30,315/31,615), 99.9% functions (3,710/3,712) |
