@@ -6,6 +6,8 @@ set(GEOLOGY_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/radiometric.c
     ${CMAKE_CURRENT_SOURCE_DIR}/thermo.c
     ${CMAKE_CURRENT_SOURCE_DIR}/geology_interpret.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/earth_voyage.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/fossil_narrative.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -16,4 +18,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_radiometric       OBJECT radiometric.c)
     add_library(time_thermo            OBJECT thermo.c)
     add_library(time_geology_interpret OBJECT geology_interpret.c)
+    add_library(time_earth_voyage      OBJECT earth_voyage.c)
+    add_library(time_fossil_narrative  OBJECT fossil_narrative.c)
 endif()
