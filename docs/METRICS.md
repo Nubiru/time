@@ -1,18 +1,18 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 19)
+**Last refreshed**: 2026-03-20 (INFRA session 20)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 424 |
-| Header files (.h) | 426 |
-| Lines of code (src/) | 101,421 (**100K milestone!**) |
-| Lines of tests | 180,000+ |
-| Test suites (CTest) | 425 |
+| Source files (.c) | 428 |
+| Header files (.h) | 429 |
+| Lines of code (src/) | 103,003 |
+| Lines of tests | 182,000+ |
+| Test suites (CTest) | 429 |
 | Render pass files | 19 |
-| Pure modules | 395+ |
+| Pure modules | 399+ |
 | Stateful modules | 29 |
 | Contributors | 184 |
 
@@ -20,9 +20,9 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 425 |
-| Test functions (RUN_TEST) | 16,767 |
-| Test assertions (TEST_ASSERT) | 28,365 |
+| Test suites (CTest) | 429 |
+| Test functions (RUN_TEST) | 16,936 |
+| Test assertions (TEST_ASSERT) | 28,670 |
 | Failures | 0 |
 | CTest time | 5.00s (with benchmarks) |
 | E2E tests (Playwright) | 5 |
@@ -87,9 +87,9 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j4 | PASS (425/425, 1.45s) |
+| CTest -j4 | PASS (429/429, 1.28s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
-| WASM build | PASS (345 KB raw, 135 KB gzipped) — storage_bridge_wasm + motion wiring |
+| WASM build | PASS (353 KB raw, 138 KB gzipped) — full motion wiring + interpret locale |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
@@ -156,10 +156,10 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 353,599 bytes (345 KB) |
-| Gzipped | 138,441 bytes (135 KB) |
+| Raw .wasm | 361,757 bytes (353 KB) |
+| Gzipped | 141,147 bytes (138 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
-| Growth since session 18 | +24 KB raw (storage_bridge_wasm + motion + content_i18n) |
+| Growth since session 18 | +32 KB raw (storage_bridge_wasm + motion wiring + interpret locale) |
 
 ## God Functions (>80 lines)
 
@@ -181,20 +181,20 @@
 
 *13 functions >80L (5 over 100L). All domain-specific logic. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-20, session 19)
+## Health (INFRA sweep — 2026-03-20, session 20)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (424 .c files, 2 WIP orphans: brain_explain.c, ui/CMakeLists.txt) |
+| Build system sync | OK (428 .c files, 1 WIP orphan: brain_explain.c) |
 | Purity audit | CLEAN (P1-P5 all zones, session 11) |
-| Native build | PASS (425/425 tests, 1.45s) — use -j4 for clean builds |
-| WASM build | PASS (345 KB raw, 135 KB gzipped) — storage_bridge_wasm linked |
+| Native build | PASS (429/429 tests, 1.28s) — use -j4 for clean builds |
+| WASM build | PASS (353 KB raw, 138 KB gzipped) |
 | E2E tests | PASS (5/5 Playwright) |
 | Coverage | 95.9% lines (30,315/31,615), 99.9% functions (3,710/3,712) |
 | Git hooks | pre-commit (build safety) + commit-msg (stream domain) — both active |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Render pipeline | 19/19 passes |
-| Platform bridge | storage_bridge_wasm.c delivered — PERSONA WASM unblocked |
-| Motion wiring | enter_zoom + earth_transition + birth_flight in core — MOTION unblocked |
+| Motion wiring | ALL 9 motion modules in core — MOTION fully wired |
+| Interpret locale | 11/16 systems have interpret_locale (4 new i18n tests blocked on content data) |
