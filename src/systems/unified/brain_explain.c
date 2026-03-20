@@ -216,6 +216,68 @@ static const br_explanation_t EXPLANATIONS[] = {
       "Both the Persian (Solar Hijri) and French Republican calendars "
       "anchor their year to an equinox. The Persian calendar uses the "
       "vernal equinox; the French Republican used the autumn equinox." },
+
+    /* --- Batch 2: high-frequency pairs from 2026 convergence report --- */
+
+    { CD_SYS_ASTRONOMY, CD_SYS_BUDDHIST, BR_EXPLAIN_SHARED_SOURCE,
+      "Lunar phase observation",
+      "Buddhist Uposatha days align with quarter-moon phases (new, "
+      "waxing, full, waning). Both systems observe the same lunar cycle "
+      "— astronomy measures it, Buddhism sanctifies it." },
+
+    { CD_SYS_ASTRONOMY, CD_SYS_TZOLKIN, BR_EXPLAIN_CONVERGENT,
+      "Independent cycles occasionally overlap",
+      "The 260-day Tzolkin count and the 29.5-day lunar cycle are "
+      "mathematically unrelated — they share no common period. Any "
+      "alignment is coincidental, yet recurring." },
+
+    { CD_SYS_TZOLKIN, CD_SYS_BUDDHIST, BR_EXPLAIN_CONVERGENT,
+      "No historical contact",
+      "Mesoamerican day-counting and Southeast Asian lunar observance "
+      "developed independently. The Tzolkin's 260-day cycle has no "
+      "relation to the Buddhist lunar calendar." },
+
+    { CD_SYS_COPTIC, CD_SYS_FRENCH, BR_EXPLAIN_SHARED_SOURCE,
+      "Both inherit Egyptian 12x30+5 structure",
+      "The Coptic calendar descends directly from ancient Egypt's civil "
+      "calendar. The French Republican calendar adopted the same 12x30+5 "
+      "structure, inspired by its rational simplicity." },
+
+    { CD_SYS_JAPANESE, CD_SYS_FRENCH, BR_EXPLAIN_CONVERGENT,
+      "Independent day-counting systems",
+      "Japanese rokuyo (6-day fortune cycle) and the French Republican "
+      "decade (10-day week) are unrelated counting systems that "
+      "occasionally produce simultaneous significant days." },
+
+    { CD_SYS_BUDDHIST, CD_SYS_JAPANESE, BR_EXPLAIN_TRANSMISSION,
+      "Buddhism transmitted to Japan",
+      "Buddhism reached Japan via Korea and China in the 6th century CE. "
+      "Buddhist observance days (Uposatha) influenced Japanese religious "
+      "practice alongside indigenous Shinto traditions." },
+
+    { CD_SYS_BUDDHIST, CD_SYS_COPTIC, BR_EXPLAIN_CONVERGENT,
+      "Independent lunar-sensitive traditions",
+      "Buddhist Uposatha (quarter-moon days) and Coptic month boundaries "
+      "are independently derived. Buddhism tracks the synodic month; "
+      "the Coptic calendar uses a fixed solar structure." },
+
+    { CD_SYS_CELTIC, CD_SYS_ASTROLOGY, BR_EXPLAIN_SHARED_SOURCE,
+      "Both track solar position",
+      "Celtic Sabbats mark solstices, equinoxes, and cross-quarter days. "
+      "Western astrology divides the same ecliptic into 12 signs. Both "
+      "systems read meaning from the Sun's annual journey." },
+
+    { CD_SYS_ASTROLOGY, CD_SYS_JAPANESE, BR_EXPLAIN_CONVERGENT,
+      "Both use solar longitude thresholds",
+      "Western zodiac sign boundaries (every 30 degrees) and Japanese "
+      "sekki solar terms (every 15 degrees) both divide the ecliptic "
+      "by angular position. Same sky, different division schemes." },
+
+    { CD_SYS_ASTRONOMY, CD_SYS_COPTIC, BR_EXPLAIN_SHARED_SOURCE,
+      "Egyptian astronomical heritage",
+      "The Coptic calendar inherits the ancient Egyptian civil calendar, "
+      "which was originally calibrated to the heliacal rising of Sirius "
+      "— a direct astronomical observation." },
 };
 
 static const int EXPLANATION_COUNT =

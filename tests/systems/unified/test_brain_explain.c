@@ -281,6 +281,40 @@ void test_lookup_persian_french_convergent(void) {
 }
 
 /* ===================================================================
+ * High-frequency 2026 convergence pairs
+ * =================================================================== */
+
+void test_lookup_astronomy_buddhist_shared(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ASTRONOMY, CD_SYS_BUDDHIST);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_SHARED_SOURCE, e->why);
+}
+
+void test_lookup_astronomy_tzolkin_convergent(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ASTRONOMY, CD_SYS_TZOLKIN);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_CONVERGENT, e->why);
+}
+
+void test_lookup_coptic_french_shared(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_COPTIC, CD_SYS_FRENCH);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_SHARED_SOURCE, e->why);
+}
+
+void test_lookup_celtic_astrology_shared(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_CELTIC, CD_SYS_ASTROLOGY);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_SHARED_SOURCE, e->why);
+}
+
+void test_lookup_buddhist_japanese_transmission(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_BUDDHIST, CD_SYS_JAPANESE);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_TRANSMISSION, e->why);
+}
+
+/* ===================================================================
  * Main
  * =================================================================== */
 
@@ -339,6 +373,13 @@ int main(void) {
     RUN_TEST(test_lookup_islamic_bahai_transmission);
     RUN_TEST(test_lookup_bahai_french_convergent);
     RUN_TEST(test_lookup_persian_french_convergent);
+
+    /* High-frequency 2026 pairs */
+    RUN_TEST(test_lookup_astronomy_buddhist_shared);
+    RUN_TEST(test_lookup_astronomy_tzolkin_convergent);
+    RUN_TEST(test_lookup_coptic_french_shared);
+    RUN_TEST(test_lookup_celtic_astrology_shared);
+    RUN_TEST(test_lookup_buddhist_japanese_transmission);
 
     return UNITY_END();
 }

@@ -90,6 +90,28 @@ static const br_known_pair_t KNOWN_PAIRS[] = {
       "Both equinox-anchored but from different traditions" },
     { CD_SYS_PERSIAN,   CD_SYS_FRENCH,   BR_CORR_APPROXIMATE, 0.50,
       "Both solar calendars anchored to equinoxes" },
+
+    /* High-frequency pairs from 2026 convergence report */
+    { CD_SYS_ASTRONOMY, CD_SYS_BUDDHIST, BR_CORR_HARMONIC,   0.85,
+      "Buddhist Uposatha days observe same lunar phases as astronomy" },
+    { CD_SYS_ASTRONOMY, CD_SYS_TZOLKIN,  BR_CORR_APPROXIMATE, 0.30,
+      "260-day and 29.5-day cycles unrelated; alignment coincidental" },
+    { CD_SYS_TZOLKIN,   CD_SYS_BUDDHIST, BR_CORR_APPROXIMATE, 0.25,
+      "No historical contact between Mesoamerica and Southeast Asia" },
+    { CD_SYS_COPTIC,    CD_SYS_FRENCH,   BR_CORR_HARMONIC,   0.75,
+      "Both use 12x30+5 structure from Egyptian civil calendar" },
+    { CD_SYS_JAPANESE,  CD_SYS_FRENCH,   BR_CORR_APPROXIMATE, 0.20,
+      "Rokuyo (6-day) and decade (10-day) cycles are unrelated" },
+    { CD_SYS_BUDDHIST,  CD_SYS_JAPANESE, BR_CORR_HARMONIC,   0.80,
+      "Buddhism transmitted to Japan in 6th century CE" },
+    { CD_SYS_BUDDHIST,  CD_SYS_COPTIC,   BR_CORR_APPROXIMATE, 0.30,
+      "Independent lunar vs solar traditions" },
+    { CD_SYS_CELTIC,    CD_SYS_ASTROLOGY, BR_CORR_HARMONIC,  0.85,
+      "Both divide the ecliptic by solar position" },
+    { CD_SYS_ASTROLOGY, CD_SYS_JAPANESE, BR_CORR_HARMONIC,   0.70,
+      "Zodiac (30-deg) and sekki (15-deg) both use solar longitude" },
+    { CD_SYS_ASTRONOMY, CD_SYS_COPTIC,   BR_CORR_APPROXIMATE, 0.50,
+      "Coptic calendar descends from Egyptian astronomical observations" },
 };
 
 static const int KNOWN_PAIR_COUNT =
