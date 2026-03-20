@@ -278,6 +278,36 @@ static const br_explanation_t EXPLANATIONS[] = {
       "The Coptic calendar inherits the ancient Egyptian civil calendar, "
       "which was originally calibrated to the heliacal rising of Sirius "
       "— a direct astronomical observation." },
+
+    /* --- Batch 3: I Ching numerological cross-system pairs (Digest 086) --- */
+
+    { CD_SYS_ICHING, CD_SYS_CHINESE, BR_EXPLAIN_SHARED_SOURCE,
+      "He Tu and Lo Shu — shared numerical cosmology",
+      "The I Ching's trigram arrangements derive from He Tu (55 dots) and "
+      "Lo Shu (45 dots, 3x3 magic square). Chinese cosmology's Five Elements "
+      "and Ten Stems were integrated with the Eight Trigrams by Sung dynasty "
+      "scholars, sharing the same numerical foundation." },
+
+    { CD_SYS_ICHING, CD_SYS_HINDU, BR_EXPLAIN_CONVERGENT,
+      "Binary completeness in independent traditions",
+      "The I Ching's 64 hexagrams form a complete 6-bit binary system (2^6). "
+      "Hindu panchanga uses 30 tithis per month and 27 nakshatras — both "
+      "are systematic divisions of cycles. Independent yet structurally "
+      "analogous approaches to encoding cyclical time." },
+
+    { CD_SYS_ICHING, CD_SYS_HEBREW, BR_EXPLAIN_CONVERGENT,
+      "Combinatorial completeness",
+      "64 hexagrams exhaust all 6-line binary combinations. The 22 Hebrew "
+      "letters generate 231 gates (C(22,2) pairs). Both traditions discovered "
+      "combinatorial completeness independently — the idea that all possible "
+      "states can be enumerated from simple elements." },
+
+    { CD_SYS_ICHING, CD_SYS_ASTROLOGY, BR_EXPLAIN_CONVERGENT,
+      "Cyclic archetypes from different sources",
+      "I Ching hexagrams cycle through 64 states of change. Western zodiac "
+      "cycles through 12 archetypal energies. Both assign qualitative meaning "
+      "to positions in a cycle. The I Ching uses binary logic; astrology uses "
+      "celestial geometry." },
 };
 
 static const int EXPLANATION_COUNT =
