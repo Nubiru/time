@@ -168,8 +168,9 @@ time_add_test(NAME test_astrology_today TEST tests/systems/astrology/test_astrol
 
 # Calendar tests
 time_add_test(NAME test_gregorian       TEST tests/systems/test_gregorian.c      DEPS gregorian julian)
-time_add_test(NAME test_gregorian_interpret TEST tests/systems/gregorian/test_gregorian_interpret.c DEPS gregorian_interpret)
-time_add_test(NAME test_gregorian_today TEST tests/systems/gregorian/test_gregorian_today.c DEPS gregorian_today gregorian gregorian_interpret julian)
+time_add_test(NAME test_gregorian_interpret TEST tests/systems/gregorian/test_gregorian_interpret.c DEPS gregorian_interpret content_i18n i18n)
+time_add_test(NAME test_gregorian_i18n TEST tests/systems/gregorian/test_gregorian_i18n.c DEPS gregorian_interpret content_i18n i18n)
+time_add_test(NAME test_gregorian_today TEST tests/systems/gregorian/test_gregorian_today.c DEPS gregorian_today gregorian gregorian_interpret content_i18n i18n julian)
 time_add_test(NAME test_tzolkin         TEST tests/systems/test_tzolkin.c        DEPS tzolkin julian)
 time_add_test(NAME test_haab            TEST tests/systems/test_haab.c           DEPS haab tzolkin julian)
 time_add_test(NAME test_chinese         TEST tests/systems/test_chinese.c        DEPS chinese julian)
@@ -204,8 +205,9 @@ time_add_test(NAME test_tree_geometry   TEST tests/systems/kabbalah/test_tree_ge
 time_add_test(NAME test_kabbalah_interpret TEST tests/systems/kabbalah/test_kabbalah_interpret.c DEPS kabbalah_interpret)
 time_add_test(NAME test_kabbalah_today TEST tests/systems/kabbalah/test_kabbalah_today.c DEPS kabbalah_today sefirot four_worlds tree_geometry kabbalah_interpret)
 time_add_test(NAME test_sabbatical     TEST tests/systems/hebrew/test_sabbatical.c    DEPS sabbatical hebrew)
-time_add_test(NAME test_hebrew_interpret TEST tests/systems/hebrew/test_hebrew_interpret.c DEPS hebrew_interpret hebrew)
-time_add_test(NAME test_hebrew_today TEST tests/systems/hebrew/test_hebrew_today.c DEPS hebrew_today hebrew sabbatical hebrew_interpret)
+time_add_test(NAME test_hebrew_interpret TEST tests/systems/hebrew/test_hebrew_interpret.c DEPS hebrew_interpret hebrew content_i18n i18n)
+time_add_test(NAME test_hebrew_i18n TEST tests/systems/hebrew/test_hebrew_i18n.c DEPS hebrew_interpret hebrew content_i18n i18n)
+time_add_test(NAME test_hebrew_today TEST tests/systems/hebrew/test_hebrew_today.c DEPS hebrew_today hebrew sabbatical hebrew_interpret content_i18n i18n)
 time_add_test(NAME test_dreamspell     TEST tests/systems/tzolkin/test_dreamspell.c   DEPS dreamspell)
 time_add_test(NAME test_tzolkin_board  TEST tests/systems/tzolkin/test_tzolkin_board.c DEPS tzolkin_board)
 time_add_test(NAME test_kin_social    TEST tests/systems/tzolkin/test_kin_social.c   DEPS kin_social dreamspell)
@@ -415,7 +417,7 @@ time_add_test(NAME test_brain_query TEST tests/systems/unified/test_brain_query.
 time_add_test(NAME test_cal_terms TEST tests/systems/unified/test_cal_terms.c
     DEPS cal_terms)
 time_add_test(NAME test_depth_interpret TEST tests/systems/unified/test_depth_interpret.c
-    DEPS depth_interpret hebrew_interpret hebrew islamic_interpret hijri buddhist_interpret hindu_interpret panchanga nakshatra iching_interpret iching kabbalah_interpret)
+    DEPS depth_interpret hebrew_interpret hebrew islamic_interpret hijri buddhist_interpret hindu_interpret panchanga nakshatra iching_interpret iching kabbalah_interpret content_i18n i18n)
 time_add_test(NAME test_depth_hud TEST tests/systems/unified/test_depth_hud.c
     DEPS depth_hud)
 time_add_test(NAME test_brain_audio_bridge TEST tests/systems/unified/test_brain_audio_bridge.c
@@ -494,6 +496,7 @@ time_add_test(NAME test_hd_card        TEST tests/ui/test_hd_card.c         DEPS
 time_add_test(NAME test_i18n           TEST tests/ui/test_i18n.c            DEPS i18n)
 time_add_test(NAME test_i18n_locales   TEST tests/ui/test_i18n_locales.c    DEPS i18n)
 time_add_test(NAME test_i18n_p1        TEST tests/ui/test_i18n_p1.c         DEPS i18n)
+time_add_test(NAME test_content_i18n   TEST tests/ui/test_content_i18n.c    DEPS content_i18n i18n)
 time_add_test(NAME test_greeting       TEST tests/ui/test_greeting.c        DEPS greeting)
 time_add_test(NAME test_share_template TEST tests/ui/test_share_template.c  DEPS share_template)
 time_add_test(NAME test_seasonal_greeting TEST tests/ui/test_seasonal_greeting.c DEPS seasonal_greeting)

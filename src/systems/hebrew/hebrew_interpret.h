@@ -10,6 +10,7 @@
 #define TIME_HEBREW_INTERPRET_H
 
 #include "hebrew.h"
+#include "../../ui/i18n.h"  /* i18n_locale_t */
 
 /* Per-month interpretation data */
 typedef struct {
@@ -37,6 +38,13 @@ hi_month_t hi_month_data(int month);
  * is_leap_year: 1 if leap, 0 if not. */
 hebrew_interp_t hi_interpret(hebrew_date_t date, int sabbatical_pos,
                              int is_leap_year);
+
+/* Locale-aware interpretation. Same as hi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+hebrew_interp_t hi_interpret_locale(hebrew_date_t date, int sabbatical_pos,
+                                    int is_leap_year,
+                                    i18n_locale_t locale);
 
 /* Returns 13 (total number of months including Adar II). */
 int hi_month_count(void);

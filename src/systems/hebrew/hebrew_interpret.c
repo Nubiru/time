@@ -4,6 +4,7 @@
  * Month data from Sefer Yetzirah / Kabbalistic tradition. */
 
 #include "hebrew_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -100,6 +101,69 @@ hebrew_interp_t hi_interpret(hebrew_date_t date, int sabbatical_pos,
         snprintf(result.detail + written,
                  sizeof(result.detail) - (size_t)written,
                  " Shemitah year %d of 7.", sabbatical_pos);
+    }
+
+    return result;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+hebrew_interp_t hi_interpret_locale(hebrew_date_t date, int sabbatical_pos,
+                                    int is_leap_year,
+                                    i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return hi_interpret(date, sabbatical_pos, is_leap_year);
+    }
+
+    hebrew_interp_t result;
+    memset(&result, 0, sizeof(result));
+
+    char key[64];
+
+    /* Month name stays system-native (Hebrew names preserved) */
+    snprintf(key, sizeof(key), "hebrew.month.%d.name", date.month);
+    const char *month_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hebrew.month.%d.letter", date.month);
+    const char *letter = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hebrew.month.%d.tribe", date.month);
+    const char *tribe = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hebrew.month.%d.sense", date.month);
+    const char *sense = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hebrew.month.%d.quality", date.month);
+    const char *quality = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hebrew.month.%d.brief", date.month);
+    const char *brief = content_get(key, locale);
+
+    /* T0: glyph — the Hebrew letter (kept original) */
+    snprintf(result.glyph, sizeof(result.glyph), "%s", letter);
+
+    /* T1: glance */
+    const char *tpl_glance = content_get("hebrew.tpl.glance", locale);
+    snprintf(result.glance, sizeof(result.glance), tpl_glance,
+             date.year, month_name, date.day, quality);
+
+    /* T3: detail */
+    const char *tpl_detail = content_get("hebrew.tpl.detail", locale);
+    int written = snprintf(result.detail, sizeof(result.detail),
+                           tpl_detail,
+                           month_name, quality, letter, tribe, sense, brief);
+
+    /* Append sabbatical position if provided */
+    if (sabbatical_pos >= 1 && sabbatical_pos <= 7 &&
+        written > 0 && (size_t)written < sizeof(result.detail)) {
+        const char *tpl_sabb = content_get("hebrew.tpl.sabbatical", locale);
+        snprintf(result.detail + written,
+                 sizeof(result.detail) - (size_t)written,
+                 tpl_sabb, sabbatical_pos);
     }
 
     return result;
