@@ -154,6 +154,37 @@ void test_default_style(void) {
     TEST_ASSERT_GREATER_THAN_FLOAT(0.0f, s.border.a);
 }
 
+/* --- Focus mode mapping --- */
+
+void test_focus_astrology(void) {
+    TEST_ASSERT_EQUAL(TS_SYS_ASTROLOGY, card_style_focus_system(1));
+}
+
+void test_focus_kin(void) {
+    TEST_ASSERT_EQUAL(TS_SYS_TZOLKIN, card_style_focus_system(2));
+}
+
+void test_focus_iching(void) {
+    TEST_ASSERT_EQUAL(TS_SYS_ICHING, card_style_focus_system(3));
+}
+
+void test_focus_chinese(void) {
+    TEST_ASSERT_EQUAL(TS_SYS_CHINESE, card_style_focus_system(4));
+}
+
+void test_focus_hd(void) {
+    TEST_ASSERT_EQUAL(TS_SYS_HUMAN_DESIGN, card_style_focus_system(5));
+}
+
+void test_focus_overview_negative(void) {
+    TEST_ASSERT_EQUAL(-1, card_style_focus_system(0));
+}
+
+void test_focus_invalid_negative(void) {
+    TEST_ASSERT_EQUAL(-1, card_style_focus_system(99));
+    TEST_ASSERT_EQUAL(-1, card_style_focus_system(-1));
+}
+
 /* --- Comprehensive: all 20 systems produce valid output --- */
 
 void test_all_twenty_systems_valid(void) {
@@ -200,6 +231,15 @@ int main(void) {
 
     /* Default */
     RUN_TEST(test_default_style);
+
+    /* Focus mode */
+    RUN_TEST(test_focus_astrology);
+    RUN_TEST(test_focus_kin);
+    RUN_TEST(test_focus_iching);
+    RUN_TEST(test_focus_chinese);
+    RUN_TEST(test_focus_hd);
+    RUN_TEST(test_focus_overview_negative);
+    RUN_TEST(test_focus_invalid_negative);
 
     /* Comprehensive */
     RUN_TEST(test_all_twenty_systems_valid);

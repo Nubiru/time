@@ -75,3 +75,15 @@ card_style_t card_style_for_system(int system_id, float opacity,
 
     return style;
 }
+
+int card_style_focus_system(int focus_mode)
+{
+    switch (focus_mode) {
+    case 1: return TS_SYS_ASTROLOGY;     /* FOCUS_MODE_ASTROLOGY */
+    case 2: return TS_SYS_TZOLKIN;       /* FOCUS_MODE_KIN */
+    case 3: return TS_SYS_ICHING;        /* FOCUS_MODE_ICHING */
+    case 4: return TS_SYS_CHINESE;       /* FOCUS_MODE_CHINESE */
+    case 5: return TS_SYS_HUMAN_DESIGN;  /* FOCUS_MODE_HD */
+    default: return -1;
+    }
+}

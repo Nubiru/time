@@ -115,8 +115,14 @@ void card_pass_draw(const render_frame_t *frame) {
     if (vh < 1.0f) vh = 1080.0f;
     float aspect = vw / vh;
 
-    /* Select top cards for current zoom depth (same as text_pass) */
+    /* Select cards: focus mode overrides zoom-based selection */
     cs_selection_t sel = cs_select(frame->log_zoom, aspect);
+    int focus_sys = card_style_focus_system(frame->focus_mode);
+    if (focus_sys >= 0) {
+        sel.filled_count = 1;
+        sel.slots[0].system_id = focus_sys;
+        sel.slots[0].opacity = 1.0f;
+    }
     if (sel.filled_count == 0) return;
 
     /* Build layout with selected cards visible */

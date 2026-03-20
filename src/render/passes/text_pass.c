@@ -216,8 +216,14 @@ static void draw_card_text(const render_frame_t *frame)
     lunar_info_t moon = lunar_phase(jd);
     double moon_lon = moon.moon_longitude;
 
-    /* Select top 5 systems for current zoom depth */
+    /* Select cards: focus mode overrides zoom-based selection */
     cs_selection_t sel = cs_select(frame->log_zoom, aspect);
+    int focus_sys = card_style_focus_system(frame->focus_mode);
+    if (focus_sys >= 0) {
+        sel.filled_count = 1;
+        sel.slots[0].system_id = focus_sys;
+        sel.slots[0].opacity = 1.0f;
+    }
 
     card_content_t card_contents[CARD_TYPE_COUNT];
     const card_content_t *contents[CARD_TYPE_COUNT];

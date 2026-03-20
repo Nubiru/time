@@ -39,4 +39,9 @@ card_style_t card_style_default(float opacity, theme_id_t theme_id);
  * Returns ct_system_t value (0-12) or -1 if no mapping exists. */
 int card_style_to_ct_system(int ts_system_id);
 
+/* Map focus mode to the knowledge system it highlights.
+ * focus_mode: 1=Astrology, 2=Kin, 3=I Ching, 4=Chinese, 5=HD
+ * Returns ts_system_t value, or -1 for overview (0) or invalid. */
+int card_style_focus_system(int focus_mode);
+
 #endif /* TIME_CARD_STYLE_H */
