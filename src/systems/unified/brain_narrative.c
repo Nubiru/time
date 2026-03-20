@@ -15,16 +15,43 @@
  * Internal: headline formatters per insight type
  * =================================================================== */
 
+/* Build a comma-separated system name list with "and" before the last.
+ * e.g. "Astronomy, Islamic, and Bahai". Returns chars written. */
+static int format_system_names(const int *systems, int count,
+                               char *buf, int buf_size) {
+    int pos = 0;
+    int remaining = buf_size;
+
+    for (int i = 0; i < count && remaining > 1; i++) {
+        const char *name = cd_system_name((cd_system_t)systems[i]);
+        int n;
+
+        if (i == 0) {
+            n = snprintf(buf + pos, (size_t)remaining, "%s", name);
+        } else if (i == count - 1) {
+            n = snprintf(buf + pos, (size_t)remaining,
+                         count == 2 ? " and %s" : ", and %s", name);
+        } else {
+            n = snprintf(buf + pos, (size_t)remaining, ", %s", name);
+        }
+
+        if (n > 0) {
+            int used = n < remaining ? n : remaining - 1;
+            pos += used;
+            remaining -= used;
+        }
+    }
+    return pos;
+}
+
 static int headline_convergence(const br_insight_t *insight,
                                 char *buf, int buf_size) {
-    if (insight->system_count >= 4) {
-        return snprintf(buf, (size_t)buf_size,
-                        "%d systems converge: %s", insight->system_count,
-                        insight->headline);
-    }
     if (insight->system_count >= 2) {
-        return snprintf(buf, (size_t)buf_size,
-                        "Alignment: %s", insight->headline);
+        /* Build: "Astronomy, Islamic, and Bahai converge" */
+        char names[96];
+        format_system_names(insight->systems, insight->system_count,
+                            names, sizeof(names));
+        return snprintf(buf, (size_t)buf_size, "%s converge", names);
     }
     return snprintf(buf, (size_t)buf_size, "%s", insight->headline);
 }
@@ -67,12 +94,23 @@ static int summary_from_insights(const br_result_t *result,
     int written = 0;
     int remaining = buf_size;
 
-    /* Lead with the top insight */
+    /* Lead with the top insight — use system names for convergence */
     if (result->insight_count > 0 && result->top_insight_index >= 0 &&
         result->top_insight_index < result->insight_count) {
         const br_insight_t *top = &result->insights[result->top_insight_index];
 
-        if (top->type != BR_INSIGHT_QUIET && top->headline[0] != '\0') {
+        if (top->type == BR_INSIGHT_CONVERGENCE && top->system_count >= 2) {
+            char names[96];
+            format_system_names(top->systems, top->system_count,
+                                names, sizeof(names));
+            int n = snprintf(buf + written, (size_t)remaining,
+                             "%s share this moment.", names);
+            if (n > 0) {
+                int used = n < remaining ? n : remaining - 1;
+                written += used;
+                remaining -= used;
+            }
+        } else if (top->type != BR_INSIGHT_QUIET && top->headline[0] != '\0') {
             int n = snprintf(buf + written, (size_t)remaining,
                              "%s.", top->headline);
             if (n > 0) {

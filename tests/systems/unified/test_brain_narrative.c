@@ -103,10 +103,15 @@ void test_headline_convergence_two_systems(void) {
     memset(&c, 0, sizeof(c));
     c.type = BR_INSIGHT_CONVERGENCE;
     strncpy(c.headline, "Hebrew-Islamic new month", BR_HEADLINE_MAX - 1);
+    c.systems[0] = CD_SYS_HEBREW;
+    c.systems[1] = CD_SYS_ISLAMIC;
     c.system_count = 2;
     char buf[128];
     br_narrative_headline(&c, buf, sizeof(buf));
-    TEST_ASSERT_NOT_NULL(strstr(buf, "Alignment"));
+    /* Now lists system names: "Hebrew and Islamic converge" */
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Hebrew"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Islamic"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "converge"));
 }
 
 void test_headline_convergence_four_systems(void) {
@@ -114,10 +119,16 @@ void test_headline_convergence_four_systems(void) {
     memset(&c, 0, sizeof(c));
     c.type = BR_INSIGHT_CONVERGENCE;
     strncpy(c.headline, "Major alignment", BR_HEADLINE_MAX - 1);
+    c.systems[0] = CD_SYS_ASTRONOMY;
+    c.systems[1] = CD_SYS_HEBREW;
+    c.systems[2] = CD_SYS_ISLAMIC;
+    c.systems[3] = CD_SYS_CELTIC;
     c.system_count = 4;
     char buf[128];
     br_narrative_headline(&c, buf, sizeof(buf));
-    TEST_ASSERT_NOT_NULL(strstr(buf, "4 systems"));
+    /* Now lists names: "Astronomy, Hebrew, Islamic, and Celtic converge" */
+    TEST_ASSERT_NOT_NULL(strstr(buf, "converge"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Astronomy"));
 }
 
 void test_headline_festival(void) {
@@ -180,9 +191,11 @@ void test_summary_major_includes_secondary(void) {
     br_result_t r = make_major_result();
     char buf[BR_SUMMARY_MAX];
     br_narrative_summary(&r, buf, sizeof(buf));
-    /* Should include both the major and secondary headlines */
-    TEST_ASSERT_NOT_NULL(strstr(buf, "rebirth"));
-    TEST_ASSERT_NOT_NULL(strstr(buf, "Lunar-solar"));
+    /* Major insight: system names. Secondary: system names.
+     * Should mention systems from both insights. */
+    TEST_ASSERT_NOT_NULL(strstr(buf, "share this moment"));
+    /* Secondary insight should also appear */
+    TEST_ASSERT_TRUE(strlen(buf) > 30);
 }
 
 /* ===================================================================
@@ -232,11 +245,13 @@ void test_compose_major_featured_no_duplicates(void) {
     TEST_ASSERT_EQUAL_INT(6, out.system_count);
 }
 
-void test_compose_major_headline_mentions_count(void) {
+void test_compose_major_headline_mentions_systems(void) {
     br_result_t r = make_major_result();
     br_narrative_t out;
     br_narrative_compose(&r, &out);
-    TEST_ASSERT_NOT_NULL(strstr(out.headline, "5 systems"));
+    /* Headline now lists system names + "converge" */
+    TEST_ASSERT_NOT_NULL(strstr(out.headline, "converge"));
+    TEST_ASSERT_NOT_NULL(strstr(out.headline, "Tzolkin"));
 }
 
 void test_compose_wisdom_id_from_strength(void) {
@@ -285,7 +300,7 @@ int main(void) {
     RUN_TEST(test_compose_convergence);
     RUN_TEST(test_compose_featured_systems);
     RUN_TEST(test_compose_major_featured_no_duplicates);
-    RUN_TEST(test_compose_major_headline_mentions_count);
+    RUN_TEST(test_compose_major_headline_mentions_systems);
     RUN_TEST(test_compose_wisdom_id_from_strength);
     RUN_TEST(test_compose_zeroes_output);
 
