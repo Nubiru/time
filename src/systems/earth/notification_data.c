@@ -56,11 +56,8 @@ static void schedule_add(nd_schedule_t *s, nd_urgency_t min_urgency,
     n->urgency = urgency;
     n->days_until = days_until;
 
-    strncpy(n->title, title, ND_TITLE_MAX - 1);
-    n->title[ND_TITLE_MAX - 1] = '\0';
-
-    strncpy(n->body, body, ND_BODY_MAX - 1);
-    n->body[ND_BODY_MAX - 1] = '\0';
+    snprintf(n->title, ND_TITLE_MAX, "%s", title);
+    snprintf(n->body, ND_BODY_MAX, "%s", body);
 
     s->count++;
 }
