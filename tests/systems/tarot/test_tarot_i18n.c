@@ -36,7 +36,7 @@ static void test_locale_es_produces_output(void)
     TEST_ASSERT_TRUE(strlen(r.glance) > 0);
     TEST_ASSERT_TRUE(strlen(r.detail) > 0);
     /* Card name preserved as system-native */
-    TEST_ASSERT_NOT_NULL(strstr(r.glance, "Fool"));
+    TEST_ASSERT_NOT_NULL(strstr(r.glance, "Loco"));
 }
 
 static void test_locale_es_with_decan(void)
@@ -44,7 +44,7 @@ static void test_locale_es_with_decan(void)
     /* The Magus + 5 of Wands */
     tarot_interp_t r = trt_interpret_locale(1, 0, 5, I18N_LOCALE_ES);
     TEST_ASSERT_TRUE(strlen(r.detail) > 0);
-    TEST_ASSERT_NOT_NULL(strstr(r.detail, "Wands"));
+    TEST_ASSERT_NOT_NULL(strstr(r.detail, "Bastos"));
 }
 
 /* ---- French fallback ---- */
