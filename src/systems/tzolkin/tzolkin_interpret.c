@@ -1,5 +1,6 @@
 #include "tzolkin_interpret.h"
 #include "dreamspell.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -193,6 +194,110 @@ tzolkin_interp_t ti_interpret(int kin, int seal, int tone)
              seal_name, sd.question,
              ws.number, ws.purpose, ws.action, ws.power,
              castle.name, castle.theme,
+             oracle.guide, oracle.analog, oracle.antipode, oracle.occult);
+
+    return r;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+tzolkin_interp_t ti_interpret_locale(int kin, int seal, int tone,
+                                     i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return ti_interpret(kin, seal, tone);
+    }
+
+    tzolkin_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    /* Validate inputs */
+    if (kin < 1 || kin > 260 || seal < 0 || seal > 19 || tone < 1 || tone > 13) {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    char key[64];
+
+    /* Seal data */
+    snprintf(key, sizeof(key), "tzolkin.seal.%d.name", seal);
+    const char *seal_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tzolkin.seal.%d.archetype", seal);
+    const char *archetype = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tzolkin.seal.%d.question", seal);
+    const char *question = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tzolkin.seal.%d.power", seal);
+    const char *seal_power = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tzolkin.seal.%d.action", seal);
+    const char *seal_action = content_get(key, locale);
+    (void)seal_action;  /* used indirectly via wavespell */
+
+    /* Color data (seal % 4) */
+    int color_idx = seal % 4;
+    snprintf(key, sizeof(key), "tzolkin.color.%d.name", color_idx);
+    const char *color_name = content_get(key, locale);
+
+    /* Tone data */
+    snprintf(key, sizeof(key), "tzolkin.tone.%d.name", tone);
+    const char *tone_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tzolkin.tone.%d.action", tone);
+    const char *tone_action = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tzolkin.tone.%d.power", tone);
+    const char *tone_power = content_get(key, locale);
+
+    /* Oracle — kin numbers, no translation needed */
+    dreamspell_oracle_t oracle = dreamspell_oracle(kin);
+
+    /* Wavespell data */
+    dreamspell_wavespell_t ws = dreamspell_wavespell(kin);
+
+    snprintf(key, sizeof(key), "tzolkin.seal.%d.name", ws.seal);
+    const char *ws_purpose = content_get(key, locale);
+
+    int ws_color_idx = ws.seal % 4;
+    snprintf(key, sizeof(key), "tzolkin.color.%d.action", ws_color_idx);
+    const char *ws_action = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tzolkin.color.%d.quality", ws_color_idx);
+    const char *ws_power = content_get(key, locale);
+
+    /* Castle data */
+    dreamspell_castle_t castle = dreamspell_castle(kin);
+
+    snprintf(key, sizeof(key), "tzolkin.castle.%d.name", castle.number);
+    const char *castle_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "tzolkin.castle.%d.theme", castle.number);
+    const char *castle_theme = content_get(key, locale);
+
+    /* T0: Glyph — same format, no translation */
+    snprintf(r.glyph, sizeof(r.glyph), "KIN %d", kin);
+
+    /* T1: Glance */
+    const char *tpl_glance = content_get("tzolkin.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             kin, color_name, tone_name, seal_name,
+             tone_action, seal_power);
+
+    /* T3: Detail */
+    const char *tpl_detail = content_get("tzolkin.tpl.detail", locale);
+    snprintf(r.detail, sizeof(r.detail), tpl_detail,
+             color_name, tone_name, seal_name, archetype,
+             tone, tone_name, tone_action, tone_power,
+             seal_name, question,
+             ws.number, ws_purpose, ws_action, ws_power,
+             castle_name, castle_theme,
              oracle.guide, oracle.analog, oracle.antipode, oracle.occult);
 
     return r;

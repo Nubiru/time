@@ -12,6 +12,8 @@
 #ifndef TIME_TZOLKIN_INTERPRET_H
 #define TIME_TZOLKIN_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-seal archetype (20 seals) */
 typedef struct {
     int seal;                   /* 0-19 */
@@ -48,5 +50,9 @@ const char *ti_color_meaning(int color);
 /* Tone meaning string for tone number (1-13).
  * Invalid: returns "?". */
 const char *ti_tone_meaning(int tone);
+
+/* Locale-aware interpretation. Falls back to English. */
+tzolkin_interp_t ti_interpret_locale(int kin, int seal, int tone,
+                                     i18n_locale_t locale);
 
 #endif /* TIME_TZOLKIN_INTERPRET_H */

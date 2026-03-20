@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "geology_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -182,3 +183,92 @@ geology_interp_t gli_interpret(int eon, int nearest_extinction,
 int gli_eon_count(void) { return 4; }
 int gli_extinction_count(void) { return 5; }
 int gli_supercontinent_count(void) { return 7; }
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+geology_interp_t gli_interpret_locale(int eon, int nearest_extinction,
+                                       int supercontinent,
+                                       i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return gli_interpret(eon, nearest_extinction, supercontinent);
+    }
+
+    geology_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    if (eon < 0 || eon > 3) {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    char key[64];
+
+    /* Eon data */
+    snprintf(key, sizeof(key), "geology.eon.%d.name", eon);
+    const char *eon_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "geology.eon.%d.meaning", eon);
+    const char *eon_meaning = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "geology.eon.%d.character", eon);
+    const char *eon_character = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "geology.eon.%d.life", eon);
+    const char *eon_life = content_get(key, locale);
+
+    /* T0: Glyph — first 3 chars of eon name */
+    size_t len = strlen(eon_name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, eon_name, copy);
+    r.glyph[copy] = '\0';
+
+    /* T1: Glance */
+    const char *tpl_glance = content_get("geology.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             eon_name, eon_meaning);
+
+    /* T3: Detail */
+    const char *tpl_detail = content_get("geology.tpl.detail", locale);
+    int pos = snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                       eon_name, eon_meaning, eon_character, eon_life);
+
+    /* Append extinction if valid */
+    if (nearest_extinction >= 0 && nearest_extinction <= 4 &&
+        pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        snprintf(key, sizeof(key), "geology.extinction.%d.name",
+                 nearest_extinction);
+        const char *ext_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "geology.extinction.%d.cause",
+                 nearest_extinction);
+        const char *ext_cause = content_get(key, locale);
+
+        const char *tpl_ext = content_get("geology.tpl.extinction", locale);
+        pos += snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                        tpl_ext, ext_name, ext_cause);
+    }
+
+    /* Append supercontinent if valid */
+    if (supercontinent >= 0 && supercontinent <= 6 &&
+        pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        snprintf(key, sizeof(key), "geology.supercontinent.%d.name",
+                 supercontinent);
+        const char *sc_name = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "geology.supercontinent.%d.age",
+                 supercontinent);
+        const char *sc_age = content_get(key, locale);
+
+        const char *tpl_sc = content_get("geology.tpl.supercontinent", locale);
+        snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                 tpl_sc, sc_name, sc_age);
+    }
+
+    return r;
+}

@@ -10,6 +10,8 @@
 #ifndef TIME_NUMEROLOGY_INTERPRET_H
 #define TIME_NUMEROLOGY_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-number interpretation (12 entries: 1-9 + 11, 22, 33) */
 typedef struct {
     int number;                 /* 1-9, 11, 22, or 33 */
@@ -41,5 +43,9 @@ numerology_interp_t ni_interpret(int life_path, int personal_year);
 
 /* Returns 12 (9 roots + 3 masters). */
 int ni_number_count(void);
+
+/* Locale-aware interpretation. Falls back to English. */
+numerology_interp_t ni_interpret_locale(int life_path, int personal_year,
+                                         i18n_locale_t locale);
 
 #endif /* TIME_NUMEROLOGY_INTERPRET_H */

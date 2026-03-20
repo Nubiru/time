@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "numerology_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -157,3 +158,91 @@ numerology_interp_t ni_interpret(int life_path, int personal_year)
 }
 
 int ni_number_count(void) { return 12; }
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+numerology_interp_t ni_interpret_locale(int life_path, int personal_year,
+                                         i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return ni_interpret(life_path, personal_year);
+    }
+
+    numerology_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    /* Validate life_path via existing lookup */
+    ni_number_t lp = ni_number_data(life_path);
+    if (lp.number < 0) {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    char key[64];
+
+    /* Fetch life path data — keys use actual number (1-9, 11, 22, 33) */
+    snprintf(key, sizeof(key), "numerology.%d.name", life_path);
+    const char *lp_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "numerology.%d.quality", life_path);
+    const char *lp_quality = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "numerology.%d.strength", life_path);
+    const char *lp_strength = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "numerology.%d.challenge", life_path);
+    const char *lp_challenge = content_get(key, locale);
+
+    /* T0: Glyph — the number itself, universal */
+    snprintf(r.glyph, sizeof(r.glyph), "%d", life_path);
+
+    /* T1: Glance */
+    if (personal_year > 0) {
+        ni_number_t py = ni_number_data(personal_year);
+        if (py.number > 0) {
+            snprintf(key, sizeof(key), "numerology.%d.name", personal_year);
+            const char *py_name = content_get(key, locale);
+
+            const char *tpl = content_get("numerology.tpl.glance_year", locale);
+            snprintf(r.glance, sizeof(r.glance), tpl,
+                     life_path, lp_name, personal_year, py_name);
+        } else {
+            const char *tpl = content_get("numerology.tpl.glance", locale);
+            snprintf(r.glance, sizeof(r.glance), tpl,
+                     life_path, lp_name);
+        }
+    } else {
+        const char *tpl = content_get("numerology.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl,
+                 life_path, lp_name);
+    }
+
+    /* T3: Detail */
+    const char *tpl_detail = content_get("numerology.tpl.detail", locale);
+    int pos = snprintf(r.detail, sizeof(r.detail), tpl_detail,
+                       life_path, lp_name, lp_quality,
+                       lp_strength, lp_challenge);
+
+    /* Append personal year if valid */
+    if (personal_year > 0 && pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        ni_number_t py = ni_number_data(personal_year);
+        if (py.number > 0) {
+            snprintf(key, sizeof(key), "numerology.%d.name", personal_year);
+            const char *py_name = content_get(key, locale);
+
+            snprintf(key, sizeof(key), "numerology.%d.quality", personal_year);
+            const char *py_quality = content_get(key, locale);
+
+            const char *tpl_year = content_get("numerology.tpl.detail_year", locale);
+            snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                     tpl_year, personal_year, py_name, py_quality);
+        }
+    }
+
+    return r;
+}

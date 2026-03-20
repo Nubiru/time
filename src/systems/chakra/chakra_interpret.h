@@ -12,6 +12,8 @@
 #ifndef TIME_CHAKRA_INTERPRET_H
 #define TIME_CHAKRA_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-chakra interpretation (7 chakras) */
 typedef struct {
     int chakra;                 /* 0-6 (Muladhara through Sahasrara) */
@@ -40,5 +42,8 @@ chi_chakra_t chi_chakra_data(int chakra);
 chakra_interp_t chi_interpret(int chakra);
 
 int chi_chakra_count(void);    /* Returns 7 */
+
+/* Locale-aware interpretation. Falls back to English. */
+chakra_interp_t chi_interpret_locale(int chakra, i18n_locale_t locale);
 
 #endif /* TIME_CHAKRA_INTERPRET_H */

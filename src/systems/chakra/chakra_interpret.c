@@ -5,6 +5,7 @@
 
 #include "chakra_interpret.h"
 #include "chakra.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -103,3 +104,63 @@ chakra_interp_t chi_interpret(int chakra)
 }
 
 int chi_chakra_count(void) { return 7; }
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+chakra_interp_t chi_interpret_locale(int chakra, i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return chi_interpret(chakra);
+    }
+
+    chakra_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    if (chakra < 0 || chakra > 6) {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    char key[64];
+
+    /* Fetch translated fields */
+    snprintf(key, sizeof(key), "chakra.%d.sanskrit", chakra);
+    const char *sanskrit = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chakra.%d.english", chakra);
+    const char *english = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chakra.%d.theme", chakra);
+    const char *theme = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chakra.%d.archetype", chakra);
+    const char *archetype_str = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chakra.%d.shadow", chakra);
+    const char *shadow = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "chakra.%d.question", chakra);
+    const char *question = content_get(key, locale);
+
+    /* T0: Glyph — bija mantra is universal (Sanskrit), no translation */
+    const char *bija = chakra_bija((chakra_t)chakra);
+    snprintf(r.glyph, sizeof(r.glyph), "%s", bija);
+
+    /* T1: Glance */
+    const char *tpl_glance = content_get("chakra.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             sanskrit, english, theme);
+
+    /* T3: Detail */
+    const char *tpl_detail = content_get("chakra.tpl.detail", locale);
+    snprintf(r.detail, sizeof(r.detail), tpl_detail,
+             sanskrit, english, archetype_str,
+             theme, shadow, question);
+
+    return r;
+}

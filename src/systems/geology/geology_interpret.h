@@ -11,6 +11,8 @@
 #ifndef TIME_GEOLOGY_INTERPRET_H
 #define TIME_GEOLOGY_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-eon interpretation (4 eons) */
 typedef struct {
     int eon;                    /* 0-3 (Hadean, Archean, Proterozoic, Phanerozoic) */
@@ -75,5 +77,10 @@ int gli_extinction_count(void);
 
 /* Returns 7 (number of supercontinents). */
 int gli_supercontinent_count(void);
+
+/* Locale-aware interpretation. Falls back to English. */
+geology_interp_t gli_interpret_locale(int eon, int nearest_extinction,
+                                       int supercontinent,
+                                       i18n_locale_t locale);
 
 #endif /* TIME_GEOLOGY_INTERPRET_H */
