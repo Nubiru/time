@@ -398,6 +398,44 @@ void test_narrative_convergence_has_system_names(void) {
 }
 
 /* ===================================================================
+ * Epoch dates and expanded database
+ * =================================================================== */
+
+void test_filter_epoch_finds_entries(void) {
+    sc_result_t res;
+    sc_list(&res);
+    sc_entry_t filtered[32];
+    int count = sc_filter_category(&res, "epoch", filtered, 32);
+    TEST_ASSERT_TRUE(count >= 4); /* at least Hijra, French, Bahai, Coptic */
+}
+
+void test_list_contains_hijra(void) {
+    sc_result_t res;
+    sc_list(&res);
+    int found = 0;
+    for (int i = 0; i < res.count; i++) {
+        if (strstr(res.entries[i].name, "Hijra")) { found = 1; break; }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+void test_list_contains_galileo(void) {
+    sc_result_t res;
+    sc_list(&res);
+    int found = 0;
+    for (int i = 0; i < res.count; i++) {
+        if (strstr(res.entries[i].name, "Galileo")) { found = 1; break; }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+void test_expanded_count_at_least_65(void) {
+    sc_result_t res;
+    int n = sc_list(&res);
+    TEST_ASSERT_TRUE(n >= 65);
+}
+
+/* ===================================================================
  * Main
  * =================================================================== */
 
@@ -455,6 +493,12 @@ int main(void) {
     RUN_TEST(test_narrative_quiet_day);
     RUN_TEST(test_narrative_convergence_has_name);
     RUN_TEST(test_narrative_convergence_has_system_names);
+
+    /* Expanded database */
+    RUN_TEST(test_filter_epoch_finds_entries);
+    RUN_TEST(test_list_contains_hijra);
+    RUN_TEST(test_list_contains_galileo);
+    RUN_TEST(test_expanded_count_at_least_65);
 
     return UNITY_END();
 }

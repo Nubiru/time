@@ -88,6 +88,29 @@ static const sc_date_def_t DATE_LIST[] = {
     { 1054,  7,  4, "Crab Nebula supernova recorded",       "astronomical" },
     { 1919,  5, 29, "Solar eclipse confirms general relativity", "astronomical" },
     { 2017,  8, 21, "Great American Solar Eclipse",         "astronomical" },
+
+    /* Calendar epoch dates — when time-keeping traditions began */
+    {  622,  7, 16, "Hijra: Islamic calendar epoch",           "epoch" },
+    { 1792,  9, 22, "French Republican calendar begins",       "epoch" },
+    { 1844,  3, 21, "Bahai: Declaration of the Bab",          "epoch" },
+    {  284,  8, 29, "Coptic calendar epoch (Diocletian Era)",  "epoch" },
+    { 1912,  1,  1, "Republic of China calendar begins",       "epoch" },
+
+    /* Cultural milestones */
+    { 1453,  5, 29, "Fall of Constantinople",                  "historical" },
+    { 1610,  1,  7, "Galileo observes Jupiter's moons",        "historical" },
+    { 1609,  7, 25, "Galileo's telescope first observations",  "historical" },
+    { 1948,  5, 14, "State of Israel declared",                "historical" },
+    { 1947,  8, 15, "India Independence Day",                  "historical" },
+    { 1517, 10, 31, "Luther's 95 Theses",                      "historical" },
+    { 1215,  6, 15, "Magna Carta sealed",                      "historical" },
+
+    /* Modern pivotal dates */
+    { 2020,  3, 11, "WHO declares COVID-19 pandemic",          "historical" },
+    { 2004, 12, 26, "Indian Ocean Tsunami",                    "historical" },
+    { 1986,  1, 28, "Challenger disaster",                     "historical" },
+    { 1969, 12, 24, "Apollo 8 Earthrise photograph",           "astronomical" },
+    { 2024,  4,  8, "Great North American Eclipse",            "astronomical" },
 };
 
 static const int DATE_COUNT = (int)(sizeof(DATE_LIST) / sizeof(DATE_LIST[0]));
