@@ -156,6 +156,22 @@ static const br_known_pair_t KNOWN_PAIRS[] = {
       "Both independently developed 12x30+5 solar calendar structure" },
     { CD_SYS_THAI,        CD_SYS_JAPANESE,   BR_CORR_APPROXIMATE, 0.30,
       "Both blend imported (Indian/Chinese) and indigenous counting" },
+
+    /* Batch 5: minimum coverage for critically under-connected */
+    { CD_SYS_MYANMAR,     CD_SYS_THAI,       BR_CORR_HARMONIC,   0.85,
+      "Both SE Asian Theravada calendars from Surya Siddhanta" },
+    { CD_SYS_MYANMAR,     CD_SYS_CHINESE,    BR_CORR_APPROXIMATE, 0.35,
+      "Independent lunisolar traditions (Indian vs Chinese sources)" },
+    { CD_SYS_KOREAN,      CD_SYS_BUDDHIST,   BR_CORR_HARMONIC,   0.75,
+      "Korean Buddhism via Chinese transmission (4th century CE)" },
+    { CD_SYS_EGYPTIAN,    CD_SYS_ASTRONOMY,  BR_CORR_HARMONIC,   0.80,
+      "Egyptian decan system and Sirius heliacal rising are astronomical" },
+    { CD_SYS_EGYPTIAN,    CD_SYS_FRENCH,     BR_CORR_HARMONIC,   0.85,
+      "French Republic directly adopted Egyptian 12x30+5 structure" },
+    { CD_SYS_CELTIC,      CD_SYS_HEBREW,     BR_CORR_APPROXIMATE, 0.30,
+      "Independent agricultural-spiritual seasonal traditions" },
+    { CD_SYS_THAI,        CD_SYS_MYANMAR,    BR_CORR_HARMONIC,   0.85,
+      "Neighboring Theravada kingdoms sharing Surya Siddhanta parameters" },
 };
 
 static const int KNOWN_PAIR_COUNT =

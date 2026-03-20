@@ -360,6 +360,26 @@ void test_lookup_celtic_french_convergent(void) {
     TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_CONVERGENT, e->why);
 }
 
+/* Batch 5 */
+
+void test_lookup_myanmar_thai_transmission(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_MYANMAR, CD_SYS_THAI);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_TRANSMISSION, e->why);
+}
+
+void test_lookup_egyptian_astronomy_shared(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_EGYPTIAN, CD_SYS_ASTRONOMY);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_SHARED_SOURCE, e->why);
+}
+
+void test_lookup_egyptian_french_transmission(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_EGYPTIAN, CD_SYS_FRENCH);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_TRANSMISSION, e->why);
+}
+
 /* ===================================================================
  * Main
  * =================================================================== */
@@ -435,6 +455,9 @@ int main(void) {
     RUN_TEST(test_lookup_islamic_persian_transmission);
     RUN_TEST(test_lookup_zoroastrian_bahai_transmission);
     RUN_TEST(test_lookup_celtic_french_convergent);
+    RUN_TEST(test_lookup_myanmar_thai_transmission);
+    RUN_TEST(test_lookup_egyptian_astronomy_shared);
+    RUN_TEST(test_lookup_egyptian_french_transmission);
 
     return UNITY_END();
 }

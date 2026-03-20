@@ -430,6 +430,51 @@ static const br_explanation_t EXPLANATIONS[] = {
       "Thai and Japanese calendars both adopted foreign systems (Indian and "
       "Chinese respectively) while retaining local cultural overlays — Thai "
       "Buddhist festivals and Japanese rokuyo/sekki." },
+
+    /* --- Batch 5: Minimum coverage for critically under-connected --- */
+
+    { CD_SYS_MYANMAR, CD_SYS_THAI, BR_EXPLAIN_TRANSMISSION,
+      "Southeast Asian Theravada calendar siblings",
+      "Both Myanmar and Thai calendars derive from the same Surya Siddhanta "
+      "astronomical parameters, transmitted through Indian influence. Both "
+      "serve Theravada Buddhist observance in neighboring kingdoms." },
+
+    { CD_SYS_MYANMAR, CD_SYS_CHINESE, BR_EXPLAIN_CONVERGENT,
+      "Independent lunisolar traditions",
+      "Myanmar and Chinese calendars both use lunisolar months with "
+      "intercalation, but from different astronomical traditions. Myanmar "
+      "uses Indian (Surya Siddhanta); Chinese uses its own observation." },
+
+    { CD_SYS_KOREAN, CD_SYS_BUDDHIST, BR_EXPLAIN_TRANSMISSION,
+      "Korean Buddhism via Chinese transmission",
+      "Buddhism reached Korea through China in the 4th century CE. Korean "
+      "Buddhist observance follows East Asian lunar calendar conventions "
+      "derived from the Chinese lunisolar system." },
+
+    { CD_SYS_EGYPTIAN, CD_SYS_ASTRONOMY, BR_EXPLAIN_SHARED_SOURCE,
+      "Sirius and the decan system",
+      "The Egyptian calendar was originally anchored to the heliacal rising "
+      "of Sirius (Sopdet). Egyptian astronomers invented the decan system — "
+      "36 star groups marking 10-day intervals across the sky." },
+
+    { CD_SYS_EGYPTIAN, CD_SYS_FRENCH, BR_EXPLAIN_TRANSMISSION,
+      "French Republic adopted Egyptian structure",
+      "The French Republican calendar directly adopted the Egyptian 12x30+5 "
+      "structure, renaming months with nature imagery and replacing the "
+      "7-day week with a rational 10-day decade." },
+
+    { CD_SYS_CELTIC, CD_SYS_HEBREW, BR_EXPLAIN_CONVERGENT,
+      "Independent agricultural-lunar traditions",
+      "Celtic and Hebrew traditions both mark seasonal transitions with "
+      "religious significance, but from entirely separate cultures. Celtic "
+      "Sabbats mark quarter/cross-quarter solar events; Hebrew festivals "
+      "follow a lunisolar agricultural cycle." },
+
+    { CD_SYS_THAI, CD_SYS_MYANMAR, BR_EXPLAIN_TRANSMISSION,
+      "Neighboring Theravada calendar traditions",
+      "Thai and Myanmar calendars share Surya Siddhanta parameters and "
+      "Theravada Buddhist purpose. Historical warfare and cultural exchange "
+      "between Siam and Burma reinforced their calendrical similarities." },
 };
 
 static const int EXPLANATION_COUNT =

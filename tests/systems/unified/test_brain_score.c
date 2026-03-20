@@ -108,8 +108,8 @@ void test_score_structural_pair(void) {
 void test_score_unknown_pair_coincidental(void) {
     br_correlation_t c;
     memset(&c, 0, sizeof(c));
-    c.system_a = CD_SYS_FRENCH;
-    c.system_b = CD_SYS_EGYPTIAN;
+    c.system_a = CD_SYS_TZOLKIN;
+    c.system_b = CD_SYS_KOREAN;
 
     br_score_correlation(&c);
     TEST_ASSERT_EQUAL_INT(BR_CORR_COINCIDENTAL, c.type);
@@ -133,8 +133,8 @@ void test_score_result_updates_all(void) {
     result.correlations[0].type = BR_CORR_APPROXIMATE;
     result.correlations[0].confidence = 0.3;
 
-    result.correlations[1].system_a = CD_SYS_FRENCH;
-    result.correlations[1].system_b = CD_SYS_EGYPTIAN;
+    result.correlations[1].system_a = CD_SYS_TZOLKIN;
+    result.correlations[1].system_b = CD_SYS_KOREAN;
     result.correlations[1].type = BR_CORR_APPROXIMATE;
     result.correlations[1].confidence = 0.3;
 
@@ -167,8 +167,8 @@ void test_score_result_keeps_higher_strength(void) {
     br_result_t result;
     memset(&result, 0, sizeof(result));
 
-    result.correlations[0].system_a = CD_SYS_FRENCH;
-    result.correlations[0].system_b = CD_SYS_EGYPTIAN;
+    result.correlations[0].system_a = CD_SYS_TZOLKIN;
+    result.correlations[0].system_b = CD_SYS_KOREAN;
     result.correlation_count = 1;
     result.convergence_strength = 0.75; /* already higher than 0.1 */
 
@@ -283,6 +283,20 @@ void test_lookup_iching_korean(void) {
     TEST_ASSERT_EQUAL_FLOAT(0.85, p->base_confidence);
 }
 
+void test_lookup_myanmar_thai(void) {
+    const br_known_pair_t *p = br_lookup_pair(CD_SYS_MYANMAR, CD_SYS_THAI);
+    TEST_ASSERT_NOT_NULL(p);
+    TEST_ASSERT_EQUAL_INT(BR_CORR_HARMONIC, p->type);
+    TEST_ASSERT_EQUAL_FLOAT(0.85, p->base_confidence);
+}
+
+void test_lookup_egyptian_french(void) {
+    const br_known_pair_t *p = br_lookup_pair(CD_SYS_EGYPTIAN, CD_SYS_FRENCH);
+    TEST_ASSERT_NOT_NULL(p);
+    TEST_ASSERT_EQUAL_INT(BR_CORR_HARMONIC, p->type);
+    TEST_ASSERT_EQUAL_FLOAT(0.85, p->base_confidence);
+}
+
 /* ===================================================================
  * Main
  * =================================================================== */
@@ -312,6 +326,8 @@ int main(void) {
     RUN_TEST(test_lookup_coptic_egyptian);
     RUN_TEST(test_lookup_astrology_hindu);
     RUN_TEST(test_lookup_iching_korean);
+    RUN_TEST(test_lookup_myanmar_thai);
+    RUN_TEST(test_lookup_egyptian_french);
 
     /* br_score_correlation */
     RUN_TEST(test_score_known_pair_updates_type);
