@@ -77,8 +77,9 @@ static const char *s_text_frag_source =
     "out vec4 frag_color;\n"
     "void main() {\n"
     "    float a = texture(u_atlas, v_uv).r;\n"
-    "    if (a < 0.5) discard;\n"
-    "    frag_color = vec4(v_color.rgb, v_color.a * a);\n"
+    "    float alpha = smoothstep(0.25, 0.75, a);\n"
+    "    if (alpha < 0.01) discard;\n"
+    "    frag_color = vec4(v_color.rgb, v_color.a * alpha);\n"
     "}\n";
 
 int text_pass_init(void) {
@@ -101,8 +102,8 @@ int text_pass_init(void) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_R8,
                  FONT_BITMAP_ATLAS_W, FONT_BITMAP_ATLAS_H,
                  0, GL_RED, GL_UNSIGNED_BYTE, s_atlas_pixels);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
