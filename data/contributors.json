@@ -4720,6 +4720,13 @@
           "note": "SE Asian Buddhist calendar structure and BE offset"
         }
       ]
+    },
+    {
+      "name": "Donald A. Norman",
+      "role": "Cognitive scientist, usability pioneer",
+      "contribution": "The Design of Everyday Things (1988) — affordances, natural mapping, visibility, feedback, Gulf of Execution/Evaluation, seven principles of user-centered design",
+      "source": "The Design of Everyday Things",
+      "added_by": "PERSONA stream"
     }
   ]
 }
