@@ -11,6 +11,8 @@
 #ifndef TIME_ASTRONOMY_INTERPRET_H
 #define TIME_ASTRONOMY_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-planet interpretation (8 planets) */
 typedef struct {
     int planet;                 /* 0-7 (Mercury through Neptune) */
@@ -54,6 +56,12 @@ ai_phase_t ai_phase_data(int phase);
  * Invalid planet: "?" strings in result. */
 astronomy_interp_t ai_astro_interpret(int planet, int is_retrograde,
                                       int moon_phase);
+
+/* Locale-aware interpretation. Same as ai_astro_interpret but produces
+ * translated output for the given locale. */
+astronomy_interp_t ai_astro_interpret_locale(int planet, int is_retrograde,
+                                             int moon_phase,
+                                             i18n_locale_t locale);
 
 /* Returns 8 (number of planets). */
 int ai_planet_count(void);

@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "astronomy_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -187,3 +188,94 @@ astronomy_interp_t ai_astro_interpret(int planet, int is_retrograde,
 
 int ai_planet_count(void) { return 8; }
 int ai_phase_count(void) { return 8; }
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+astronomy_interp_t ai_astro_interpret_locale(int planet, int is_retrograde,
+                                             int moon_phase,
+                                             i18n_locale_t locale)
+{
+    /* English fast path */
+    if (locale == I18N_LOCALE_EN) {
+        return ai_astro_interpret(planet, is_retrograde, moon_phase);
+    }
+
+    astronomy_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    if (planet < 0 || planet > 7) {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    char key[64];
+
+    snprintf(key, sizeof(key), "astronomy.planet.%d.name", planet);
+    const char *p_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "astronomy.planet.%d.archetype", planet);
+    const char *p_arch = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "astronomy.planet.%d.deity", planet);
+    const char *p_deity = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "astronomy.planet.%d.domain", planet);
+    const char *p_domain = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "astronomy.planet.%d.brief", planet);
+    const char *p_brief = content_get(key, locale);
+
+    /* Glyph: first 3 chars of localized planet name */
+    size_t len = strlen(p_name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, p_name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Moon phase data */
+    const char *ph_name = NULL;
+    const char *ph_theme = NULL;
+    if (moon_phase >= 0 && moon_phase <= 7) {
+        snprintf(key, sizeof(key), "astronomy.phase.%d.name", moon_phase);
+        ph_name = content_get(key, locale);
+        snprintf(key, sizeof(key), "astronomy.phase.%d.theme", moon_phase);
+        ph_theme = content_get(key, locale);
+    }
+
+    /* Glance */
+    if (is_retrograde) {
+        const char *tpl = content_get("astronomy.tpl.glance_retro", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, p_name, p_arch);
+    } else if (ph_name != NULL) {
+        const char *tpl = content_get("astronomy.tpl.glance_moon", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, p_name, p_arch, ph_name);
+    } else {
+        const char *tpl = content_get("astronomy.tpl.glance", locale);
+        snprintf(r.glance, sizeof(r.glance), tpl, p_name, p_arch);
+    }
+
+    /* Detail */
+    const char *tpl_planet = content_get("astronomy.tpl.detail_planet",
+                                         locale);
+    int pos = snprintf(r.detail, sizeof(r.detail), tpl_planet,
+                       p_name, p_deity, p_domain, p_brief);
+
+    if (is_retrograde && pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        const char *tpl_retro = content_get("astronomy.tpl.detail_retro",
+                                            locale);
+        pos += snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                        "%s", tpl_retro);
+    }
+
+    if (ph_name != NULL && pos > 0 && (size_t)pos < sizeof(r.detail)) {
+        const char *tpl_moon = content_get("astronomy.tpl.detail_moon",
+                                           locale);
+        snprintf(r.detail + pos, sizeof(r.detail) - (size_t)pos,
+                 tpl_moon, ph_name, ph_theme);
+    }
+
+    return r;
+}

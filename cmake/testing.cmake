@@ -153,7 +153,8 @@ time_add_test(NAME test_cosmic_time     TEST tests/systems/test_cosmic_time.c   
 time_add_test(NAME test_planet_data     TEST tests/systems/test_planet_data.c    DEPS planet_data)
 time_add_test(NAME test_moon_nodes      TEST tests/systems/test_moon_nodes.c     DEPS moon_nodes)
 time_add_test(NAME test_retrograde      TEST tests/systems/test_retrograde.c     DEPS retrograde planets orbit kepler)
-time_add_test(NAME test_astronomy_interpret TEST tests/systems/astronomy/test_astronomy_interpret.c DEPS astronomy_interpret)
+time_add_test(NAME test_astronomy_interpret TEST tests/systems/astronomy/test_astronomy_interpret.c DEPS astronomy_interpret content_i18n i18n)
+time_add_test(NAME test_astronomy_i18n TEST tests/systems/astronomy/test_astronomy_i18n.c DEPS astronomy_interpret content_i18n i18n)
 
 # Astrology tests
 time_add_test(NAME test_zodiac          TEST tests/systems/test_zodiac.c         DEPS zodiac)
