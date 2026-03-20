@@ -471,7 +471,7 @@ time_add_test(NAME test_theme_css    TEST tests/ui/test_theme_css.c    DEPS them
 time_add_test(NAME test_touch_gestures TEST tests/ui/test_touch_gestures.c DEPS touch_gestures)
 time_add_test(NAME test_view_registry  TEST tests/ui/test_view_registry.c  DEPS view_registry)
 time_add_test(NAME test_audio_score   TEST tests/ui/test_audio_score.c
-    DEPS audio_score audio_event audio_data frequency view_registry
+    DEPS audio_score audio_culture audio_event audio_data frequency view_registry
          brain_scan brain_audio_bridge brain_types
          planets orbit kepler aspects convergence_detect julian tzolkin
          tzolkin_board iching chinese hebrew hijri buddhist lunar persian
@@ -498,7 +498,7 @@ time_add_test(NAME test_audio_culture TEST tests/ui/test_audio_culture.c
 time_add_test(NAME test_audio_meditation TEST tests/ui/test_audio_meditation.c
     DEPS audio_meditation golden_layout chakra)
 time_add_test(NAME test_pianist_score TEST tests/ui/test_pianist_score.c
-    DEPS pianist_score audio_score audio_event audio_data frequency view_registry
+    DEPS pianist_score audio_score audio_culture audio_event audio_data frequency view_registry
          brain_scan brain_audio_bridge brain_types
          planets orbit kepler aspects convergence_detect julian tzolkin
          tzolkin_board iching chinese hebrew hijri buddhist lunar persian
@@ -506,7 +506,7 @@ time_add_test(NAME test_pianist_score TEST tests/ui/test_pianist_score.c
          korean_calendar thai_calendar tamil_calendar myanmar zoroastrian
          calendar_fixed)
 time_add_test(NAME test_midi_output TEST tests/ui/test_midi_output.c
-    DEPS midi_output audio_score audio_event audio_data frequency view_registry
+    DEPS midi_output audio_score audio_culture audio_event audio_data frequency view_registry
          brain_scan brain_audio_bridge brain_types
          planets orbit kepler aspects convergence_detect julian tzolkin
          tzolkin_board iching chinese hebrew hijri buddhist lunar persian
@@ -516,7 +516,7 @@ time_add_test(NAME test_midi_output TEST tests/ui/test_midi_output.c
 time_add_test(NAME test_audio_vis_data TEST tests/ui/test_audio_vis_data.c
     DEPS audio_vis_data)
 time_add_test(NAME test_audio_a11y TEST tests/ui/test_audio_a11y.c
-    DEPS audio_a11y pianist_score audio_score audio_event audio_data frequency
+    DEPS audio_a11y pianist_score audio_score audio_culture audio_event audio_data frequency
          view_registry brain_scan brain_audio_bridge brain_types
          planets orbit kepler aspects convergence_detect julian tzolkin
          tzolkin_board iching chinese hebrew hijri buddhist lunar persian
@@ -564,6 +564,8 @@ time_add_test(NAME test_drama_seq TEST tests/ui/test_drama_seq.c
     DEPS drama_seq kf_track animation easing LABELS unit)
 time_add_test(NAME test_card_depth TEST tests/ui/test_card_depth.c
     DEPS card_depth LABELS unit)
+time_add_test(NAME test_earth_transition TEST tests/ui/test_earth_transition.c
+    DEPS earth_transition camera_path spring vec_interp vec3 animation easing LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
