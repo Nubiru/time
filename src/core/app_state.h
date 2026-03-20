@@ -10,6 +10,11 @@
 #include "../render/render_lod.h"
 #include "../ui/auto_theme.h"
 #include "../render/birth_sky.h"
+#include "../ui/enter_zoom.h"
+#include "../ui/zoom_depth.h"
+#include "../ui/motion_prefs.h"
+#include "../ui/earth_transition.h"
+#include "../ui/birth_flight.h"
 
 /* All mutable application state in one place.
  * Pure functions never touch this — they receive data and return data.
@@ -53,6 +58,14 @@ typedef struct {
     /* Birth sky (natal chart view) */
     birth_sky_t birth_sky;   /* pre-computed natal data */
     double saved_jd;         /* real simulation_jd to restore when exiting birth view */
+
+    /* Motion choreography */
+    enter_zoom_t enter_zoom;
+    int enter_zoom_active;        /* 1 until sequence completes or user skips */
+    earth_transition_t earth_trans;
+    birth_flight_t birth_flight;
+    zoom_depth_t zoom_depth;
+    motion_prefs_t motion_prefs;
 
     /* Visual toggles */
     int show_trails;       /* orbit trail lines */

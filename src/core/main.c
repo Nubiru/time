@@ -64,6 +64,42 @@ void main_loop(void) {
         g_state.camera.distance = expf(new_log_zoom);
     }
 
+    /* --- Motion choreographies: tick all, apply highest-priority pose --- */
+    g_state.enter_zoom  = ez_tick(g_state.enter_zoom, (float)dt_sec);
+    g_state.earth_trans = et_tick(g_state.earth_trans, (float)dt_sec);
+    g_state.birth_flight = bf_tick(g_state.birth_flight, (float)dt_sec);
+
+    {
+        camera_pose_t motion_pose;
+        int motion_active = 0;
+
+        if (g_state.enter_zoom_active && ez_active(g_state.enter_zoom)) {
+            motion_pose = ez_pose(g_state.enter_zoom);
+            motion_active = 1;
+            if (ez_just_done(g_state.enter_zoom))
+                g_state.enter_zoom_active = 0;
+        } else if (et_active(g_state.earth_trans)) {
+            motion_pose = et_pose(g_state.earth_trans);
+            motion_active = 1;
+        } else if (bf_active(g_state.birth_flight)) {
+            motion_pose = bf_pose(g_state.birth_flight);
+            motion_active = 1;
+        }
+
+        if (motion_active) {
+            g_state.camera.azimuth   = motion_pose.azimuth;
+            g_state.camera.elevation = motion_pose.elevation;
+            g_state.camera.log_zoom  = motion_pose.log_zoom;
+            g_state.camera.distance  = expf(motion_pose.log_zoom);
+            g_state.camera.target    = motion_pose.target;
+        }
+    }
+
+    /* --- Zoom-depth: track camera zoom → depth tier mapping --- */
+    g_state.zoom_depth = zoom_depth_update(g_state.zoom_depth,
+                                            g_state.camera.log_zoom,
+                                            (float)dt_sec);
+
     /* --- Performance LOD: record frame time, adapt quality --- */
     g_state.lod = lod_record_frame(g_state.lod, (float)(dt_sec * 1000.0));
     g_state.view = vs_set_lod(g_state.view, (int)lod_current_tier(&g_state.lod));
@@ -118,6 +154,7 @@ void main_loop(void) {
         .log_zoom      = g_state.camera.log_zoom,
         .observer_lat  = g_state.observer_lat,
         .observer_lon  = g_state.observer_lon,
+        .theme_id      = (int)g_state.auto_theme.active_theme,
     };
 
     /* --- Get pass schedule from view state --- */
@@ -196,6 +233,18 @@ int main(void) {
     double css_w, css_h;
     emscripten_get_element_css_size("#canvas", &css_w, &css_h);
     g_state = app_state_create((float)(css_w / css_h));
+
+    /* Check prefers-reduced-motion accessibility preference */
+    {
+        int reduced = EM_ASM_INT({
+            return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 0;
+        });
+        g_state.motion_prefs = mp_set_reduced(g_state.motion_prefs, reduced);
+        if (reduced) {
+            g_state.enter_zoom = ez_skip(g_state.enter_zoom);
+            g_state.enter_zoom_active = 0;
+        }
+    }
 
     /* Initialize render passes */
     if (star_pass_init() != 0) return 1;

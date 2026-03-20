@@ -73,6 +73,13 @@ static EM_BOOL on_wheel(int type, const EmscriptenWheelEvent *e, void *data) {
 static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *data) {
     (void)type; (void)data;
 
+    /* Skip "Enter Time" zoom on any keypress */
+    if (g_input_state->enter_zoom_active) {
+        g_input_state->enter_zoom = ez_skip(g_input_state->enter_zoom);
+        g_input_state->enter_zoom_active = 0;
+        return EM_TRUE;
+    }
+
     if (e->key[0] == ' ' && e->key[1] == '\0') {
         if (g_input_state->time_speed == 0.0)
             g_input_state->time_speed = g_input_state->prev_speed;
@@ -109,11 +116,17 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         return EM_TRUE;
     }
 
-    /* E: switch to Earth View (toggle Space ↔ Earth) */
+    /* E: switch to Earth View (toggle Space ↔ Earth) with camera choreography */
     if ((e->key[0] == 'e' || e->key[0] == 'E') && e->key[1] == '\0' && !e->shiftKey) {
         int cur = g_input_state->view.current_view;
-        g_input_state->view = vs_set_view(g_input_state->view,
-                                           cur == 1 ? 0 : 1); /* VIEW_EARTH=1, VIEW_SPACE=0 */
+        int target = cur == 1 ? 0 : 1; /* VIEW_EARTH=1, VIEW_SPACE=0 */
+        g_input_state->view = vs_set_view(g_input_state->view, target);
+        /* Smooth camera transition */
+        camera_pose_t current_pose = camera_pose_create(
+            g_input_state->camera.azimuth, g_input_state->camera.elevation,
+            g_input_state->camera.log_zoom, g_input_state->camera.target);
+        g_input_state->earth_trans = et_begin(g_input_state->earth_trans,
+            target == 1 ? ET_DIR_TO_EARTH : ET_DIR_TO_SPACE, current_pose);
         return EM_TRUE;
     }
 
@@ -137,9 +150,13 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         }
     }
 
-    /* Escape: return to overview mode */
+    /* Escape: return to overview mode + cancel active choreographies */
     if (e->key[0] == 27 || (e->key[0] == 'E' && e->key[1] == 's')) {
         g_input_state->view = vs_set_focus(g_input_state->view, 0); /* FOCUS_MODE_OVERVIEW */
+        if (et_active(g_input_state->earth_trans))
+            g_input_state->earth_trans = et_cancel(g_input_state->earth_trans);
+        if (bf_active(g_input_state->birth_flight))
+            g_input_state->birth_flight = bf_cancel(g_input_state->birth_flight);
         return EM_TRUE;
     }
 
@@ -158,18 +175,25 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         return EM_TRUE;
     }
 
-    /* B (no shift): toggle birth sky view */
+    /* B (no shift): toggle birth sky view with camera choreography */
     if (!e->shiftKey && (e->key[0] == 'b' || e->key[0] == 'B') && e->key[1] == '\0') {
         if (g_input_state->birth_sky.active) {
             /* Exit birth view: restore real simulation time */
             g_input_state->birth_sky.active = false;
             if (g_input_state->saved_jd > 0.0)
                 g_input_state->simulation_jd = g_input_state->saved_jd;
+            g_input_state->birth_flight = bf_cancel(g_input_state->birth_flight);
         } else {
             /* Enter birth view: save current JD and jump to birth moment */
             g_input_state->saved_jd = g_input_state->simulation_jd;
             g_input_state->simulation_jd = g_input_state->birth_sky.jd;
             g_input_state->birth_sky.active = true;
+            /* Smooth camera transition */
+            camera_pose_t current_pose = camera_pose_create(
+                g_input_state->camera.azimuth, g_input_state->camera.elevation,
+                g_input_state->camera.log_zoom, g_input_state->camera.target);
+            g_input_state->birth_flight = bf_begin(g_input_state->birth_flight,
+                                                    current_pose);
         }
         return EM_TRUE;
     }
@@ -224,6 +248,14 @@ static float touch_pinch_distance(const EmscriptenTouchEvent *e) {
 
 static EM_BOOL on_touchstart(int type, const EmscriptenTouchEvent *e, void *data) {
     (void)type; (void)data;
+
+    /* Skip "Enter Time" zoom on any touch */
+    if (g_input_state->enter_zoom_active) {
+        g_input_state->enter_zoom = ez_skip(g_input_state->enter_zoom);
+        g_input_state->enter_zoom_active = 0;
+        return EM_TRUE;
+    }
+
     double now = emscripten_get_now();
 
     for (int i = 0; i < e->numTouches; i++) {

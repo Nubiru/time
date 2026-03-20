@@ -40,6 +40,15 @@ app_state_t app_state_create(float aspect_ratio) {
         state.saved_jd = 0.0;
     }
 
+    /* Motion choreography */
+    state.enter_zoom = ez_create();
+    state.enter_zoom = ez_start(state.enter_zoom);
+    state.enter_zoom_active = 1;
+    state.earth_trans = et_create();
+    state.birth_flight = bf_create();
+    state.zoom_depth = zoom_depth_create(state.camera.log_zoom, -1);
+    state.motion_prefs = mp_create();
+
     /* Toggles */
     state.show_trails = 1; /* on by default */
     state.show_hud = 1;    /* on by default */
