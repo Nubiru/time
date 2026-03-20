@@ -282,6 +282,27 @@ void test_tfx_none_preset_zero(void)
     TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.0f, adj.exposure_boost);
 }
 
+void test_tfx_tick_advances_elapsed(void)
+{
+    transition_fx_t fx = tfx_create();
+    fx = tfx_activate(fx, TFX_FLY_TO, 1.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.0f, fx.elapsed);
+
+    fx = tfx_tick(fx, 0.016f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.016f, fx.elapsed);
+
+    fx = tfx_tick(fx, 0.016f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.032f, fx.elapsed);
+
+    /* Negative dt should not advance */
+    fx = tfx_tick(fx, -1.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.032f, fx.elapsed);
+
+    /* Zero dt should not advance */
+    fx = tfx_tick(fx, 0.0f);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.032f, fx.elapsed);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -307,5 +328,6 @@ int main(void)
     RUN_TEST(test_tfx_compute_stateless);
     RUN_TEST(test_tfx_combine_additive);
     RUN_TEST(test_tfx_none_preset_zero);
+    RUN_TEST(test_tfx_tick_advances_elapsed);
     return UNITY_END();
 }

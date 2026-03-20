@@ -39,15 +39,15 @@
 | unlabeled | 284 | Functional tests without explicit labels |
 | e2e | 5 | Playwright (WASM load, canvas, help, pause) |
 
-## Code Coverage (refreshed — 2026-03-20, session 14)
+## Code Coverage (refreshed — 2026-03-20, session 23)
 
 | Metric | Value |
 |--------|-------|
-| **Overall line coverage** | **95.9%** (30,315 / 31,615 lines) |
-| **Overall function coverage** | **99.9%** (3,710 / 3,712 functions) |
-| Uncovered functions | `spring_vec3_velocity`, `headline_cycle` |
+| **Overall line coverage** | **95.9%** (34,125 / 35,590 lines) |
+| **Overall function coverage** | **99.9%** (4,054 / 4,057 functions) |
+| Uncovered functions | `spring_vec3_velocity`, `headline_cycle`, `tfx_tick` |
 
-*Coverage maintained at 95.9% across 31,615 lines (up from 29,616). 385 source files, 385 test suites.*
+*Coverage maintained at 95.9% across 35,590 lines (+3,975 since session 14). 428 source files, 455 test suites.*
 
 ### Foundational Math Modules
 
@@ -71,16 +71,16 @@
 
 | Module | Coverage | Lines | Notes |
 |--------|----------|-------|-------|
-| brain_depth.c | 67.2% | 90/134 | New — depth tier selection logic |
+| brain_depth.c | 68.9% | 111/161 | Depth tier selection logic |
 | vec_interp.c | 70.9% | 61/86 | 1 uncovered fn: spring_vec3_velocity |
+| zoroastrian_interpret.c | 75.8% | 91/120 | New — locale expansion added paths |
 | timeline_data.c | 78.6% | 228/290 | Large module, many edge paths |
 | text_lod.c | 78.6% | 81/103 | LOD text tier selection |
 | camera_path.c | 80.5% | 91/113 | Camera interpolation paths |
-| input_dispatch.c | 80.6% | 100/124 | New — keyboard dispatch |
+| input_dispatch.c | 80.6% | 100/124 | Keyboard dispatch |
 | audio_event.c | 83.1% | 54/65 | Audio event triggers |
 | bezier.c | 83.2% | 89/107 | Edge cases, degenerate inputs |
-| planetary_hours.c | 84.6% | 22/26 | 4 uncovered lines |
-| brain_surprise.c | 84.6% | 33/39 | New — surprise detection |
+| brain_narrative.c | 83.2% | 119/143 | New — narrative composition |
 
 ## Build
 
