@@ -102,11 +102,11 @@ static int cd_is_significant(cd_system_t sys, double jd)
     }
 
     case CD_SYS_ASTROLOGY: {
-        /* Sun ingress: first 1 degree of any zodiac sign */
+        /* Sun ingress: within 2.5 degrees of any zodiac sign boundary */
         double lon = approx_sun_longitude(jd);
         double within_sign = fmod(lon, 30.0);
         if (within_sign < 0.0) within_sign += 30.0;
-        return within_sign < 1.0 ? 1 : 0;
+        return (within_sign < 2.5 || within_sign > 27.5) ? 1 : 0;
     }
 
     case CD_SYS_TZOLKIN: {
@@ -122,9 +122,11 @@ static int cd_is_significant(cd_system_t sys, double jd)
 
     case CD_SYS_ICHING: {
         hexagram_t hex = iching_from_jd(jd);
-        /* Creative (1), Receptive (2), Peace (11), Standstill (12) */
+        /* Creative (1), Receptive (2), Peace (11), Standstill (12),
+         * After Completion (63), Before Completion (64) — bookend hexagrams */
         if (hex.king_wen == 1 || hex.king_wen == 2 ||
-            hex.king_wen == 11 || hex.king_wen == 12)
+            hex.king_wen == 11 || hex.king_wen == 12 ||
+            hex.king_wen == 63 || hex.king_wen == 64)
             return 1;
         return 0;
     }
@@ -163,6 +165,8 @@ static int cd_is_significant(cd_system_t sys, double jd)
         if (hd.day == 1) return 1;
         /* Ramadan (month 9) */
         if (hd.month == 9) return 1;
+        /* Eid al-Adha: 10-12 Dhul Hijjah (month 12) */
+        if (hd.month == 12 && hd.day >= 10 && hd.day <= 12) return 1;
         return 0;
     }
 
@@ -190,9 +194,10 @@ static int cd_is_significant(cd_system_t sys, double jd)
         persian_date_t pd = persian_from_jd(jd);
         /* Month boundary (day 1) */
         if (pd.day == 1) return 1;
-        /* Nowruz: 1 Farvardin (month 1, day 1) already covered above.
-         * Sizdah Bedar: 13 Farvardin */
+        /* Sizdah Bedar: 13 Farvardin */
         if (pd.month == 1 && pd.day == 13) return 1;
+        /* Eve of Nowruz: last day of Esfand (month 12, day 29 or 30) */
+        if (pd.month == 12 && pd.day >= 29) return 1;
         return 0;
     }
 

@@ -74,6 +74,22 @@ static const br_known_pair_t KNOWN_PAIRS[] = {
       "Zoroastrian calendar is the pre-Islamic Persian calendar" },
     { CD_SYS_BAHAI,     CD_SYS_PERSIAN,   BR_CORR_HARMONIC,   0.80,
       "Bahai calendar starts at Naw-Ruz (Persian New Year)" },
+
+    /* Equinox-cluster pairs (2026-03-20 narrative pipeline) */
+    { CD_SYS_ASTRONOMY, CD_SYS_PERSIAN,  BR_CORR_STRUCTURAL, 1.0,
+      "Nowruz IS the vernal equinox — direct astronomical definition" },
+    { CD_SYS_ASTRONOMY, CD_SYS_BAHAI,    BR_CORR_STRUCTURAL, 0.95,
+      "Bahai New Year (Naw-Ruz) defined at vernal equinox" },
+    { CD_SYS_ASTRONOMY, CD_SYS_FRENCH,   BR_CORR_STRUCTURAL, 0.95,
+      "French Republican year defined at autumn equinox" },
+    { CD_SYS_ASTRONOMY, CD_SYS_HINDU,    BR_CORR_HARMONIC,   0.85,
+      "Hindu calendar uses Surya Siddhanta astronomical parameters" },
+    { CD_SYS_ISLAMIC,   CD_SYS_BAHAI,    BR_CORR_APPROXIMATE, 0.50,
+      "Bahai emerged from Islamic cultural context, distinct calendar" },
+    { CD_SYS_BAHAI,     CD_SYS_FRENCH,   BR_CORR_APPROXIMATE, 0.45,
+      "Both equinox-anchored but from different traditions" },
+    { CD_SYS_PERSIAN,   CD_SYS_FRENCH,   BR_CORR_APPROXIMATE, 0.50,
+      "Both solar calendars anchored to equinoxes" },
 };
 
 static const int KNOWN_PAIR_COUNT =

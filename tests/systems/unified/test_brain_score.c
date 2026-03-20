@@ -223,6 +223,28 @@ void test_rarity_monotonic(void) {
 }
 
 /* ===================================================================
+ * New equinox-cluster pairs
+ * =================================================================== */
+
+void test_lookup_astronomy_persian(void) {
+    const br_known_pair_t *p = br_lookup_pair(CD_SYS_ASTRONOMY, CD_SYS_PERSIAN);
+    TEST_ASSERT_NOT_NULL(p);
+    TEST_ASSERT_EQUAL_INT(BR_CORR_STRUCTURAL, p->type);
+}
+
+void test_lookup_astronomy_bahai(void) {
+    const br_known_pair_t *p = br_lookup_pair(CD_SYS_ASTRONOMY, CD_SYS_BAHAI);
+    TEST_ASSERT_NOT_NULL(p);
+    TEST_ASSERT_EQUAL_INT(BR_CORR_STRUCTURAL, p->type);
+}
+
+void test_lookup_islamic_bahai(void) {
+    const br_known_pair_t *p = br_lookup_pair(CD_SYS_ISLAMIC, CD_SYS_BAHAI);
+    TEST_ASSERT_NOT_NULL(p);
+    TEST_ASSERT_EQUAL_INT(BR_CORR_APPROXIMATE, p->type);
+}
+
+/* ===================================================================
  * Main
  * =================================================================== */
 
@@ -239,6 +261,11 @@ int main(void) {
     RUN_TEST(test_lookup_chinese_korean);
     RUN_TEST(test_lookup_approximate_pair);
     RUN_TEST(test_all_pairs_have_reason);
+
+    /* New equinox-cluster pairs */
+    RUN_TEST(test_lookup_astronomy_persian);
+    RUN_TEST(test_lookup_astronomy_bahai);
+    RUN_TEST(test_lookup_islamic_bahai);
 
     /* br_score_correlation */
     RUN_TEST(test_score_known_pair_updates_type);

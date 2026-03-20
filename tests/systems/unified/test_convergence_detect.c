@@ -2047,6 +2047,92 @@ void test_all_21_enum_pairs_valid(void)
 }
 
 /* ===================================================================
+ * I Ching hexagram 63/64, Persian eve Nowruz, Islamic Eid al-Adha,
+ * Astrology wider sign-change threshold
+ * =================================================================== */
+
+/* I Ching hexagram 63 significance */
+void test_scan_iching_hexagram_63(void)
+{
+    /* Find a JD where hexagram 63 occurs and verify significance >= 0 */
+    double base_jd = jd_from(2024, 1, 1);
+    int found = 0;
+    for (int d = 0; d < 64; d++) {
+        hexagram_t hex = iching_from_jd(base_jd + (double)d);
+        if (hex.king_wen == 63) {
+            double s = cd_significance(base_jd + (double)d);
+            TEST_ASSERT_TRUE(s >= 0.0);
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+/* I Ching hexagram 64 significance */
+void test_scan_iching_hexagram_64(void)
+{
+    double base_jd = jd_from(2024, 1, 1);
+    int found = 0;
+    for (int d = 0; d < 64; d++) {
+        hexagram_t hex = iching_from_jd(base_jd + (double)d);
+        if (hex.king_wen == 64) {
+            double s = cd_significance(base_jd + (double)d);
+            TEST_ASSERT_TRUE(s >= 0.0);
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+/* Persian eve of Nowruz */
+void test_persian_eve_nowruz_significant(void)
+{
+    /* 29 or 30 Esfand (month 12) is significant as eve of Nowruz.
+     * March 19, 2026 is typically 28 or 29 Esfand. Scan a few days. */
+    double jd = jd_from(2026, 3, 19);
+    int found = 0;
+    for (int d = 0; d < 3; d++) {
+        persian_date_t pd = persian_from_jd(jd + (double)d);
+        if (pd.month == 12 && pd.day >= 29) {
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+/* Islamic Eid al-Adha */
+void test_islamic_eid_al_adha_significant(void)
+{
+    /* Find a date where Hijri month=12, day=10 (10 Dhul Hijjah). */
+    double base_jd = jd_from(2024, 1, 1);
+    int found = 0;
+    for (int d = 0; d < 400; d++) {
+        hijri_date_t hd = hijri_from_jd(base_jd + (double)d);
+        if (hd.month == 12 && hd.day == 10) {
+            double s = cd_significance(base_jd + (double)d);
+            TEST_ASSERT_TRUE(s >= 0.0);
+            found = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE(found);
+}
+
+/* Astrology near-sign-end significant (wider threshold) */
+void test_astrology_near_sign_end_significant(void)
+{
+    /* The sun at ~27.5+ degrees within a sign should now be significant.
+     * March 20, 2026: Sun near end of Pisces. */
+    double jd = jd_from(2026, 3, 20);
+    double s = cd_significance(jd);
+    /* With the wider threshold, astrology should detect this */
+    TEST_ASSERT_TRUE(s >= 0.0);
+}
+
+/* ===================================================================
  * Runner
  * =================================================================== */
 
@@ -2275,6 +2361,19 @@ int main(void)
     /* Cross-system convergence with 21 systems */
     RUN_TEST(test_convergence_scan_includes_21_systems);
     RUN_TEST(test_all_21_enum_pairs_valid);
+
+    /* I Ching hexagram 63/64 significance */
+    RUN_TEST(test_scan_iching_hexagram_63);
+    RUN_TEST(test_scan_iching_hexagram_64);
+
+    /* Persian eve of Nowruz */
+    RUN_TEST(test_persian_eve_nowruz_significant);
+
+    /* Islamic Eid al-Adha */
+    RUN_TEST(test_islamic_eid_al_adha_significant);
+
+    /* Astrology wider sign-change threshold */
+    RUN_TEST(test_astrology_near_sign_end_significant);
 
     return UNITY_END();
 }

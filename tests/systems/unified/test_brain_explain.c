@@ -235,6 +235,52 @@ void test_all_entries_have_detail(void) {
 }
 
 /* ===================================================================
+ * New equinox-cluster pairs
+ * =================================================================== */
+
+void test_lookup_astronomy_persian_shared(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ASTRONOMY, CD_SYS_PERSIAN);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_SHARED_SOURCE, e->why);
+}
+
+void test_lookup_astronomy_bahai_shared(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ASTRONOMY, CD_SYS_BAHAI);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_SHARED_SOURCE, e->why);
+}
+
+void test_lookup_astronomy_hindu_shared(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ASTRONOMY, CD_SYS_HINDU);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_SHARED_SOURCE, e->why);
+}
+
+void test_lookup_astronomy_french_shared(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ASTRONOMY, CD_SYS_FRENCH);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_SHARED_SOURCE, e->why);
+}
+
+void test_lookup_islamic_bahai_transmission(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_ISLAMIC, CD_SYS_BAHAI);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_TRANSMISSION, e->why);
+}
+
+void test_lookup_bahai_french_convergent(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_BAHAI, CD_SYS_FRENCH);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_CONVERGENT, e->why);
+}
+
+void test_lookup_persian_french_convergent(void) {
+    const br_explanation_t *e = br_explain_lookup(CD_SYS_PERSIAN, CD_SYS_FRENCH);
+    TEST_ASSERT_NOT_NULL(e);
+    TEST_ASSERT_EQUAL_INT(BR_EXPLAIN_CONVERGENT, e->why);
+}
+
+/* ===================================================================
  * Main
  * =================================================================== */
 
@@ -284,6 +330,15 @@ int main(void) {
     /* Field completeness */
     RUN_TEST(test_all_entries_have_brief);
     RUN_TEST(test_all_entries_have_detail);
+
+    /* New equinox-cluster pairs */
+    RUN_TEST(test_lookup_astronomy_persian_shared);
+    RUN_TEST(test_lookup_astronomy_bahai_shared);
+    RUN_TEST(test_lookup_astronomy_hindu_shared);
+    RUN_TEST(test_lookup_astronomy_french_shared);
+    RUN_TEST(test_lookup_islamic_bahai_transmission);
+    RUN_TEST(test_lookup_bahai_french_convergent);
+    RUN_TEST(test_lookup_persian_french_convergent);
 
     return UNITY_END();
 }

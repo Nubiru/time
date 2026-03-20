@@ -172,6 +172,50 @@ static const br_explanation_t EXPLANATIONS[] = {
       "Coptic inherits Egyptian",
       "The Coptic calendar is a direct descendant of the ancient Egyptian "
       "civil calendar, preserving the 12x30+5 day structure." },
+
+    /* --- Equinox-cluster pairs (2026-03-20 narrative pipeline) --- */
+
+    { CD_SYS_ASTRONOMY, CD_SYS_PERSIAN, BR_EXPLAIN_SHARED_SOURCE,
+      "Nowruz anchored to vernal equinox",
+      "The Persian New Year (Nowruz) is defined as the exact moment of the "
+      "vernal equinox — a direct astronomical observation that has anchored "
+      "the calendar for over 3,000 years." },
+
+    { CD_SYS_ASTRONOMY, CD_SYS_BAHAI, BR_EXPLAIN_SHARED_SOURCE,
+      "Naw-Ruz at vernal equinox",
+      "The Bahai calendar begins its year at the vernal equinox (Naw-Ruz). "
+      "This anchor point is determined by astronomical observation, directly "
+      "inherited from Persian tradition." },
+
+    { CD_SYS_ASTRONOMY, CD_SYS_HINDU, BR_EXPLAIN_SHARED_SOURCE,
+      "Surya Siddhanta astronomical model",
+      "Hindu calendar parameters derive from the Surya Siddhanta, an "
+      "astronomical text that models solar and lunar motion. Tithi and "
+      "nakshatra calculations are direct astronomical observations." },
+
+    { CD_SYS_ASTRONOMY, CD_SYS_FRENCH, BR_EXPLAIN_SHARED_SOURCE,
+      "French Republican year begins at autumn equinox",
+      "The French Republican calendar anchored its year start to the "
+      "autumn equinox — an astronomical event that coincided with the "
+      "founding of the Republic in 1792." },
+
+    { CD_SYS_ISLAMIC, CD_SYS_BAHAI, BR_EXPLAIN_TRANSMISSION,
+      "Bahai emerged from Islamic culture",
+      "The Bahai Faith arose in 19th-century Persia within an Islamic "
+      "cultural context. While the Bahai calendar is distinct (19 months "
+      "of 19 days), its origin is within the Islamic world." },
+
+    { CD_SYS_BAHAI, CD_SYS_FRENCH, BR_EXPLAIN_CONVERGENT,
+      "Both anchored to equinox, independently",
+      "The Bahai calendar (vernal equinox) and French Republican calendar "
+      "(autumn equinox) both chose equinoxes as their year start — one "
+      "from religious revelation, the other from revolutionary rationalism." },
+
+    { CD_SYS_PERSIAN, CD_SYS_FRENCH, BR_EXPLAIN_CONVERGENT,
+      "Both solar, equinox-anchored",
+      "Both the Persian (Solar Hijri) and French Republican calendars "
+      "anchor their year to an equinox. The Persian calendar uses the "
+      "vernal equinox; the French Republican used the autumn equinox." },
 };
 
 static const int EXPLANATION_COUNT =
