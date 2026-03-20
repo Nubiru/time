@@ -6,6 +6,7 @@
  * Pure functions: no globals, no malloc, no side effects. */
 
 #include "iching_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -444,4 +445,55 @@ iching_interp_t ii_interpret(int king_wen, const char *upper_tri,
 int ii_hexagram_count(void)
 {
     return 64;
+}
+
+iching_interp_t ii_interpret_locale(int king_wen, const char *upper_tri,
+                                    const char *lower_tri,
+                                    i18n_locale_t locale)
+{
+    if (locale == I18N_LOCALE_EN) {
+        return ii_interpret(king_wen, upper_tri, lower_tri);
+    }
+
+    iching_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    if (king_wen < 1 || king_wen > 64) {
+        snprintf(r.glyph,  sizeof(r.glyph),  "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    const char *up = upper_tri ? upper_tri : "?";
+    const char *lo = lower_tri ? lower_tri : "?";
+
+    char key[64];
+
+    snprintf(key, sizeof(key), "iching.hex.%d.name", king_wen);
+    const char *name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "iching.hex.%d.judgment", king_wen);
+    const char *judgment = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "iching.hex.%d.image", king_wen);
+    const char *image = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "iching.hex.%d.keywords", king_wen);
+    const char *keywords = content_get(key, locale);
+
+    /* Glyph: hexagram number */
+    snprintf(r.glyph, sizeof(r.glyph), "%d", king_wen);
+
+    /* Glance */
+    const char *tpl_glance = content_get("iching.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             king_wen, name, up, lo);
+
+    /* Detail */
+    const char *tpl_detail = content_get("iching.tpl.detail", locale);
+    snprintf(r.detail, sizeof(r.detail), tpl_detail,
+             name, judgment, image, keywords, up, lo);
+
+    return r;
 }

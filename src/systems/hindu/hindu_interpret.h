@@ -9,6 +9,7 @@
 #ifndef TIME_HINDU_INTERPRET_H
 #define TIME_HINDU_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
 #include "panchanga.h"
 
 /* Per-tithi interpretation */
@@ -39,5 +40,10 @@ hindu_interp_t hndi_interpret(int tithi, const char *nakshatra_name,
 
 /* Returns 30 (total number of tithis). */
 int hndi_tithi_count(void);
+
+/* Locale-aware interpretation. Falls back to English. */
+hindu_interp_t hndi_interpret_locale(int tithi, const char *nakshatra_name,
+                                     const char *yoga_name,
+                                     i18n_locale_t locale);
 
 #endif /* TIME_HINDU_INTERPRET_H */

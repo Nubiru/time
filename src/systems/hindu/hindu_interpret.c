@@ -4,6 +4,7 @@
  * Tithi data from traditional Hindu Panchanga sources. */
 
 #include "hindu_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -153,6 +154,82 @@ hindu_interp_t hndi_interpret(int tithi, const char *nakshatra_name,
         snprintf(result.detail + written,
                  sizeof(result.detail) - (size_t)written,
                  " Yoga: %s.", yoga_name);
+    }
+
+    return result;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+hindu_interp_t hndi_interpret_locale(int tithi, const char *nakshatra_name,
+                                     const char *yoga_name,
+                                     i18n_locale_t locale)
+{
+    if (locale == I18N_LOCALE_EN) {
+        return hndi_interpret(tithi, nakshatra_name, yoga_name);
+    }
+
+    hindu_interp_t result;
+    memset(&result, 0, sizeof(result));
+
+    if (tithi < 1 || tithi > 30) {
+        snprintf(result.glyph, sizeof(result.glyph), "?");
+        snprintf(result.glance, sizeof(result.glance), "?");
+        snprintf(result.detail, sizeof(result.detail), "?");
+        return result;
+    }
+
+    char key[64];
+
+    snprintf(key, sizeof(key), "hindu.tithi.%d.name", tithi);
+    const char *full_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hindu.tithi.%d.deity", tithi);
+    const char *deity = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hindu.tithi.%d.quality", tithi);
+    const char *quality = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hindu.tithi.%d.activity", tithi);
+    const char *activity = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hindu.tithi.%d.brief", tithi);
+    const char *brief = content_get(key, locale);
+
+    /* T0: glyph */
+    if (tithi <= 15) {
+        snprintf(result.glyph, sizeof(result.glyph), "S%d", tithi);
+    } else {
+        snprintf(result.glyph, sizeof(result.glyph), "K%d", tithi - 15);
+    }
+
+    /* T1: glance */
+    const char *tpl_glance = content_get("hindu.tpl.glance", locale);
+    snprintf(result.glance, sizeof(result.glance), tpl_glance,
+             full_name, deity, quality, activity);
+
+    /* T3: detail */
+    const char *tpl_detail = content_get("hindu.tpl.detail", locale);
+    int written = snprintf(result.detail, sizeof(result.detail), tpl_detail,
+                          full_name, brief, deity, quality, activity);
+
+    if (nakshatra_name != NULL && written > 0 &&
+        (size_t)written < sizeof(result.detail)) {
+        const char *tpl_nak = content_get("hindu.tpl.nakshatra", locale);
+        int added = snprintf(result.detail + written,
+                            sizeof(result.detail) - (size_t)written,
+                            tpl_nak, nakshatra_name);
+        if (added > 0) written += added;
+    }
+
+    if (yoga_name != NULL && written > 0 &&
+        (size_t)written < sizeof(result.detail)) {
+        const char *tpl_yoga = content_get("hindu.tpl.yoga", locale);
+        snprintf(result.detail + written,
+                sizeof(result.detail) - (size_t)written,
+                tpl_yoga, yoga_name);
     }
 
     return result;

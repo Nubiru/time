@@ -7,6 +7,7 @@
  *          Golden Dawn path attributions (Hebrew letter + Tarot). */
 
 #include "kabbalah_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -199,4 +200,57 @@ int ki_sefirah_count(void)
 int ki_path_count(void)
 {
     return 22;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+kabbalah_interp_t ki_interpret_sefirah_locale(int index, const char *planet_name,
+                                              i18n_locale_t locale)
+{
+    if (locale == I18N_LOCALE_EN) {
+        return ki_interpret_sefirah(index, planet_name);
+    }
+
+    kabbalah_interp_t result;
+    memset(&result, 0, sizeof(result));
+
+    if (index < 0 || index >= 10) {
+        snprintf(result.glyph, sizeof(result.glyph), "?");
+        snprintf(result.glance, sizeof(result.glance), "?");
+        snprintf(result.detail, sizeof(result.detail), "?");
+        return result;
+    }
+
+    char key[64];
+
+    /* Sefirah names are Hebrew — keep original in all languages */
+    snprintf(key, sizeof(key), "kabbalah.sefirah.%d.name", index);
+    const char *name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "kabbalah.sefirah.%d.meditation", index);
+    const char *meditation = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "kabbalah.sefirah.%d.question", index);
+    const char *question = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "kabbalah.sefirah.%d.brief", index);
+    const char *brief = content_get(key, locale);
+
+    const char *planet = planet_name ? planet_name : "unassigned";
+
+    /* Glyph: first 3 chars of name */
+    snprintf(result.glyph, sizeof(result.glyph), "%.3s", name);
+
+    /* Glance */
+    const char *tpl_glance = content_get("kabbalah.tpl.glance", locale);
+    snprintf(result.glance, sizeof(result.glance), tpl_glance, name, brief);
+
+    /* Detail */
+    const char *tpl_detail = content_get("kabbalah.tpl.detail", locale);
+    snprintf(result.detail, sizeof(result.detail), tpl_detail,
+             name, meditation, question, planet);
+
+    return result;
 }

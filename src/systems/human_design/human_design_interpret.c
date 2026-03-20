@@ -5,6 +5,7 @@
 
 #include "human_design_interpret.h"
 #include "human_design.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -346,4 +347,112 @@ int hdi_authority_count(void)
 int hdi_center_count(void)
 {
     return 9;
+}
+
+/* Profile index lookup for locale function (same order as PROFILES array) */
+static int hdi_profile_idx(int line1, int line2)
+{
+    static const int pairs[12][2] = {
+        {1,3}, {1,4}, {2,4}, {2,5}, {3,5}, {3,6},
+        {4,6}, {4,1}, {5,1}, {5,2}, {6,2}, {6,3}
+    };
+    for (int i = 0; i < 12; i++) {
+        if (pairs[i][0] == line1 && pairs[i][1] == line2)
+            return i;
+    }
+    return -1;
+}
+
+human_design_interp_t hdi_interpret_locale(int type, int authority,
+                                           int line1, int line2,
+                                           int sun_gate,
+                                           i18n_locale_t locale)
+{
+    if (locale == I18N_LOCALE_EN) {
+        return hdi_interpret(type, authority, line1, line2, sun_gate);
+    }
+
+    human_design_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    if (type < 0 || type > 4) {
+        snprintf(r.glyph,  sizeof(r.glyph),  "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    char key[64];
+
+    /* Type data */
+    snprintf(key, sizeof(key), "hd.type.%d.name", type);
+    const char *type_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hd.type.%d.strategy", type);
+    const char *strategy = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hd.type.%d.signature", type);
+    const char *signature = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hd.type.%d.not_self", type);
+    const char *not_self = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hd.type.%d.aura", type);
+    const char *aura = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hd.type.%d.brief", type);
+    const char *type_brief = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hd.type.%d.abbr", type);
+    const char *type_abbr = content_get(key, locale);
+
+    /* Authority data */
+    snprintf(key, sizeof(key), "hd.auth.%d.name", authority);
+    const char *auth_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "hd.auth.%d.brief", authority);
+    const char *auth_brief = content_get(key, locale);
+
+    /* Profile data */
+    int pidx = hdi_profile_idx(line1, line2);
+    const char *prof_name = "?";
+    const char *prof_theme = "?";
+    const char *prof_conscious = "?";
+    const char *prof_unconscious = "?";
+    if (pidx >= 0) {
+        /* Profile name like "1/3" is universal — no translation */
+        prof_name = PROFILES[pidx].name;
+
+        snprintf(key, sizeof(key), "hd.profile.%d.theme", pidx);
+        prof_theme = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "hd.profile.%d.conscious", pidx);
+        prof_conscious = content_get(key, locale);
+
+        snprintf(key, sizeof(key), "hd.profile.%d.unconscious", pidx);
+        prof_unconscious = content_get(key, locale);
+    }
+
+    /* Gate data (stays English — from human_design.h) */
+    const char *gate_name = hd_gate_name(sun_gate);
+    const char *gate_kw   = hd_gate_keyword(sun_gate);
+
+    /* Glyph */
+    snprintf(r.glyph, sizeof(r.glyph), "%s", type_abbr);
+
+    /* Glance */
+    const char *tpl_glance = content_get("hd.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             type_name, prof_name, sun_gate, gate_name);
+
+    /* Detail */
+    const char *tpl_detail = content_get("hd.tpl.detail", locale);
+    snprintf(r.detail, sizeof(r.detail), tpl_detail,
+             type_name, strategy, signature, not_self,
+             aura,
+             auth_name, auth_brief,
+             prof_name, prof_theme, prof_conscious, prof_unconscious,
+             sun_gate, gate_name, gate_kw, type_brief);
+
+    return r;
 }

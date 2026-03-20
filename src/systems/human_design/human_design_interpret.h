@@ -14,6 +14,8 @@
 #ifndef TIME_HUMAN_DESIGN_INTERPRET_H
 #define TIME_HUMAN_DESIGN_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* ================================================================
  * Type enumeration (5 types)
  * ================================================================ */
@@ -130,5 +132,13 @@ int hdi_authority_count(void);
 
 /* Returns 9 (number of HD centers). */
 int hdi_center_count(void);
+
+/* Locale-aware interpretation. Same as hdi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+human_design_interp_t hdi_interpret_locale(int type, int authority,
+                                           int line1, int line2,
+                                           int sun_gate,
+                                           i18n_locale_t locale);
 
 #endif /* TIME_HUMAN_DESIGN_INTERPRET_H */

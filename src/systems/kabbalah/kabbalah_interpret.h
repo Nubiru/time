@@ -13,6 +13,8 @@
 #ifndef TIME_KABBALAH_INTERPRET_H
 #define TIME_KABBALAH_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-Sefirah interpretation */
 typedef struct {
     int index;                  /* 0-9 (Keter to Malkuth) */
@@ -56,5 +58,9 @@ int ki_sefirah_count(void);
 
 /* Count of path interpretations (always 22). */
 int ki_path_count(void);
+
+/* Locale-aware Sefirah interpretation. Falls back to English. */
+kabbalah_interp_t ki_interpret_sefirah_locale(int index, const char *planet_name,
+                                              i18n_locale_t locale);
 
 #endif /* TIME_KABBALAH_INTERPRET_H */

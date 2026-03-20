@@ -9,6 +9,8 @@
 #ifndef TIME_ICHING_INTERPRET_H
 #define TIME_ICHING_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-hexagram interpretation data */
 typedef struct {
     int king_wen;               /* 1-64 */
@@ -38,5 +40,12 @@ iching_interp_t ii_interpret(int king_wen, const char *upper_tri,
 
 /* Returns 64 (total number of hexagrams). */
 int ii_hexagram_count(void);
+
+/* Locale-aware interpretation. Same as ii_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+iching_interp_t ii_interpret_locale(int king_wen, const char *upper_tri,
+                                    const char *lower_tri,
+                                    i18n_locale_t locale);
 
 #endif /* TIME_ICHING_INTERPRET_H */

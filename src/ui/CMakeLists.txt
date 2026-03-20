@@ -22,6 +22,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/chinese_fmt.c
     ${CMAKE_CURRENT_SOURCE_DIR}/hd_card.c
     ${CMAKE_CURRENT_SOURCE_DIR}/i18n.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/content_i18n.c
     ${CMAKE_CURRENT_SOURCE_DIR}/iching_card.c
     ${CMAKE_CURRENT_SOURCE_DIR}/lunar_display.c
     ${CMAKE_CURRENT_SOURCE_DIR}/rtl_layout.c
@@ -84,7 +85,6 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/transition_fx.c
     ${CMAKE_CURRENT_SOURCE_DIR}/card_flight.c
     ${CMAKE_CURRENT_SOURCE_DIR}/card_style.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/content_i18n.c
     PARENT_SCOPE
 )
 
@@ -110,6 +110,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_chinese_fmt     OBJECT chinese_fmt.c)
     add_library(time_hd_card         OBJECT hd_card.c)
     add_library(time_i18n            OBJECT i18n.c)
+    add_library(time_content_i18n    OBJECT content_i18n.c)
     add_library(time_iching_card     OBJECT iching_card.c)
     add_library(time_lunar_display   OBJECT lunar_display.c)
     add_library(time_rtl_layout      OBJECT rtl_layout.c)
@@ -170,6 +171,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_transition_fx OBJECT transition_fx.c)
     add_library(time_card_flight OBJECT card_flight.c)
     add_library(time_card_style OBJECT card_style.c)
-    add_library(time_content_i18n OBJECT content_i18n.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
