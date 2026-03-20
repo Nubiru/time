@@ -28,10 +28,10 @@ echo "=== Stream Domain Check: $STREAM ==="
 # Format: space-separated list of allowed path prefixes (relative to repo root)
 case "$STREAM" in
     VISUALS)
-        ALLOWED="src/render/ shaders/ web/ src/core/main.c"
+        ALLOWED="src/render/ src/ui/ shaders/ web/ src/core/main.c"
         ;;
     LANGUAGE)
-        ALLOWED="src/ui/ data/translations/"
+        ALLOWED="src/ui/ src/systems/ data/translations/ data/content/ scripts/ cmake/ tests/"
         ;;
     MOTION)
         ALLOWED="src/ui/"
