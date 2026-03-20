@@ -439,6 +439,8 @@ time_add_test(NAME test_drama_narrator TEST tests/systems/unified/test_drama_nar
     DEPS drama_narrator)
 time_add_test(NAME test_stored_convergences TEST tests/systems/unified/test_stored_convergences.c
     DEPS stored_convergences convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+time_add_test(NAME test_brain_stats TEST tests/systems/unified/test_brain_stats.c
+    DEPS brain_stats brain_archive brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 
 # UI tests
 time_add_test(NAME test_time_hud        TEST tests/ui/test_time_hud.c
@@ -598,6 +600,8 @@ time_add_test(NAME test_convergence_motion TEST tests/ui/test_convergence_motion
     DEPS convergence_motion spring LABELS unit)
 time_add_test(NAME test_transition_fx TEST tests/ui/test_transition_fx.c
     DEPS transition_fx LABELS unit)
+time_add_test(NAME test_card_flight TEST tests/ui/test_card_flight.c
+    DEPS card_flight spring LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
