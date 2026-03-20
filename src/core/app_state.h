@@ -80,6 +80,11 @@ typedef struct {
     int show_hud;          /* time HUD overlay */
     int meditation_active; /* 1=meditation mode on */
 
+    /* Brain scan cache (refreshed once per simulated day) */
+    double headline_jd;          /* floor(jd) of last brain scan */
+    char   headline[128];        /* cached daily narrative headline */
+    float  convergence_strength; /* 0.0-1.0 from brain scan */
+
     /* Timing */
     double prev_time_ms;
 } app_state_t;

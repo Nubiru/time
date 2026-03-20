@@ -36,6 +36,9 @@
 #include "../ui/audio_score.h"
 #include "../ui/audio_engine.h"
 #include "../ui/audio_meditation.h"
+#include "../systems/unified/brain_scan.h"
+#include "../systems/unified/brain_narrative.h"
+#include <string.h>
 #endif
 
 #ifdef __EMSCRIPTEN__
@@ -62,6 +65,24 @@ void main_loop(void) {
         float new_log_zoom = scale_transition_value(g_state.scale_transition);
         g_state.camera.log_zoom = new_log_zoom;
         g_state.camera.distance = expf(new_log_zoom);
+    }
+
+    /* --- Brain scan: refresh once per simulated day --- */
+    {
+        double day_now = floor(g_state.simulation_jd);
+        if (day_now != g_state.headline_jd) {
+            g_state.headline_jd = day_now;
+            br_result_t br;
+            br_scan(g_state.simulation_jd, &br);
+            g_state.convergence_strength = (float)br.convergence_strength;
+            br_narrative_t story;
+            if (br_narrative_compose(&br, &story)) {
+                memcpy(g_state.headline, story.headline,
+                       sizeof(g_state.headline));
+            } else {
+                g_state.headline[0] = '\0';
+            }
+        }
     }
 
     /* --- Motion choreographies: tick all, apply highest-priority pose --- */
@@ -100,8 +121,10 @@ void main_loop(void) {
                                             g_state.camera.log_zoom,
                                             (float)dt_sec);
 
-    /* --- Convergence motion: animate from brain intensity (0 until BRAIN feeds data) --- */
-    g_state.convergence = cm_update(g_state.convergence, 0.0f, 0.0f, (float)dt_sec);
+    /* --- Convergence motion: animate from brain scan intensity --- */
+    g_state.convergence = cm_update(g_state.convergence,
+                                     g_state.convergence_strength, 0.0f,
+                                     (float)dt_sec);
 
     /* --- Card flight: spring-animated depth navigation --- */
     g_state.cards = cf_tick(g_state.cards, (float)dt_sec);
@@ -184,6 +207,7 @@ void main_loop(void) {
         .theme_id      = (int)g_state.auto_theme.active_theme,
         .focus_mode    = g_state.view.focus_mode,
     };
+    memcpy(frame.headline, g_state.headline, sizeof(frame.headline));
 
     /* --- Get pass schedule from view state --- */
     pass_schedule_t sched = vs_blended_schedule(&g_state.view);
