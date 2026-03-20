@@ -100,6 +100,33 @@ void main_loop(void) {
                                             g_state.camera.log_zoom,
                                             (float)dt_sec);
 
+    /* --- Convergence motion: animate from brain intensity (0 until BRAIN feeds data) --- */
+    g_state.convergence = cm_update(g_state.convergence, 0.0f, 0.0f, (float)dt_sec);
+
+    /* --- Card flight: spring-animated depth navigation --- */
+    g_state.cards = cf_tick(g_state.cards, (float)dt_sec);
+
+    /* --- Focus flow: click-to-focus camera (idle until triggered) --- */
+    g_state.focus = focus_flow_update(g_state.focus, (float)dt_sec);
+
+    /* --- Transition FX: drive post-processing from active choreography --- */
+    if (g_state.enter_zoom_active && ez_active(g_state.enter_zoom)) {
+        g_state.fx = tfx_activate(g_state.fx, TFX_ENTER_ZOOM, 1.0f);
+        g_state.fx = tfx_set_progress(g_state.fx, ez_progress(g_state.enter_zoom));
+    } else if (et_active(g_state.earth_trans)) {
+        g_state.fx = tfx_activate(g_state.fx, TFX_EARTH_VIEW, 1.0f);
+        g_state.fx = tfx_set_progress(g_state.fx, et_progress(g_state.earth_trans));
+    } else if (bf_active(g_state.birth_flight)) {
+        g_state.fx = tfx_activate(g_state.fx, TFX_BIRTH_TRAVEL, 1.0f);
+        g_state.fx = tfx_set_progress(g_state.fx, bf_progress(g_state.birth_flight));
+    } else if (cm_active(g_state.convergence)) {
+        g_state.fx = tfx_activate(g_state.fx, TFX_CONVERGENCE,
+                                   cm_glow(g_state.convergence));
+    } else {
+        g_state.fx = tfx_deactivate(g_state.fx);
+    }
+    g_state.fx = tfx_tick(g_state.fx, (float)dt_sec);
+
     /* --- Performance LOD: record frame time, adapt quality --- */
     g_state.lod = lod_record_frame(g_state.lod, (float)(dt_sec * 1000.0));
     g_state.view = vs_set_lod(g_state.view, (int)lod_current_tier(&g_state.lod));
@@ -155,6 +182,7 @@ void main_loop(void) {
         .observer_lat  = g_state.observer_lat,
         .observer_lon  = g_state.observer_lon,
         .theme_id      = (int)g_state.auto_theme.active_theme,
+        .focus_mode    = g_state.view.focus_mode,
     };
 
     /* --- Get pass schedule from view state --- */

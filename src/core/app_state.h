@@ -15,6 +15,10 @@
 #include "../ui/motion_prefs.h"
 #include "../ui/earth_transition.h"
 #include "../ui/birth_flight.h"
+#include "../ui/convergence_motion.h"
+#include "../ui/transition_fx.h"
+#include "../ui/card_flight.h"
+#include "../ui/focus_flow.h"
 
 /* All mutable application state in one place.
  * Pure functions never touch this — they receive data and return data.
@@ -66,6 +70,10 @@ typedef struct {
     birth_flight_t birth_flight;
     zoom_depth_t zoom_depth;
     motion_prefs_t motion_prefs;
+    convergence_motion_t convergence;
+    transition_fx_t fx;
+    card_flight_t cards;
+    focus_flow_t focus;
 
     /* Visual toggles */
     int show_trails;       /* orbit trail lines */

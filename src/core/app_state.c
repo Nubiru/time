@@ -48,6 +48,10 @@ app_state_t app_state_create(float aspect_ratio) {
     state.birth_flight = bf_create();
     state.zoom_depth = zoom_depth_create(state.camera.log_zoom, -1);
     state.motion_prefs = mp_create();
+    state.convergence = cm_create();
+    state.fx = tfx_create();
+    state.cards = cf_create(CF_DEPTH_TODAY);
+    state.focus = focus_flow_create();
 
     /* Toggles */
     state.show_trails = 1; /* on by default */

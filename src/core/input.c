@@ -157,7 +157,23 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
             g_input_state->earth_trans = et_cancel(g_input_state->earth_trans);
         if (bf_active(g_input_state->birth_flight))
             g_input_state->birth_flight = bf_cancel(g_input_state->birth_flight);
+        if (cf_active(g_input_state->cards))
+            g_input_state->cards = cf_cancel(g_input_state->cards);
+        if (focus_flow_active(g_input_state->focus))
+            g_input_state->focus = focus_flow_release(g_input_state->focus);
         return EM_TRUE;
+    }
+
+    /* Page Down / Page Up: card depth fly-through */
+    if (e->key[0] == 'P' && e->key[1] == 'a' && e->key[2] == 'g' && e->key[3] == 'e') {
+        if (e->key[4] == 'D') {
+            g_input_state->cards = cf_fly_deeper(g_input_state->cards);
+            return EM_TRUE;
+        }
+        if (e->key[4] == 'U') {
+            g_input_state->cards = cf_fly_shallower(g_input_state->cards);
+            return EM_TRUE;
+        }
     }
 
     /* Shift + M: toggle meditation mode */
