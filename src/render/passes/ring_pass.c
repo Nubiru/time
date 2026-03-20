@@ -18,6 +18,7 @@
 #include "../shader.h"
 #include "../../systems/astronomy/planets.h"
 #include "../../systems/astronomy/lunar.h"
+#include "../../systems/unified/depth_ring.h"
 
 /* Ring placement: outside the zodiac ring (which is at ~4.2-4.8).
  * Concentric rings start at radius 5.5, extending outward. */
@@ -118,6 +119,46 @@ void ring_pass_draw(const render_frame_t *frame) {
 
     s_index_count = info.total_indices;
     if (s_index_count <= 0) return;
+
+    /* Apply brain-driven ring glow: boost vertex brightness for converging rings */
+    {
+        const br_visual_frame_t *bv = &frame->brain_visual;
+
+        /* Accumulate glow per ring from brain insights */
+        float ring_glow[DEPTH_RING_COUNT];
+        for (int r = 0; r < DEPTH_RING_COUNT; r++) ring_glow[r] = 0.0f;
+
+        for (int i = 0; i < bv->insight_count; i++) {
+            int sys = bv->insights[i].highlight_system;
+            if (sys < 0) {
+                /* Global insight: boost all rings evenly */
+                for (int r = 0; r < DEPTH_RING_COUNT; r++)
+                    ring_glow[r] += bv->insights[i].ring_glow * 0.3f;
+            } else {
+                int ring = (int)depth_ring_for_system(sys);
+                if (ring < DEPTH_RING_COUNT)
+                    ring_glow[ring] += bv->insights[i].ring_glow;
+            }
+        }
+
+        /* Modulate vertex colors per ring (RGB * (1 + glow), clamped) */
+        for (int r = 0; r < layout.ring_count && r < DEPTH_RING_COUNT; r++) {
+            float g = ring_glow[r];
+            if (g < 0.01f) continue;
+            float boost = 1.0f + g * 0.5f; /* 0.5 dampens so max glow doesn't clip */
+
+            int v_start = info.ring_vert_offset[r];
+            int v_count = info.ring_vert_count[r];
+            for (int v = v_start; v < v_start + v_count; v++) {
+                float *c = &verts[v * CR_VERT_FLOATS + 3]; /* color offset */
+                c[0] = fminf(c[0] * boost, 1.0f);
+                c[1] = fminf(c[1] * boost, 1.0f);
+                c[2] = fminf(c[2] * boost, 1.0f);
+                /* alpha: slight boost for visibility */
+                c[3] = fminf(c[3] * (1.0f + g * 0.2f), 1.0f);
+            }
+        }
+    }
 
     /* Upload to GPU */
     glBindBuffer(GL_ARRAY_BUFFER, s_vbo);

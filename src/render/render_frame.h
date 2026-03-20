@@ -10,6 +10,7 @@
 
 #include "../math/mat4.h"
 #include "render_layers.h"
+#include "../systems/unified/brain_visual_bridge.h"
 
 typedef struct {
     double simulation_jd;
@@ -25,6 +26,7 @@ typedef struct {
     int    theme_id;              /* active theme (0=COSMOS, 1=DAWN) for themed rendering */
     int    focus_mode;            /* focus_mode_e: 0=overview, 1-5=system focus */
     char   headline[128];         /* daily narrative headline (from brain_narrative) */
+    br_visual_frame_t brain_visual; /* visual encoding of brain scan (convergence lines, glow) */
 } render_frame_t;
 
 #endif /* TIME_RENDER_FRAME_H */
