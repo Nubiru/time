@@ -113,6 +113,7 @@ void main_loop(void) {
         .view_proj     = mat4_multiply(proj, view),
         .layers        = g_state.layer_state,
         .show_trails   = g_state.show_trails,
+        .log_zoom      = g_state.camera.log_zoom,
         .observer_lat  = g_state.observer_lat,
         .observer_lon  = g_state.observer_lon,
     };

@@ -26,6 +26,7 @@
 #include "../../systems/human_design/human_design.h"
 #include "../../ui/card_data.h"
 #include "../../ui/card_layout.h"
+#include "../../ui/card_selector.h"
 #include "../../ui/today_card.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
@@ -208,27 +209,26 @@ static void draw_card_text(const render_frame_t *frame)
     float aspect = (float)vw / (float)vh;
     card_layout_t layout = card_layout_compute(card_all_mask(), aspect);
 
-    /* Compute system data via universal dispatcher */
+    /* Compute system data via zoom-aware card pipeline */
     double jd = frame->simulation_jd;
     double sun_lon = approx_sun_longitude(jd);
     lunar_info_t moon = lunar_phase(jd);
     double moon_lon = moon.moon_longitude;
 
-    /* System IDs for the 5 card slots (ts_system_t values) */
-    static const int SLOT_SYSTEMS[CARD_TYPE_COUNT] = {
-        1,  /* CARD_TZOLKIN   → TS_SYS_TZOLKIN */
-        8,  /* CARD_ICHING    → TS_SYS_ICHING */
-        3,  /* CARD_CHINESE   → TS_SYS_CHINESE */
-        10, /* CARD_HD        → TS_SYS_HUMAN_DESIGN */
-        9   /* CARD_ASTROLOGY → TS_SYS_ASTROLOGY */
-    };
+    /* Select top 5 systems for current zoom depth */
+    cs_selection_t sel = cs_select(frame->log_zoom, aspect);
 
     card_content_t card_contents[CARD_TYPE_COUNT];
     const card_content_t *contents[CARD_TYPE_COUNT];
     for (int i = 0; i < CARD_TYPE_COUNT; i++) {
-        card_contents[i] = today_card_for_system(
-            SLOT_SYSTEMS[i], jd, sun_lon, moon_lon);
+        int sys_id = (i < sel.filled_count) ? sel.slots[i].system_id : -1;
+        card_contents[i] = (sys_id >= 0)
+            ? today_card_for_system(sys_id, jd, sun_lon, moon_lon)
+            : (card_content_t){0};
         contents[i] = &card_contents[i];
+        /* Update layout visibility based on selection */
+        layout.cards[i].visible = (sys_id >= 0);
+        layout.cards[i].opacity = (i < sel.filled_count) ? sel.slots[i].opacity : 0.0f;
     }
 
     /* Build glyph instances for card text */

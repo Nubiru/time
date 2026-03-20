@@ -19,6 +19,7 @@ typedef struct {
     mat4_t view_proj;
     layer_state_t layers;
     int show_trails;
+    float  log_zoom;              /* camera log-zoom level (for depth-aware rendering) */
     double observer_lat;
     double observer_lon;
 } render_frame_t;
