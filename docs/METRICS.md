@@ -1,18 +1,18 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 13)
+**Last refreshed**: 2026-03-20 (INFRA session 15)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 385 |
-| Header files (.h) | 387 |
-| Lines of code (src/) | 93,224 |
-| Lines of tests | 164,000+ |
-| Test suites (CTest) | 378 |
+| Source files (.c) | 394 |
+| Header files (.h) | 395 |
+| Lines of code (src/) | 95,757 |
+| Lines of tests | 168,000+ |
+| Test suites (CTest) | 388 |
 | Render pass files | 19 |
-| Pure modules | 358+ |
+| Pure modules | 367+ |
 | Stateful modules | 29 |
 | Contributors | 179 |
 
@@ -20,11 +20,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 378 |
-| Test functions (RUN_TEST) | 15,323 |
-| Test assertions (TEST_ASSERT) | 27,000+ |
+| Test suites (CTest) | 388 |
+| Test functions (RUN_TEST) | 15,608 |
+| Test assertions (TEST_ASSERT) | 27,500+ |
 | Failures | 0 |
-| CTest time | 1.19s |
+| CTest time | 3.06s (with benchmarks) |
 | E2E tests (Playwright) | 5 |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -156,8 +156,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 307,005 bytes (307 KB) |
-| Gzipped | 121,130 bytes (121 KB) |
+| Raw .wasm | 314,169 bytes (314 KB) |
+| Gzipped | 124,432 bytes (124 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 | Growth since sweep #19 | +70 KB raw (+33%) |
 
@@ -181,15 +181,15 @@
 
 *13 functions >80L (5 over 100L). All domain-specific logic. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-20, session 13)
+## Health (INFRA sweep — 2026-03-20, session 15)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (385 .c files, 1 orphan — human_population.c WIP) |
+| Build system sync | OK (394 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 11) |
-| Native build | PASS (385/385 tests, 1.19s) — use -j4 for clean builds (race at -j12 with 360 OBJECT libs) |
-| WASM build | PASS (307 KB raw, 121 KB gzipped) — zero linker warnings |
+| Native build | PASS (388/388 tests) — use -j4 for clean builds (race at -j12 with 360+ OBJECT libs) |
+| WASM build | PASS (314 KB raw, 124 KB gzipped) — zero linker warnings |
 | E2E tests | PASS (5/5 Playwright) |
 | Coverage | 95.9% lines (30,315/31,615), 99.9% functions (3,710/3,712) |
 | Git hooks | pre-commit (build safety) + commit-msg (stream domain) — both active |
