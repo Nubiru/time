@@ -276,6 +276,28 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
         result.brain_system_count = brain_evt.system_count;
     }
 
+    /* Convergence modulation (L2.1+L2.4):
+     * High event_intensity boosts amplitudes and reverb, making
+     * convergence moments aurally richer and more present.
+     * Surprise factor adds a brief brightness spike. */
+    {
+        float intensity = result.event_intensity;
+        float surprise = result.surprise_factor;
+
+        /* Volume boost during convergence: up to +40% at full intensity */
+        float convergence_boost = 1.0f + 0.4f * intensity;
+
+        /* Surprise adds a sharper spike: up to +25% */
+        convergence_boost += 0.25f * surprise;
+
+        result.master_volume *= convergence_boost;
+        if (result.master_volume > 1.0f)
+            result.master_volume = 1.0f;
+
+        /* More reverb during convergence (spacious, resonant) */
+        result.reverb_wet += 0.15f * intensity;
+    }
+
     /* Populate timbre data from audio_data profiles */
     for (int i = 0; i < result.planet_count; i++) {
         int planet_idx = i + 1; /* audio_score_chord uses planets 1-8, mapping to slots 0-7 */

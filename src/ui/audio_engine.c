@@ -156,6 +156,14 @@ void audio_engine_update(const audio_params_t *params) {
 
     if (!params) return;
 
+    /* Resume AudioContext if suspended (browser autoplay policy).
+     * Browsers create contexts in 'suspended' state until user gesture.
+     * By the time we reach here, a click/keypress has likely occurred. */
+    EM_ASM({
+        var ta = window._timeAudio;
+        if (ta && ta.ctx.state === 'suspended') ta.ctx.resume();
+    });
+
     /* Update each active planet oscillator */
     for (int i = 0; i < AS_MAX_PLANETS && i < params->planet_count; i++) {
         float freq = params->frequencies[i];
