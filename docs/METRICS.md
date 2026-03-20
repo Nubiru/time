@@ -1,6 +1,6 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 20)
+**Last refreshed**: 2026-03-20 (INFRA session 22)
 
 ## Codebase
 
@@ -8,23 +8,23 @@
 |--------|-------|
 | Source files (.c) | 428 |
 | Header files (.h) | 429 |
-| Lines of code (src/) | 103,003 |
-| Lines of tests | 182,000+ |
-| Test suites (CTest) | 429 |
+| Lines of code (src/) | 104,778 |
+| Lines of tests | 184,000+ |
+| Test suites (CTest) | 455 |
 | Render pass files | 19 |
 | Pure modules | 399+ |
 | Stateful modules | 29 |
-| Contributors | 184 |
+| Contributors | 186 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 429 |
-| Test functions (RUN_TEST) | 16,936 |
-| Test assertions (TEST_ASSERT) | 28,670 |
+| Test suites (CTest) | 455 |
+| Test functions (RUN_TEST) | 17,102 |
+| Test assertions (TEST_ASSERT) | 29,095 |
 | Failures | 0 |
-| CTest time | 5.00s (with benchmarks) |
+| CTest time | 0.94s (with -j4, benchmarks included) |
 | E2E tests (Playwright) | 5 |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -87,9 +87,9 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j4 | PASS (429/429, 1.28s) |
+| CTest -j4 | PASS (455/455, 0.94s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
-| WASM build | PASS (353 KB raw, 138 KB gzipped) — full motion wiring + interpret locale |
+| WASM build | PASS (362 KB raw, 141 KB gzipped) — 32 interpret_locale systems |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
@@ -156,10 +156,10 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 361,757 bytes (353 KB) |
-| Gzipped | 141,147 bytes (138 KB) |
+| Raw .wasm | 362,260 bytes (354 KB) |
+| Gzipped | 141,425 bytes (138 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
-| Growth since session 18 | +32 KB raw (storage_bridge_wasm + motion wiring + interpret locale) |
+| Growth since session 18 | +32 KB raw (storage_bridge_wasm + motion wiring + interpret locale x32) |
 
 ## God Functions (>80 lines)
 
@@ -181,15 +181,15 @@
 
 *13 functions >80L (5 over 100L). All domain-specific logic. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-20, session 20)
+## Health (INFRA sweep — 2026-03-20, session 22)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (428 .c files, 1 WIP orphan: brain_explain.c) |
+| Build system sync | OK (428 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 11) |
-| Native build | PASS (429/429 tests, 1.28s) — use -j4 for clean builds |
-| WASM build | PASS (353 KB raw, 138 KB gzipped) |
+| Native build | PASS (455/455 tests, 0.94s) — use -j4 for clean builds |
+| WASM build | PASS (362 KB raw, 141 KB gzipped) |
 | E2E tests | PASS (5/5 Playwright) |
 | Coverage | 95.9% lines (30,315/31,615), 99.9% functions (3,710/3,712) |
 | Git hooks | pre-commit (build safety) + commit-msg (stream domain) — both active |
@@ -197,4 +197,5 @@
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Render pipeline | 19/19 passes |
 | Motion wiring | ALL 9 motion modules in core — MOTION fully wired |
-| Interpret locale | 11/16 systems have interpret_locale (4 new i18n tests blocked on content data) |
+| Interpret locale | 32 systems have interpret_locale — LANGUAGE i18n fully deployed |
+| Content encoding | ⚠ 996 lines with U+FFFD, 584 lines with double-encoded em dashes in content_generated.h |
