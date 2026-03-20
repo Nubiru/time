@@ -4,6 +4,7 @@
  * No globals, no malloc, no side effects. */
 
 #include "gregorian_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -191,4 +192,82 @@ int gi_season_count(void)
 int gi_day_count(void)
 {
     return 7;
+}
+
+/* ================================================================
+ * Locale-aware interpretation
+ * ================================================================ */
+
+gregorian_interp_t gi_interpret_locale(int month, int day_of_month,
+                                       int day_of_week,
+                                       i18n_locale_t locale)
+{
+    /* English fast path — use existing static data */
+    if (locale == I18N_LOCALE_EN) {
+        return gi_interpret(month, day_of_month, day_of_week);
+    }
+
+    gregorian_interp_t r;
+    memset(&r, 0, sizeof(r));
+
+    if (month < 1 || month > 12) {
+        snprintf(r.glyph, sizeof(r.glyph), "?");
+        snprintf(r.glance, sizeof(r.glance), "?");
+        snprintf(r.detail, sizeof(r.detail), "?");
+        return r;
+    }
+
+    /* Season: Mar-May=0, Jun-Aug=1, Sep-Nov=2, Dec-Feb=3 */
+    int season_idx;
+    if (month >= 3 && month <= 5) season_idx = 0;
+    else if (month >= 6 && month <= 8) season_idx = 1;
+    else if (month >= 9 && month <= 11) season_idx = 2;
+    else season_idx = 3;
+
+    /* Build keys and fetch locale-aware strings */
+    char key[64];
+
+    snprintf(key, sizeof(key), "gregorian.month.%d.name", month);
+    const char *month_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "gregorian.month.%d.origin", month);
+    const char *month_origin = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "gregorian.month.%d.quality", month);
+    const char *month_quality = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "gregorian.season.%d.name", season_idx);
+    const char *season_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "gregorian.season.%d.theme", season_idx);
+    const char *season_theme = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "gregorian.day.%d.name", day_of_week);
+    const char *day_name = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "gregorian.day.%d.planet", day_of_week);
+    const char *day_planet = content_get(key, locale);
+
+    snprintf(key, sizeof(key), "gregorian.day.%d.brief", day_of_week);
+    const char *day_brief = content_get(key, locale);
+
+    /* Glyph: first 3 chars of localized month name */
+    size_t len = strlen(month_name);
+    size_t copy = len < 3 ? len : 3;
+    memcpy(r.glyph, month_name, copy);
+    r.glyph[copy] = '\0';
+
+    /* Glance with positional format specifiers */
+    const char *tpl_glance = content_get("gregorian.tpl.glance", locale);
+    snprintf(r.glance, sizeof(r.glance), tpl_glance,
+             month_name, day_of_month, day_name, season_name);
+
+    /* Detail with positional format specifiers */
+    const char *tpl_detail = content_get("gregorian.tpl.detail", locale);
+    snprintf(r.detail, sizeof(r.detail), tpl_detail,
+             month_name, month_origin, month_quality,
+             season_name, season_theme,
+             day_name, day_planet, day_brief);
+
+    return r;
 }

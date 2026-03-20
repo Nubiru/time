@@ -10,6 +10,8 @@
 #ifndef TIME_GREGORIAN_INTERPRET_H
 #define TIME_GREGORIAN_INTERPRET_H
 
+#include "../../ui/i18n.h"  /* i18n_locale_t */
+
 /* Per-month interpretation (12 months) */
 typedef struct {
     int month;                  /* 1-12 */
@@ -62,6 +64,13 @@ gi_day_t gi_day_data(int day);
  * month: 1-12, day_of_month: 1-31, day_of_week: 0-6 (Mon-Sun).
  * Invalid month: "?" strings in result. */
 gregorian_interp_t gi_interpret(int month, int day_of_month, int day_of_week);
+
+/* Locale-aware interpretation. Same as gi_interpret but produces
+ * translated output for the given locale (falls back to English).
+ * Requires content_i18n module. */
+gregorian_interp_t gi_interpret_locale(int month, int day_of_month,
+                                       int day_of_week,
+                                       i18n_locale_t locale);
 
 /* Returns 12 (number of months). */
 int gi_month_count(void);
