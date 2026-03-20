@@ -24,6 +24,7 @@ typedef struct {
     double observer_lon;
     int    theme_id;              /* active theme (0=COSMOS, 1=DAWN) for themed rendering */
     int    focus_mode;            /* focus_mode_e: 0=overview, 1-5=system focus */
+    char   headline[128];         /* daily narrative headline (from brain_narrative) */
 } render_frame_t;
 
 #endif /* TIME_RENDER_FRAME_H */

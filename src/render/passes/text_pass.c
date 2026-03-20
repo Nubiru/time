@@ -300,6 +300,23 @@ static void draw_card_text(const render_frame_t *frame)
         }
     }
 
+    /* Daily narrative headline at bottom center of screen */
+    if (frame->headline[0] != '\0') {
+        theme_t hl_theme = theme_get((theme_id_t)frame->theme_id);
+        glyph_color_t hl_color = {hl_theme.brand_secondary.r,
+                                  hl_theme.brand_secondary.g,
+                                  hl_theme.brand_secondary.b, 0.85f};
+        float hl_scale = 1.6f;
+        float hl_chars = 0.0f;
+        const char *hl = frame->headline;
+        while (hl[(int)hl_chars] != '\0' && (int)hl_chars < 60) hl_chars++;
+        float hl_width = hl_chars * 10.0f * hl_scale;
+        float hl_x = ((float)vw - hl_width) * 0.5f;  /* centered */
+        float hl_y = (float)vh - 40.0f;               /* near bottom */
+        len = append_text_glyphs(instances, len, frame->headline,
+                                 60, hl_x, hl_y, hl_scale, hl_color);
+    }
+
     if (len == 0)
         return;
 
