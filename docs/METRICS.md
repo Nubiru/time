@@ -1,18 +1,18 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 11)
+**Last refreshed**: 2026-03-20 (INFRA session 13)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 374 |
-| Header files (.h) | 375 |
-| Lines of code (src/) | 90,200+ |
-| Lines of tests | 160,000+ |
-| Test suites (CTest) | 368 |
+| Source files (.c) | 385 |
+| Header files (.h) | 387 |
+| Lines of code (src/) | 93,224 |
+| Lines of tests | 164,000+ |
+| Test suites (CTest) | 378 |
 | Render pass files | 19 |
-| Pure modules | 348 |
+| Pure modules | 358+ |
 | Stateful modules | 29 |
 | Contributors | 179 |
 
@@ -20,11 +20,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 368 |
-| Test functions (RUN_TEST) | 14,789 |
-| Test assertions (TEST_ASSERT) | 26,000+ |
+| Test suites (CTest) | 378 |
+| Test functions (RUN_TEST) | 15,323 |
+| Test assertions (TEST_ASSERT) | 27,000+ |
 | Failures | 0 |
-| CTest time | 1.07s |
+| CTest time | 1.19s |
 | E2E tests (Playwright) | 5 |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -156,8 +156,8 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 306,539 bytes (307 KB) |
-| Gzipped | 120,965 bytes (121 KB) |
+| Raw .wasm | 307,005 bytes (307 KB) |
+| Gzipped | 121,130 bytes (121 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 | Growth since sweep #19 | +70 KB raw (+33%) |
 
@@ -181,20 +181,19 @@
 
 *13 functions >80L (5 over 100L). All domain-specific logic. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-20, session 11)
+## Health (INFRA sweep — 2026-03-20, session 13)
 
 | Check | Status |
 |-------|--------|
-| Git integrity | OK (gc run this session) |
-| Build system sync | OK (374 .c files, all registered, 0 phantoms) |
-| Purity audit | CLEAN (P1-P5 all zones, 348 pure modules verified) |
-| Native build | PASS (368/368 tests, 1.07s) |
+| Git integrity | OK |
+| Build system sync | OK (385 .c files, 1 orphan — human_population.c WIP) |
+| Purity audit | CLEAN (P1-P5 all zones, session 11) |
+| Native build | PASS (378/378 tests, 1.19s) |
 | WASM build | PASS (307 KB raw, 121 KB gzipped) — zero linker warnings |
 | E2E tests | PASS (5/5 Playwright) |
-| Coverage | 95.9% lines (28,393/29,616), 99.9% functions (3,523/3,525) |
+| Coverage | 95.9% lines (28,393/29,616), 99.9% functions (session 9 — needs rerun) |
 | Git hooks | pre-commit (build safety) + commit-msg (stream domain) — both active |
-| STATE.md | SYNCED (348 pure + 29 stateful = 377 modules) |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Render pipeline | 19/19 passes |
-| Refactor audit | 13 God Functions >80L (5 over 100L), all domain logic, no urgency |
+| AUDIO core wiring | Committed by INFRA on behalf of AUDIO (view-aware audio + M mute) |
