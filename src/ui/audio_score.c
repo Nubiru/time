@@ -17,6 +17,7 @@
 
 #include "audio_score.h"
 #include "audio_event.h"
+#include "audio_culture.h"
 #include "../systems/unified/audio_data.h"
 #include "../systems/unified/brain_scan.h"
 #include "../systems/unified/brain_audio_bridge.h"
@@ -231,6 +232,7 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
     result.event_intensity = 0.0f;
     result.surprise_factor = 0.0f;
     result.brain_system_count = 0;
+    result.focused_system = -1;
 
     /* Chord */
     result.planet_count = audio_score_chord(jd, result.frequencies,
@@ -249,11 +251,12 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
     /* Tempo */
     result.tempo_bpm = audio_score_tempo(time_speed);
 
+    /* Brain scan (used by event detection and cultural timbre) */
+    br_result_t br;
+    br_scan(jd, &br);
+
     /* Event detection: brain intelligence + aspects (L2.1+L2.2+L2.4) */
     {
-        /* Brain scan provides the deepest intelligence */
-        br_result_t br;
-        br_scan(jd, &br);
         br_audio_event_t brain_evt;
         br_audio_from_result(&br, &brain_evt);
 
@@ -370,6 +373,41 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
     /* Final amplitude clamp to [0, 1] */
     for (int i = 0; i < result.planet_count; i++) {
         result.amplitudes[i] = clampf(result.amplitudes[i], 0.0f, 1.0f);
+    }
+
+    /* Cultural timbre overlay (L2.3):
+     * When the brain detects a convergence involving a specific calendar
+     * system, add that system's cultural timbre on oscillator slot 8.
+     * This gives each system a unique sonic identity (wooden flute for
+     * Tzolkin, singing bowl for Buddhist, shofar for Hebrew, etc.). */
+    {
+        const br_insight_t *top = br_top_insight(&br);
+        if (top && top->system_count > 0 && top->score > 0.3) {
+            int sys = top->systems[0];
+            if (audio_culture_has_timbre((cd_system_t)sys)) {
+                audio_culture_t culture = audio_culture_get((cd_system_t)sys);
+                result.focused_system = sys;
+
+                /* Fill next available slot with cultural timbre */
+                int slot = result.planet_count;
+                if (slot < AS_MAX_PLANETS) {
+                    result.frequencies[slot] = culture.base_freq_hz;
+                    /* Subtle blend: scale by event intensity */
+                    result.amplitudes[slot] = culture.base_amplitude * 0.3f
+                                            * (0.5f + 0.5f * result.event_intensity);
+                    result.amplitudes[slot] = clampf(result.amplitudes[slot],
+                                                     0.0f, 1.0f);
+                    result.waveform_types[slot] = 0; /* fallback sine */
+                    result.harmonic_counts[slot] = culture.partial_count;
+                    for (int h = 0; h < culture.partial_count
+                         && h < AS_MAX_HARMONICS; h++) {
+                        result.harmonic_amps[slot][h] = culture.partials[h];
+                    }
+                    result.pan_positions[slot] = 0.0f; /* center */
+                    result.planet_count = slot + 1;
+                }
+            }
+        }
     }
 
     /* Reverb: cold views get more reverb (vast/spacious), warm views less (intimate) */

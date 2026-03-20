@@ -35,6 +35,7 @@ typedef struct {
     float event_intensity;                             /* 0.0-1.0 combined event intensity */
     float surprise_factor;                             /* 0.0-1.0 from brain anomaly detection */
     int   brain_system_count;                          /* systems involved in brain insights */
+    int   focused_system;                              /* cd_system_t of culturally active system, or -1 */
 } audio_params_t;
 
 /* Compute full audio parameters from current state.

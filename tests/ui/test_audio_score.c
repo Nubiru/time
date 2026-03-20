@@ -1,7 +1,9 @@
 #include "../unity/unity.h"
 #include "../../src/ui/audio_score.h"
+#include "../../src/ui/audio_culture.h"
 #include "../../src/ui/view_registry.h"
 #include "../../src/systems/unified/audio_data.h"
+#include "../../src/systems/unified/convergence_detect.h"
 
 #include <math.h>
 #include <string.h>
@@ -711,6 +713,83 @@ void test_compute_brain_across_dates(void)
     }
 }
 
+/* ---- L2.3: cultural timbre overlay ---- */
+
+void test_compute_focused_system_default_negative(void)
+{
+    /* Default focused_system is -1 (no system focused) */
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    TEST_ASSERT_TRUE(p.focused_system >= -1);
+    /* focused_system is either -1 (no convergence) or a valid system */
+    if (p.focused_system >= 0) {
+        TEST_ASSERT_TRUE(audio_culture_has_timbre((cd_system_t)p.focused_system));
+    }
+}
+
+void test_compute_focused_system_valid_across_dates(void)
+{
+    /* Across multiple dates, focused_system is always valid */
+    for (int i = 0; i < 10; i++) {
+        double jd = JD_J2000 + i * 50.0;
+        audio_params_t p = audio_score_compute(jd, VIEW_SPACE, 0.0f, 1.0);
+        TEST_ASSERT_TRUE(p.focused_system >= -1);
+        if (p.focused_system >= 0) {
+            TEST_ASSERT_TRUE(audio_culture_has_timbre((cd_system_t)p.focused_system));
+        }
+    }
+}
+
+void test_compute_cultural_timbre_slot_valid(void)
+{
+    /* When focused_system is set, planet_count should be 9 (8 planets + 1 culture) */
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    if (p.focused_system >= 0) {
+        TEST_ASSERT_EQUAL_INT(9, p.planet_count);
+        /* Cultural slot (index 8) should have valid data */
+        TEST_ASSERT_TRUE(p.frequencies[8] > 0.0f);
+        TEST_ASSERT_TRUE(p.amplitudes[8] >= 0.0f);
+        TEST_ASSERT_TRUE(p.amplitudes[8] <= 1.0f);
+        TEST_ASSERT_TRUE(p.harmonic_counts[8] > 0);
+        TEST_ASSERT_FLOAT_WITHIN(0.01f, 0.0f, p.pan_positions[8]); /* centered */
+    }
+}
+
+void test_compute_cultural_timbre_frequency_matches_culture(void)
+{
+    /* When a cultural timbre is active, its frequency should match audio_culture_get */
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    if (p.focused_system >= 0) {
+        audio_culture_t culture = audio_culture_get((cd_system_t)p.focused_system);
+        TEST_ASSERT_FLOAT_WITHIN(0.01f, culture.base_freq_hz, p.frequencies[8]);
+    }
+}
+
+void test_compute_cultural_timbre_amplitude_subtle(void)
+{
+    /* Cultural timbre amplitude should be subtle (not overpower planets) */
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    if (p.focused_system >= 0) {
+        /* Cultural amplitude should be much less than typical planet amplitude */
+        float max_planet_amp = 0.0f;
+        for (int i = 0; i < 8 && i < p.planet_count; i++) {
+            if (p.amplitudes[i] > max_planet_amp)
+                max_planet_amp = p.amplitudes[i];
+        }
+        TEST_ASSERT_TRUE(p.amplitudes[8] < max_planet_amp);
+    }
+}
+
+void test_compute_planet_count_max_nine(void)
+{
+    /* planet_count should never exceed AS_MAX_PLANETS (9) */
+    for (int i = 0; i < 10; i++) {
+        double jd = JD_J2000 + i * 37.0;
+        audio_params_t p = audio_score_compute(jd, VIEW_SPACE, 0.0f, 1.0);
+        TEST_ASSERT_TRUE(p.planet_count >= 1);
+        TEST_ASSERT_TRUE(p.planet_count <= AS_MAX_PLANETS);
+    }
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -827,6 +906,13 @@ int main(void)
     RUN_TEST(test_compute_event_density_from_brain);
     RUN_TEST(test_compute_event_intensity_from_brain);
     RUN_TEST(test_compute_brain_across_dates);
+    /* L2.3: cultural timbre overlay */
+    RUN_TEST(test_compute_focused_system_default_negative);
+    RUN_TEST(test_compute_focused_system_valid_across_dates);
+    RUN_TEST(test_compute_cultural_timbre_slot_valid);
+    RUN_TEST(test_compute_cultural_timbre_frequency_matches_culture);
+    RUN_TEST(test_compute_cultural_timbre_amplitude_subtle);
+    RUN_TEST(test_compute_planet_count_max_nine);
 
     return UNITY_END();
 }
