@@ -374,6 +374,16 @@ void text_pass_draw(const render_frame_t *frame) {
     glyph_instance_t instances[GLYPH_BATCH_MAX];
     int len = 0;
 
+    /* Theme-derived label colors */
+    theme_t label_theme = theme_get((theme_id_t)frame->theme_id);
+    glyph_color_t sun_label_color = {label_theme.brand_primary.r,
+                                     label_theme.brand_primary.g,
+                                     label_theme.brand_primary.b, 1.0f};
+    glyph_color_t planet_label_color = {label_theme.text_secondary.r,
+                                        label_theme.text_secondary.g,
+                                        label_theme.text_secondary.b,
+                                        label_theme.text_secondary.a};
+
     /* Sun label at origin */
     {
         static const char *sun_name = "Sun";
@@ -385,7 +395,7 @@ void text_pass_draw(const render_frame_t *frame) {
             instances[len].position = vec3_create(
                 sx + (float)i * spacing, 1.0f, 0.0f);
             instances[len].scale    = 1.0f;
-            instances[len].color    = (glyph_color_t){1.0f, 0.85f, 0.55f, 1.0f};
+            instances[len].color    = sun_label_color;
             len++;
         }
     }
@@ -427,7 +437,7 @@ void text_pass_draw(const render_frame_t *frame) {
             instances[len].position = vec3_create(
                 lx + sx + (float)i * spacing, ly, lz);
             instances[len].scale    = 0.8f;
-            instances[len].color    = (glyph_color_t){0.8f, 0.85f, 0.9f, 0.9f};
+            instances[len].color    = planet_label_color;
             len++;
         }
     }
