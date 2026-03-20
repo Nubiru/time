@@ -13,6 +13,7 @@
 #include "../render/camera.h"
 #include "../render/camera_scale.h"
 #include "../ui/touch_gestures.h"
+#include "../ui/audio_engine.h"
 #include <math.h>
 
 /* Module-level pointer to the single app state.
@@ -145,6 +146,15 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
     /* Shift + M: toggle meditation mode */
     if (e->shiftKey && e->key[0] == 'M' && e->key[1] == '\0') {
         g_input_state->meditation_active = !g_input_state->meditation_active;
+        return EM_TRUE;
+    }
+
+    /* M (no shift): toggle audio mute/unmute */
+    if (!e->shiftKey && e->key[0] == 'm' && e->key[1] == '\0') {
+        if (audio_engine_is_muted())
+            audio_engine_unmute();
+        else
+            audio_engine_mute();
         return EM_TRUE;
     }
 

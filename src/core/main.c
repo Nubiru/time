@@ -158,7 +158,7 @@ void main_loop(void) {
     {
         audio_params_t audio = audio_score_compute(
             g_state.simulation_jd,
-            VIEW_SPACE,
+            g_state.view.current_view,
             g_state.camera.log_zoom,
             g_state.time_speed);
         audio.pulse_factor = audio_score_pulse(audio.tempo_bpm,
