@@ -1,16 +1,16 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-21 (INFRA session 29)
+**Last refreshed**: 2026-03-21 (INFRA session 30)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 438 |
-| Header files (.h) | 439 |
-| Lines of code (src/) | 148,100+ |
+| Source files (.c) | 447 |
+| Header files (.h) | 448 |
+| Lines of code (src/) | 150,000+ |
 | Lines of tests | 185,000+ |
-| Test suites (CTest) | 465 |
+| Test suites (CTest) | 473 |
 | Render pass files | 19 |
 | Pure modules | 399+ |
 | Stateful modules | 29 |
@@ -20,7 +20,7 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 465 |
+| Test suites (CTest) | 473 |
 | Test functions (RUN_TEST) | 17,132+ |
 | Test assertions (TEST_ASSERT) | 29,891+ |
 | Failures | 0 |
@@ -87,7 +87,7 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j4 | PASS (455/455, 1.15s) |
+| CTest -j4 | PASS (473/473, 1.43s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
 | WASM build | PASS (363 KB raw, ~143 KB gzipped) — brain visual bridge wired |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
@@ -156,7 +156,7 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 371,853 bytes (363 KB) |
+| Raw .wasm | 373,690 bytes (365 KB) |
 | Gzipped | ~143 KB |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 | Growth since session 18 | +42 KB raw (storage_bridge_wasm + motion wiring + interpret locale x32 + brain pipeline + visual bridge) |
@@ -183,15 +183,15 @@
 
 *15 functions >80L (8 over 100L). main_loop grew from wiring (brain+motion+audio). GL passes are naturally large. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-21, session 29)
+## Health (INFRA sweep — 2026-03-21, session 30)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (438 .c files, 0 orphans) |
+| Build system sync | OK (447 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 23) |
-| Native build | PASS (465/465 tests, 1.43s) — use -j4 for clean builds |
-| WASM build | PASS (363 KB raw, ~143 KB gzipped) |
+| Native build | PASS (473/473 tests, 1.43s) — use -j4 for clean builds |
+| WASM build | PASS (365 KB raw, ~143 KB gzipped) |
 | E2E tests | PASS (5/5 basic + 7/10 visual, 2 skips, 1 SwiftShader) |
 | Coverage | 95.9% lines (34,295/35,751), 99.97% functions (4,071/4,072) |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
@@ -202,6 +202,6 @@
 | Motion wiring | ALL 9 motion modules in core — MOTION fully wired |
 | Interpret locale | 32 systems have interpret_locale — LANGUAGE i18n fully deployed |
 | Content encoding | CLEAN — encoding fix (session 22→23, commit 67079b7) |
-| Header deps | CLEAN — 0 cycles, 0 purity violations, 0 missing, max depth 7 (scripts/check_deps.py) |
+| Header deps | CLEAN — 895 files, 0 cycles, 0 purity violations, 0 missing, max depth 7 |
 | ASan/UBSan | PASS (461/461, zero findings, session 28) |
 | Shader budget | All 19 passes under 8KB (largest: sun_shader 4.5KB) |
