@@ -7,6 +7,7 @@ set(TZOLKIN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_social.c
     ${CMAKE_CURRENT_SOURCE_DIR}/tzolkin_interpret.c
     ${CMAKE_CURRENT_SOURCE_DIR}/tzolkin_today.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/thirteen_moon.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -18,4 +19,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_kin_social    OBJECT kin_social.c)
     add_library(time_tzolkin_interpret OBJECT tzolkin_interpret.c)
     add_library(time_tzolkin_today    OBJECT tzolkin_today.c)
+    add_library(time_thirteen_moon   OBJECT thirteen_moon.c)
 endif()

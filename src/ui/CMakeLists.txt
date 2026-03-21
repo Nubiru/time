@@ -98,6 +98,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_earth_family.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_pulsar_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_oracle_map.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/kin_moon_page.c
     PARENT_SCOPE
 )
 
@@ -197,5 +198,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_kin_earth_family OBJECT kin_earth_family.c)
     add_library(time_kin_pulsar_layout OBJECT kin_pulsar_layout.c)
     add_library(time_kin_oracle_map OBJECT kin_oracle_map.c)
+    add_library(time_kin_moon_page OBJECT kin_moon_page.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
