@@ -27,6 +27,10 @@ typedef struct {
     int    focus_mode;            /* focus_mode_e: 0=overview, 1-5=system focus */
     char   headline[128];         /* daily narrative headline (from brain_narrative) */
     br_visual_frame_t brain_visual; /* visual encoding of brain scan (convergence lines, glow) */
+    double sun_lon;               /* Sun ecliptic longitude (degrees, 0-360) */
+    double planet_lon[8];         /* Mercury..Neptune ecliptic longitudes (degrees) */
+    int    viewport_width;        /* screen width in pixels (for 2D passes) */
+    int    viewport_height;       /* screen height in pixels */
 } render_frame_t;
 
 #endif /* TIME_RENDER_FRAME_H */

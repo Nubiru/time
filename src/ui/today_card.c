@@ -41,6 +41,8 @@
 #include "daily_hd_layout.h"
 #include "daily_transit_layout.h"
 #include "nakshatra_wheel_layout.h"
+#include "daily_gregorian_layout.h"
+#include "daily_geology_layout.h"
 
 /* ------------------------------------------------------------------ */
 
@@ -55,11 +57,21 @@ static card_content_t empty_card(void)
 
 static card_content_t make_gregorian(double jd)
 {
+    daily_gregorian_layout_t dg = daily_gregorian_compute(jd);
     int year = 0, month = 0;
     double day_frac = jd_to_gregorian(jd, &year, &month);
     int day = (int)floor(day_frac);
     int dow = gregorian_day_of_week(jd);
-    return card_format_gregorian(year, month, day, dow, NULL);
+    card_content_t c = card_format_gregorian(year, month, day, dow,
+                                              dg.season_name);
+    if (dg.day_planet && dg.day_planet[0])
+        snprintf(c.line3, sizeof(c.line3), "%s day — %s",
+                 dg.day_planet, dg.day_origin ? dg.day_origin : "");
+    if (dg.month_quality && dg.month_quality[0])
+        snprintf(c.detail, sizeof(c.detail), "%s: %s",
+                 dg.month_name ? dg.month_name : "",
+                 dg.month_quality);
+    return c;
 }
 
 static card_content_t make_tzolkin(double jd)
@@ -208,12 +220,19 @@ static card_content_t make_kabbalah(double jd)
 
 static card_content_t make_geology(double jd)
 {
+    daily_geology_layout_t dgl = daily_geology_compute(jd);
     double ma = geo_jd_to_ma(jd);
     geo_unit_t eon    = geo_eon_at(ma);
     geo_unit_t era    = geo_era_at(ma);
     geo_unit_t period = geo_period_at(ma);
     geo_unit_t epoch  = geo_epoch_at(ma);
-    return card_format_geology(eon.name, era.name, period.name, epoch.name);
+    card_content_t c = card_format_geology(eon.name, era.name,
+                                            period.name, epoch.name);
+    if (dgl.fact_name && dgl.fact_name[0])
+        snprintf(c.line3, sizeof(c.line3), "%s", dgl.fact_name);
+    if (dgl.fact_description && dgl.fact_description[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dgl.fact_description);
+    return c;
 }
 
 static card_content_t make_coptic(double jd)

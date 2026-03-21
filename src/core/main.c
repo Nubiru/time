@@ -30,7 +30,9 @@
 #include "../render/passes/ring_pass.h"
 #include "../render/passes/convergence_pass.h"
 #include "../render/passes/post_pass.h"
+#include "../render/passes/natal_chart_pass.h"
 #include "../render/earth_view_frame.h"
+#include "../systems/astronomy/planets.h"
 #include "../ui/ui_bridge.h"
 #include "../ui/view_registry.h"
 #include "../ui/audio_score.h"
@@ -215,6 +217,19 @@ void main_loop(void) {
     memcpy(frame.headline, g_state.headline, sizeof(frame.headline));
     frame.brain_visual = g_state.brain_visual;
 
+    /* Planet data for natal chart pass */
+    {
+        solar_system_t ss = planets_at(frame.simulation_jd);
+        frame.sun_lon = fmod(ss.positions[PLANET_EARTH].longitude + 180.0, 360.0);
+        if (frame.sun_lon < 0.0) frame.sun_lon += 360.0;
+        for (int p = 0; p < 8; p++)
+            frame.planet_lon[p] = ss.positions[p].longitude;
+        GLint vp[4];
+        glGetIntegerv(GL_VIEWPORT, vp);
+        frame.viewport_width  = vp[2] > 0 ? vp[2] : 1920;
+        frame.viewport_height = vp[3] > 0 ? vp[3] : 1080;
+    }
+
     /* --- Get pass schedule from view state --- */
     pass_schedule_t sched = vs_blended_schedule(&g_state.view);
 
@@ -237,6 +252,7 @@ void main_loop(void) {
     if (ps_is_enabled(&sched, PASS_BODYGRAPH))      bodygraph_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_HEXAGRAM))       hexagram_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_TREE))           tree_pass_draw(&frame);
+    if (frame.focus_mode == 1) natal_chart_pass_draw(&frame); /* Astrology wheel */
     if (ps_is_enabled(&sched, PASS_CARD))           card_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_TEXT))           text_pass_draw(&frame);
 
@@ -369,6 +385,7 @@ int main(void) {
     if (orbit_trail_pass_init() != 0) return 1;
     if (ring_pass_init() != 0) return 1;
     if (convergence_pass_init() != 0) return 1;
+    natal_chart_pass_init();
     if (card_pass_init() != 0) return 1;
     if (text_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
