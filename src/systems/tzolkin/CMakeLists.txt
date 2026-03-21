@@ -19,6 +19,7 @@ set(TZOLKIN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/synchronotron.c
     ${CMAKE_CURRENT_SOURCE_DIR}/matrix_441.c
     ${CMAKE_CURRENT_SOURCE_DIR}/haab_vinal.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/telektonon_oracle.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -42,4 +43,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_synchronotron       OBJECT synchronotron.c)
     add_library(time_matrix_441          OBJECT matrix_441.c)
     add_library(time_haab_vinal          OBJECT haab_vinal.c)
+    add_library(time_telektonon_oracle   OBJECT telektonon_oracle.c)
 endif()
