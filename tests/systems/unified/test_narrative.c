@@ -660,6 +660,52 @@ void test_narr_compose_empty_headline(void)
 }
 
 /* ================================================================
+ * Locale tests
+ * ================================================================ */
+
+static void test_narr_compose_default_locale_is_en(void)
+{
+    narr_state_t state;
+    narr_init(&state);
+
+    narr_input_t input;
+    memset(&input, 0, sizeof(input));
+    /* locale defaults to 0 = EN */
+    TEST_ASSERT_EQUAL_INT(0, input.locale);
+}
+
+static void test_narr_compose_hebrew_uses_translated_template(void)
+{
+    narr_state_t state;
+    narr_init(&state);
+
+    br_lang_context_t ctx;
+    memset(&ctx, 0, sizeof(ctx));
+    /* Set thread type to "quiet" and fill headline */
+    snprintf(ctx.slots[BR_LANG_SLOT_THREAD_TYPE].value,
+             BR_LANG_SLOT_MAX, "quiet");
+    ctx.slots[BR_LANG_SLOT_THREAD_TYPE].filled = 1;
+    snprintf(ctx.slots[BR_LANG_SLOT_HEADLINE].value,
+             BR_LANG_SLOT_MAX, "Test headline");
+    ctx.slots[BR_LANG_SLOT_HEADLINE].filled = 1;
+    ctx.slot_count = BR_LANG_SLOT_COUNT;
+
+    narr_input_t input;
+    memset(&input, 0, sizeof(input));
+    input.brain_ctx = &ctx;
+    input.depth = NARR_DEPTH_CONTEXT;
+    input.locale = 3; /* I18N_LOCALE_HE = 3 (EN=0, ES=1, AR=2, HE=3) */
+
+    narr_output_t out;
+    int ok = narr_compose(&state, &input, &out);
+    TEST_ASSERT_EQUAL_INT(1, ok);
+    /* Hebrew template should NOT contain English "ordinary day" */
+    TEST_ASSERT_NULL(strstr(out.body, "ordinary day"));
+    /* Body should have content (Hebrew template was used) */
+    TEST_ASSERT_TRUE(strlen(out.body) > 0);
+}
+
+/* ================================================================
  * Runner
  * ================================================================ */
 
@@ -690,6 +736,10 @@ int main(void)
     RUN_TEST(test_narr_compose_with_personal_note);
     RUN_TEST(test_narr_compose_depth_surface_minimal);
     RUN_TEST(test_narr_compose_empty_headline);
+
+    /* Locale */
+    RUN_TEST(test_narr_compose_default_locale_is_en);
+    RUN_TEST(test_narr_compose_hebrew_uses_translated_template);
 
     return UNITY_END();
 }

@@ -4,6 +4,7 @@
  * Selects template by thread type, fills slots, adjusts by depth. */
 
 #include "narrative.h"
+#include "../../ui/content_i18n.h"
 
 /* ===================================================================
  * Thread type table
@@ -279,6 +280,19 @@ int narr_compose(narr_state_t *state,
 
     /* Compose body based on depth */
     const char *tmpl_text = TEMPLATES[tidx][variant].text;
+
+    /* Try locale-specific template from content_i18n */
+    if (input->locale > 0 && tidx >= 0 && tidx < NARR_THREAD_COUNT) {
+        char tmpl_key[48];
+        snprintf(tmpl_key, sizeof(tmpl_key), "narr.tmpl.%s.%d",
+                 THREAD_NAMES[tidx], variant);
+        const char *localized = content_get(tmpl_key, (i18n_locale_t)input->locale);
+        /* content_get returns key itself on miss — check it's a real template */
+        if (localized && localized[0] && localized != tmpl_key &&
+            strcmp(localized, tmpl_key) != 0) {
+            tmpl_text = localized;
+        }
+    }
 
     if (input->depth == NARR_DEPTH_SURFACE) {
         /* Surface: headline only, no template expansion */

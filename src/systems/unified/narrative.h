@@ -65,6 +65,7 @@ typedef struct {
     int          wisdom_year;            /* year CE (negative for BCE), 0 if unknown */
     narr_depth_t depth;                  /* how much detail to produce */
     const char  *system_name;            /* primary system name, NULL if none */
+    int          locale;                 /* i18n_locale_t (0=EN default via memset) */
 } narr_input_t;
 
 /* ===================================================================

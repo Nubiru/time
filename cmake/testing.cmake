@@ -482,7 +482,7 @@ time_add_test(NAME test_personal_resonance TEST tests/systems/unified/test_perso
 time_add_test(NAME test_depth_temporal TEST tests/systems/unified/test_depth_temporal.c
     DEPS depth_temporal)
 time_add_test(NAME test_narrative TEST tests/systems/unified/test_narrative.c
-    DEPS narrative brain_language_bridge brain_types)
+    DEPS narrative brain_language_bridge brain_types content_i18n i18n)
 time_add_test(NAME test_text_lod TEST tests/systems/unified/test_text_lod.c
     DEPS text_lod depth_tier)
 time_add_test(NAME test_universal_card TEST tests/systems/unified/test_universal_card.c
