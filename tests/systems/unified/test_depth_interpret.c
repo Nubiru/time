@@ -348,6 +348,28 @@ void test_interpret_kabbalah_negative_sefirah(void)
 }
 
 /* ===================================================================
+ * depth_interpret — locale-aware dispatch
+ * =================================================================== */
+
+void test_interpret_default_locale_is_english(void)
+{
+    di_params_t p = depth_interpret_default_params();
+    /* locale defaults to 0 = EN via memset */
+    TEST_ASSERT_EQUAL_INT(I18N_LOCALE_EN, p.locale);
+}
+
+void test_interpret_unsupported_locale_es(void)
+{
+    di_params_t p = depth_interpret_default_params();
+    p.locale = I18N_LOCALE_ES;
+
+    depth_interp_t r = depth_interpret(TS_SYS_GREGORIAN, &p);
+    TEST_ASSERT_EQUAL_INT(0, r.has_data);
+    /* Spanish unsupported glance should contain Spanish text */
+    TEST_ASSERT_NOT_NULL(strstr(r.glance, "no disponible"));
+}
+
+/* ===================================================================
  * main
  * =================================================================== */
 
@@ -410,6 +432,10 @@ int main(void)
     RUN_TEST(test_interpret_hindu_zero_tithi);
     RUN_TEST(test_interpret_iching_zero_king_wen);
     RUN_TEST(test_interpret_kabbalah_negative_sefirah);
+
+    /* Locale-aware dispatch */
+    RUN_TEST(test_interpret_default_locale_is_english);
+    RUN_TEST(test_interpret_unsupported_locale_es);
 
     return UNITY_END();
 }

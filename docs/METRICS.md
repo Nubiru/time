@@ -1,31 +1,32 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-21 (INFRA session 50)
+**Last refreshed**: 2026-03-21 (INFRA session 54)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 494 |
-| Header files (.h) | 497 |
-| Lines of code (src/) | 175,000+ |
-| Lines of tests | 215,000+ |
-| Test suites (CTest) | 518 |
+| Source files (.c) | 500 |
+| Header files (.h) | 503 |
+| Lines of code (src/) | 115,903 |
+| Lines of tests | 211,307 |
+| Test suites (CTest) | 524 |
 | Render pass files | 22 |
-| Pure modules | 425+ |
+| Knowledge systems | 21 |
+| Pure modules | 430+ |
 | Stateful modules | 32 |
-| Contributors | 186 |
+| Contributors | 244 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 518 |
-| Test functions (RUN_TEST) | 18,500+ |
-| Test assertions (TEST_ASSERT) | 31,000+ |
+| Test suites (CTest) | 524 |
+| Test functions (RUN_TEST) | 19,851 |
+| Test assertions (TEST_ASSERT) | 34,060 |
 | Failures | 0 |
-| CTest time | ~1.3s (with -j12) |
-| E2E tests (Playwright) | 15 (5 basic + 10 visual) |
+| CTest time | ~0.7s (with -j12) |
+| E2E tests (Playwright) | 17 (5 basic + 12 visual) |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
 ### Test Pyramid
@@ -87,9 +88,9 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j4 | PASS (496/496, 1.19s) |
+| CTest -j12 | PASS (524/524, 0.73s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
-| WASM build | PASS (705 KB dev — MSDF + 3 geometric passes) |
+| WASM build | PASS (701 KB dev — 21 systems, 22 passes) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
@@ -156,44 +157,47 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 721,920 bytes (705 KB) |
+| Raw .wasm | 717,903 bytes (701 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 | MSDF font atlas | JetBrains Mono 512×512 RGB (~250 KB in binary) |
 | Sans atlas | Excluded (MSDF_SANS_ENABLED not set) |
-| Growth since session 37 | +87 KB (natal chart + tree of life + bagua passes, Hebrew locale data) |
+| Gzipped | ~266 KB |
+| Growth since session 37 | +83 KB (3 geometric passes, Hebrew locale, Earth system) |
 
-## God Functions (>80 lines)
+## God Functions (>100 lines)
 
 | Lines | File | Function | Notes |
 |-------|------|----------|-------|
-| 241 | convergence_detect.c | cd_is_significant | 18-case switch — domain logic |
-| 273 | main.c | main_loop | Central render loop — well-sectioned |
-| ~120 | card_pass.c | draw_oracle_cross | Oracle cross + wavespell quads |
-| ~100 | text_pass.c | draw_oracle_text | MSDF oracle text |
-| 142 | text_pass.c | text_pass_draw | GL text rendering |
-| 130 | hud.c | hud_update | HUD overlay update |
-| 105 | weather_overlay.c | wov_arrow_glyph | Wind arrow glyph geometry |
-| 102 | brain_personal.c | br_personal_scan | Personal convergence analysis |
-| 99 | timeline_data.c | format_label | Label formatting |
-| 99 | post_pass.c | post_pass_init | FBO + shader setup |
-| 99 | planet_pass.c | planet_pass_init | Planet texture + shader setup |
-| 94 | ring_pass.c | ring_pass_draw | GL ring rendering |
-| 92 | astronomy_interpret.c | ai_phase_count (block) | Phase data array |
-| 90 | geology_interpret.c | gli_supercontinent_count (block) | Data array |
-| 89 | numerology_interpret.c | ni_number_count (block) | Data array |
+| 304 | main.c | main_loop | Central render loop — well-sectioned |
+| 252 | audio_score.c | audio_score_compute | Complex scoring logic |
+| 240 | convergence_detect.c | cd_is_significant | 18-case switch — domain logic |
+| 183 | calendar_convert.c | cal_convert | Calendar conversion switch |
+| 173 | input.c | on_key_down | Key handler switch |
+| 169 | card_pass.c | draw_oracle_cross | Oracle cross + wavespell quads |
+| 167 | annual_summary.c | as_compute | Annual summary computation |
+| 167 | tree_geometry.c | Tree | Tree of Life geometry |
+| 153 | seasonal_lighting.c | slp_sky_gradient | Sky color gradient |
+| 153 | card_pass.c | draw_iching_overlay | I Ching visual overlay |
 
-*15 functions >80L (8 over 100L). main_loop grew from wiring (brain+motion+audio). GL passes are naturally large. No refactoring urgency.*
+*10 functions >100L. main_loop + input handler grew from wiring work. GL passes and switch-heavy code are naturally large. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-21, session 33)
+## Large Files (>800 lines, non-data)
+
+| Lines | File | Notes |
+|-------|------|-------|
+| 1073 | text_pass.c | Candidate: split cards/labels/overlays |
+| 756 | card_pass.c | Render pass with multiple overlays |
+
+## Health (INFRA sweep — 2026-03-21, session 54)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (469 .c files, 0 orphans) |
+| Build system sync | OK (500 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 23) |
-| Native build | PASS (496/496 tests, 1.19s) — use -j4 for clean builds |
-| WASM build | PASS (705 KB dev) |
-| E2E tests | PASS (5/5 basic + 7/10 visual, 2 skips, 1 SwiftShader) |
+| Native build | PASS (524/524 tests, 0.7s) — use -j12 |
+| WASM build | PASS (701 KB dev) |
+| E2E tests | PASS (5/5 basic + 12 visual) |
 | Coverage | 96.0% lines (35,581/37,053), 99.98% functions (4,233/4,234) |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
 | Dead code | 0 |

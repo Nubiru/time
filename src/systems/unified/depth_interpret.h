@@ -16,6 +16,7 @@
 #define TIME_DEPTH_INTERPRET_H
 
 #include "today_summary.h"  /* ts_system_t */
+#include "../../ui/i18n.h"  /* i18n_locale_t */
 
 /* Standardized tiered interpretation — the universal output format */
 typedef struct {
@@ -53,6 +54,8 @@ typedef struct {
 
     int kabbalah_sefirah;       /* 0-9, -1 = not available */
     const char *kabbalah_planet;
+
+    i18n_locale_t locale;       /* 0 = EN (default via memset) */
 } di_params_t;
 
 /* Route to appropriate interpret module based on system_id.

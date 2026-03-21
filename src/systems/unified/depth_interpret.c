@@ -12,6 +12,7 @@
 #include "../hindu/hindu_interpret.h"
 #include "../iching/iching_interpret.h"
 #include "../kabbalah/kabbalah_interpret.h"
+#include "../../ui/content_i18n.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -19,20 +20,36 @@
  * Internal helpers
  * =================================================================== */
 
-/* Local system name lookup — avoids linking today_summary.c and its
- * full dependency tree. Mirrors ts_system_name() values. */
-static const char *di_system_name(int system_id)
+/* Content keys for system names — enables locale-aware display.
+ * Falls back to English array when no translation found. */
+static const char *di_system_keys[TS_SYS_COUNT] = {
+    "sys.name.gregorian", "sys.name.tzolkin", "sys.name.haab",
+    "sys.name.chinese", "sys.name.hebrew", "sys.name.islamic",
+    "sys.name.buddhist", "sys.name.hindu", "sys.name.iching",
+    "sys.name.astrology", "sys.name.human_design", "sys.name.kabbalah",
+    "sys.name.coptic", "sys.name.ethiopian", "sys.name.persian",
+    "sys.name.japanese", "sys.name.korean", "sys.name.thai",
+    "sys.name.geological", "sys.name.cosmic", "sys.name.earth"
+};
+
+static const char *di_system_fallback[TS_SYS_COUNT] = {
+    "Gregorian", "Tzolkin", "Haab", "Chinese", "Hebrew",
+    "Islamic", "Buddhist", "Hindu", "I Ching", "Astrology",
+    "Human Design", "Kabbalah", "Coptic", "Ethiopian", "Persian",
+    "Japanese", "Korean", "Thai", "Geological", "Cosmic", "Earth"
+};
+
+static const char *di_system_name(int system_id, i18n_locale_t locale)
 {
-    static const char *names[TS_SYS_COUNT] = {
-        "Gregorian", "Tzolkin", "Haab", "Chinese", "Hebrew",
-        "Islamic", "Buddhist", "Hindu", "I Ching", "Astrology",
-        "Human Design", "Kabbalah", "Coptic", "Ethiopian", "Persian",
-        "Japanese", "Korean", "Thai", "Geological", "Cosmic", "Earth"
-    };
-    if (system_id >= 0 && system_id < TS_SYS_COUNT) {
-        return names[system_id];
+    if (system_id < 0 || system_id >= TS_SYS_COUNT) {
+        return "?";
     }
-    return "?";
+    const char *name = content_get(di_system_keys[system_id], locale);
+    /* content_get returns the key itself when not found */
+    if (name == di_system_keys[system_id]) {
+        return di_system_fallback[system_id];
+    }
+    return name;
 }
 
 static depth_interp_t make_empty(int system_id)
@@ -44,25 +61,26 @@ static depth_interp_t make_empty(int system_id)
     return r;
 }
 
-static depth_interp_t make_unsupported(int system_id)
+static depth_interp_t make_unsupported(int system_id, i18n_locale_t locale)
 {
     depth_interp_t r = make_empty(system_id);
-    const char *name = di_system_name(system_id);
+    const char *name = di_system_name(system_id, locale);
     snprintf(r.glyph, sizeof(r.glyph), "-");
-    snprintf(r.glance, sizeof(r.glance), "%s: Interpretation not yet available",
-             name);
-    snprintf(r.detail, sizeof(r.detail),
-             "The %s system does not yet have an interpretation module.", name);
+    snprintf(r.glance, sizeof(r.glance), "%s: %s", name,
+             content_get("depth.unsupported.glance", locale));
+    snprintf(r.detail, sizeof(r.detail), "%s %s",
+             name, content_get("depth.unsupported.detail", locale));
     return r;
 }
 
-static depth_interp_t make_invalid(int system_id)
+static depth_interp_t make_invalid(int system_id, i18n_locale_t locale)
 {
     depth_interp_t r = make_empty(system_id);
     snprintf(r.glyph, sizeof(r.glyph), "?");
-    snprintf(r.glance, sizeof(r.glance), "Unknown system");
-    snprintf(r.detail, sizeof(r.detail), "No interpretation available for system %d.",
-             system_id);
+    snprintf(r.glance, sizeof(r.glance), "%s",
+             content_get("depth.invalid.glance", locale));
+    snprintf(r.detail, sizeof(r.detail), "%s %d.",
+             content_get("depth.invalid.detail", locale), system_id);
     return r;
 }
 
@@ -81,8 +99,8 @@ static depth_interp_t interpret_hebrew(const di_params_t *p)
     date.month = p->hebrew_month;
     date.day = p->hebrew_day;
 
-    hebrew_interp_t hi = hi_interpret(date, p->hebrew_sabbatical,
-                                      p->hebrew_is_leap);
+    hebrew_interp_t hi = hi_interpret_locale(date, p->hebrew_sabbatical,
+                                             p->hebrew_is_leap, p->locale);
 
     depth_interp_t r;
     memset(&r, 0, sizeof(r));
@@ -105,7 +123,7 @@ static depth_interp_t interpret_islamic(const di_params_t *p)
     date.month = p->islamic_month;
     date.day = p->islamic_day;
 
-    islamic_interp_t ii = isi_interpret(date);
+    islamic_interp_t ii = isi_interpret_locale(date, p->locale);
 
     depth_interp_t r;
     memset(&r, 0, sizeof(r));
@@ -123,11 +141,12 @@ static depth_interp_t interpret_buddhist(const di_params_t *p)
         return make_empty(TS_SYS_BUDDHIST);
     }
 
-    buddhist_interp_t bi = bi_interpret(
+    buddhist_interp_t bi = bi_interpret_locale(
         p->buddhist_year,
         p->buddhist_month,
         (uposatha_type_t)p->buddhist_uposatha,
-        (kalpa_phase_t)p->buddhist_kalpa_phase
+        (kalpa_phase_t)p->buddhist_kalpa_phase,
+        p->locale
     );
 
     depth_interp_t r;
@@ -146,10 +165,11 @@ static depth_interp_t interpret_hindu(const di_params_t *p)
         return make_empty(TS_SYS_HINDU);
     }
 
-    hindu_interp_t hi = hndi_interpret(
+    hindu_interp_t hi = hndi_interpret_locale(
         p->hindu_tithi,
         p->hindu_nakshatra,
-        p->hindu_yoga
+        p->hindu_yoga,
+        p->locale
     );
 
     depth_interp_t r;
@@ -168,10 +188,11 @@ static depth_interp_t interpret_iching(const di_params_t *p)
         return make_empty(TS_SYS_ICHING);
     }
 
-    iching_interp_t ii = ii_interpret(
+    iching_interp_t ii = ii_interpret_locale(
         p->iching_king_wen,
         p->iching_upper_tri,
-        p->iching_lower_tri
+        p->iching_lower_tri,
+        p->locale
     );
 
     depth_interp_t r;
@@ -190,9 +211,10 @@ static depth_interp_t interpret_kabbalah(const di_params_t *p)
         return make_empty(TS_SYS_KABBALAH);
     }
 
-    kabbalah_interp_t ki = ki_interpret_sefirah(
+    kabbalah_interp_t ki = ki_interpret_sefirah_locale(
         p->kabbalah_sefirah,
-        p->kabbalah_planet
+        p->kabbalah_planet,
+        p->locale
     );
 
     depth_interp_t r;
@@ -216,7 +238,7 @@ depth_interp_t depth_interpret(int system_id, const di_params_t *params)
     }
 
     if (system_id < 0 || system_id >= TS_SYS_COUNT) {
-        return make_invalid(system_id);
+        return make_invalid(system_id, params->locale);
     }
 
     switch ((ts_system_t)system_id) {
@@ -226,7 +248,7 @@ depth_interp_t depth_interpret(int system_id, const di_params_t *params)
     case TS_SYS_HINDU:    return interpret_hindu(params);
     case TS_SYS_ICHING:   return interpret_iching(params);
     case TS_SYS_KABBALAH: return interpret_kabbalah(params);
-    default:              return make_unsupported(system_id);
+    default:              return make_unsupported(system_id, params->locale);
     }
 }
 
