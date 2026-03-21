@@ -766,6 +766,12 @@ time_add_test(NAME test_prayer_times_layout TEST tests/ui/test_prayer_times_layo
     DEPS prayer_times_layout prayer_times solar_events julian LABELS unit)
 time_add_test(NAME test_nakshatra_wheel_layout TEST tests/ui/test_nakshatra_wheel_layout.c
     DEPS nakshatra_wheel_layout nakshatra LABELS unit)
+time_add_test(NAME test_daily_gregorian_layout TEST tests/ui/test_daily_gregorian_layout.c
+    DEPS daily_gregorian_layout gregorian gregorian_interpret i18n content_i18n julian LABELS unit)
+time_add_test(NAME test_daily_geology_layout TEST tests/ui/test_daily_geology_layout.c
+    DEPS daily_geology_layout geology_interpret earth_fraction i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_earth_layout TEST tests/ui/test_daily_earth_layout.c
+    DEPS daily_earth_layout daylight seasons solar_events julian LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)

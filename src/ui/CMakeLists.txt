@@ -129,6 +129,9 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/zodiac_animals_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/prayer_times_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/nakshatra_wheel_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_gregorian_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_geology_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_earth_layout.c
     PARENT_SCOPE
 )
 
@@ -259,5 +262,8 @@ if(NOT EMSCRIPTEN)
     add_library(time_zodiac_animals_layout OBJECT zodiac_animals_layout.c)
     add_library(time_prayer_times_layout OBJECT prayer_times_layout.c)
     add_library(time_nakshatra_wheel_layout OBJECT nakshatra_wheel_layout.c)
+    add_library(time_daily_gregorian_layout OBJECT daily_gregorian_layout.c)
+    add_library(time_daily_geology_layout OBJECT daily_geology_layout.c)
+    add_library(time_daily_earth_layout OBJECT daily_earth_layout.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
