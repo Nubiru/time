@@ -41,6 +41,7 @@ typedef enum {
     TS_SYS_THAI,
     TS_SYS_GEOLOGICAL,
     TS_SYS_COSMIC,
+    TS_SYS_EARTH,
     TS_SYS_COUNT
 } ts_system_t;
 

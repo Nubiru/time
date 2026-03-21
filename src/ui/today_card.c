@@ -43,6 +43,7 @@
 #include "nakshatra_wheel_layout.h"
 #include "daily_gregorian_layout.h"
 #include "daily_geology_layout.h"
+#include "daily_earth_layout.h"
 
 /* ------------------------------------------------------------------ */
 
@@ -303,11 +304,38 @@ static card_content_t make_thai(double jd)
     return card_format_thai(td.be_year, td.month, td.day, mname);
 }
 
+static card_content_t make_earth(double jd, double lat, double lon)
+{
+    daily_earth_layout_t el = daily_earth_compute(jd, lat, lon);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Earth");
+    if (el.season_name)
+        snprintf(c.line1, sizeof(c.line1), "%s (%.0f%%)",
+                 el.season_name, el.season_progress * 100.0);
+    snprintf(c.line2, sizeof(c.line2), "Daylight: %.1f hours",
+             el.day_length_hours);
+    snprintf(c.line3, sizeof(c.line3), "Sun: %.1f\xc2\xb0 %s",
+             el.sun_elevation_deg,
+             el.sun_elevation_deg >= 0.0 ? "above" : "below");
+    if (el.polar_day)
+        snprintf(c.detail, sizeof(c.detail), "Polar day — midnight sun");
+    else if (el.polar_night)
+        snprintf(c.detail, sizeof(c.detail), "Polar night — no sunrise");
+    else
+        snprintf(c.detail, sizeof(c.detail), "%s | %.1fh daylight | Sun %.1f\xc2\xb0",
+                 el.season_name ? el.season_name : "",
+                 el.day_length_hours, el.sun_elevation_deg);
+    return c;
+}
+
 /* ------------------------------------------------------------------ */
 
 card_content_t today_card_for_system(int system_id, double jd,
                                       double sun_lon_deg,
-                                      double moon_lon_deg)
+                                      double moon_lon_deg,
+                                      double observer_lat,
+                                      double observer_lon)
 {
     switch (system_id) {
     case TS_SYS_GREGORIAN:    return make_gregorian(jd);
@@ -330,6 +358,7 @@ card_content_t today_card_for_system(int system_id, double jd,
     case TS_SYS_THAI:         return make_thai(jd);
     case TS_SYS_GEOLOGICAL:   return make_geology(jd);
     case TS_SYS_COSMIC:       return empty_card();
+    case TS_SYS_EARTH:        return make_earth(jd, observer_lat, observer_lon);
     default:                  return empty_card();
     }
 }

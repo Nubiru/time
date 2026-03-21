@@ -136,6 +136,12 @@ static const sys_meta_t SYS_META[TS_SYS_COUNT] = {
         "The universe is %s — every atom in your body was forged in a star.",
         "Standard Cosmological Model",
         SENSITIVITY_GENERAL
+    },
+    [TS_SYS_EARTH] = {
+        "Earth",
+        "Right now on Earth: %s — daylight, season, and sun position shape your day.",
+        "Solar geometry, axial tilt",
+        SENSITIVITY_GENERAL
     }
 };
 

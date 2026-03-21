@@ -307,3 +307,59 @@ def test_audio_context_created(page):
             "Audio engine not initialized in WASM — "
             "AUDIO stream: wire audio_engine_init() in main_loop"
         )
+
+
+# ============================================================
+# THEME — Does the dark theme stay stable?
+# ============================================================
+
+
+def test_theme_stays_dark(page):
+    """Canvas should NOT flash to light theme (auto-theme disabled).
+
+    Stream: INFRA
+    Feature: Cosmos dark theme stays active, no Dawn flashing
+    If this fails: auto_theme may still be cycling, or CSS vars export broken.
+    """
+    page.wait_for_timeout(5000)  # Wait through any auto-theme cycle
+    img = canvas_screenshot(page)
+    save_screenshot(img, "08_theme_dark.png")
+    pixels = list(img.getdata())
+    # Average brightness should be LOW (dark theme)
+    avg_brightness = sum(sum(p[:3]) for p in pixels) / (len(pixels) * 3)
+    assert avg_brightness < 100, (
+        f"Theme too bright: avg={avg_brightness}. "
+        "Auto-theme may be flashing to Dawn."
+    )
+
+
+# ============================================================
+# HELP PANEL SCROLL — Can the user see all shortcuts?
+# ============================================================
+
+
+def test_help_panel_scrollable(page):
+    """Help panel body should be scrollable when content overflows.
+
+    Stream: INFRA
+    Feature: Help panel with overflow-y: auto on panel-body
+    If this fails: panel-body CSS missing overflow-y, or parent clips it.
+    """
+    page.keyboard.press("?")
+    page.wait_for_timeout(500)
+
+    overflow = page.evaluate("""() => {
+        const panel = document.getElementById('help-panel');
+        if (!panel) return 'no-panel';
+        const body = panel.querySelector('.panel-body');
+        if (!body) return 'no-body';
+        const style = getComputedStyle(body);
+        return style.overflowY;
+    }""")
+
+    assert overflow in ['auto', 'scroll'], (
+        f"Help panel-body overflow-y is '{overflow}', not scrollable"
+    )
+
+    page.keyboard.press("Escape")
+    page.wait_for_timeout(300)

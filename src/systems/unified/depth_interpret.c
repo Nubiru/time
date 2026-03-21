@@ -27,7 +27,7 @@ static const char *di_system_name(int system_id)
         "Gregorian", "Tzolkin", "Haab", "Chinese", "Hebrew",
         "Islamic", "Buddhist", "Hindu", "I Ching", "Astrology",
         "Human Design", "Kabbalah", "Coptic", "Ethiopian", "Persian",
-        "Japanese", "Korean", "Thai", "Geological", "Cosmic"
+        "Japanese", "Korean", "Thai", "Geological", "Cosmic", "Earth"
     };
     if (system_id >= 0 && system_id < TS_SYS_COUNT) {
         return names[system_id];

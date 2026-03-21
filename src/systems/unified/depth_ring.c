@@ -6,7 +6,7 @@
 
 #include "depth_ring.h"
 
-/* Static mapping: ts_system_t (0-19) -> depth_ring_t
+/* Static mapping: ts_system_t (0-20) -> depth_ring_t
  *
  * RING_COSMIC (0): TS_SYS_GEOLOGICAL, TS_SYS_COSMIC
  * RING_AGE    (1): TS_SYS_BUDDHIST, TS_SYS_HINDU
@@ -37,7 +37,8 @@ static const depth_ring_t s_ring_map[TS_SYS_COUNT] = {
     /* [TS_SYS_KOREAN       = 16] */ DEPTH_RING_YEAR,
     /* [TS_SYS_THAI         = 17] */ DEPTH_RING_YEAR,
     /* [TS_SYS_GEOLOGICAL   = 18] */ DEPTH_RING_COSMIC,
-    /* [TS_SYS_COSMIC       = 19] */ DEPTH_RING_COSMIC
+    /* [TS_SYS_COSMIC       = 19] */ DEPTH_RING_COSMIC,
+    /* [TS_SYS_EARTH        = 20] */ DEPTH_RING_TODAY
 };
 
 depth_ring_t depth_ring_for_system(int system_id)

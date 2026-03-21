@@ -82,6 +82,7 @@ static const char *SYSTEM_LABELS[TS_SYS_COUNT] = {
     [TS_SYS_THAI]         = "Thai",
     [TS_SYS_GEOLOGICAL]   = "Geological",
     [TS_SYS_COSMIC]       = "Cosmic",
+    [TS_SYS_EARTH]        = "Earth",
 };
 
 /* Depth ring representatives: one system per ring for the standard layout */

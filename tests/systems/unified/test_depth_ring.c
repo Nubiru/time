@@ -231,7 +231,7 @@ static void test_systems_today_count(void)
 {
     int ids[TS_SYS_COUNT];
     int count = depth_ring_systems(DEPTH_RING_TODAY, ids, TS_SYS_COUNT);
-    TEST_ASSERT_EQUAL_INT(3, count);
+    TEST_ASSERT_EQUAL_INT(4, count);
 }
 
 /* ========== depth_ring_systems — NULL out_ids ========== */

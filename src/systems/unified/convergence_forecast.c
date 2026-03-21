@@ -93,7 +93,7 @@ static const char *SHORT_NAMES[TS_SYS_COUNT] = {
     "Hebrew", "Islamic", "Buddhist", "Hindu",
     "I Ching", "Astrology", "Human Design", "Kabbalah",
     "Coptic", "Ethiopian", "Persian", "Japanese",
-    "Korean", "Thai", "Geological", "Cosmic",
+    "Korean", "Thai", "Geological", "Cosmic", "Earth",
 };
 
 /* ===== cf_schedule ===== */

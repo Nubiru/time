@@ -18,7 +18,8 @@ static const double TEST_MOON_LON = 120.0;
 void test_gregorian_card_title(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_GREGORIAN, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Gregorian") != NULL);
 }
 
@@ -26,7 +27,8 @@ void test_gregorian_card_title(void)
 void test_tzolkin_card_has_kin(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_TZOLKIN, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.line1, "Kin") != NULL);
 }
 
@@ -34,7 +36,8 @@ void test_tzolkin_card_has_kin(void)
 void test_iching_card_has_hexagram(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_ICHING, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.line1, "Hexagram") != NULL ||
                      strstr(c.title, "I Ching") != NULL);
 }
@@ -43,7 +46,8 @@ void test_iching_card_has_hexagram(void)
 void test_chinese_card_has_animal(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_CHINESE, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Chinese") != NULL);
     /* line1 should contain the animal symbol and name */
     TEST_ASSERT_TRUE(strlen(c.line1) > 0);
@@ -53,7 +57,8 @@ void test_chinese_card_has_animal(void)
 void test_hebrew_card_title(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_HEBREW, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Hebrew") != NULL);
 }
 
@@ -61,7 +66,8 @@ void test_hebrew_card_title(void)
 void test_islamic_card_title(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_ISLAMIC, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Islamic") != NULL);
 }
 
@@ -69,7 +75,8 @@ void test_islamic_card_title(void)
 void test_buddhist_card_has_be(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_BUDDHIST, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.line1, "BE") != NULL);
 }
 
@@ -77,7 +84,8 @@ void test_buddhist_card_has_be(void)
 void test_hindu_card_has_nakshatra(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_HINDU, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Hindu") != NULL ||
                      strstr(c.title, "Panchanga") != NULL);
 }
@@ -86,7 +94,8 @@ void test_hindu_card_has_nakshatra(void)
 void test_astrology_card_has_sun(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_ASTROLOGY, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.line1, "Sun") != NULL);
 }
 
@@ -94,7 +103,8 @@ void test_astrology_card_has_sun(void)
 void test_hd_card_has_gate(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_HUMAN_DESIGN, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.line1, "Gate") != NULL);
 }
 
@@ -102,7 +112,8 @@ void test_hd_card_has_gate(void)
 void test_kabbalah_card_title(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_KABBALAH, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Tree") != NULL ||
                      strstr(c.title, "Kabbalah") != NULL);
 }
@@ -111,7 +122,8 @@ void test_kabbalah_card_title(void)
 void test_geology_card_has_era(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_GEOLOGICAL, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Geolog") != NULL);
 }
 
@@ -119,7 +131,8 @@ void test_geology_card_has_era(void)
 void test_coptic_card_title(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_COPTIC, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Coptic") != NULL);
 }
 
@@ -127,7 +140,8 @@ void test_coptic_card_title(void)
 void test_ethiopian_card_title(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_ETHIOPIAN, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Ethiopian") != NULL);
 }
 
@@ -135,7 +149,8 @@ void test_ethiopian_card_title(void)
 void test_persian_card_title(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_PERSIAN, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Hijri") != NULL ||
                      strstr(c.title, "Persian") != NULL ||
                      strstr(c.title, "Solar") != NULL);
@@ -145,7 +160,8 @@ void test_persian_card_title(void)
 void test_thai_card_title(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_THAI, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_TRUE(strstr(c.title, "Thai") != NULL);
 }
 
@@ -153,15 +169,27 @@ void test_thai_card_title(void)
 void test_cosmic_returns_empty(void)
 {
     card_content_t c = today_card_for_system(TS_SYS_COSMIC, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_EQUAL_STRING("", c.title);
 }
 
-/* 18. Invalid system returns empty */
+/* 18. Earth card has season */
+void test_earth_card_has_season(void)
+{
+    card_content_t c = today_card_for_system(TS_SYS_EARTH, TEST_JD,
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
+    TEST_ASSERT_EQUAL_STRING("Earth", c.title);
+    TEST_ASSERT_TRUE(strlen(c.line1) > 0);
+}
+
+/* 19. Invalid system returns empty */
 void test_invalid_system_returns_empty(void)
 {
     card_content_t c = today_card_for_system(999, TEST_JD,
-                                              TEST_SUN_LON, TEST_MOON_LON);
+                                              TEST_SUN_LON, TEST_MOON_LON,
+                                              0.0, 0.0);
     TEST_ASSERT_EQUAL_STRING("", c.title);
 }
 
@@ -178,7 +206,8 @@ void test_all_supported_produce_nonempty(void)
         if (today_card_supported(i)) {
             card_content_t c = today_card_for_system(i, TEST_JD,
                                                       TEST_SUN_LON,
-                                                      TEST_MOON_LON);
+                                                      TEST_MOON_LON,
+                                                      0.0, 0.0);
             TEST_ASSERT_TRUE_MESSAGE(strlen(c.title) > 0,
                                      "Supported system returned empty title");
         }
@@ -205,6 +234,7 @@ int main(void)
     RUN_TEST(test_persian_card_title);
     RUN_TEST(test_thai_card_title);
     RUN_TEST(test_cosmic_returns_empty);
+    RUN_TEST(test_earth_card_has_season);
     RUN_TEST(test_invalid_system_returns_empty);
     RUN_TEST(test_supported_count);
     RUN_TEST(test_all_supported_produce_nonempty);

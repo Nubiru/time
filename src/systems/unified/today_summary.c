@@ -59,7 +59,8 @@ static const char *SYSTEM_NAMES[TS_SYS_COUNT] = {
     "Korean",
     "Thai",
     "Geological",
-    "Cosmic"
+    "Cosmic",
+    "Earth"
 };
 
 /* ------------------------------------------------------------------ */
@@ -622,6 +623,14 @@ static ts_entry_t compute_cosmic(double jd)
     return e;
 }
 
+static ts_entry_t compute_earth(void)
+{
+    ts_entry_t e = make_entry(TS_SYS_EARTH);
+    snprintf(e.date_str, TS_DATE_MAX, "Earth Surface");
+    e.active = 1;
+    return e;
+}
+
 /* ------------------------------------------------------------------ */
 /* Convergence and headline                                             */
 /* ------------------------------------------------------------------ */
@@ -729,6 +738,7 @@ ts_summary_t ts_compute(double jd)
     s.entries[TS_SYS_THAI]         = compute_thai(jd);
     s.entries[TS_SYS_GEOLOGICAL]   = compute_geological(jd);
     s.entries[TS_SYS_COSMIC]       = compute_cosmic(jd);
+    s.entries[TS_SYS_EARTH]        = compute_earth();
 
     s.entry_count = TS_SYS_COUNT;
 

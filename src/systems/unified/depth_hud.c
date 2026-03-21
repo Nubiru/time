@@ -108,7 +108,12 @@ static const dh_system_spec_t s_specs[TS_SYS_COUNT] = {
     /* TS_SYS_COSMIC (19) */
     { TS_SYS_COSMIC,     "Cosmic",       '/', HUD_POS_BOTTOM_CENTER,
       "{age}", "{age} Gy",
-      "{age} Gy — {epoch}", 18 }
+      "{age} Gy — {epoch}", 18 },
+
+    /* TS_SYS_EARTH (20) */
+    { TS_SYS_EARTH,      "Earth",        'e', HUD_POS_BOTTOM_CENTER,
+      "{season}", "{season} ({progress}%)",
+      "{season} — {daylight}h daylight", 19 }
 };
 
 /* Invalid/sentinel spec */

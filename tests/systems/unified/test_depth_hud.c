@@ -14,9 +14,9 @@ void tearDown(void) { }
 
 /* ========== dh_system_count ========== */
 
-static void test_system_count_returns_20(void)
+static void test_system_count_returns_21(void)
 {
-    TEST_ASSERT_EQUAL_INT(20, dh_system_count());
+    TEST_ASSERT_EQUAL_INT(21, dh_system_count());
 }
 
 /* ========== dh_position_count ========== */
@@ -181,9 +181,9 @@ static void test_all_20_systems_have_valid_names(void)
 
 /* ========== dh_system_spec — invalid ========== */
 
-static void test_spec_invalid_20(void)
+static void test_spec_invalid_21(void)
 {
-    dh_system_spec_t s = dh_system_spec(20);
+    dh_system_spec_t s = dh_system_spec(21);
     TEST_ASSERT_EQUAL_INT(-1, s.system_id);
     TEST_ASSERT_EQUAL_STRING("?", s.display_name);
 }
@@ -400,7 +400,7 @@ int main(void)
     UNITY_BEGIN();
 
     /* counts */
-    RUN_TEST(test_system_count_returns_20);
+    RUN_TEST(test_system_count_returns_21);
     RUN_TEST(test_position_count_returns_8);
 
     /* individual system specs */
@@ -423,7 +423,7 @@ int main(void)
     RUN_TEST(test_all_20_systems_have_valid_names);
 
     /* invalid specs */
-    RUN_TEST(test_spec_invalid_20);
+    RUN_TEST(test_spec_invalid_21);
     RUN_TEST(test_spec_invalid_negative);
 
     /* key lookup */

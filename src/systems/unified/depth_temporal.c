@@ -33,6 +33,7 @@ static const dt_cycle_t s_cycles[TS_SYS_COUNT] = {
     [TS_SYS_THAI]         = { TS_SYS_THAI,         "Buddhist Year",          365.2425, 1.0,    "Solar year (BE dating)" },
     [TS_SYS_GEOLOGICAL]   = { TS_SYS_GEOLOGICAL,   "Geological Epoch",       0.0,      0.0,    "No recurrence (linear deep time)" },
     [TS_SYS_COSMIC]       = { TS_SYS_COSMIC,       "Cosmic Age",             0.0,      0.0,    "No recurrence (linear cosmic time)" },
+    [TS_SYS_EARTH]        = { TS_SYS_EARTH,        "Earth Day",              1.0,      1.0,    "Solar day (daylight cycle)" },
 };
 
 dt_cycle_t dt_cycle_info(int system_id)

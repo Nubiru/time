@@ -155,6 +155,9 @@ ring_today_t ring_today_compute(double jd, double sun_lon_deg,
     /* TS_SYS_COSMIC (19): scale too large */
     rt.indices[TS_SYS_COSMIC] = -1;
 
+    /* TS_SYS_EARTH (20): daily cycle, map to Gregorian ring */
+    rt.indices[TS_SYS_EARTH] = rt.indices[TS_SYS_GREGORIAN];
+
     return rt;
 }
 

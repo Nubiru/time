@@ -27,7 +27,8 @@ static const char *s_system_names[] = {
     "Korean",        /* 16 TS_SYS_KOREAN */
     "Thai",          /* 17 TS_SYS_THAI */
     "Geological",    /* 18 TS_SYS_GEOLOGICAL */
-    "Cosmic"         /* 19 TS_SYS_COSMIC */
+    "Cosmic",        /* 19 TS_SYS_COSMIC */
+    "Earth"          /* 20 TS_SYS_EARTH */
 };
 
 #define CS_NAME_COUNT ((int)(sizeof(s_system_names) / sizeof(s_system_names[0])))

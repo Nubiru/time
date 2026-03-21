@@ -848,7 +848,9 @@ static void draw_card_text(const render_frame_t *frame)
     for (int i = 0; i < CARD_TYPE_COUNT; i++) {
         int sys_id = (i < sel.filled_count) ? sel.slots[i].system_id : -1;
         card_contents[i] = (sys_id >= 0)
-            ? today_card_for_system(sys_id, jd, sun_lon, moon_lon)
+            ? today_card_for_system(sys_id, jd, sun_lon, moon_lon,
+                                       frame->observer_lat,
+                                       frame->observer_lon)
             : (card_content_t){0};
         layout.cards[i].visible = (sys_id >= 0);
         layout.cards[i].opacity = (i < sel.filled_count) ? sel.slots[i].opacity : 0.0f;

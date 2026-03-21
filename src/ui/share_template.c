@@ -14,7 +14,7 @@ static const char *sht_sys_names[TS_SYS_COUNT] = {
     "Gregorian", "Tzolkin", "Haab", "Chinese", "Hebrew",
     "Islamic", "Buddhist", "Hindu", "I Ching", "Astrology",
     "Human Design", "Kabbalah", "Coptic", "Ethiopian", "Persian",
-    "Japanese", "Korean", "Thai", "Geological", "Cosmic"
+    "Japanese", "Korean", "Thai", "Geological", "Cosmic", "Earth"
 };
 
 static const char *sht_system_name(ts_system_t sys)
