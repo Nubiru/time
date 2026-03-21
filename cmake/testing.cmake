@@ -525,6 +525,8 @@ time_add_test(NAME test_today_card     TEST tests/ui/test_today_card.c
     daily_hebrew_layout daily_islamic_layout daily_buddhist_layout daily_hindu_layout daily_chinese_layout daily_iching_layout daily_hd_layout daily_transit_layout
     iching_interpret i18n content_i18n aspects dignity hebrew_interpret islamic_interpret
     nakshatra_wheel_layout daily_gregorian_layout daily_geology_layout daily_earth_layout
+    daily_coptic_layout daily_ethiopian_layout daily_persian_layout daily_japanese_layout daily_korean_layout daily_thai_layout
+    coptic_interpret ethiopian_interpret persian_interpret japanese_interpret korean_interpret thai_interpret
     gregorian_interpret geology_interpret earth_fraction daylight seasons solar_events)
 time_add_test(NAME test_zodiac_glyphs   TEST tests/ui/test_zodiac_glyphs.c   DEPS zodiac_glyphs)
 time_add_test(NAME test_hexagram_visual TEST tests/ui/test_hexagram_visual.c  DEPS hexagram_visual iching)

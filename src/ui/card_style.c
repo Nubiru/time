@@ -90,6 +90,7 @@ int card_style_focus_system(int focus_mode)
     case 3: return TS_SYS_ICHING;        /* FOCUS_MODE_ICHING */
     case 4: return TS_SYS_CHINESE;       /* FOCUS_MODE_CHINESE */
     case 5: return TS_SYS_HUMAN_DESIGN;  /* FOCUS_MODE_HD */
+    case 6: return TS_SYS_KABBALAH;      /* FOCUS_MODE_KABBALAH */
     default: return -1;
     }
 }

@@ -76,8 +76,9 @@ static const help_entry_t SYSTEM_ENTRIES[] = {
     { "I", "I Ching focus",            HELP_CAT_SYSTEMS },
     { "C", "Chinese calendar focus",   HELP_CAT_SYSTEMS },
     { "D", "Human Design focus",       HELP_CAT_SYSTEMS },
+    { "T", "Kabbalah/Tree of Life",    HELP_CAT_SYSTEMS },
 };
-#define SYSTEM_ENTRY_COUNT 5
+#define SYSTEM_ENTRY_COUNT 6
 
 /* UI */
 static const help_entry_t UI_ENTRIES[] = {

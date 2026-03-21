@@ -150,6 +150,7 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
             case 'i': case 'I': focus = 3; break; /* FOCUS_MODE_ICHING */
             case 'c': case 'C': focus = 4; break; /* FOCUS_MODE_CHINESE */
             case 'd': case 'D': focus = 5; break; /* FOCUS_MODE_HD */
+            case 't': case 'T': focus = 6; break; /* FOCUS_MODE_KABBALAH */
             default: break;
         }
         if (focus >= 0) {

@@ -44,6 +44,12 @@
 #include "daily_gregorian_layout.h"
 #include "daily_geology_layout.h"
 #include "daily_earth_layout.h"
+#include "daily_coptic_layout.h"
+#include "daily_ethiopian_layout.h"
+#include "daily_japanese_layout.h"
+#include "daily_korean_layout.h"
+#include "daily_persian_layout.h"
+#include "daily_thai_layout.h"
 
 /* ------------------------------------------------------------------ */
 
@@ -238,70 +244,121 @@ static card_content_t make_geology(double jd)
 
 static card_content_t make_coptic(double jd)
 {
+    daily_coptic_layout_t dcl = daily_coptic_compute(jd);
     coptic_date_t cd = coptic_from_jd(jd);
     const char *mname = coptic_month_name(cd.month);
-    return card_format_coptic(cd.year, cd.month, cd.day, mname);
+    card_content_t c = card_format_coptic(cd.year, cd.month, cd.day, mname);
+    if (dcl.liturgy && dcl.liturgy[0])
+        snprintf(c.line3, sizeof(c.line3), "%s", dcl.liturgy);
+    if (dcl.feast_name && dcl.feast_name[0])
+        snprintf(c.detail, sizeof(c.detail), "%s — %s",
+                 dcl.origin ? dcl.origin : "", dcl.feast_name);
+    else if (dcl.origin && dcl.origin[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dcl.origin);
+    return c;
 }
 
 static card_content_t make_ethiopian(double jd)
 {
+    daily_ethiopian_layout_t del = daily_ethiopian_compute(jd);
     ethiopian_date_t ed = ethiopian_from_jd(jd);
     const char *mname = ethiopian_month_name(ed.month);
-    return card_format_ethiopian(ed.year, ed.month, ed.day, mname);
+    card_content_t c = card_format_ethiopian(ed.year, ed.month, ed.day, mname);
+    if (del.season && del.season[0])
+        snprintf(c.line3, sizeof(c.line3), "%s", del.season);
+    if (del.feast_name && del.feast_name[0])
+        snprintf(c.detail, sizeof(c.detail), "%s — %s",
+                 del.meaning ? del.meaning : "", del.feast_name);
+    else if (del.meaning && del.meaning[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", del.meaning);
+    return c;
 }
 
 static card_content_t make_persian(double jd)
 {
+    daily_persian_layout_t dpl = daily_persian_compute(jd);
     persian_date_t pd = persian_from_jd(jd);
     const char *mname = persian_month_name(pd.month);
-    return card_format_persian(pd.year, pd.month, pd.day, mname);
+    card_content_t c = card_format_persian(pd.year, pd.month, pd.day, mname);
+    if (dpl.weekday_name && dpl.weekday_name[0])
+        snprintf(c.line3, sizeof(c.line3), "%s — %s",
+                 dpl.weekday_name, dpl.season ? dpl.season : "");
+    if (dpl.festival_name && dpl.festival_name[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dpl.festival_name);
+    else if (dpl.meaning && dpl.meaning[0])
+        snprintf(c.detail, sizeof(c.detail), "%s: %s",
+                 mname, dpl.meaning);
+    return c;
 }
 
-static card_content_t make_japanese(double jd)
+static card_content_t make_japanese(double jd, double sun_lon)
 {
+    daily_japanese_layout_t djl = daily_japanese_compute(jd, sun_lon);
     japanese_date_t jd_date = japanese_from_jd(jd);
     card_content_t c;
     memset(&c, 0, sizeof(c));
     snprintf(c.title, sizeof(c.title), "Japanese");
     snprintf(c.line1, sizeof(c.line1), "%s %d",
              japanese_era_name(jd_date.era_index), jd_date.era_year);
-    snprintf(c.line2, sizeof(c.line2), "%d-%02d-%02d",
-             jd_date.greg_year, jd_date.month, jd_date.day);
-    jp_rokuyo_t r = japanese_rokuyo(jd);
-    snprintf(c.line3, sizeof(c.line3), "%s", japanese_rokuyo_name(r));
-    snprintf(c.detail, sizeof(c.detail), "%s %d | %d-%02d-%02d | %s",
-             japanese_era_name(jd_date.era_index), jd_date.era_year,
-             jd_date.greg_year, jd_date.month, jd_date.day,
-             japanese_rokuyo_name(r));
+    if (djl.rokuyo_name && djl.rokuyo_name[0])
+        snprintf(c.line2, sizeof(c.line2), "%s — %s",
+                 djl.rokuyo_name, djl.rokuyo_meaning ? djl.rokuyo_meaning : "");
+    else
+        snprintf(c.line2, sizeof(c.line2), "%d-%02d-%02d",
+                 jd_date.greg_year, jd_date.month, jd_date.day);
+    if (djl.sekki_name && djl.sekki_name[0])
+        snprintf(c.line3, sizeof(c.line3), "%s %s",
+                 djl.sekki_kanji ? djl.sekki_kanji : "", djl.sekki_name);
+    if (djl.animal_name && djl.animal_name[0])
+        snprintf(c.detail, sizeof(c.detail), "%s %s | %s %d",
+                 djl.animal_kanji ? djl.animal_kanji : "", djl.animal_name,
+                 japanese_era_name(jd_date.era_index), jd_date.era_year);
     return c;
 }
 
 static card_content_t make_korean(double jd)
 {
+    daily_korean_layout_t dkl = daily_korean_compute(jd);
     korean_date_t kd = korean_from_jd(jd);
     card_content_t c;
     memset(&c, 0, sizeof(c));
     snprintf(c.title, sizeof(c.title), "Korean");
     snprintf(c.line1, sizeof(c.line1), "Dangun %d", kd.dangun_year);
-    snprintf(c.line2, sizeof(c.line2), "%s %s",
-             korean_element_name(kd.element),
-             korean_animal_name(kd.animal));
+    if (dkl.sexagenary && dkl.sexagenary[0])
+        snprintf(c.line2, sizeof(c.line2), "%s %s — %s",
+                 dkl.element_name ? dkl.element_name : "",
+                 dkl.animal_name ? dkl.animal_name : "",
+                 dkl.sexagenary);
+    else
+        snprintf(c.line2, sizeof(c.line2), "%s %s",
+                 korean_element_name(kd.element),
+                 korean_animal_name(kd.animal));
     snprintf(c.line3, sizeof(c.line3), "Lunar %d/%d",
              kd.lunar_month, kd.lunar_day);
-    snprintf(c.detail, sizeof(c.detail),
-             "Dangun %d | %s %s | Lunar %d/%d",
-             kd.dangun_year,
-             korean_element_name(kd.element),
-             korean_animal_name(kd.animal),
-             kd.lunar_month, kd.lunar_day);
+    if (dkl.festival_name && dkl.festival_name[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dkl.festival_name);
+    else
+        snprintf(c.detail, sizeof(c.detail),
+                 "Dangun %d | %s %s",
+                 kd.dangun_year,
+                 korean_element_name(kd.element),
+                 korean_animal_name(kd.animal));
     return c;
 }
 
 static card_content_t make_thai(double jd)
 {
+    daily_thai_layout_t dtl = daily_thai_compute(jd);
     thai_date_t td = thai_from_jd(jd);
     const char *mname = thai_month_name(td.month);
-    return card_format_thai(td.be_year, td.month, td.day, mname);
+    card_content_t c = card_format_thai(td.be_year, td.month, td.day, mname);
+    if (dtl.season && dtl.season[0])
+        snprintf(c.line3, sizeof(c.line3), "%s", dtl.season);
+    if (dtl.festival_name && dtl.festival_name[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dtl.festival_name);
+    else if (dtl.origin && dtl.origin[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dtl.origin);
+    return c;
 }
 
 static card_content_t make_earth(double jd, double lat, double lon)
@@ -353,7 +410,7 @@ card_content_t today_card_for_system(int system_id, double jd,
     case TS_SYS_COPTIC:       return make_coptic(jd);
     case TS_SYS_ETHIOPIAN:    return make_ethiopian(jd);
     case TS_SYS_PERSIAN:      return make_persian(jd);
-    case TS_SYS_JAPANESE:     return make_japanese(jd);
+    case TS_SYS_JAPANESE:     return make_japanese(jd, sun_lon_deg);
     case TS_SYS_KOREAN:       return make_korean(jd);
     case TS_SYS_THAI:         return make_thai(jd);
     case TS_SYS_GEOLOGICAL:   return make_geology(jd);
