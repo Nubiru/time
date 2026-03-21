@@ -104,6 +104,8 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_moon_schematic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_hk21_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_telektonon_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/kin_telektonon_path.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/kin_tubo_mauri.c
     PARENT_SCOPE
 )
 
@@ -209,5 +211,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_kin_moon_schematic OBJECT kin_moon_schematic.c)
     add_library(time_kin_hk21_layout OBJECT kin_hk21_layout.c)
     add_library(time_kin_telektonon_layout OBJECT kin_telektonon_layout.c)
+    add_library(time_kin_telektonon_path OBJECT kin_telektonon_path.c)
+    add_library(time_kin_tubo_mauri OBJECT kin_tubo_mauri.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
