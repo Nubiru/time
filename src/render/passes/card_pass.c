@@ -17,6 +17,7 @@
 #include "../../ui/card_selector.h"
 #include "../../ui/card_style.h"
 #include "../../ui/kin_oracle_layout.h"
+#include "../../ui/kin_wavespell_layout.h"
 #include "../../ui/kin_cell.h"
 #include "../../ui/focus_mode.h"
 #include "../../systems/tzolkin/tzolkin.h"
@@ -170,6 +171,76 @@ static void draw_oracle_cross(const render_frame_t *frame, float vw, float vh)
         glDrawElements(GL_TRIANGLES, qdata.index_count,
                         GL_UNSIGNED_INT, (void*)0);
         glBindVertexArray(0);
+    }
+
+    /* --- Wavespell strip: 13 cells in gap between middle row and occult --- */
+    {
+        kin_wavespell_layout_t ws = kin_wavespell_compute(today.kin);
+        float ws_y = 0.675f;
+        float ws_h = 0.08f;
+
+        for (int batch = 0; batch < 3; batch++) {
+            int start = batch * CP_MAX_CARDS;
+            int count = KIN_WS_CELLS - start;
+            if (count > CP_MAX_CARDS) count = CP_MAX_CARDS;
+
+            card_layout_t ws_layout;
+            for (int j = 0; j < CARD_TYPE_COUNT; j++) {
+                if (j < count) {
+                    kin_cell_t cell = ws.cells[start + j];
+                    ws_layout.cards[j].x = cell.x - cell.w * 0.5f;
+                    ws_layout.cards[j].y = ws_y - ws_h * 0.5f;
+                    ws_layout.cards[j].w = cell.w;
+                    ws_layout.cards[j].h = ws_h;
+                    ws_layout.cards[j].opacity = 1.0f;
+                    ws_layout.cards[j].visible = 1;
+                    ws_layout.cards[j].type = (card_type_t)j;
+                } else {
+                    ws_layout.cards[j].visible = 0;
+                    ws_layout.cards[j].opacity = 0.0f;
+                    ws_layout.cards[j].x = 0;
+                    ws_layout.cards[j].y = 0;
+                    ws_layout.cards[j].w = 0;
+                    ws_layout.cards[j].h = 0;
+                    ws_layout.cards[j].type = (card_type_t)j;
+                }
+            }
+
+            cp_quad_data_t ws_qdata = cp_pack_quads(&ws_layout, vw, vh,
+                                                     0.0f, 0.0f, 0.0f, 0.0f);
+
+            for (int j = 0; j < ws_qdata.card_count; j++) {
+                kin_cell_t cell = ws.cells[start + j];
+                float rgba[4];
+                kin_cell_rgba(cell.color, rgba);
+                float alpha = cell.highlighted ? 0.85f : 0.5f;
+                if (kin_wavespell_is_power_day(start + j + 1))
+                    alpha += 0.1f;
+                float bot_a = alpha * 0.618f;
+                for (int v = 0; v < CP_VERTS_PER_QUAD; v++) {
+                    int base = (j * CP_VERTS_PER_QUAD + v) * CP_VERTEX_FLOATS;
+                    ws_qdata.vertices[base + 4] = rgba[0] * 0.25f;
+                    ws_qdata.vertices[base + 5] = rgba[1] * 0.25f;
+                    ws_qdata.vertices[base + 6] = rgba[2] * 0.25f;
+                    ws_qdata.vertices[base + 7] = (v < 2) ? bot_a : alpha;
+                }
+            }
+
+            if (ws_qdata.vertex_count > 0) {
+                glBindVertexArray(s_quad_vao);
+                glBindBuffer(GL_ARRAY_BUFFER, s_quad_vbo);
+                glBufferSubData(GL_ARRAY_BUFFER, 0,
+                                (GLsizeiptr)cp_quad_vertex_bytes(&ws_qdata),
+                                ws_qdata.vertices);
+                glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_quad_ebo);
+                glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                                (GLsizeiptr)cp_quad_index_bytes(&ws_qdata),
+                                ws_qdata.indices);
+                glDrawElements(GL_TRIANGLES, ws_qdata.index_count,
+                                GL_UNSIGNED_INT, (void*)0);
+                glBindVertexArray(0);
+            }
+        }
     }
 
     /* Pack border lines then override per-card with directional colors */

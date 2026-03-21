@@ -30,6 +30,7 @@
 #include "../../ui/card_style.h"
 #include "../../ui/today_card.h"
 #include "../../ui/kin_oracle_layout.h"
+#include "../../ui/kin_wavespell_layout.h"
 #include "../../ui/kin_cell.h"
 #include "../../ui/focus_mode.h"
 #include "../../systems/tzolkin/dreamspell.h"
@@ -266,6 +267,41 @@ static void draw_oracle_text(const render_frame_t *frame)
         len = append_text_glyphs(instances, len, kin_line,
                                  CARD_TEXT_LINE_MAX, card_x, card_y,
                                  body_scale, muted_color);
+    }
+
+    /* --- Wavespell strip text: title + tone numbers per cell --- */
+    {
+        kin_wavespell_layout_t ws = kin_wavespell_compute(today.kin);
+        float ws_y_center = 0.675f;
+        float ws_h = 0.08f;
+
+        /* Wavespell title above the strip */
+        char ws_title[64];
+        snprintf(ws_title, sizeof(ws_title), "Wavespell %d: %s",
+                 ws.wavespell_number, ws.purpose ? ws.purpose : "");
+        float ws_title_x = 0.04f * (float)vw;
+        float ws_title_y = (ws_y_center - ws_h * 0.5f) * (float)vh - 16.0f;
+        len = append_text_glyphs(instances, len, ws_title, 48,
+                                 ws_title_x, ws_title_y, body_scale, body_color);
+
+        /* Tone number inside each cell */
+        for (int i = 0; i < KIN_WS_CELLS && len < GLYPH_BATCH_MAX - 5; i++) {
+            kin_cell_t cell = ws.cells[i];
+            float cx = cell.x * (float)vw;
+            float cy = ws_y_center * (float)vh;
+            char tone_str[4];
+            snprintf(tone_str, sizeof(tone_str), "%d", cell.tone);
+            float tw = (cell.tone >= 10) ? 10.0f : 5.0f;
+
+            float rgba[4];
+            kin_cell_rgba(cell.color, rgba);
+            glyph_color_t tone_color = cell.highlighted
+                ? (glyph_color_t){rgba[0], rgba[1], rgba[2], 1.0f}
+                : muted_color;
+            len = append_text_glyphs(instances, len, tone_str, 3,
+                                     cx - tw * body_scale, cy - 7.0f,
+                                     body_scale, tone_color);
+        }
     }
 
     /* Headline at bottom center */
