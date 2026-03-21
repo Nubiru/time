@@ -937,23 +937,28 @@ void text_pass_draw(const render_frame_t *frame) {
                                         label_theme.text_secondary.b,
                                         label_theme.text_secondary.a};
 
-    /* Sun label at origin */
+    /* Get camera basis vectors FIRST — needed for text placement */
+    vec3_t cam_right, cam_up;
+    billboard_camera_vectors(&frame->view, &cam_right, &cam_up);
+
+    /* Sun label at origin — place chars along cam_right so text always faces camera */
     {
         static const char *sun_name = "Sun";
         int slen = (int)strlen(sun_name);
         float spacing = 0.3f;
         float sx = -spacing * (float)(slen - 1) * 0.5f;
+        vec3_t base = vec3_create(0.0f, 1.0f, 0.0f);
         for (int i = 0; i < slen && len < GLYPH_BATCH_MAX; i++) {
+            vec3_t offset = vec3_scale(cam_right, sx + (float)i * spacing);
             instances[len].glyph_id = (int)sun_name[i];
-            instances[len].position = vec3_create(
-                sx + (float)i * spacing, 1.0f, 0.0f);
-            instances[len].scale    = 1.0f;
+            instances[len].position = vec3_add(base, offset);
+            instances[len].scale    = 0.6f;
             instances[len].color    = sun_label_color;
             len++;
         }
     }
 
-    /* Planet labels at orbital positions (same math as planet_pass.c) */
+    /* Planet labels at orbital positions — placed along cam_right */
     for (int p = 0; p < 8 && len < GLYPH_BATCH_MAX - 10; p++) {
         const char *name = planet_name(p);
         if (!name) continue;
@@ -982,22 +987,19 @@ void text_pass_draw(const render_frame_t *frame) {
         /* Offset label slightly above ecliptic plane */
         ly += 0.5f;
 
-        /* Place label characters centered above planet */
-        float spacing = 0.25f;
+        /* Place chars along cam_right so text reads correctly from any angle */
+        vec3_t base = vec3_create(lx, ly, lz);
+        float spacing = 0.15f;
         float sx = -spacing * (float)(nlen - 1) * 0.5f;
         for (int i = 0; i < nlen && len < GLYPH_BATCH_MAX; i++) {
+            vec3_t offset = vec3_scale(cam_right, sx + (float)i * spacing);
             instances[len].glyph_id = (int)name[i];
-            instances[len].position = vec3_create(
-                lx + sx + (float)i * spacing, ly, lz);
-            instances[len].scale    = 0.8f;
+            instances[len].position = vec3_add(base, offset);
+            instances[len].scale    = 0.5f;
             instances[len].color    = planet_label_color;
             len++;
         }
     }
-
-    /* Get camera basis vectors for billboarding */
-    vec3_t cam_right, cam_up;
-    billboard_camera_vectors(&frame->view, &cam_right, &cam_up);
 
     /* Build glyph atlas descriptor matching glyph_batch API */
     glyph_atlas_t batch_atlas = {

@@ -20,7 +20,7 @@
 /* Module-static state (S1)                                            */
 /* ------------------------------------------------------------------ */
 
-static int s_muted = 0;
+static int s_muted = 1;  /* start muted — user enables with M key */
 static int s_initialized = 0;
 static int s_frame_counter = 0;
 

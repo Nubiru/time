@@ -119,10 +119,11 @@
         });
 
         document.addEventListener('keydown', function(e) {
-            if (e.target.id === 'cmd-search') {
-                if (e.key === 'Escape' && Module && Module._ui_close_panels) {
-                    Module._ui_close_panels();
+            /* Let HTML inputs handle their own keyboard events */
+            if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+                if (e.key === 'Escape') {
                     e.target.blur();
+                    if (Module && Module._ui_close_panels) Module._ui_close_panels();
                 }
                 return;
             }
@@ -198,6 +199,9 @@
         }
         document.querySelectorAll('.panel-close').forEach(function(btn) {
             btn.addEventListener('click', function() {
+                /* Hide all JS-managed panels */
+                var bp = document.getElementById('birth-panel');
+                if (bp) bp.classList.add('hidden');
                 if (Module && Module._ui_close_panels) Module._ui_close_panels();
             });
         });

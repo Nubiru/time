@@ -28,9 +28,9 @@ app_state_t app_state_create(float aspect_ratio) {
     /* Performance LOD: target 60fps */
     state.lod = lod_init(60.0f);
 
-    /* Auto-theme: enabled by default */
-    state.auto_theme = at_from_sun_elevation(0.0);
-    state.auto_theme_enabled = 1;
+    /* Auto-theme: disabled — Cosmos (dark) only until Dawn theme is refined */
+    state.auto_theme = at_from_sun_elevation(-10.0); /* force night = Cosmos */
+    state.auto_theme_enabled = 0;
 
     /* Birth sky: default to Jan 1, 2000 — user replaces via birth entry UI */
     {

@@ -251,14 +251,21 @@ void main_loop(void) {
     ring_pass_draw(&frame);  /* concentric knowledge system rings */
     convergence_pass_draw(&frame);  /* brain convergence connection lines */
     if (ps_is_enabled(&sched, PASS_EARTH))          earth_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_BODYGRAPH))      bodygraph_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_HEXAGRAM))       hexagram_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_TREE)) {
-        tree_pass_draw(&frame);
-        tree_of_life_pass_draw(&frame); /* Richer Sefirot visualization */
+
+    /* System-specific geometric passes — only draw when focused (BUG 5 fix) */
+    if (frame.focus_mode == 5) { /* FOCUS_MODE_HD */
+        if (ps_is_enabled(&sched, PASS_BODYGRAPH))  bodygraph_pass_draw(&frame);
     }
-    if (frame.focus_mode == 1) natal_chart_pass_draw(&frame); /* Astrology wheel */
-    if (frame.focus_mode == 3) bagua_pass_draw(&frame);     /* I Ching bagua */
+    if (frame.focus_mode == 3) { /* FOCUS_MODE_ICHING */
+        if (ps_is_enabled(&sched, PASS_HEXAGRAM))   hexagram_pass_draw(&frame);
+        bagua_pass_draw(&frame);
+    }
+    if (ps_is_enabled(&sched, PASS_TREE) && frame.focus_mode == 0) {
+        /* Tree only in overview — Kabbalah has no focus key yet */
+        tree_pass_draw(&frame);
+        tree_of_life_pass_draw(&frame);
+    }
+    if (frame.focus_mode == 1) natal_chart_pass_draw(&frame); /* Astrology */
     if (ps_is_enabled(&sched, PASS_CARD))           card_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_TEXT))           text_pass_draw(&frame);
 
