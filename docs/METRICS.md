@@ -1,6 +1,6 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-21 (INFRA session 32)
+**Last refreshed**: 2026-03-21 (INFRA session 33)
 
 ## Codebase
 
@@ -39,15 +39,15 @@
 | unlabeled | 284 | Functional tests without explicit labels |
 | e2e | 5 | Playwright (WASM load, canvas, help, pause) |
 
-## Code Coverage (refreshed — 2026-03-20, session 27)
+## Code Coverage (refreshed — 2026-03-21, session 33)
 
 | Metric | Value |
 |--------|-------|
-| **Overall line coverage** | **95.9%** (34,295 / 35,751 lines) |
-| **Overall function coverage** | **99.97%** (4,071 / 4,072 functions) |
+| **Overall line coverage** | **96.0%** (35,581 / 37,053 lines) |
+| **Overall function coverage** | **99.98%** (4,233 / 4,234 functions) |
 | Uncovered functions | `spring_vec3_velocity` (vec_interp.c — advanced physics helper) |
 
-*Coverage maintained at 95.9% across 35,751 lines. 431 source files, 460 test suites. 2 coverage gaps closed this session (headline_cycle, sr_neutral_color).*
+*Coverage improved to 96.0% across 37,053 lines (+1,302 since session 27). 469 source files, 496 test suites. All new Kin Maya, Synchronotron, and Telektonon modules fully covered.*
 
 ### Foundational Math Modules
 
@@ -184,7 +184,7 @@
 
 *15 functions >80L (8 over 100L). main_loop grew from wiring (brain+motion+audio). GL passes are naturally large. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-21, session 32)
+## Health (INFRA sweep — 2026-03-21, session 33)
 
 | Check | Status |
 |-------|--------|
@@ -194,7 +194,7 @@
 | Native build | PASS (496/496 tests, 1.19s) — use -j4 for clean builds |
 | WASM build | PASS (365 KB raw, ~143 KB gzipped) |
 | E2E tests | PASS (5/5 basic + 7/10 visual, 2 skips, 1 SwiftShader) |
-| Coverage | 95.9% lines (34,295/35,751), 99.97% functions (4,071/4,072) |
+| Coverage | 96.0% lines (35,581/37,053), 99.98% functions (4,233/4,234) |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
