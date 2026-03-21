@@ -75,6 +75,7 @@ void main_loop(void) {
             br_result_t br;
             br_scan(g_state.simulation_jd, &br);
             g_state.convergence_strength = (float)br.convergence_strength;
+            br_visual_from_result(&br, &g_state.brain_visual);
             br_narrative_t story;
             if (br_narrative_compose(&br, &story)) {
                 memcpy(g_state.headline, story.headline,
@@ -208,6 +209,7 @@ void main_loop(void) {
         .focus_mode    = g_state.view.focus_mode,
     };
     memcpy(frame.headline, g_state.headline, sizeof(frame.headline));
+    frame.brain_visual = g_state.brain_visual;
 
     /* --- Get pass schedule from view state --- */
     pass_schedule_t sched = vs_blended_schedule(&g_state.view);

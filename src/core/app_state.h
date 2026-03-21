@@ -19,6 +19,7 @@
 #include "../ui/transition_fx.h"
 #include "../ui/card_flight.h"
 #include "../ui/focus_flow.h"
+#include "../systems/unified/brain_visual_bridge.h"
 
 /* All mutable application state in one place.
  * Pure functions never touch this — they receive data and return data.
@@ -84,6 +85,7 @@ typedef struct {
     double headline_jd;          /* floor(jd) of last brain scan */
     char   headline[128];        /* cached daily narrative headline */
     float  convergence_strength; /* 0.0-1.0 from brain scan */
+    br_visual_frame_t brain_visual; /* cached visual encoding for convergence_pass + ring glow */
 
     /* Timing */
     double prev_time_ms;
