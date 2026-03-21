@@ -263,4 +263,222 @@ flowchart TD
 
 ---
 
-*Diagrams follow the [C4 model](https://c4model.com/) using [Mermaid](https://mermaid.js.org/) syntax. Render in any Mermaid-compatible viewer (GitHub, VS Code, etc.).*
+## Stream Coordination Flow
+
+9 streams + MEGA + NERVE — who talks to whom, inbox/outbox routing.
+
+```mermaid
+flowchart TD
+    subgraph Command["Command Layer"]
+        GABRIEL["Gabriel (launches sessions)"]
+        MEGA["MEGA (primary — vision, coordination)"]
+        NERVE["NERVE (first mate — verify, unblock)"]
+    end
+
+    subgraph Builders["Builder Streams"]
+        VISUALS["VISUALS — How it LOOKS\n(layouts, passes, shaders)"]
+        LANGUAGE["LANGUAGE — How it SPEAKS\n(i18n, fonts, content)"]
+        MOTION["MOTION — How it MOVES\n(animation, transitions)"]
+        AUDIO["AUDIO — How it SOUNDS\n(planetary harmonics, tones)"]
+        DEPTH["DEPTH — How DEEP it goes\n(interpretation, wisdom)"]
+        BRAIN["BRAIN — How it THINKS\n(convergence, narrative)"]
+        INFRA["INFRA — How it STAYS HEALTHY\n(build, test, wiring, metrics)"]
+        PERSONA["PERSONA — How it KNOWS YOU\n(birth profile, preferences)"]
+    end
+
+    GABRIEL -->|"/stream {name}"| VISUALS & LANGUAGE & MOTION & AUDIO & DEPTH & BRAIN & INFRA & PERSONA
+    GABRIEL -->|"/mega"| MEGA
+    GABRIEL -->|"/stream nerve"| NERVE
+
+    MEGA -->|"inbox.md tasks"| VISUALS & LANGUAGE & MOTION & AUDIO & DEPTH & BRAIN & INFRA & PERSONA
+    NERVE -->|"verify claims\nwrite to inboxes"| VISUALS & LANGUAGE & INFRA
+
+    VISUALS -->|"outbox → INFRA inbox\n(wire my layouts!)"| INFRA
+    LANGUAGE -->|"outbox → INFRA inbox\n(MSDF font ready)"| INFRA
+    BRAIN -->|"outbox → DEPTH inbox\n(interpretation needed)"| DEPTH
+    INFRA -->|"outbox → MEGA\n(architecture decisions)"| MEGA
+
+    style MEGA fill:#f9d71c,color:#000
+    style NERVE fill:#7cb9e8,color:#000
+    style INFRA fill:#90ee90,color:#000
+```
+
+### File-Based Communication Protocol
+
+```mermaid
+flowchart LR
+    subgraph StreamA["Stream A"]
+        A_STATUS["status.md\n(phase, readiness)"]
+        A_OUTBOX["outbox.md\n(sent log)"]
+    end
+
+    subgraph StreamB["Stream B"]
+        B_INBOX["inbox.md\n(pending messages)"]
+        B_STATUS["status.md"]
+    end
+
+    subgraph Global["Global Files"]
+        CROSS["CROSS.md\n(dependency index)"]
+        MVP["MVP.md\n(progress scores)"]
+    end
+
+    A_OUTBOX -->|"Stream A writes\ndirectly to B's inbox"| B_INBOX
+    A_OUTBOX -.->|"copy for audit"| CROSS
+    NERVE -->|"reads all status.md\nverifies claims"| A_STATUS & B_STATUS
+    NERVE -->|"updates scores"| MVP
+```
+
+---
+
+## Knowledge Pipeline
+
+Book acquisition → extraction → routing → code → display.
+
+```mermaid
+flowchart TD
+    subgraph Acquisition["1. Acquisition"]
+        INBOX_DIR["~/Desktop/temp/time/inbox/\n(Gabriel drops PDFs)"]
+        CATALOG["docs/checklists/books.md\n(204 acquired)"]
+        MANIFEST[".context/library/manifest.json"]
+    end
+
+    subgraph Extraction["2. Extraction"]
+        QUESTIONS[".context/research/\nEXTRACTION_QUESTIONS.md"]
+        DELTA["DELTA agent\n(picks book, extracts)"]
+        DIGESTS[".context/research/digested/\n(85+ digests)"]
+    end
+
+    subgraph Routing["3. Routing"]
+        MEGA_ROUTE["MEGA reads digest\n→ identifies findings"]
+        STREAM_INBOX["Target stream inbox.md\n(specific task spec)"]
+    end
+
+    subgraph Code["4. Code"]
+        SYSTEM_C["src/systems/{name}/*.c\n(algorithms, data)"]
+        UI_C["src/ui/*_layout.c\n(visual layouts)"]
+        TESTS_C["tests/**/test_*.c\n(TDD verification)"]
+    end
+
+    subgraph Display["5. Display"]
+        TODAY_CARD["today_card.c\n(card text enrichment)"]
+        CARD_PASS["card_pass.c\n(background quads)"]
+        TEXT_PASS["text_pass.c\n(MSDF text overlay)"]
+        BROWSER["Browser — user sees it"]
+    end
+
+    subgraph Attribution["Attribution"]
+        CONTRIBUTORS["data/contributors.json\n(186+ humans honored)"]
+    end
+
+    INBOX_DIR -->|"MEGA scans on startup"| CATALOG
+    CATALOG --> MANIFEST
+    MANIFEST --> QUESTIONS
+    QUESTIONS --> DELTA
+    DELTA -->|"read PDF, answer questions"| DIGESTS
+    DIGESTS --> MEGA_ROUTE
+    MEGA_ROUTE -->|"route findings to\nowning stream"| STREAM_INBOX
+    STREAM_INBOX -->|"stream builds modules"| SYSTEM_C & UI_C
+    SYSTEM_C --> TESTS_C
+    UI_C --> TESTS_C
+    UI_C --> TODAY_CARD
+    TODAY_CARD --> TEXT_PASS
+    SYSTEM_C --> CARD_PASS
+    TEXT_PASS --> BROWSER
+    CARD_PASS --> BROWSER
+    DELTA -->|"every author"| CONTRIBUTORS
+
+    style DIGESTS fill:#f0e68c,color:#000
+    style BROWSER fill:#90ee90,color:#000
+    style CONTRIBUTORS fill:#dda0dd,color:#000
+```
+
+---
+
+## Art Asset Pipeline
+
+Reference material → generation → optimization → display.
+
+```mermaid
+flowchart LR
+    subgraph Reference["1. Reference"]
+        BOOKS["Library books\n(Itten, Albers, Tufte)"]
+        RESEARCH["Stream research docs\n(visual surveys)"]
+    end
+
+    subgraph Generation["2. Generation"]
+        PROMPT["DALL-E / Midjourney\nprompt crafting"]
+        GABRIEL_GEN["Gabriel generates\nimages externally"]
+        RAW["Raw PNG/SVG assets"]
+    end
+
+    subgraph Optimization["3. Optimization (ART stream)"]
+        COMPRESS["Compress / resize\n(WebGL texture limits)"]
+        ATLAS["Atlas packing\n(MSDF, sprite sheets)"]
+        C_HEADER["gen_msdf_header.py\n→ C header with pixel data"]
+    end
+
+    subgraph Integration["4. Integration (INFRA)"]
+        DATA_H["src/render/*_data.h\n(embedded atlas)"]
+        PASS_C["Render pass .c\n(GL texture upload)"]
+        WASM["WASM binary\n(asset embedded)"]
+    end
+
+    BOOKS --> PROMPT
+    RESEARCH --> PROMPT
+    PROMPT --> GABRIEL_GEN --> RAW
+    RAW --> COMPRESS --> ATLAS --> C_HEADER
+    C_HEADER --> DATA_H --> PASS_C --> WASM
+
+    style GABRIEL_GEN fill:#f9d71c,color:#000
+    style WASM fill:#90ee90,color:#000
+```
+
+---
+
+## Experience Verification Pipeline
+
+How we verify that code changes produce visible, correct output.
+
+```mermaid
+flowchart TD
+    subgraph CodeChange["1. Code Change"]
+        WRITER["Writer agent\n(TDD: test → header → code)"]
+        BUILD["cmake --build\n(zero warnings)"]
+        CTEST["ctest -j12\n(518+ unit/contract tests)"]
+    end
+
+    subgraph WASMVerify["2. WASM Verification"]
+        WASM_BUILD["emcmake cmake\n→ index.wasm (618 KB)"]
+        SERVE["python3 -m http.server 8080"]
+        BROWSER["Open in Chrome/Firefox"]
+    end
+
+    subgraph VisualCheck["3. Visual Verification"]
+        SCREENSHOT["Manual screenshot\nor Playwright E2E"]
+        COMPARE["Compare against\nexpected output"]
+        PASS_FAIL{Pass?}
+    end
+
+    subgraph Feedback["4. Feedback Loop"]
+        PASS["✅ Commit + push\nUpdate status.md"]
+        FAIL["❌ File bug to\nowning stream inbox"]
+        WIRING["🟡 Module works but\ndisplay blank → INFRA"]
+    end
+
+    WRITER --> BUILD --> CTEST
+    CTEST -->|"all pass"| WASM_BUILD
+    CTEST -->|"failure"| WRITER
+    WASM_BUILD --> SERVE --> BROWSER
+    BROWSER --> SCREENSHOT --> COMPARE --> PASS_FAIL
+    PASS_FAIL -->|"yes"| PASS
+    PASS_FAIL -->|"no — logic bug"| FAIL
+    PASS_FAIL -->|"no — not wired"| WIRING
+
+    style PASS fill:#90ee90,color:#000
+    style FAIL fill:#ff6b6b,color:#000
+    style WIRING fill:#ffd700,color:#000
+```
+
+---
+
+*Diagrams follow the [C4 model](https://c4model.com/) and process flow conventions using [Mermaid](https://mermaid.js.org/) syntax. Render in any Mermaid-compatible viewer (GitHub, VS Code, etc.).*
