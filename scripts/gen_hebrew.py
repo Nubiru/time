@@ -253,6 +253,117 @@ KEY_TRANSLATIONS = {
     "hebrew.holiday.5.name": "\u05d7\u05e0\u05d5\u05db\u05d4",  # חנוכה
     "hebrew.holiday.6.name": "\u05e4\u05d5\u05e8\u05d9\u05dd",  # פורים
 
+    # Hebrew month qualities/briefs/senses/tribes
+    "hebrew.month.1.quality": "\u05d2\u05d0\u05d5\u05dc\u05d4",  # גאולה (Redemption)
+    "hebrew.month.1.sense": "\u05d3\u05d9\u05d1\u05d5\u05e8",    # דיבור (Speech)
+    "hebrew.month.1.tribe": "\u05d9\u05d4\u05d5\u05d3\u05d4",    # יהודה (Judah)
+    "hebrew.month.1.brief": "\u05d7\u05d5\u05d3\u05e9 \u05d4\u05e0\u05d9\u05e1\u05d9\u05dd \u05d5\u05d4\u05e9\u05d7\u05e8\u05d5\u05e8 \u2014 \u05e4\u05e1\u05d7",  # חודש הניסים והשחרור — פסח
+    "hebrew.month.2.quality": "\u05d4\u05e8\u05d4\u05d5\u05e8",  # הרהור (Reflection)
+    "hebrew.month.2.sense": "\u05de\u05d7\u05e9\u05d1\u05d4",    # מחשבה (Thought)
+    "hebrew.month.2.tribe": "\u05d9\u05e9\u05e9\u05db\u05e8",    # יששכר (Issachar)
+    "hebrew.month.3.quality": "\u05e7\u05d1\u05dc\u05d4",        # קבלה (Receiving)
+    "hebrew.month.3.sense": "\u05d4\u05dc\u05d9\u05db\u05d4",    # הליכה (Walking)
+    "hebrew.month.3.tribe": "\u05d6\u05d1\u05d5\u05dc\u05d5\u05df",  # זבולון (Zebulun)
+    "hebrew.month.4.quality": "\u05e8\u05d0\u05d9\u05d9\u05d4",  # ראייה (Sight)
+    "hebrew.month.4.sense": "\u05e8\u05d0\u05d9\u05d9\u05d4",    # ראייה (Sight)
+    "hebrew.month.4.tribe": "\u05e8\u05d0\u05d5\u05d1\u05df",    # ראובן (Reuben)
+    "hebrew.month.5.quality": "\u05e9\u05de\u05d9\u05e2\u05d4",  # שמיעה (Hearing)
+    "hebrew.month.5.sense": "\u05e9\u05de\u05d9\u05e2\u05d4",    # שמיעה (Hearing)
+    "hebrew.month.5.tribe": "\u05e9\u05de\u05e2\u05d5\u05df",    # שמעון (Simeon)
+    "hebrew.month.6.quality": "\u05ea\u05e9\u05d5\u05d1\u05d4",  # תשובה (Return)
+    "hebrew.month.6.sense": "\u05e4\u05e2\u05d5\u05dc\u05d4",    # פעולה (Action)
+    "hebrew.month.6.tribe": "\u05d2\u05d3",                      # גד (Gad)
+    "hebrew.month.7.quality": "\u05de\u05d2\u05e2",              # מגע (Touch)
+    "hebrew.month.7.sense": "\u05de\u05d2\u05e2",                # מגע (Touch)
+    "hebrew.month.7.tribe": "\u05d0\u05e4\u05e8\u05d9\u05dd",    # אפרים (Ephraim)
+    "hebrew.month.8.quality": "\u05e8\u05d9\u05d7",              # ריח (Smell)
+    "hebrew.month.8.sense": "\u05e8\u05d9\u05d7",                # ריח (Smell)
+    "hebrew.month.8.tribe": "\u05de\u05e0\u05e9\u05d4",          # מנשה (Manasseh)
+    "hebrew.month.9.quality": "\u05e9\u05d9\u05e0\u05d4",        # שינה (Sleep)
+    "hebrew.month.9.sense": "\u05e9\u05d9\u05e0\u05d4",          # שינה (Sleep)
+    "hebrew.month.9.tribe": "\u05d1\u05e0\u05d9\u05de\u05d9\u05df",  # בנימין (Benjamin)
+    "hebrew.month.10.quality": "\u05db\u05e2\u05e1",             # כעס (Anger)
+    "hebrew.month.10.sense": "\u05db\u05e2\u05e1",               # כעס (Anger)
+    "hebrew.month.10.tribe": "\u05d3\u05df",                     # דן (Dan)
+    "hebrew.month.11.quality": "\u05d8\u05e2\u05dd",             # טעם (Taste)
+    "hebrew.month.11.sense": "\u05d0\u05db\u05d9\u05dc\u05d4",   # אכילה (Eating)
+    "hebrew.month.11.tribe": "\u05d0\u05e9\u05e8",               # אשר (Asher)
+    "hebrew.month.12.quality": "\u05e9\u05de\u05d7\u05d4",       # שמחה (Joy)
+    "hebrew.month.12.sense": "\u05e6\u05d7\u05d5\u05e7",         # צחוק (Laughter)
+    "hebrew.month.12.tribe": "\u05e0\u05e4\u05ea\u05dc\u05d9",   # נפתלי (Naphtali)
+
+    # Hebrew holiday briefs
+    "hebrew.holiday.0.brief": "\u05e8\u05d0\u05e9 \u05d4\u05e9\u05e0\u05d4 \u2014 \u05d9\u05d5\u05dd \u05d4\u05d3\u05d9\u05df, \u05ea\u05e7\u05d9\u05e2\u05ea \u05d4\u05e9\u05d5\u05e4\u05e8",
+    "hebrew.holiday.1.brief": "\u05d9\u05d5\u05dd \u05db\u05d9\u05e4\u05d5\u05e8 \u2014 \u05d9\u05d5\u05dd \u05d4\u05e6\u05d5\u05dd \u05d5\u05d4\u05ea\u05e9\u05d5\u05d1\u05d4",
+    "hebrew.holiday.2.brief": "\u05e1\u05d5\u05db\u05d5\u05ea \u2014 \u05d7\u05d2 \u05d4\u05e7\u05e6\u05d9\u05e8, \u05e9\u05de\u05d7\u05d4 \u05d1\u05d8\u05d1\u05e2",
+    "hebrew.holiday.3.brief": "\u05e4\u05e1\u05d7 \u2014 \u05d7\u05d2 \u05d4\u05d7\u05d9\u05e8\u05d5\u05ea, \u05d6\u05db\u05e8\u05d5\u05df \u05d9\u05e6\u05d9\u05d0\u05ea \u05de\u05e6\u05e8\u05d9\u05dd",
+    "hebrew.holiday.4.brief": "\u05e9\u05d1\u05d5\u05e2\u05d5\u05ea \u2014 \u05de\u05ea\u05df \u05ea\u05d5\u05e8\u05d4, \u05d7\u05d2 \u05d4\u05e7\u05e6\u05d9\u05e8",
+    "hebrew.holiday.5.brief": "\u05d7\u05e0\u05d5\u05db\u05d4 \u2014 \u05d7\u05d2 \u05d4\u05d0\u05d5\u05e8\u05d5\u05ea, \u05e0\u05e1 \u05d4\u05d7\u05e0\u05d5\u05db\u05d9\u05d4",
+    "hebrew.holiday.6.brief": "\u05e4\u05d5\u05e8\u05d9\u05dd \u2014 \u05d7\u05d2 \u05d4\u05e9\u05de\u05d7\u05d4, \u05de\u05d2\u05d9\u05dc\u05ea \u05d0\u05e1\u05ea\u05e8",
+
+    # Astrology sign briefs (Hebrew)
+    "astrology.sign.0.brief": "\u05d4\u05e0\u05d9\u05e6\u05d5\u05e5 \u05e9\u05de\u05ea\u05d7\u05d9\u05dc \u2014 \u05d0\u05d5\u05de\u05e5 \u05d2\u05d5\u05dc\u05de\u05d9 \u05dc\u05d4\u05ea\u05e7\u05d9\u05d9\u05dd",
+    "astrology.sign.1.brief": "\u05d4\u05d0\u05d3\u05de\u05d4 \u05e9\u05e1\u05d5\u05d1\u05dc\u05ea \u2014 \u05d8\u05d9\u05e4\u05d5\u05d7 \u05e1\u05d1\u05dc\u05e0\u05d9 \u05e9\u05dc \u05d9\u05d5\u05e4\u05d9",
+    "astrology.sign.2.brief": "\u05d4\u05e8\u05d5\u05d7 \u05e9\u05de\u05d7\u05d1\u05e8\u05ea \u2014 \u05ea\u05e7\u05e9\u05d5\u05e8\u05ea \u05e1\u05e7\u05e8\u05e0\u05d5\u05ea \u05d0\u05d9\u05e0\u05e1\u05d5\u05e4\u05d9\u05ea",
+    "astrology.sign.3.brief": "\u05d4\u05d9\u05dd \u05e9\u05de\u05d8\u05e4\u05d7 \u2014 \u05e2\u05d5\u05de\u05e7 \u05e8\u05d2\u05e9\u05d9 \u05e9\u05dc \u05d0\u05d9\u05e0\u05d8\u05d5\u05d0\u05d9\u05e6\u05d9\u05d4",
+    "astrology.sign.4.brief": "\u05d4\u05d0\u05e9 \u05e9\u05d1\u05de\u05e8\u05db\u05d6 \u2014 \u05d4\u05d1\u05e2\u05ea \u05e2\u05e6\u05de\u05d9\u05ea \u05d9\u05e6\u05d9\u05e8\u05ea\u05d9\u05ea",
+    "astrology.sign.5.brief": "\u05d4\u05d0\u05d3\u05de\u05d4 \u05e9\u05de\u05e0\u05ea\u05d7\u05ea \u2014 \u05e9\u05d9\u05e8\u05d5\u05ea \u05d3\u05e8\u05da \u05d3\u05d9\u05d5\u05e7",
+    "astrology.sign.6.brief": "\u05d4\u05d0\u05d5\u05d5\u05d9\u05e8 \u05e9\u05de\u05d0\u05d6\u05df \u2014 \u05d4\u05e8\u05de\u05d5\u05e0\u05d9\u05d4 \u05d3\u05e8\u05da \u05d9\u05d7\u05e1\u05d9\u05dd",
+    "astrology.sign.7.brief": "\u05d4\u05de\u05d9\u05dd \u05e9\u05de\u05e9\u05e0\u05d9\u05dd \u2014 \u05e2\u05d5\u05de\u05e7 \u05e8\u05d2\u05e9\u05d9 \u05e9\u05dc \u05d4\u05ea\u05d7\u05d3\u05e9\u05d5\u05ea",
+    "astrology.sign.8.brief": "\u05d4\u05d0\u05e9 \u05e9\u05e9\u05d5\u05d0\u05e4\u05ea \u2014 \u05d4\u05e8\u05e4\u05ea\u05e7\u05d4 \u05d3\u05e8\u05da \u05d7\u05d5\u05e4\u05e9",
+    "astrology.sign.9.brief": "\u05d4\u05d0\u05d3\u05de\u05d4 \u05e9\u05de\u05d8\u05e4\u05e1\u05ea \u2014 \u05de\u05e2\u05e9\u05d9\u05d5\u05ea \u05d3\u05e8\u05da \u05de\u05e9\u05de\u05e2\u05ea",
+    "astrology.sign.10.brief": "\u05d4\u05d0\u05d5\u05d5\u05d9\u05e8 \u05e9\u05de\u05d7\u05d3\u05e9 \u2014 \u05d7\u05d6\u05d5\u05df \u05dc\u05e2\u05ea\u05d9\u05d3",
+    "astrology.sign.11.brief": "\u05d4\u05de\u05d9\u05dd \u05e9\u05de\u05e8\u05d2\u05d9\u05e9\u05d9\u05dd \u2014 \u05d7\u05de\u05dc\u05d4 \u05d3\u05e8\u05da \u05d3\u05de\u05d9\u05d5\u05df",
+
+    # Astrology sign keywords (Hebrew)
+    "astrology.sign.0.keywords": "\u05d0\u05d5\u05de\u05e5, \u05d9\u05d5\u05d6\u05de\u05d4, \u05e2\u05e6\u05de\u05d0\u05d5\u05ea",
+    "astrology.sign.1.keywords": "\u05d9\u05e6\u05d9\u05d1\u05d5\u05ea, \u05d7\u05d5\u05e9\u05e0\u05d9\u05d5\u05ea, \u05d4\u05ea\u05de\u05d3\u05d4",
+    "astrology.sign.2.keywords": "\u05ea\u05e7\u05e9\u05d5\u05e8\u05ea, \u05d2\u05de\u05d9\u05e9\u05d5\u05ea, \u05e1\u05e7\u05e8\u05e0\u05d5\u05ea",
+    "astrology.sign.3.keywords": "\u05d0\u05d9\u05e0\u05d8\u05d5\u05d0\u05d9\u05e6\u05d9\u05d4, \u05d4\u05d2\u05e0\u05d4, \u05e8\u05d2\u05e9\u05d9\u05d5\u05ea",
+    "astrology.sign.4.keywords": "\u05d9\u05e6\u05d9\u05e8\u05ea\u05d9\u05d5\u05ea, \u05e0\u05d3\u05d9\u05d1\u05d5\u05ea, \u05de\u05e0\u05d4\u05d9\u05d2\u05d5\u05ea",
+    "astrology.sign.5.keywords": "\u05e0\u05d9\u05ea\u05d5\u05d7, \u05e9\u05d9\u05e8\u05d5\u05ea, \u05d3\u05d9\u05d5\u05e7",
+    "astrology.sign.6.keywords": "\u05d4\u05e8\u05de\u05d5\u05e0\u05d9\u05d4, \u05d3\u05d9\u05e4\u05dc\u05d5\u05de\u05d8\u05d9\u05d4, \u05e6\u05d3\u05e7",
+    "astrology.sign.7.keywords": "\u05e2\u05d5\u05e6\u05de\u05d4, \u05d4\u05ea\u05d7\u05d3\u05e9\u05d5\u05ea, \u05ea\u05e9\u05d5\u05e7\u05d4",
+    "astrology.sign.8.keywords": "\u05d4\u05e8\u05e4\u05ea\u05e7\u05d4, \u05d0\u05d5\u05e4\u05d8\u05d9\u05de\u05d9\u05d5\u05ea, \u05d7\u05d9\u05e4\u05d5\u05e9",
+    "astrology.sign.9.keywords": "\u05de\u05e9\u05de\u05e2\u05ea, \u05e9\u05d0\u05d9\u05e4\u05d4, \u05d0\u05d7\u05e8\u05d9\u05d5\u05ea",
+    "astrology.sign.10.keywords": "\u05d7\u05d3\u05e9\u05e0\u05d5\u05ea, \u05d0\u05e0\u05d5\u05e9\u05d9\u05d5\u05ea, \u05de\u05e8\u05d3\u05e0\u05d5\u05ea",
+    "astrology.sign.11.keywords": "\u05d7\u05de\u05dc\u05d4, \u05d3\u05de\u05d9\u05d5\u05df, \u05d0\u05d9\u05e0\u05d8\u05d5\u05d0\u05d9\u05e6\u05d9\u05d4",
+
+    # Astrology elements — expression field
+    "astrology.element.0.name": "\u05d0\u05e9",
+    "astrology.element.0.expression": "\u05d3\u05e8\u05da \u05e4\u05e2\u05d5\u05dc\u05d4, \u05d4\u05e9\u05e8\u05d0\u05d4 \u05d5\u05d4\u05ea\u05dc\u05d4\u05d1\u05d5\u05ea",
+    "astrology.element.1.name": "\u05d0\u05d3\u05de\u05d4",
+    "astrology.element.1.expression": "\u05d3\u05e8\u05da \u05de\u05e2\u05e9\u05d9\u05d5\u05ea, \u05d1\u05e0\u05d9\u05d9\u05d4 \u05d5\u05d7\u05d5\u05e9\u05e0\u05d9\u05d5\u05ea",
+    "astrology.element.2.name": "\u05d0\u05d5\u05d5\u05d9\u05e8",
+    "astrology.element.2.expression": "\u05d3\u05e8\u05da \u05de\u05d7\u05e9\u05d1\u05d4, \u05ea\u05e7\u05e9\u05d5\u05e8\u05ea \u05d5\u05e8\u05e2\u05d9\u05d5\u05e0\u05d5\u05ea",
+    "astrology.element.3.name": "\u05de\u05d9\u05dd",
+    "astrology.element.3.expression": "\u05d3\u05e8\u05da \u05e8\u05d2\u05e9, \u05d0\u05d9\u05e0\u05d8\u05d5\u05d0\u05d9\u05e6\u05d9\u05d4 \u05d5\u05d7\u05de\u05dc\u05d4",
+
+    # Convergence strength names + descriptions (Hebrew)
+    "convergence.strength.0.name": "\u05d9\u05d9\u05e9\u05d5\u05e8 \u05e7\u05dc",          # יישור קל (Minor Alignment)
+    "convergence.strength.0.description": "\u05e9\u05ea\u05d9 \u05de\u05e2\u05e8\u05db\u05d5\u05ea \u05d7\u05d5\u05dc\u05e7\u05d5\u05ea \u05e8\u05d2\u05e2 \u05de\u05e9\u05de\u05e2\u05d5\u05ea\u05d9",
+    "convergence.strength.1.name": "\u05d4\u05ea\u05db\u05e0\u05e1\u05d5\u05ea \u05de\u05e9\u05de\u05e2\u05d5\u05ea\u05d9\u05ea",
+    "convergence.strength.1.description": "\u05e9\u05dc\u05d5\u05e9 \u05de\u05e2\u05e8\u05db\u05d5\u05ea \u05de\u05ea\u05d9\u05d9\u05e9\u05e8\u05d5\u05ea \u05d1\u05d5-\u05d6\u05de\u05e0\u05d9\u05ea",
+    "convergence.strength.2.name": "\u05d4\u05ea\u05db\u05e0\u05e1\u05d5\u05ea \u05d2\u05d3\u05d5\u05dc\u05d4",
+    "convergence.strength.2.description": "\u05d0\u05e8\u05d1\u05e2 \u05de\u05e2\u05e8\u05db\u05d5\u05ea \u05d0\u05d5 \u05d9\u05d5\u05ea\u05e8 \u05de\u05ea\u05db\u05e0\u05e1\u05d5\u05ea",
+    "convergence.strength.3.name": "\u05d4\u05ea\u05db\u05e0\u05e1\u05d5\u05ea \u05e0\u05d3\u05d9\u05e8\u05d4",
+    "convergence.strength.3.description": "\u05d7\u05de\u05e9 \u05de\u05e2\u05e8\u05db\u05d5\u05ea \u05d0\u05d5 \u05d9\u05d5\u05ea\u05e8 \u05d1\u05d9\u05d9\u05e9\u05d5\u05e8",
+
+    # Convergence system names
+    "convergence.system.0.system_name": "\u05d0\u05e1\u05d8\u05e8\u05d5\u05e0\u05d5\u05de\u05d9\u05d4",  # אסטרונומיה
+    "convergence.system.1.system_name": "\u05d0\u05e1\u05d8\u05e8\u05d5\u05dc\u05d5\u05d2\u05d9\u05d4",  # אסטרולוגיה
+    "convergence.system.2.system_name": "\u05e6\u05d5\u05dc\u05e7\u05d9\u05df",  # צולקין
+    "convergence.system.3.system_name": "\u05d0\u05d9 \u05e6\u05f3\u05d9\u05e0\u05d2",  # אי צ'ינג
+    "convergence.system.4.system_name": "\u05e2\u05d9\u05e6\u05d5\u05d1 \u05d0\u05e0\u05d5\u05e9\u05d9",  # עיצוב אנושי
+    "convergence.system.5.system_name": "\u05e1\u05d9\u05e0\u05d9",  # סיני
+    "convergence.system.6.system_name": "\u05d2\u05e8\u05d2\u05d5\u05e8\u05d9\u05d0\u05e0\u05d9",  # גרגוריאני
+    "convergence.system.7.system_name": "\u05e2\u05d1\u05e8\u05d9",  # עברי
+    "convergence.system.8.system_name": "\u05d0\u05e1\u05dc\u05d0\u05de\u05d9",  # אסלאמי
+    "convergence.system.9.system_name": "\u05d1\u05d5\u05d3\u05d4\u05d9\u05e1\u05d8\u05d9",  # בודהיסטי
+    "convergence.system.10.system_name": "\u05d4\u05d9\u05e0\u05d3\u05d5",  # הינדו
+    "convergence.system.11.system_name": "\u05e7\u05d1\u05dc\u05d4",  # קבלה
+    "convergence.system.12.system_name": "\u05d2\u05d9\u05d0\u05d5\u05dc\u05d5\u05d2\u05d9\u05d4",  # גיאולוגיה
+
     # Islamic months (Hebrew transliteration)
     "islamic.month.1.name": "\u05de\u05d5\u05d7\u05e8\u05dd",  # מוחרם
     "islamic.month.2.name": "\u05e6\u05e4\u05e8",           # צפר
