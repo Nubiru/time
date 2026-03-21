@@ -10,6 +10,7 @@ set(TZOLKIN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/thirteen_moon.c
     ${CMAKE_CURRENT_SOURCE_DIR}/heptad_gate.c
     ${CMAKE_CURRENT_SOURCE_DIR}/hunab_ku_21.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/lenses_of_time.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -24,4 +25,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_thirteen_moon   OBJECT thirteen_moon.c)
     add_library(time_heptad_gate     OBJECT heptad_gate.c)
     add_library(time_hunab_ku_21    OBJECT hunab_ku_21.c)
+    add_library(time_lenses_of_time  OBJECT lenses_of_time.c)
 endif()

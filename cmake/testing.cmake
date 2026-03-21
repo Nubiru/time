@@ -226,6 +226,7 @@ time_add_test(NAME test_tzolkin_i18n TEST tests/systems/tzolkin/test_tzolkin_i18
 time_add_test(NAME test_tzolkin_today TEST tests/systems/tzolkin/test_tzolkin_today.c DEPS tzolkin_today tzolkin dreamspell tzolkin_board haab cr_cycle julian tzolkin_interpret content_i18n i18n)
 time_add_test(NAME test_heptad_gate  TEST tests/systems/tzolkin/test_heptad_gate.c  DEPS heptad_gate)
 time_add_test(NAME test_hunab_ku_21 TEST tests/systems/tzolkin/test_hunab_ku_21.c DEPS hunab_ku_21)
+time_add_test(NAME test_lenses_of_time TEST tests/systems/tzolkin/test_lenses_of_time.c DEPS lenses_of_time)
 time_add_test(NAME test_coptic         TEST tests/systems/coptic/test_coptic.c        DEPS coptic calendar_fixed)
 time_add_test(NAME test_coptic_interpret TEST tests/systems/coptic/test_coptic_interpret.c DEPS coptic_interpret content_i18n i18n)
 time_add_test(NAME test_coptic_i18n TEST tests/systems/coptic/test_coptic_i18n.c DEPS coptic_interpret content_i18n i18n)
