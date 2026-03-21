@@ -152,6 +152,17 @@ void test_headline_number(void) {
     TEST_ASSERT_NOT_NULL(strstr(buf, "Sacred number"));
 }
 
+void test_headline_cycle(void) {
+    br_insight_t c;
+    memset(&c, 0, sizeof(c));
+    c.type = BR_INSIGHT_CYCLE;
+    strncpy(c.headline, "Tzolkin wavespell boundary", BR_HEADLINE_MAX - 1);
+    char buf[128];
+    br_narrative_headline(&c, buf, sizeof(buf));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Cycle milestone"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Tzolkin wavespell boundary"));
+}
+
 void test_headline_astronomical(void) {
     br_insight_t a;
     memset(&a, 0, sizeof(a));
@@ -286,6 +297,7 @@ int main(void) {
     RUN_TEST(test_headline_convergence_four_systems);
     RUN_TEST(test_headline_festival);
     RUN_TEST(test_headline_number);
+    RUN_TEST(test_headline_cycle);
     RUN_TEST(test_headline_astronomical);
 
     /* Summaries */

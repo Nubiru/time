@@ -146,7 +146,19 @@ void test_sr_depth_layout_segments_valid(void)
     }
 }
 
-/* 18. At least 10 known systems */
+/* 18. Unknown system ID returns neutral gray color */
+void test_sr_system_def_unknown_neutral(void)
+{
+    sr_system_def_t def = sr_system_def(999);
+    /* neutral fallback = 0.6, 0.6, 0.6 */
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 0.6f, def.color[0]);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 0.6f, def.color[1]);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 0.6f, def.color[2]);
+    TEST_ASSERT_EQUAL_STRING("Unknown", def.label);
+    TEST_ASSERT_EQUAL_INT(-1, def.today_index);
+}
+
+/* 19. At least 10 known systems */
 void test_sr_known_system_count(void)
 {
     TEST_ASSERT_TRUE(sr_known_system_count() >= 10);
@@ -172,6 +184,7 @@ int main(void)
     RUN_TEST(test_sr_depth_layout_6_rings);
     RUN_TEST(test_sr_depth_representative_valid);
     RUN_TEST(test_sr_depth_layout_segments_valid);
+    RUN_TEST(test_sr_system_def_unknown_neutral);
     RUN_TEST(test_sr_known_system_count);
     return UNITY_END();
 }

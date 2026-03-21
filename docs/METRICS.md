@@ -1,16 +1,16 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 26)
+**Last refreshed**: 2026-03-20 (INFRA session 27)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 428 |
-| Header files (.h) | 429 |
+| Source files (.c) | 431 |
+| Header files (.h) | 432 |
 | Lines of code (src/) | 143,487 |
 | Lines of tests | 185,000+ |
-| Test suites (CTest) | 455 |
+| Test suites (CTest) | 460 |
 | Render pass files | 19 |
 | Pure modules | 399+ |
 | Stateful modules | 29 |
@@ -20,11 +20,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 455 |
-| Test functions (RUN_TEST) | 17,132 |
-| Test assertions (TEST_ASSERT) | 29,891 |
+| Test suites (CTest) | 460 |
+| Test functions (RUN_TEST) | 17,132+ |
+| Test assertions (TEST_ASSERT) | 29,891+ |
 | Failures | 0 |
-| CTest time | 1.15s (with -j4, benchmarks included) |
+| CTest time | 1.44s (with -j4, benchmarks included) |
 | E2E tests (Playwright) | 15 (5 basic + 10 visual) |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -39,15 +39,15 @@
 | unlabeled | 284 | Functional tests without explicit labels |
 | e2e | 5 | Playwright (WASM load, canvas, help, pause) |
 
-## Code Coverage (refreshed — 2026-03-20, session 23)
+## Code Coverage (refreshed — 2026-03-20, session 27)
 
 | Metric | Value |
 |--------|-------|
-| **Overall line coverage** | **95.9%** (34,125 / 35,590 lines) |
-| **Overall function coverage** | **99.9%** (4,054 / 4,057 functions) |
-| Uncovered functions | `spring_vec3_velocity`, `headline_cycle`, `tfx_tick` |
+| **Overall line coverage** | **95.9%** (34,295 / 35,751 lines) |
+| **Overall function coverage** | **99.97%** (4,071 / 4,072 functions) |
+| Uncovered functions | `spring_vec3_velocity` (vec_interp.c — advanced physics helper) |
 
-*Coverage maintained at 95.9% across 35,590 lines (+3,975 since session 14). 428 source files, 455 test suites.*
+*Coverage maintained at 95.9% across 35,751 lines. 431 source files, 460 test suites. 2 coverage gaps closed this session (headline_cycle, sr_neutral_color).*
 
 ### Foundational Math Modules
 
@@ -181,17 +181,17 @@
 
 *13 functions >80L (5 over 100L). All domain-specific logic. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-20, session 26)
+## Health (INFRA sweep — 2026-03-20, session 27)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (428 .c files, 0 orphans) |
+| Build system sync | OK (431 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 23) |
-| Native build | PASS (455/455 tests, 0.90s) — use -j4 for clean builds |
+| Native build | PASS (460/460 tests, 1.44s) — use -j4 for clean builds |
 | WASM build | PASS (363 KB raw, ~143 KB gzipped) |
 | E2E tests | PASS (5/5 basic + 7/10 visual, 2 skips, 1 SwiftShader) |
-| Coverage | 95.9% lines (34,125/35,590), 99.9% functions (4,054/4,057) |
+| Coverage | 95.9% lines (34,295/35,751), 99.97% functions (4,071/4,072) |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
