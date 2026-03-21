@@ -13,6 +13,8 @@ set(TZOLKIN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/lenses_of_time.c
     ${CMAKE_CURRENT_SOURCE_DIR}/clear_signs.c
     ${CMAKE_CURRENT_SOURCE_DIR}/telektonon_board.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/telektonon_journey.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/force_lines.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -29,5 +31,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_hunab_ku_21    OBJECT hunab_ku_21.c)
     add_library(time_lenses_of_time  OBJECT lenses_of_time.c)
     add_library(time_clear_signs     OBJECT clear_signs.c)
-    add_library(time_telektonon_board OBJECT telektonon_board.c)
+    add_library(time_telektonon_board   OBJECT telektonon_board.c)
+    add_library(time_telektonon_journey OBJECT telektonon_journey.c)
+    add_library(time_force_lines        OBJECT force_lines.c)
 endif()
