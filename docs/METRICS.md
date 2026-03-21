@@ -1,16 +1,16 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-21 (INFRA session 28)
+**Last refreshed**: 2026-03-21 (INFRA session 29)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 436 |
-| Header files (.h) | 437 |
-| Lines of code (src/) | 148,100 |
+| Source files (.c) | 438 |
+| Header files (.h) | 439 |
+| Lines of code (src/) | 148,100+ |
 | Lines of tests | 185,000+ |
-| Test suites (CTest) | 463 |
+| Test suites (CTest) | 465 |
 | Render pass files | 19 |
 | Pure modules | 399+ |
 | Stateful modules | 29 |
@@ -20,7 +20,7 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 463 |
+| Test suites (CTest) | 465 |
 | Test functions (RUN_TEST) | 17,132+ |
 | Test assertions (TEST_ASSERT) | 29,891+ |
 | Failures | 0 |
@@ -183,14 +183,14 @@
 
 *15 functions >80L (8 over 100L). main_loop grew from wiring (brain+motion+audio). GL passes are naturally large. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-21, session 28)
+## Health (INFRA sweep — 2026-03-21, session 29)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (436 .c files, 0 orphans) |
+| Build system sync | OK (438 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 23) |
-| Native build | PASS (463/463 tests, 1.43s) — use -j4 for clean builds |
+| Native build | PASS (465/465 tests, 1.43s) — use -j4 for clean builds |
 | WASM build | PASS (363 KB raw, ~143 KB gzipped) |
 | E2E tests | PASS (5/5 basic + 7/10 visual, 2 skips, 1 SwiftShader) |
 | Coverage | 95.9% lines (34,295/35,751), 99.97% functions (4,071/4,072) |
@@ -202,3 +202,6 @@
 | Motion wiring | ALL 9 motion modules in core — MOTION fully wired |
 | Interpret locale | 32 systems have interpret_locale — LANGUAGE i18n fully deployed |
 | Content encoding | CLEAN — encoding fix (session 22→23, commit 67079b7) |
+| Header deps | CLEAN — 0 cycles, 0 purity violations, 0 missing, max depth 7 (scripts/check_deps.py) |
+| ASan/UBSan | PASS (461/461, zero findings, session 28) |
+| Shader budget | All 19 passes under 8KB (largest: sun_shader 4.5KB) |
