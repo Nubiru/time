@@ -23,6 +23,9 @@ static const content_table_t content_tables[I18N_LOCALE_COUNT] = {
 #ifdef GEN_CONTENT_ES_COUNT
     [I18N_LOCALE_ES] = { gen_content_es, GEN_CONTENT_ES_COUNT },
 #endif
+#ifdef GEN_CONTENT_PT_COUNT
+    [I18N_LOCALE_PT] = { gen_content_pt, GEN_CONTENT_PT_COUNT },
+#endif
 };
 
 /* ---- Binary search over sorted entry array ---- */
