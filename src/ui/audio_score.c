@@ -375,37 +375,74 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
         result.amplitudes[i] = clampf(result.amplitudes[i], 0.0f, 1.0f);
     }
 
-    /* Cultural timbre overlay (L2.3):
-     * When the brain detects a convergence involving a specific calendar
-     * system, add that system's cultural timbre on oscillator slot 8.
-     * This gives each system a unique sonic identity (wooden flute for
-     * Tzolkin, singing bowl for Buddhist, shofar for Hebrew, etc.). */
+    /* Convergence chord (L2.3 + S111):
+     * Scan ALL brain insights, collect converging systems with timbres.
+     * Blend their frequencies (weighted average) and merge harmonic
+     * partials (take richest spectrum). More convergence = richer sound.
+     * Single-system convergence sounds like that system's instrument.
+     * Multi-system convergence sounds like a blended composite. */
     {
-        const br_insight_t *top = br_top_insight(&br);
-        if (top && top->system_count > 0 && top->score > 0.3) {
-            int sys = top->systems[0];
-            if (audio_culture_has_timbre((cd_system_t)sys)) {
-                audio_culture_t culture = audio_culture_get((cd_system_t)sys);
-                result.focused_system = sys;
+        float blend_freq = 0.0f;
+        float blend_amp = 0.0f;
+        float blend_partials[AS_MAX_HARMONICS];
+        int blend_max_partials = 0;
+        float weight_sum = 0.0f;
+        int system_count = 0;
+        int primary_sys = -1;
 
-                /* Fill next available slot with cultural timbre */
-                int slot = result.planet_count;
-                if (slot < AS_MAX_PLANETS) {
-                    result.frequencies[slot] = culture.base_freq_hz;
-                    /* Subtle blend: scale by event intensity */
-                    result.amplitudes[slot] = culture.base_amplitude * 0.3f
-                                            * (0.5f + 0.5f * result.event_intensity);
-                    result.amplitudes[slot] = clampf(result.amplitudes[slot],
-                                                     0.0f, 1.0f);
-                    result.waveform_types[slot] = 0; /* fallback sine */
-                    result.harmonic_counts[slot] = culture.partial_count;
-                    for (int h = 0; h < culture.partial_count
-                         && h < AS_MAX_HARMONICS; h++) {
-                        result.harmonic_amps[slot][h] = culture.partials[h];
-                    }
-                    result.pan_positions[slot] = 0.0f; /* center */
-                    result.planet_count = slot + 1;
+        for (int h = 0; h < AS_MAX_HARMONICS; h++)
+            blend_partials[h] = 0.0f;
+
+        /* Iterate all insights, collect timbres from converging systems */
+        for (int i = 0; i < br.insight_count && i < BR_MAX_INSIGHTS; i++) {
+            const br_insight_t *ins = &br.insights[i];
+            if (ins->score < 0.2) continue;
+
+            for (int s = 0; s < ins->system_count && s < BR_MAX_SYSTEMS; s++) {
+                int sys = ins->systems[s];
+                if (sys < 0 || sys >= (int)CD_SYS_COUNT) continue;
+                if (!audio_culture_has_timbre((cd_system_t)sys)) continue;
+
+                audio_culture_t culture = audio_culture_get((cd_system_t)sys);
+                float w = (float)ins->score;
+
+                blend_freq += culture.base_freq_hz * w;
+                blend_amp += culture.base_amplitude * w;
+                weight_sum += w;
+
+                /* Merge partials: take max at each position for richest spectrum */
+                for (int h = 0; h < culture.partial_count && h < AS_MAX_HARMONICS; h++) {
+                    if (culture.partials[h] > blend_partials[h])
+                        blend_partials[h] = culture.partials[h];
                 }
+                if (culture.partial_count > blend_max_partials)
+                    blend_max_partials = culture.partial_count;
+
+                if (primary_sys < 0 || w > 0.5f)
+                    primary_sys = sys;
+                system_count++;
+            }
+        }
+
+        /* Apply blended timbre to oscillator slot 8 */
+        if (system_count > 0 && weight_sum > 0.0f) {
+            int slot = result.planet_count;
+            if (slot < AS_MAX_PLANETS) {
+                result.focused_system = primary_sys;
+                result.frequencies[slot] = blend_freq / weight_sum;
+                /* Amplitude scales with convergence: more systems = louder */
+                float sys_boost = 1.0f + 0.15f * (float)(system_count - 1);
+                result.amplitudes[slot] = (blend_amp / weight_sum) * 0.3f
+                                        * (0.5f + 0.5f * result.event_intensity)
+                                        * sys_boost;
+                result.amplitudes[slot] = clampf(result.amplitudes[slot],
+                                                 0.0f, 1.0f);
+                result.waveform_types[slot] = 0; /* sine for composite */
+                result.harmonic_counts[slot] = blend_max_partials;
+                for (int h = 0; h < blend_max_partials && h < AS_MAX_HARMONICS; h++)
+                    result.harmonic_amps[slot][h] = blend_partials[h];
+                result.pan_positions[slot] = 0.0f;
+                result.planet_count = slot + 1;
             }
         }
     }
