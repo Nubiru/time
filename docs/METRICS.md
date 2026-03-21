@@ -159,14 +159,15 @@
 | Raw .wasm | 373,690 bytes (365 KB) |
 | Gzipped | ~143 KB |
 | Build mode | Development (-Os, ASSERTIONS=2) |
-| Growth since session 18 | +42 KB raw (storage_bridge_wasm + motion wiring + interpret locale x32 + brain pipeline + visual bridge) |
+| Release .wasm | 311,718 bytes (304 KB) — with full LTO |
+| Growth since session 18 | +44 KB raw (all wiring + 20 Kin Maya layouts + focus-mode audio) |
 
 ## God Functions (>80 lines)
 
 | Lines | File | Function | Notes |
 |-------|------|----------|-------|
 | 241 | convergence_detect.c | cd_is_significant | 18-case switch — domain logic |
-| 225 | main.c | main_loop | Central render loop — well-sectioned, hard to decompose |
+| 273 | main.c | main_loop | Central render loop — well-sectioned, AUDIO added focus-mode timbres |
 | 189 | text_pass.c | draw_card_text | Complex text render |
 | 142 | text_pass.c | text_pass_draw | GL text rendering |
 | 130 | hud.c | hud_update | HUD overlay update |
