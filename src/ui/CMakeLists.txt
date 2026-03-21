@@ -122,6 +122,13 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/zodiac_wheel_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/dignity_table_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_iching_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_chinese_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_islamic_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_buddhist_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_hindu_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/zodiac_animals_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/prayer_times_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/nakshatra_wheel_layout.c
     PARENT_SCOPE
 )
 
@@ -245,5 +252,12 @@ if(NOT EMSCRIPTEN)
     add_library(time_zodiac_wheel_layout OBJECT zodiac_wheel_layout.c)
     add_library(time_dignity_table_layout OBJECT dignity_table_layout.c)
     add_library(time_daily_iching_layout OBJECT daily_iching_layout.c)
+    add_library(time_daily_chinese_layout OBJECT daily_chinese_layout.c)
+    add_library(time_daily_islamic_layout OBJECT daily_islamic_layout.c)
+    add_library(time_daily_buddhist_layout OBJECT daily_buddhist_layout.c)
+    add_library(time_daily_hindu_layout OBJECT daily_hindu_layout.c)
+    add_library(time_zodiac_animals_layout OBJECT zodiac_animals_layout.c)
+    add_library(time_prayer_times_layout OBJECT prayer_times_layout.c)
+    add_library(time_nakshatra_wheel_layout OBJECT nakshatra_wheel_layout.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()

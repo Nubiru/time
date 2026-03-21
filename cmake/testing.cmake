@@ -752,6 +752,20 @@ time_add_test(NAME test_dignity_table_layout TEST tests/ui/test_dignity_table_la
     DEPS dignity_table_layout dignity zodiac LABELS unit)
 time_add_test(NAME test_daily_iching_layout TEST tests/ui/test_daily_iching_layout.c
     DEPS daily_iching_layout iching iching_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_chinese_layout TEST tests/ui/test_daily_chinese_layout.c
+    DEPS daily_chinese_layout chinese julian LABELS unit)
+time_add_test(NAME test_daily_islamic_layout TEST tests/ui/test_daily_islamic_layout.c
+    DEPS daily_islamic_layout hijri islamic_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_buddhist_layout TEST tests/ui/test_daily_buddhist_layout.c
+    DEPS daily_buddhist_layout buddhist lunar LABELS unit)
+time_add_test(NAME test_daily_hindu_layout TEST tests/ui/test_daily_hindu_layout.c
+    DEPS daily_hindu_layout panchanga nakshatra LABELS unit)
+time_add_test(NAME test_zodiac_animals_layout TEST tests/ui/test_zodiac_animals_layout.c
+    DEPS zodiac_animals_layout chinese julian LABELS unit)
+time_add_test(NAME test_prayer_times_layout TEST tests/ui/test_prayer_times_layout.c
+    DEPS prayer_times_layout prayer_times solar_events julian LABELS unit)
+time_add_test(NAME test_nakshatra_wheel_layout TEST tests/ui/test_nakshatra_wheel_layout.c
+    DEPS nakshatra_wheel_layout nakshatra LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
