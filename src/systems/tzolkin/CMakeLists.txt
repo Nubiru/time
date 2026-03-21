@@ -16,6 +16,7 @@ set(TZOLKIN_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/telektonon_journey.c
     ${CMAKE_CURRENT_SOURCE_DIR}/force_lines.c
     ${CMAKE_CURRENT_SOURCE_DIR}/telektonon_cards.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/synchronotron.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -36,4 +37,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_telektonon_journey OBJECT telektonon_journey.c)
     add_library(time_force_lines        OBJECT force_lines.c)
     add_library(time_telektonon_cards    OBJECT telektonon_cards.c)
+    add_library(time_synchronotron       OBJECT synchronotron.c)
 endif()
