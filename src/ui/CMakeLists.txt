@@ -132,6 +132,12 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_gregorian_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_geology_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_earth_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_coptic_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_ethiopian_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_persian_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_japanese_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_korean_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_thai_layout.c
     PARENT_SCOPE
 )
 
@@ -265,5 +271,11 @@ if(NOT EMSCRIPTEN)
     add_library(time_daily_gregorian_layout OBJECT daily_gregorian_layout.c)
     add_library(time_daily_geology_layout OBJECT daily_geology_layout.c)
     add_library(time_daily_earth_layout OBJECT daily_earth_layout.c)
+    add_library(time_daily_coptic_layout OBJECT daily_coptic_layout.c)
+    add_library(time_daily_ethiopian_layout OBJECT daily_ethiopian_layout.c)
+    add_library(time_daily_persian_layout OBJECT daily_persian_layout.c)
+    add_library(time_daily_japanese_layout OBJECT daily_japanese_layout.c)
+    add_library(time_daily_korean_layout OBJECT daily_korean_layout.c)
+    add_library(time_daily_thai_layout OBJECT daily_thai_layout.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()

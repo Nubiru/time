@@ -524,8 +524,8 @@ time_add_test(NAME test_today_card     TEST tests/ui/test_today_card.c
     DEPS today_card card_data julian gregorian tzolkin haab iching chinese hebrew hijri buddhist lunar panchanga nakshatra zodiac human_design sefirot geo_time coptic ethiopian persian japanese korean_calendar thai_calendar calendar_fixed
     daily_hebrew_layout daily_islamic_layout daily_buddhist_layout daily_hindu_layout daily_chinese_layout daily_iching_layout daily_hd_layout daily_transit_layout
     iching_interpret i18n content_i18n aspects dignity hebrew_interpret islamic_interpret
-    nakshatra_wheel_layout daily_gregorian_layout daily_geology_layout
-    gregorian_interpret geology_interpret earth_fraction)
+    nakshatra_wheel_layout daily_gregorian_layout daily_geology_layout daily_earth_layout
+    gregorian_interpret geology_interpret earth_fraction daylight seasons solar_events)
 time_add_test(NAME test_zodiac_glyphs   TEST tests/ui/test_zodiac_glyphs.c   DEPS zodiac_glyphs)
 time_add_test(NAME test_hexagram_visual TEST tests/ui/test_hexagram_visual.c  DEPS hexagram_visual iching)
 time_add_test(NAME test_symbol_atlas    TEST tests/ui/test_symbol_atlas.c    DEPS symbol_atlas zodiac_glyphs)
@@ -776,6 +776,18 @@ time_add_test(NAME test_daily_geology_layout TEST tests/ui/test_daily_geology_la
     DEPS daily_geology_layout geology_interpret earth_fraction i18n content_i18n LABELS unit)
 time_add_test(NAME test_daily_earth_layout TEST tests/ui/test_daily_earth_layout.c
     DEPS daily_earth_layout daylight seasons solar_events julian LABELS unit)
+time_add_test(NAME test_daily_coptic_layout TEST tests/ui/test_daily_coptic_layout.c
+    DEPS daily_coptic_layout coptic coptic_interpret calendar_fixed i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_ethiopian_layout TEST tests/ui/test_daily_ethiopian_layout.c
+    DEPS daily_ethiopian_layout ethiopian ethiopian_interpret i18n content_i18n calendar_fixed LABELS unit)
+time_add_test(NAME test_daily_persian_layout TEST tests/ui/test_daily_persian_layout.c
+    DEPS daily_persian_layout persian persian_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_japanese_layout TEST tests/ui/test_daily_japanese_layout.c
+    DEPS daily_japanese_layout japanese japanese_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_korean_layout TEST tests/ui/test_daily_korean_layout.c
+    DEPS daily_korean_layout korean_calendar korean_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_thai_layout TEST tests/ui/test_daily_thai_layout.c
+    DEPS daily_thai_layout thai_calendar thai_interpret i18n content_i18n LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
