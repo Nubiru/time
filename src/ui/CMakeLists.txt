@@ -109,6 +109,8 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_seven_gen.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_moon_detail.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_base_matrix.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/kin_sync_matrix.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/kin_cube_layout.c
     PARENT_SCOPE
 )
 
@@ -219,5 +221,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_kin_seven_gen OBJECT kin_seven_gen.c)
     add_library(time_kin_moon_detail OBJECT kin_moon_detail.c)
     add_library(time_kin_base_matrix OBJECT kin_base_matrix.c)
+    add_library(time_kin_sync_matrix OBJECT kin_sync_matrix.c)
+    add_library(time_kin_cube_layout OBJECT kin_cube_layout.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
