@@ -247,8 +247,12 @@ void main_loop(void) {
     if (ps_is_enabled(&sched, PASS_PLANET))         planet_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_SATURN))         saturn_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_MOON))           moon_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_ZODIAC))         zodiac_pass_draw(&frame);
-    ring_pass_draw(&frame);  /* concentric knowledge system rings */
+    /* Zodiac ring + knowledge rings: only in Astrology focus or overview */
+    if (ps_is_enabled(&sched, PASS_ZODIAC) &&
+        (frame.focus_mode == 0 || frame.focus_mode == 1))
+        zodiac_pass_draw(&frame);
+    if (frame.focus_mode == 0)
+        ring_pass_draw(&frame);  /* concentric knowledge system rings — overview only */
     convergence_pass_draw(&frame);  /* brain convergence connection lines */
     if (ps_is_enabled(&sched, PASS_EARTH))          earth_pass_draw(&frame);
 
@@ -260,11 +264,8 @@ void main_loop(void) {
         if (ps_is_enabled(&sched, PASS_HEXAGRAM))   hexagram_pass_draw(&frame);
         bagua_pass_draw(&frame);
     }
-    if (ps_is_enabled(&sched, PASS_TREE) && frame.focus_mode == 0) {
-        /* Tree only in overview — Kabbalah has no focus key yet */
-        tree_pass_draw(&frame);
-        tree_of_life_pass_draw(&frame);
-    }
+    /* Tree of Life: disabled in overview to reduce clutter.
+     * Will draw when Kabbalah gets a focus key (T or similar). */
     if (frame.focus_mode == 1) natal_chart_pass_draw(&frame); /* Astrology */
     if (ps_is_enabled(&sched, PASS_CARD))           card_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_TEXT))           text_pass_draw(&frame);
@@ -520,6 +521,46 @@ EMSCRIPTEN_KEEPALIVE int ui_get_birth_month(void) {
 
 EMSCRIPTEN_KEEPALIVE int ui_get_birth_day(void) {
     return g_state.birth_day;
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_show_birth_profile(void) {
+    if (!g_state.birth_entered) return;
+    const birth_profile_t *p = &g_state.birth_profile;
+
+    /* Build HTML string in C to avoid EM_ASM parameter limits */
+    static char html[1024];
+    snprintf(html, sizeof(html),
+        "<b>Your Cosmic Identity</b><br>"
+        "Kin %d — %s %s<br>"
+        "%s %s (%s)<br>"
+        "Hebrew: %d %s %d<br>"
+        "Islamic: %d %s %d<br>"
+        "Buddhist Era: %d<br>"
+        "I Ching: Hexagram %d — %s<br>"
+        "%s | HD Gate %d.%d",
+        p->tzolkin.kin,
+        p->tzolkin.tone_name ? p->tzolkin.tone_name : "?",
+        p->tzolkin.seal_name ? p->tzolkin.seal_name : "?",
+        p->chinese.element_name ? p->chinese.element_name : "?",
+        p->chinese.animal_name ? p->chinese.animal_name : "?",
+        p->western_zodiac ? p->western_zodiac : "?",
+        p->hebrew.year,
+        p->hebrew.month_name ? p->hebrew.month_name : "?",
+        p->hebrew.day,
+        p->islamic.year,
+        p->islamic.month_name ? p->islamic.month_name : "?",
+        p->islamic.day,
+        p->buddhist.era_year,
+        p->iching.king_wen,
+        p->iching.name ? p->iching.name : "?",
+        p->astrology.sun_sign_name ? p->astrology.sun_sign_name : "?",
+        p->astrology.hd_sun_gate, p->astrology.hd_earth_gate
+    );
+
+    EM_ASM({
+        var el = document.getElementById('birth-result');
+        if (el) el.innerHTML = UTF8ToString($0);
+    }, html);
 }
 
 EMSCRIPTEN_KEEPALIVE void ui_set_locale(int locale_id) {

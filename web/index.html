@@ -234,11 +234,8 @@
                 if (Module && Module._ui_set_birth_date) {
                     Module._ui_set_birth_date(y, m, d);
                     localStorage.setItem('time_birth', JSON.stringify({y:y, m:m, d:d}));
-                    var kin = Module._ui_get_birth_kin ? Module._ui_get_birth_kin() : 0;
-                    var res = document.getElementById('birth-result');
-                    if (res) res.textContent = kin > 0
-                        ? 'Your Galactic Signature: Kin ' + kin
-                        : 'Birth profile computed.';
+                    if (Module._ui_show_birth_profile)
+                        Module._ui_show_birth_profile();
                 }
             });
             /* Restore from localStorage on load */
