@@ -59,4 +59,9 @@ int msdf_text_atlas_height(msdf_font_id_t font);
 /* Number of glyphs available in a font. */
 int msdf_text_glyph_count(msdf_font_id_t font);
 
+/* Get atlas pixel data pointer for a font.
+ * Returns RGB data (3 bytes per pixel), atlas_width * atlas_height * 3 bytes.
+ * The pointer points to static const data — do not free. */
+const unsigned char *msdf_text_atlas_pixels(msdf_font_id_t font);
+
 #endif /* TIME_MSDF_TEXT_H */

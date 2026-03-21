@@ -309,3 +309,8 @@ int msdf_text_glyph_count(msdf_font_id_t font)
 {
     return (font == MSDF_FONT_MONO) ? MSDF_MONO_GLYPH_COUNT : MSDF_SANS_GLYPH_COUNT;
 }
+
+const unsigned char *msdf_text_atlas_pixels(msdf_font_id_t font)
+{
+    return (font == MSDF_FONT_MONO) ? MSDF_MONO_PIXELS : MSDF_SANS_PIXELS;
+}

@@ -34,6 +34,7 @@
 #include "../../ui/kin_cell.h"
 #include "../../ui/focus_mode.h"
 #include "../../systems/tzolkin/dreamspell.h"
+#include "../msdf_text.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
 static const float TEXT_ORBIT_SCALE = 3.0f;
@@ -52,6 +53,20 @@ static GLuint s_text_vbo;
 static GLuint s_text_ebo;
 static GLuint s_text_atlas_tex;
 static font_atlas_t s_text_font;
+
+/* --- MSDF text rendering (2D card/oracle text) --- */
+static GLuint s_msdf_program;
+static GLint  s_msdf_loc_mvp;
+static GLint  s_msdf_loc_atlas;
+static GLint  s_msdf_loc_px_range;
+static GLuint s_msdf_atlas_tex;
+
+/* MSDF frame buffer: accumulates quads across multiple msdf_text_layout calls */
+#define MSDF_FRAME_MAX_QUADS 512
+static float    s_msdf_verts[MSDF_FRAME_MAX_QUADS * 4 * GLYPH_VERTEX_STRIDE];
+static unsigned int s_msdf_indices[MSDF_FRAME_MAX_QUADS * 6];
+static int      s_msdf_vert_count;
+static int      s_msdf_idx_count;
 
 /* --- Static scratch buffer for atlas pixels (BSS, zero stack cost) --- */
 static uint8_t s_atlas_pixels[FONT_BITMAP_ATLAS_W * FONT_BITMAP_ATLAS_H];
@@ -86,6 +101,111 @@ static const char *s_text_frag_source =
     "    if (alpha < 0.01) discard;\n"
     "    frag_color = vec4(v_color.rgb, v_color.a * alpha);\n"
     "}\n";
+
+/* --- MSDF shader: 3-channel median distance for crispy text --- */
+
+static const char *s_msdf_frag_source =
+    "#version 300 es\n"
+    "precision highp float;\n"
+    "in vec2 v_uv;\n"
+    "in vec4 v_color;\n"
+    "uniform sampler2D u_atlas;\n"
+    "uniform float u_px_range;\n"
+    "out vec4 frag_color;\n"
+    "float median(float r, float g, float b) {\n"
+    "    return max(min(r, g), min(max(r, g), b));\n"
+    "}\n"
+    "void main() {\n"
+    "    vec3 msd = texture(u_atlas, v_uv).rgb;\n"
+    "    float sd = median(msd.r, msd.g, msd.b);\n"
+    "    vec2 sz = vec2(textureSize(u_atlas, 0));\n"
+    "    vec2 dx = dFdx(v_uv) * sz;\n"
+    "    vec2 dy = dFdy(v_uv) * sz;\n"
+    "    float to_px = u_px_range * inversesqrt(dot(dx,dx) + dot(dy,dy));\n"
+    "    float opacity = clamp((sd - 0.5) * to_px + 0.5, 0.0, 1.0);\n"
+    "    if (opacity < 0.01) discard;\n"
+    "    frag_color = vec4(v_color.rgb, v_color.a * opacity);\n"
+    "}\n";
+
+/* --- MSDF frame helpers --- */
+
+static void msdf_begin(void) {
+    s_msdf_vert_count = 0;
+    s_msdf_idx_count = 0;
+}
+
+static void msdf_add_text(const char *text, float x, float y,
+                           float font_size, float r, float g, float b, float a)
+{
+    msdf_layout_t layout = msdf_text_layout(MSDF_FONT_MONO, text, x, y, font_size);
+    for (int i = 0; i < layout.count && s_msdf_vert_count < MSDF_FRAME_MAX_QUADS * 4; i++) {
+        const msdf_quad_t *q = &layout.quads[i];
+        unsigned int base = (unsigned int)s_msdf_vert_count;
+        float *v = &s_msdf_verts[s_msdf_vert_count * GLYPH_VERTEX_STRIDE];
+
+        /* v0: top-left */
+        v[0]=q->x;      v[1]=q->y;      v[2]=0; v[3]=q->u0; v[4]=q->v0;
+        v[5]=r; v[6]=g; v[7]=b; v[8]=a;
+        v += GLYPH_VERTEX_STRIDE;
+        /* v1: top-right */
+        v[0]=q->x+q->w; v[1]=q->y;      v[2]=0; v[3]=q->u1; v[4]=q->v0;
+        v[5]=r; v[6]=g; v[7]=b; v[8]=a;
+        v += GLYPH_VERTEX_STRIDE;
+        /* v2: bottom-right */
+        v[0]=q->x+q->w; v[1]=q->y+q->h; v[2]=0; v[3]=q->u1; v[4]=q->v1;
+        v[5]=r; v[6]=g; v[7]=b; v[8]=a;
+        v += GLYPH_VERTEX_STRIDE;
+        /* v3: bottom-left */
+        v[0]=q->x;      v[1]=q->y+q->h; v[2]=0; v[3]=q->u0; v[4]=q->v1;
+        v[5]=r; v[6]=g; v[7]=b; v[8]=a;
+
+        unsigned int *idx = &s_msdf_indices[s_msdf_idx_count];
+        idx[0]=base; idx[1]=base+1; idx[2]=base+2;
+        idx[3]=base; idx[4]=base+2; idx[5]=base+3;
+
+        s_msdf_vert_count += 4;
+        s_msdf_idx_count += 6;
+    }
+}
+
+static void msdf_flush(int vw, int vh) {
+    if (s_msdf_idx_count == 0) return;
+
+    /* Orthographic projection: pixel coords -> NDC */
+    mat4_t ortho;
+    memset(&ortho, 0, sizeof(ortho));
+    ortho.m[0]  =  2.0f / (float)vw;
+    ortho.m[5]  = -2.0f / (float)vh;
+    ortho.m[10] = -1.0f;
+    ortho.m[12] = -1.0f;
+    ortho.m[13] =  1.0f;
+    ortho.m[14] =  0.0f;
+    ortho.m[15] =  1.0f;
+
+    glBindVertexArray(s_text_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, s_text_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0,
+                    s_msdf_vert_count * GLYPH_VERTEX_STRIDE * (GLsizeiptr)sizeof(float),
+                    s_msdf_verts);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_text_ebo);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                    s_msdf_idx_count * (GLsizeiptr)sizeof(unsigned int),
+                    s_msdf_indices);
+
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glUseProgram(s_msdf_program);
+    glUniformMatrix4fv(s_msdf_loc_mvp, 1, GL_FALSE, ortho.m);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, s_msdf_atlas_tex);
+    glUniform1i(s_msdf_loc_atlas, 0);
+    glUniform1f(s_msdf_loc_px_range, 2.0f);
+
+    glDrawElements(GL_TRIANGLES, s_msdf_idx_count, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
 
 int text_pass_init(void) {
     /* Compile shader program */
@@ -157,35 +277,39 @@ int text_pass_init(void) {
 
     printf("Text: atlas %dx%d, shader compiled\n",
            FONT_BITMAP_ATLAS_W, FONT_BITMAP_ATLAS_H);
+
+    /* --- MSDF shader + atlas for 2D card/oracle text --- */
+    s_msdf_program = shader_create_program(s_text_vert_source, s_msdf_frag_source);
+    if (s_msdf_program == 0) {
+        printf("Failed to create MSDF text shader\n");
+        return 1;
+    }
+    s_msdf_loc_mvp      = glGetUniformLocation(s_msdf_program, "u_mvp");
+    s_msdf_loc_atlas    = glGetUniformLocation(s_msdf_program, "u_atlas");
+    s_msdf_loc_px_range = glGetUniformLocation(s_msdf_program, "u_px_range");
+
+    /* Upload MSDF atlas as RGB8 texture */
+    int msdf_w = msdf_text_atlas_width(MSDF_FONT_MONO);
+    int msdf_h = msdf_text_atlas_height(MSDF_FONT_MONO);
+    const unsigned char *msdf_pixels = msdf_text_atlas_pixels(MSDF_FONT_MONO);
+
+    glGenTextures(1, &s_msdf_atlas_tex);
+    glBindTexture(GL_TEXTURE_2D, s_msdf_atlas_tex);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8,
+                 msdf_w, msdf_h, 0, GL_RGB, GL_UNSIGNED_BYTE, msdf_pixels);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    printf("MSDF: %dx%d atlas, %d glyphs, shader compiled\n",
+           msdf_w, msdf_h, msdf_text_glyph_count(MSDF_FONT_MONO));
+
     return 0;
 }
 
 /* --- Card text helpers --- */
-
-/* Maximum characters per card text line to keep within GLYPH_BATCH_MAX */
-#define CARD_TEXT_LINE_MAX 32
-
-/* Append characters from a string as glyph instances at a given pixel position.
- * Advances px_x by character spacing. Returns updated glyph count. */
-static int append_text_glyphs(glyph_instance_t *inst, int len,
-                              const char *text, int max_chars,
-                              float px_x, float px_y,
-                              float scale, glyph_color_t color)
-{
-    float spacing = 10.0f * scale;  /* pixels per character advance */
-    int chars = (int)strlen(text);
-    if (chars > max_chars) chars = max_chars;
-    for (int i = 0; i < chars && len < GLYPH_BATCH_MAX; i++) {
-        if (text[i] < 32) continue;  /* skip control chars */
-        inst[len].glyph_id = (int)text[i];
-        inst[len].position = vec3_create(
-            px_x + (float)i * spacing, px_y, 0.0f);
-        inst[len].scale    = scale;
-        inst[len].color    = color;
-        len++;
-    }
-    return len;
-}
 
 /* Compute approximate sun ecliptic longitude from JD (Meeus low-accuracy). */
 static double approx_sun_longitude(double jd)
@@ -197,8 +321,8 @@ static double approx_sun_longitude(double jd)
     return lon;
 }
 
-/* Draw Kin Maya oracle cross text — position names, seal+tone, kin numbers.
- * Called instead of normal card text when focus_mode == FOCUS_MODE_KIN. */
+/* Draw Kin Maya oracle cross text — MSDF rendering.
+ * Position names, seal+tone, kin numbers, wavespell strip, headline. */
 static void draw_oracle_text(const render_frame_t *frame)
 {
     GLint viewport[4];
@@ -211,22 +335,16 @@ static void draw_oracle_text(const render_frame_t *frame)
     tzolkin_day_t today = tzolkin_from_jd(frame->simulation_jd);
     kin_oracle_layout_t oracle = kin_oracle_compute(today.kin);
 
-    glyph_instance_t instances[GLYPH_BATCH_MAX];
-    int len = 0;
-
     theme_t th = theme_get((theme_id_t)frame->theme_id);
-    glyph_color_t body_color = {th.text_primary.r, th.text_primary.g,
-                                 th.text_primary.b, th.text_primary.a};
-    glyph_color_t muted_color = {th.text_secondary.r, th.text_secondary.g,
-                                  th.text_secondary.b, th.text_secondary.a};
-
-    float title_scale = 1.8f;
-    float body_scale = 1.4f;
+    float title_fs = 24.0f;
+    float body_fs  = 18.0f;
     float margin_x = 8.0f;
-    float margin_y = 6.0f;
-    float line_h = 18.0f;
+    float margin_y = 10.0f;
+    float line_h   = 22.0f;
 
-    for (int i = 0; i < KIN_ORACLE_POSITIONS && len < GLYPH_BATCH_MAX - 80; i++) {
+    msdf_begin();
+
+    for (int i = 0; i < KIN_ORACLE_POSITIONS; i++) {
         kin_cell_t cell = kin_oracle_cell_at(&oracle, i);
         float card_x = (cell.x - cell.w * 0.5f) * (float)vw + margin_x;
         float card_y = (cell.y - cell.h * 0.5f) * (float)vh + margin_y;
@@ -234,144 +352,77 @@ static void draw_oracle_text(const render_frame_t *frame)
         /* Title: position name in directional color */
         float rgba[4];
         kin_cell_rgba(cell.color, rgba);
-        glyph_color_t title_color = {rgba[0], rgba[1], rgba[2], 1.0f};
-        const char *pos_name = kin_oracle_position_name(i);
-        len = append_text_glyphs(instances, len, pos_name,
-                                 CARD_TEXT_LINE_MAX, card_x, card_y,
-                                 title_scale, title_color);
+        msdf_add_text(kin_oracle_position_name(i),
+                      card_x, card_y, title_fs, rgba[0], rgba[1], rgba[2], 1.0f);
 
         /* Line 1: Color + Seal name */
-        card_y += line_h * title_scale;
+        card_y += line_h + 4.0f;
         dreamspell_color_t dc = dreamspell_color(cell.seal);
         char seal_line[64];
         snprintf(seal_line, sizeof(seal_line), "%s %s",
                  dc.name, tzolkin_seal_name(cell.seal));
-        len = append_text_glyphs(instances, len, seal_line,
-                                 CARD_TEXT_LINE_MAX, card_x, card_y,
-                                 body_scale, body_color);
+        msdf_add_text(seal_line, card_x, card_y, body_fs,
+                      th.text_primary.r, th.text_primary.g,
+                      th.text_primary.b, th.text_primary.a);
 
         /* Line 2: Tone name + number */
-        card_y += line_h * body_scale;
+        card_y += line_h;
         dreamspell_tone_t dt = dreamspell_tone(cell.tone);
         char tone_line[64];
-        snprintf(tone_line, sizeof(tone_line), "%s %d",
-                 dt.name, cell.tone);
-        len = append_text_glyphs(instances, len, tone_line,
-                                 CARD_TEXT_LINE_MAX, card_x, card_y,
-                                 body_scale, body_color);
+        snprintf(tone_line, sizeof(tone_line), "%s %d", dt.name, cell.tone);
+        msdf_add_text(tone_line, card_x, card_y, body_fs,
+                      th.text_primary.r, th.text_primary.g,
+                      th.text_primary.b, th.text_primary.a);
 
         /* Line 3: Kin number */
-        card_y += line_h * body_scale;
+        card_y += line_h;
         char kin_line[32];
         snprintf(kin_line, sizeof(kin_line), "Kin %d", cell.kin);
-        len = append_text_glyphs(instances, len, kin_line,
-                                 CARD_TEXT_LINE_MAX, card_x, card_y,
-                                 body_scale, muted_color);
+        msdf_add_text(kin_line, card_x, card_y, body_fs,
+                      th.text_secondary.r, th.text_secondary.g,
+                      th.text_secondary.b, th.text_secondary.a);
     }
 
-    /* --- Wavespell strip text: title + tone numbers per cell --- */
+    /* --- Wavespell strip text --- */
     {
         kin_wavespell_layout_t ws = kin_wavespell_compute(today.kin);
         float ws_y_center = 0.675f;
         float ws_h = 0.08f;
+        float ws_fs = 14.0f;
 
-        /* Wavespell title above the strip */
         char ws_title[64];
         snprintf(ws_title, sizeof(ws_title), "Wavespell %d: %s",
                  ws.wavespell_number, ws.purpose ? ws.purpose : "");
-        float ws_title_x = 0.04f * (float)vw;
-        float ws_title_y = (ws_y_center - ws_h * 0.5f) * (float)vh - 16.0f;
-        len = append_text_glyphs(instances, len, ws_title, 48,
-                                 ws_title_x, ws_title_y, body_scale, body_color);
+        float ws_title_y = (ws_y_center - ws_h * 0.5f) * (float)vh - 18.0f;
+        msdf_add_text(ws_title, 0.04f * (float)vw, ws_title_y, body_fs,
+                      th.text_primary.r, th.text_primary.g,
+                      th.text_primary.b, th.text_primary.a);
 
-        /* Tone number inside each cell */
-        for (int i = 0; i < KIN_WS_CELLS && len < GLYPH_BATCH_MAX - 5; i++) {
+        for (int i = 0; i < KIN_WS_CELLS; i++) {
             kin_cell_t cell = ws.cells[i];
-            float cx = cell.x * (float)vw;
-            float cy = ws_y_center * (float)vh;
+            float cx = cell.x * (float)vw - 4.0f;
+            float cy = ws_y_center * (float)vh - 5.0f;
             char tone_str[4];
             snprintf(tone_str, sizeof(tone_str), "%d", cell.tone);
-            float tw = (cell.tone >= 10) ? 10.0f : 5.0f;
-
             float rgba[4];
             kin_cell_rgba(cell.color, rgba);
-            glyph_color_t tone_color = cell.highlighted
-                ? (glyph_color_t){rgba[0], rgba[1], rgba[2], 1.0f}
-                : muted_color;
-            len = append_text_glyphs(instances, len, tone_str, 3,
-                                     cx - tw * body_scale, cy - 7.0f,
-                                     body_scale, tone_color);
+            float a = cell.highlighted ? 1.0f : 0.6f;
+            msdf_add_text(tone_str, cx, cy, ws_fs, rgba[0], rgba[1], rgba[2], a);
         }
     }
 
     /* Headline at bottom center */
     if (frame->headline[0] != '\0') {
-        glyph_color_t hl_color = {th.brand_secondary.r,
-                                  th.brand_secondary.g,
-                                  th.brand_secondary.b, 0.85f};
-        float hl_scale = 1.6f;
-        int hl_chars = 0;
-        while (frame->headline[hl_chars] != '\0' && hl_chars < 60) hl_chars++;
-        float hl_width = (float)hl_chars * 10.0f * hl_scale;
-        float hl_x = ((float)vw - hl_width) * 0.5f;
+        float hl_fs = 20.0f;
+        float hl_w = msdf_text_width(MSDF_FONT_MONO, frame->headline, hl_fs);
+        float hl_x = ((float)vw - hl_w) * 0.5f;
         float hl_y = (float)vh - 40.0f;
-        len = append_text_glyphs(instances, len, frame->headline,
-                                 60, hl_x, hl_y, hl_scale, hl_color);
+        msdf_add_text(frame->headline, hl_x, hl_y, hl_fs,
+                      th.brand_secondary.r, th.brand_secondary.g,
+                      th.brand_secondary.b, 0.85f);
     }
 
-    if (len == 0) return;
-
-    /* Orthographic projection: pixel coords → NDC */
-    mat4_t ortho;
-    memset(&ortho, 0, sizeof(ortho));
-    ortho.m[0]  =  2.0f / (float)vw;
-    ortho.m[5]  = -2.0f / (float)vh;
-    ortho.m[10] = -1.0f;
-    ortho.m[12] = -1.0f;
-    ortho.m[13] =  1.0f;
-    ortho.m[14] =  0.0f;
-    ortho.m[15] =  1.0f;
-
-    vec3_t cam_right = vec3_create(1.0f, 0.0f, 0.0f);
-    vec3_t cam_up    = vec3_create(0.0f, -1.0f, 0.0f);
-
-    glyph_atlas_t batch_atlas = {
-        .cols     = FONT_BITMAP_COLS,
-        .rows     = FONT_BITMAP_ROWS,
-        .first_id = FONT_BITMAP_FIRST,
-        .last_id  = FONT_BITMAP_LAST
-    };
-
-    glyph_batch_t batch = glyph_batch_create(
-        instances, len, batch_atlas,
-        cam_right, cam_up,
-        8.0f, 14.0f);
-
-    if (batch.glyph_count == 0) return;
-
-    glBindVertexArray(s_text_vao);
-    glBindBuffer(GL_ARRAY_BUFFER, s_text_vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0,
-                    (GLsizeiptr)glyph_batch_vertex_bytes(&batch),
-                    batch.vertices);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_text_ebo);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
-                    (GLsizeiptr)glyph_batch_index_bytes(&batch),
-                    batch.indices);
-
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    glUseProgram(s_text_program);
-    glUniformMatrix4fv(s_text_loc_mvp, 1, GL_FALSE, ortho.m);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, s_text_atlas_tex);
-    glUniform1i(s_text_loc_atlas, 0);
-
-    glDrawElements(GL_TRIANGLES, batch.index_count, GL_UNSIGNED_INT, 0);
-
-    glBindVertexArray(0);
+    msdf_flush(vw, vh);
 }
 
 /* Draw card text as a 2D screen-space overlay.
@@ -395,17 +446,15 @@ static void draw_card_text(const render_frame_t *frame)
     if (vw < 1) vw = 1920;
     if (vh < 1) vh = 1080;
 
-    /* Compute card layout (all cards visible for demo) */
+    /* Compute card layout */
     float aspect = (float)vw / (float)vh;
     card_layout_t layout = card_layout_compute(card_all_mask(), aspect);
 
-    /* Compute system data via zoom-aware card pipeline */
     double jd = frame->simulation_jd;
     double sun_lon = approx_sun_longitude(jd);
     lunar_info_t moon = lunar_phase(jd);
     double moon_lon = moon.moon_longitude;
 
-    /* Select cards: focus mode overrides zoom-based selection */
     cs_selection_t sel = cs_select(frame->log_zoom, aspect);
     int focus_sys = card_style_focus_system(frame->focus_mode);
     if (focus_sys >= 0) {
@@ -415,161 +464,72 @@ static void draw_card_text(const render_frame_t *frame)
     }
 
     card_content_t card_contents[CARD_TYPE_COUNT];
-    const card_content_t *contents[CARD_TYPE_COUNT];
     for (int i = 0; i < CARD_TYPE_COUNT; i++) {
         int sys_id = (i < sel.filled_count) ? sel.slots[i].system_id : -1;
         card_contents[i] = (sys_id >= 0)
             ? today_card_for_system(sys_id, jd, sun_lon, moon_lon)
             : (card_content_t){0};
-        contents[i] = &card_contents[i];
-        /* Update layout visibility based on selection */
         layout.cards[i].visible = (sys_id >= 0);
         layout.cards[i].opacity = (i < sel.filled_count) ? sel.slots[i].opacity : 0.0f;
     }
 
-    /* Build glyph instances for card text */
-    glyph_instance_t instances[GLYPH_BATCH_MAX];
-    int len = 0;
-
-    /* Scale: title slightly larger than body */
-    float title_scale = 1.8f;
-    float body_scale  = 1.4f;
-
-    /* Vertical offsets within card (in pixels from card top) */
+    /* MSDF text rendering */
+    float title_fs = 24.0f;
+    float body_fs  = 18.0f;
     float margin_x = 8.0f;
-    float margin_y_title = 6.0f;
-    float line_height = 18.0f;
+    float margin_y = 10.0f;
+    float line_h   = 22.0f;
 
-    for (int c = 0; c < CARD_TYPE_COUNT && len < GLYPH_BATCH_MAX - 20; c++) {
+    msdf_begin();
+
+    for (int c = 0; c < CARD_TYPE_COUNT; c++) {
         const card_rect_t *r = &layout.cards[c];
         if (!r->visible) continue;
 
-        const card_content_t *content = contents[c];
-
-        /* Per-card themed colors from card_style */
+        const card_content_t *content = &card_contents[c];
         int sys_id = (c < sel.filled_count) ? sel.slots[c].system_id : -1;
         card_style_t style = (sys_id >= 0)
             ? card_style_for_system(sys_id, r->opacity, (theme_id_t)frame->theme_id)
             : card_style_default(r->opacity, (theme_id_t)frame->theme_id);
-        glyph_color_t title_color = {style.title.r, style.title.g,
-                                     style.title.b, style.title.a};
-        glyph_color_t body_color  = {style.body.r, style.body.g,
-                                     style.body.b, style.body.a};
 
-        /* Convert normalized card position to pixel coordinates */
         float px = r->x * (float)vw + margin_x;
-        float py = r->y * (float)vh + margin_y_title;
+        float py = r->y * (float)vh + margin_y;
 
         /* Title */
-        len = append_text_glyphs(instances, len, content->title,
-                                 CARD_TEXT_LINE_MAX,
-                                 px, py, title_scale, title_color);
+        msdf_add_text(content->title, px, py, title_fs,
+                      style.title.r, style.title.g, style.title.b, style.title.a);
 
         /* Line 1 */
-        py += line_height * title_scale;
-        len = append_text_glyphs(instances, len, content->line1,
-                                 CARD_TEXT_LINE_MAX,
-                                 px, py, body_scale, body_color);
+        py += line_h + 4.0f;
+        msdf_add_text(content->line1, px, py, body_fs,
+                      style.body.r, style.body.g, style.body.b, style.body.a);
 
         /* Line 2 */
-        py += line_height * body_scale;
-        len = append_text_glyphs(instances, len, content->line2,
-                                 CARD_TEXT_LINE_MAX,
-                                 px, py, body_scale, body_color);
+        py += line_h;
+        msdf_add_text(content->line2, px, py, body_fs,
+                      style.body.r, style.body.g, style.body.b, style.body.a);
 
-        /* Line 3 (muted color for secondary detail) */
+        /* Line 3 */
         if (content->line3[0] != '\0') {
-            glyph_color_t muted_color = {style.muted.r, style.muted.g,
-                                         style.muted.b, style.muted.a};
-            py += line_height * body_scale;
-            len = append_text_glyphs(instances, len, content->line3,
-                                     CARD_TEXT_LINE_MAX,
-                                     px, py, body_scale, muted_color);
+            py += line_h;
+            msdf_add_text(content->line3, px, py, body_fs,
+                          style.muted.r, style.muted.g, style.muted.b, style.muted.a);
         }
     }
 
-    /* Daily narrative headline at bottom center of screen */
+    /* Headline at bottom center */
     if (frame->headline[0] != '\0') {
         theme_t hl_theme = theme_get((theme_id_t)frame->theme_id);
-        glyph_color_t hl_color = {hl_theme.brand_secondary.r,
-                                  hl_theme.brand_secondary.g,
-                                  hl_theme.brand_secondary.b, 0.85f};
-        float hl_scale = 1.6f;
-        float hl_chars = 0.0f;
-        const char *hl = frame->headline;
-        while (hl[(int)hl_chars] != '\0' && (int)hl_chars < 60) hl_chars++;
-        float hl_width = hl_chars * 10.0f * hl_scale;
-        float hl_x = ((float)vw - hl_width) * 0.5f;  /* centered */
-        float hl_y = (float)vh - 40.0f;               /* near bottom */
-        len = append_text_glyphs(instances, len, frame->headline,
-                                 60, hl_x, hl_y, hl_scale, hl_color);
+        float hl_fs = 20.0f;
+        float hl_w = msdf_text_width(MSDF_FONT_MONO, frame->headline, hl_fs);
+        float hl_x = ((float)vw - hl_w) * 0.5f;
+        float hl_y = (float)vh - 40.0f;
+        msdf_add_text(frame->headline, hl_x, hl_y, hl_fs,
+                      hl_theme.brand_secondary.r, hl_theme.brand_secondary.g,
+                      hl_theme.brand_secondary.b, 0.85f);
     }
 
-    if (len == 0)
-        return;
-
-    /* Build orthographic projection: pixel coords -> NDC.
-     * (0,0) = top-left, (vw,vh) = bottom-right. */
-    mat4_t ortho;
-    memset(&ortho, 0, sizeof(ortho));
-    ortho.m[0]  =  2.0f / (float)vw;
-    ortho.m[5]  = -2.0f / (float)vh;  /* flip Y: top = 0 */
-    ortho.m[10] = -1.0f;
-    ortho.m[12] = -1.0f;
-    ortho.m[13] =  1.0f;
-    ortho.m[14] =  0.0f;
-    ortho.m[15] =  1.0f;
-
-    /* For screen-space text: fixed camera axes, no billboarding */
-    vec3_t cam_right = vec3_create(1.0f, 0.0f, 0.0f);
-    vec3_t cam_up    = vec3_create(0.0f, -1.0f, 0.0f);  /* -Y: screen Y grows down */
-
-    glyph_atlas_t batch_atlas = {
-        .cols     = FONT_BITMAP_COLS,
-        .rows     = FONT_BITMAP_ROWS,
-        .first_id = FONT_BITMAP_FIRST,
-        .last_id  = FONT_BITMAP_LAST
-    };
-
-    /* Base size in pixels: each glyph quad is base_width x base_height pixels,
-     * then multiplied by per-instance scale. */
-    glyph_batch_t batch = glyph_batch_create(
-        instances, len, batch_atlas,
-        cam_right, cam_up,
-        8.0f, 14.0f);
-
-    if (batch.glyph_count == 0)
-        return;
-
-    /* Upload to same VAO/VBO/EBO (replaces 3D label data) */
-    glBindVertexArray(s_text_vao);
-
-    glBindBuffer(GL_ARRAY_BUFFER, s_text_vbo);
-    glBufferSubData(GL_ARRAY_BUFFER, 0,
-                    (GLsizeiptr)glyph_batch_vertex_bytes(&batch),
-                    batch.vertices);
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_text_ebo);
-    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
-                    (GLsizeiptr)glyph_batch_index_bytes(&batch),
-                    batch.indices);
-
-    /* GL state: depth off, blend on (should still be set from labels draw) */
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    /* Set ortho MVP for screen-space rendering */
-    glUseProgram(s_text_program);
-    glUniformMatrix4fv(s_text_loc_mvp, 1, GL_FALSE, ortho.m);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, s_text_atlas_tex);
-    glUniform1i(s_text_loc_atlas, 0);
-
-    /* Draw card text */
-    glDrawElements(GL_TRIANGLES, batch.index_count, GL_UNSIGNED_INT, 0);
-
-    glBindVertexArray(0);
+    msdf_flush(vw, vh);
 }
 
 void text_pass_draw(const render_frame_t *frame) {
@@ -718,6 +678,8 @@ void text_pass_draw(const render_frame_t *frame) {
 void text_pass_destroy(void) {
     glDeleteProgram(s_text_program);
     glDeleteTextures(1, &s_text_atlas_tex);
+    glDeleteProgram(s_msdf_program);
+    glDeleteTextures(1, &s_msdf_atlas_tex);
     glDeleteBuffers(1, &s_text_vbo);
     glDeleteBuffers(1, &s_text_ebo);
     glDeleteVertexArrays(1, &s_text_vao);
