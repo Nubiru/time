@@ -22,8 +22,11 @@
 #include "../../ui/focus_mode.h"
 #include "../../ui/hexagram_layout.h"
 #include "../../ui/daily_hd_layout.h"
+#include "../../ui/zodiac_wheel_layout.h"
+#include "../../ui/zodiac_animals_layout.h"
 #include "../../systems/tzolkin/tzolkin.h"
 #include "../../systems/iching/iching.h"
+#include "../../systems/astronomy/lunar.h"
 
 /* --- Module-static GL handles --- */
 
@@ -501,6 +504,118 @@ static void draw_hd_overlay(const render_frame_t *frame, float vw, float vh)
     glDisable(GL_BLEND);
 }
 
+/* Draw Astrology zodiac wheel overlay — 12 signs + Sun position.
+ * Single circular card with sign labels at wheel positions. */
+static void draw_astrology_overlay(const render_frame_t *frame, float vw, float vh)
+{
+    /* Approximate sun longitude */
+    double T = (frame->simulation_jd - 2451545.0) / 36525.0;
+    double sun_lon = 280.46646 + 36000.76983 * T;
+    sun_lon = sun_lon - 360.0 * (int)(sun_lon / 360.0);
+    if (sun_lon < 0.0) sun_lon += 360.0;
+
+    zodiac_wheel_layout_t wl = zodiac_wheel_compute(sun_lon);
+    (void)wl; /* wheel data used by text_pass for labels */
+
+    /* Single large card as backdrop */
+    card_layout_t cl;
+    cl.cards[0].x = 0.05f; cl.cards[0].y = 0.05f;
+    cl.cards[0].w = 0.90f; cl.cards[0].h = 0.85f;
+    cl.cards[0].opacity = 1.0f; cl.cards[0].visible = 1;
+    cl.cards[0].type = (card_type_t)0;
+    for (int i = 1; i < CARD_TYPE_COUNT; i++) {
+        cl.cards[i].visible = 0; cl.cards[i].opacity = 0.0f;
+        cl.cards[i].x = 0; cl.cards[i].y = 0;
+        cl.cards[i].w = 0; cl.cards[i].h = 0;
+        cl.cards[i].type = (card_type_t)i;
+    }
+
+    cp_quad_data_t qdata = cp_pack_quads(&cl, vw, vh, 0, 0, 0, 0);
+    /* Deep indigo tint for astrology */
+    for (int v = 0; v < qdata.card_count * CP_VERTS_PER_QUAD; v++) {
+        int base = v * CP_VERTEX_FLOATS;
+        qdata.vertices[base + 4] = 0.03f;
+        qdata.vertices[base + 5] = 0.03f;
+        qdata.vertices[base + 6] = 0.10f;
+        qdata.vertices[base + 7] = (v % 4 < 2) ? 0.55f : 0.80f;
+    }
+
+    if (qdata.vertex_count > 0) {
+        glUseProgram(s_quad_program);
+        glUniform2f(s_quad_loc_resolution, vw, vh);
+        theme_t t = theme_get((theme_id_t)frame->theme_id);
+        glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_DEPTH_TEST);
+        glBindVertexArray(s_quad_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, s_quad_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_quad_vertex_bytes(&qdata), qdata.vertices);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_quad_ebo);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_quad_index_bytes(&qdata), qdata.indices);
+        glDrawElements(GL_TRIANGLES, qdata.index_count, GL_UNSIGNED_INT, (void*)0);
+        glBindVertexArray(0);
+    }
+
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+}
+
+/* Draw Chinese zodiac animals overlay — 12 animals in circle.
+ * Single large card with animal labels at wheel positions. */
+static void draw_chinese_overlay(const render_frame_t *frame, float vw, float vh)
+{
+    zodiac_animals_layout_t zal = zodiac_animals_compute(frame->simulation_jd);
+    (void)zal; /* wheel data used by text_pass for labels */
+
+    /* Single large card as backdrop */
+    card_layout_t cl;
+    cl.cards[0].x = 0.05f; cl.cards[0].y = 0.05f;
+    cl.cards[0].w = 0.90f; cl.cards[0].h = 0.85f;
+    cl.cards[0].opacity = 1.0f; cl.cards[0].visible = 1;
+    cl.cards[0].type = (card_type_t)0;
+    for (int i = 1; i < CARD_TYPE_COUNT; i++) {
+        cl.cards[i].visible = 0; cl.cards[i].opacity = 0.0f;
+        cl.cards[i].x = 0; cl.cards[i].y = 0;
+        cl.cards[i].w = 0; cl.cards[i].h = 0;
+        cl.cards[i].type = (card_type_t)i;
+    }
+
+    cp_quad_data_t qdata = cp_pack_quads(&cl, vw, vh, 0, 0, 0, 0);
+    /* Dark red tint for Chinese */
+    for (int v = 0; v < qdata.card_count * CP_VERTS_PER_QUAD; v++) {
+        int base = v * CP_VERTEX_FLOATS;
+        qdata.vertices[base + 4] = 0.10f;
+        qdata.vertices[base + 5] = 0.02f;
+        qdata.vertices[base + 6] = 0.02f;
+        qdata.vertices[base + 7] = (v % 4 < 2) ? 0.55f : 0.80f;
+    }
+
+    if (qdata.vertex_count > 0) {
+        glUseProgram(s_quad_program);
+        glUniform2f(s_quad_loc_resolution, vw, vh);
+        theme_t t = theme_get((theme_id_t)frame->theme_id);
+        glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_DEPTH_TEST);
+        glBindVertexArray(s_quad_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, s_quad_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_quad_vertex_bytes(&qdata), qdata.vertices);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_quad_ebo);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_quad_index_bytes(&qdata), qdata.indices);
+        glDrawElements(GL_TRIANGLES, qdata.index_count, GL_UNSIGNED_INT, (void*)0);
+        glBindVertexArray(0);
+    }
+
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+}
+
 void card_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
@@ -524,6 +639,14 @@ void card_pass_draw(const render_frame_t *frame) {
     }
     if (frame->focus_mode == FOCUS_MODE_HD) {
         draw_hd_overlay(frame, vw, vh);
+        return;
+    }
+    if (frame->focus_mode == FOCUS_MODE_ASTROLOGY) {
+        draw_astrology_overlay(frame, vw, vh);
+        return;
+    }
+    if (frame->focus_mode == FOCUS_MODE_CHINESE) {
+        draw_chinese_overlay(frame, vw, vh);
         return;
     }
 

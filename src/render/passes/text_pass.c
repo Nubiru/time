@@ -37,6 +37,8 @@
 #include "../../systems/iching/iching.h"
 #include "../../ui/hexagram_layout.h"
 #include "../../ui/daily_hd_layout.h"
+#include "../../ui/zodiac_wheel_layout.h"
+#include "../../ui/zodiac_animals_layout.h"
 #include "../msdf_text.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
@@ -606,6 +608,110 @@ static void draw_hd_text(const render_frame_t *frame)
     msdf_flush(vw, vh);
 }
 
+/* Draw Astrology zodiac wheel text — 12 sign names + Sun position via MSDF. */
+static void draw_astrology_text(const render_frame_t *frame)
+{
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    int vw = viewport[2], vh = viewport[3];
+    if (vw < 1) vw = 1920;
+    if (vh < 1) vh = 1080;
+
+    double T = (frame->simulation_jd - 2451545.0) / 36525.0;
+    double sun_lon = 280.46646 + 36000.76983 * T;
+    sun_lon = sun_lon - 360.0 * (int)(sun_lon / 360.0);
+    if (sun_lon < 0.0) sun_lon += 360.0;
+
+    zodiac_wheel_layout_t wl = zodiac_wheel_compute(sun_lon);
+    theme_t th = theme_get((theme_id_t)frame->theme_id);
+
+    msdf_begin();
+
+    /* Title */
+    msdf_add_text("Zodiac Wheel", 0.35f * (float)vw, 0.07f * (float)vh, 26.0f,
+                  th.brand_primary.r, th.brand_primary.g,
+                  th.brand_primary.b, 1.0f);
+
+    /* 12 sign labels at wheel positions */
+    for (int i = 0; i < 12; i++) {
+        zw_sign_t s = wl.signs[i];
+        float lx = s.label_x * (float)vw;
+        float ly = s.label_y * (float)vh;
+        float alpha = (s.sign == wl.sun_sign) ? 1.0f : 0.7f;
+        float fs = (s.sign == wl.sun_sign) ? 18.0f : 14.0f;
+        msdf_add_text(s.name, lx - 20.0f, ly - 6.0f, fs,
+                      th.text_primary.r, th.text_primary.g,
+                      th.text_primary.b, alpha);
+    }
+
+    /* Sun position label */
+    char sun_label[48];
+    snprintf(sun_label, sizeof(sun_label), "Sun: %.1f deg", wl.sun_degree);
+    msdf_add_text(sun_label, wl.sun_x * (float)vw - 30.0f,
+                  wl.sun_y * (float)vh + 14.0f, 14.0f,
+                  th.brand_primary.r, th.brand_primary.g,
+                  th.brand_primary.b, 0.9f);
+
+    /* Headline */
+    if (frame->headline[0] != '\0') {
+        float hl_w = msdf_text_width(MSDF_FONT_MONO, frame->headline, 20.0f);
+        msdf_add_text(frame->headline,
+                      ((float)vw - hl_w) * 0.5f, (float)vh - 40.0f, 20.0f,
+                      th.brand_secondary.r, th.brand_secondary.g,
+                      th.brand_secondary.b, 0.85f);
+    }
+
+    msdf_flush(vw, vh);
+}
+
+/* Draw Chinese zodiac animals text — 12 animal names in circle via MSDF. */
+static void draw_chinese_text(const render_frame_t *frame)
+{
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    int vw = viewport[2], vh = viewport[3];
+    if (vw < 1) vw = 1920;
+    if (vh < 1) vh = 1080;
+
+    zodiac_animals_layout_t zal = zodiac_animals_compute(frame->simulation_jd);
+    theme_t th = theme_get((theme_id_t)frame->theme_id);
+
+    msdf_begin();
+
+    /* Title */
+    char title[64];
+    snprintf(title, sizeof(title), "Chinese Zodiac — %s %s",
+             zal.current_element_name ? zal.current_element_name : "",
+             zal.animals[zal.current_animal].name ? zal.animals[zal.current_animal].name : "");
+    msdf_add_text(title, 0.22f * (float)vw, 0.07f * (float)vh, 24.0f,
+                  th.brand_primary.r, th.brand_primary.g,
+                  th.brand_primary.b, 1.0f);
+
+    /* 12 animal labels at circle positions */
+    for (int i = 0; i < ZA_ANIMAL_COUNT; i++) {
+        za_animal_t a = zal.animals[i];
+        float lx = a.x * (float)vw;
+        float ly = a.y * (float)vh;
+        float alpha = a.highlighted ? 1.0f : 0.6f;
+        float fs = a.highlighted ? 20.0f : 14.0f;
+        if (a.name)
+            msdf_add_text(a.name, lx - 16.0f, ly - 6.0f, fs,
+                          th.text_primary.r, th.text_primary.g,
+                          th.text_primary.b, alpha);
+    }
+
+    /* Headline */
+    if (frame->headline[0] != '\0') {
+        float hl_w = msdf_text_width(MSDF_FONT_MONO, frame->headline, 20.0f);
+        msdf_add_text(frame->headline,
+                      ((float)vw - hl_w) * 0.5f, (float)vh - 40.0f, 20.0f,
+                      th.brand_secondary.r, th.brand_secondary.g,
+                      th.brand_secondary.b, 0.85f);
+    }
+
+    msdf_flush(vw, vh);
+}
+
 /* Draw card text as a 2D screen-space overlay.
  * Called after the 3D planet label draw; reuses same VAO/VBO/EBO. */
 static void draw_card_text(const render_frame_t *frame)
@@ -624,6 +730,14 @@ static void draw_card_text(const render_frame_t *frame)
     }
     if (frame->focus_mode == FOCUS_MODE_HD) {
         draw_hd_text(frame);
+        return;
+    }
+    if (frame->focus_mode == FOCUS_MODE_ASTROLOGY) {
+        draw_astrology_text(frame);
+        return;
+    }
+    if (frame->focus_mode == FOCUS_MODE_CHINESE) {
+        draw_chinese_text(frame);
         return;
     }
 
