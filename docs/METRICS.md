@@ -1,16 +1,16 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 27)
+**Last refreshed**: 2026-03-21 (INFRA session 28)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 431 |
-| Header files (.h) | 432 |
-| Lines of code (src/) | 143,487 |
+| Source files (.c) | 436 |
+| Header files (.h) | 437 |
+| Lines of code (src/) | 148,100 |
 | Lines of tests | 185,000+ |
-| Test suites (CTest) | 460 |
+| Test suites (CTest) | 463 |
 | Render pass files | 19 |
 | Pure modules | 399+ |
 | Stateful modules | 29 |
@@ -20,11 +20,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 460 |
+| Test suites (CTest) | 463 |
 | Test functions (RUN_TEST) | 17,132+ |
 | Test assertions (TEST_ASSERT) | 29,891+ |
 | Failures | 0 |
-| CTest time | 1.44s (with -j4, benchmarks included) |
+| CTest time | 1.43s (with -j4, benchmarks included) |
 | E2E tests (Playwright) | 15 (5 basic + 10 visual) |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -165,30 +165,32 @@
 
 | Lines | File | Function | Notes |
 |-------|------|----------|-------|
-| 240 | convergence_detect.c | cd_is_significant | 18-case switch — domain logic |
-| 183 | calendar_convert.c | cal_convert | Exhaustive date converter |
-| 179 | text_pass.c | draw_card_text | Complex text render |
-| 153 | seasonal_lighting.c | slp_sky_gradient | Sky color gradient |
-| 129 | scale_hud.c | hud_visibility_at_scale | Visibility rules |
-| 105 | kin_social.c | ks_match | Kin matching logic |
-| 98 | timeline_data.c | format_label | Label formatting |
-| 97 | content_curator.c | cc_digest | Content digest |
-| 97 | horizon_geometry.c | hzg_pack | Horizon mesh packing |
-| 95 | number_scanner.c | number_scan | Number pattern detection |
-| 87 | command_palette.c | cmd_palette_search | Command search |
-| 84 | zoroastrian_interpret.c | zi_interpret | Calendar interpretation |
-| 83 | lens_flare.c | lf_sun_config | Lens flare configuration |
+| 241 | convergence_detect.c | cd_is_significant | 18-case switch — domain logic |
+| 225 | main.c | main_loop | Central render loop — well-sectioned, hard to decompose |
+| 189 | text_pass.c | draw_card_text | Complex text render |
+| 142 | text_pass.c | text_pass_draw | GL text rendering |
+| 130 | hud.c | hud_update | HUD overlay update |
+| 105 | weather_overlay.c | wov_arrow_glyph | Wind arrow glyph geometry |
+| 103 | card_pass.c | card_pass_draw | GL card rendering |
+| 102 | brain_personal.c | br_personal_scan | Personal convergence analysis |
+| 99 | timeline_data.c | format_label | Label formatting |
+| 99 | post_pass.c | post_pass_init | FBO + shader setup |
+| 99 | planet_pass.c | planet_pass_init | Planet texture + shader setup |
+| 94 | ring_pass.c | ring_pass_draw | GL ring rendering |
+| 92 | astronomy_interpret.c | ai_phase_count (block) | Phase data array |
+| 90 | geology_interpret.c | gli_supercontinent_count (block) | Data array |
+| 89 | numerology_interpret.c | ni_number_count (block) | Data array |
 
-*13 functions >80L (5 over 100L). All domain-specific logic. No refactoring urgency.*
+*15 functions >80L (8 over 100L). main_loop grew from wiring (brain+motion+audio). GL passes are naturally large. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-20, session 27)
+## Health (INFRA sweep — 2026-03-21, session 28)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (431 .c files, 0 orphans) |
+| Build system sync | OK (436 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 23) |
-| Native build | PASS (460/460 tests, 1.44s) — use -j4 for clean builds |
+| Native build | PASS (463/463 tests, 1.43s) — use -j4 for clean builds |
 | WASM build | PASS (363 KB raw, ~143 KB gzipped) |
 | E2E tests | PASS (5/5 basic + 7/10 visual, 2 skips, 1 SwiftShader) |
 | Coverage | 95.9% lines (34,295/35,751), 99.97% functions (4,071/4,072) |
