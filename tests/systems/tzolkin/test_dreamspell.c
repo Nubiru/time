@@ -1,5 +1,6 @@
 #include "../../unity/unity.h"
 #include "../../../src/systems/tzolkin/dreamspell.h"
+#include <stdio.h>
 
 void setUp(void) {}
 void tearDown(void) {}
@@ -997,6 +998,187 @@ void test_wavespell_purpose_kin14(void) {
     TEST_ASSERT_EQUAL_STRING("Wizard", w.purpose);
 }
 
+/* ============================================================
+ * Planetary Holon — Dreamspell seal-planet correspondence
+ * Source: Arguelles, "Dreamspell" (1990)
+ * ============================================================ */
+
+void test_planet_dragon_neptune(void) {
+    dreamspell_planet_t p = dreamspell_planet(0);
+    TEST_ASSERT_EQUAL_STRING("Neptune", p.planet_name);
+    TEST_ASSERT_EQUAL_INT(8, p.freq_planet_index);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.0f, p.freq_multiplier);
+}
+
+void test_planet_wind_uranus(void) {
+    dreamspell_planet_t p = dreamspell_planet(1);
+    TEST_ASSERT_EQUAL_STRING("Uranus", p.planet_name);
+    TEST_ASSERT_EQUAL_INT(7, p.freq_planet_index);
+}
+
+void test_planet_night_saturn(void) {
+    dreamspell_planet_t p = dreamspell_planet(2);
+    TEST_ASSERT_EQUAL_STRING("Saturn", p.planet_name);
+    TEST_ASSERT_EQUAL_INT(6, p.freq_planet_index);
+}
+
+void test_planet_seed_jupiter(void) {
+    dreamspell_planet_t p = dreamspell_planet(3);
+    TEST_ASSERT_EQUAL_STRING("Jupiter", p.planet_name);
+    TEST_ASSERT_EQUAL_INT(5, p.freq_planet_index);
+}
+
+void test_planet_serpent_maldek(void) {
+    dreamspell_planet_t p = dreamspell_planet(4);
+    TEST_ASSERT_EQUAL_STRING("Maldek", p.planet_name);
+    /* Uses Mars index as nearest analog */
+    TEST_ASSERT_EQUAL_INT(4, p.freq_planet_index);
+    /* Different multiplier from Mars seal (5) */
+    TEST_ASSERT_TRUE(p.freq_multiplier != 1.0f);
+}
+
+void test_planet_bridger_mars(void) {
+    dreamspell_planet_t p = dreamspell_planet(5);
+    TEST_ASSERT_EQUAL_STRING("Mars", p.planet_name);
+    TEST_ASSERT_EQUAL_INT(4, p.freq_planet_index);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.0f, p.freq_multiplier);
+}
+
+void test_planet_hand_earth(void) {
+    dreamspell_planet_t p = dreamspell_planet(6);
+    TEST_ASSERT_EQUAL_STRING("Earth", p.planet_name);
+    TEST_ASSERT_EQUAL_INT(3, p.freq_planet_index);
+}
+
+void test_planet_star_venus(void) {
+    dreamspell_planet_t p = dreamspell_planet(7);
+    TEST_ASSERT_EQUAL_STRING("Venus", p.planet_name);
+    TEST_ASSERT_EQUAL_INT(2, p.freq_planet_index);
+}
+
+void test_planet_moon_mercury(void) {
+    dreamspell_planet_t p = dreamspell_planet(8);
+    TEST_ASSERT_EQUAL_STRING("Mercury", p.planet_name);
+    TEST_ASSERT_EQUAL_INT(1, p.freq_planet_index);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.0f, p.freq_multiplier);
+}
+
+void test_planet_dog_mercury_p5(void) {
+    dreamspell_planet_t p = dreamspell_planet(9);
+    TEST_ASSERT_EQUAL_STRING("Mercury", p.planet_name);
+    TEST_ASSERT_EQUAL_INT(1, p.freq_planet_index);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.5f, p.freq_multiplier);
+}
+
+void test_planet_monkey_venus_p5(void) {
+    dreamspell_planet_t p = dreamspell_planet(10);
+    TEST_ASSERT_EQUAL_STRING("Venus", p.planet_name);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.5f, p.freq_multiplier);
+}
+
+void test_planet_human_earth_p5(void) {
+    dreamspell_planet_t p = dreamspell_planet(11);
+    TEST_ASSERT_EQUAL_STRING("Earth", p.planet_name);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.5f, p.freq_multiplier);
+}
+
+void test_planet_skywalker_mars_p5(void) {
+    dreamspell_planet_t p = dreamspell_planet(12);
+    TEST_ASSERT_EQUAL_STRING("Mars", p.planet_name);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.5f, p.freq_multiplier);
+}
+
+void test_planet_wizard_maldek(void) {
+    dreamspell_planet_t p = dreamspell_planet(13);
+    TEST_ASSERT_EQUAL_STRING("Maldek", p.planet_name);
+    /* Maldek pair: different multiplier from Serpent (4) */
+    dreamspell_planet_t serpent = dreamspell_planet(4);
+    TEST_ASSERT_TRUE(p.freq_multiplier != serpent.freq_multiplier);
+}
+
+void test_planet_eagle_jupiter_p5(void) {
+    dreamspell_planet_t p = dreamspell_planet(14);
+    TEST_ASSERT_EQUAL_STRING("Jupiter", p.planet_name);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.5f, p.freq_multiplier);
+}
+
+void test_planet_warrior_saturn_p5(void) {
+    dreamspell_planet_t p = dreamspell_planet(15);
+    TEST_ASSERT_EQUAL_STRING("Saturn", p.planet_name);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.5f, p.freq_multiplier);
+}
+
+void test_planet_earth_uranus_p5(void) {
+    dreamspell_planet_t p = dreamspell_planet(16);
+    TEST_ASSERT_EQUAL_STRING("Uranus", p.planet_name);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.5f, p.freq_multiplier);
+}
+
+void test_planet_mirror_neptune_p5(void) {
+    dreamspell_planet_t p = dreamspell_planet(17);
+    TEST_ASSERT_EQUAL_STRING("Neptune", p.planet_name);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.5f, p.freq_multiplier);
+}
+
+void test_planet_storm_pluto(void) {
+    dreamspell_planet_t p = dreamspell_planet(18);
+    TEST_ASSERT_EQUAL_STRING("Pluto", p.planet_name);
+    TEST_ASSERT_TRUE(p.freq_planet_index >= 0);
+}
+
+void test_planet_sun_pluto(void) {
+    dreamspell_planet_t p = dreamspell_planet(19);
+    TEST_ASSERT_EQUAL_STRING("Pluto", p.planet_name);
+    TEST_ASSERT_TRUE(p.freq_planet_index >= 0);
+}
+
+/* Mirror symmetry: seals 0-8 pair with seals 17-9 (share planet name) */
+void test_planet_mirror_symmetry(void) {
+    for (int i = 0; i <= 8; i++) {
+        dreamspell_planet_t a = dreamspell_planet(i);
+        dreamspell_planet_t b = dreamspell_planet(17 - i);
+        TEST_ASSERT_EQUAL_STRING(a.planet_name, b.planet_name);
+        TEST_ASSERT_EQUAL_INT(a.freq_planet_index, b.freq_planet_index);
+    }
+}
+
+/* All 20 seals must have valid freq_planet_index (0-9) */
+void test_planet_all_valid_indices(void) {
+    for (int s = 0; s < 20; s++) {
+        dreamspell_planet_t p = dreamspell_planet(s);
+        TEST_ASSERT_TRUE(p.freq_planet_index >= 0);
+        TEST_ASSERT_TRUE(p.freq_planet_index <= 9);
+        TEST_ASSERT_TRUE(p.freq_multiplier > 0.0f);
+    }
+}
+
+/* All 20 seals produce unique frequency signatures (planet_index × multiplier) */
+void test_planet_20_unique_frequencies(void) {
+    float sigs[20];
+    for (int s = 0; s < 20; s++) {
+        dreamspell_planet_t p = dreamspell_planet(s);
+        sigs[s] = (float)p.freq_planet_index * 100.0f + p.freq_multiplier;
+    }
+    for (int i = 0; i < 20; i++) {
+        for (int j = i + 1; j < 20; j++) {
+            char msg[80];
+            snprintf(msg, sizeof(msg), "seal %d and %d must differ", i, j);
+            TEST_ASSERT_TRUE_MESSAGE(
+                sigs[i] != sigs[j] ||
+                (i == 4 && j == 5), /* Maldek/Mars share index but differ by mult */
+                msg);
+        }
+    }
+}
+
+void test_planet_invalid_seal(void) {
+    dreamspell_planet_t p = dreamspell_planet(-1);
+    TEST_ASSERT_EQUAL_STRING("?", p.planet_name);
+    TEST_ASSERT_EQUAL_INT(-1, p.freq_planet_index);
+    p = dreamspell_planet(20);
+    TEST_ASSERT_EQUAL_STRING("?", p.planet_name);
+}
+
 int main(void) {
     UNITY_BEGIN();
 
@@ -1114,6 +1296,32 @@ int main(void) {
     RUN_TEST(test_family_all_seals_covered);
     RUN_TEST(test_family_count);
     RUN_TEST(test_family_invalid);
+
+    /* Planetary Holon */
+    RUN_TEST(test_planet_dragon_neptune);
+    RUN_TEST(test_planet_wind_uranus);
+    RUN_TEST(test_planet_night_saturn);
+    RUN_TEST(test_planet_seed_jupiter);
+    RUN_TEST(test_planet_serpent_maldek);
+    RUN_TEST(test_planet_bridger_mars);
+    RUN_TEST(test_planet_hand_earth);
+    RUN_TEST(test_planet_star_venus);
+    RUN_TEST(test_planet_moon_mercury);
+    RUN_TEST(test_planet_dog_mercury_p5);
+    RUN_TEST(test_planet_monkey_venus_p5);
+    RUN_TEST(test_planet_human_earth_p5);
+    RUN_TEST(test_planet_skywalker_mars_p5);
+    RUN_TEST(test_planet_wizard_maldek);
+    RUN_TEST(test_planet_eagle_jupiter_p5);
+    RUN_TEST(test_planet_warrior_saturn_p5);
+    RUN_TEST(test_planet_earth_uranus_p5);
+    RUN_TEST(test_planet_mirror_neptune_p5);
+    RUN_TEST(test_planet_storm_pluto);
+    RUN_TEST(test_planet_sun_pluto);
+    RUN_TEST(test_planet_mirror_symmetry);
+    RUN_TEST(test_planet_all_valid_indices);
+    RUN_TEST(test_planet_20_unique_frequencies);
+    RUN_TEST(test_planet_invalid_seal);
 
     return UNITY_END();
 }

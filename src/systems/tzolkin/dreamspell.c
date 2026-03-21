@@ -287,3 +287,49 @@ int dreamspell_castle_count(void)
 {
     return 5;
 }
+
+/* --- Dreamspell Planetary Holon ---
+ *
+ * Arguelles assigns each seal to a planet in the Planetary Holon.
+ * Seals 0-8 pair with seals 17-9 (mirror symmetry), sharing a planet.
+ * Seals 18-19 are Pluto.
+ *
+ * freq_planet_index maps to frequency.h (0=Earth day .. 9=Moon synodic).
+ * Maldek (destroyed planet) uses Mars (index 4) as nearest analog.
+ * Pluto uses Neptune (index 8) as nearest neighbor.
+ * freq_multiplier distinguishes paired seals (P5=1.5, 8va=2.0). */
+
+static const dreamspell_planet_t PLANET_TABLE[20] = {
+    {"Neptune",  8, 1.0f},  /*  0 Dragon     */
+    {"Uranus",   7, 1.0f},  /*  1 Wind       */
+    {"Saturn",   6, 1.0f},  /*  2 Night      */
+    {"Jupiter",  5, 1.0f},  /*  3 Seed       */
+    {"Maldek",   4, 1.25f}, /*  4 Serpent    — Mars × major third */
+    {"Mars",     4, 1.0f},  /*  5 Bridger    */
+    {"Earth",    3, 1.0f},  /*  6 Hand       */
+    {"Venus",    2, 1.0f},  /*  7 Star       */
+    {"Mercury",  1, 1.0f},  /*  8 Moon       */
+    {"Mercury",  1, 1.5f},  /*  9 Dog        — Mercury × P5 */
+    {"Venus",    2, 1.5f},  /* 10 Monkey     — Venus × P5 */
+    {"Earth",    3, 1.5f},  /* 11 Human      — Earth × P5 */
+    {"Mars",     4, 1.5f},  /* 12 Skywalker  — Mars × P5 */
+    {"Maldek",   4, 2.0f},  /* 13 Wizard     — Mars × octave */
+    {"Jupiter",  5, 1.5f},  /* 14 Eagle      — Jupiter × P5 */
+    {"Saturn",   6, 1.5f},  /* 15 Warrior    — Saturn × P5 */
+    {"Uranus",   7, 1.5f},  /* 16 Earth      — Uranus × P5 */
+    {"Neptune",  8, 1.5f},  /* 17 Mirror     — Neptune × P5 */
+    {"Pluto",    8, 2.0f},  /* 18 Storm      — Neptune × octave */
+    {"Pluto",    0, 1.5f},  /* 19 Sun        — Earth day × P5 (solar) */
+};
+
+dreamspell_planet_t dreamspell_planet(int seal)
+{
+    if (seal < 0 || seal > 19) {
+        dreamspell_planet_t p;
+        p.planet_name = "?";
+        p.freq_planet_index = -1;
+        p.freq_multiplier = 0.0f;
+        return p;
+    }
+    return PLANET_TABLE[seal];
+}

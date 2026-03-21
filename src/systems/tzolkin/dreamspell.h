@@ -99,4 +99,22 @@ int dreamspell_family_count(void);
 /* Number of castles (always 5). */
 int dreamspell_castle_count(void);
 
+/* Dreamspell planetary correspondence.
+ *
+ * Each seal maps to a planet. Seals 0-8 pair with seals 17-9 (mirror).
+ * Seals 18-19 map to Pluto. freq_planet_index uses frequency.h indices.
+ * freq_mult differentiates paired seals (1.0=fundamental, 1.5=P5, 2.0=8va).
+ *
+ * Source: Arguelles, "Dreamspell" (1990) — Planetary Holon. */
+
+typedef struct {
+    const char *planet_name;  /* "Neptune", "Mercury", "Maldek", "Pluto", etc. */
+    int freq_planet_index;    /* frequency.h planet index (0-9), or -1 */
+    float freq_multiplier;    /* 1.0=fundamental, 1.5=perfect fifth, 2.0=octave */
+} dreamspell_planet_t;
+
+/* Get planetary correspondence for a seal (0-19).
+ * Returns planet_name="?" for invalid seal. */
+dreamspell_planet_t dreamspell_planet(int seal);
+
 #endif /* TIME_DREAMSPELL_H */

@@ -37,6 +37,9 @@
 #include "../ui/audio_engine.h"
 #include "../ui/audio_meditation.h"
 #include "../ui/audio_culture.h"
+#include "../systems/tzolkin/tzolkin.h"
+#include "../systems/tzolkin/dreamspell.h"
+#include "../systems/unified/audio_data.h"
 #include "../systems/unified/brain_scan.h"
 #include "../systems/unified/brain_narrative.h"
 #include <string.h>
@@ -270,38 +273,50 @@ void main_loop(void) {
                 audio.reverb_wet = 0.85f;
         }
 
-        /* Focus-mode cultural timbre override (S108):
-         * When user presses K/A/I/C/D, force that system's timbre into
-         * the cultural slot (index 8), overriding brain-driven timbre. */
+        /* Focus-mode audio override (S108):
+         * K key: seal-specific planetary tone from Dreamspell correspondence.
+         * A/I/C keys: cultural timbre from audio_culture. */
         {
             int fm = g_state.view.focus_mode;
             if (fm > 0 && fm < 6) {
-                /* Map focus_mode to cd_system_t (values align for 1-4) */
-                static const int FOCUS_TO_CD[] = {
-                    -1,                /* 0: OVERVIEW */
-                    CD_SYS_ASTROLOGY,  /* 1: A key */
-                    CD_SYS_TZOLKIN,    /* 2: K key */
-                    CD_SYS_ICHING,     /* 3: I key */
-                    CD_SYS_CHINESE,    /* 4: C key */
-                    -1                 /* 5: D key (Human Design, no cd_system) */
-                };
-                int cd_sys = FOCUS_TO_CD[fm];
-                if (cd_sys >= 0 && audio_culture_has_timbre((cd_system_t)cd_sys)) {
-                    audio_culture_t culture = audio_culture_get((cd_system_t)cd_sys);
-                    int slot = 8; /* dedicated cultural timbre slot */
-                    audio.focused_system = cd_sys;
-                    audio.frequencies[slot] = culture.base_freq_hz;
-                    /* Prominent when user-focused (vs 0.3x for brain-driven) */
-                    audio.amplitudes[slot] = culture.base_amplitude * 0.5f;
-                    audio.waveform_types[slot] = 0;
-                    audio.harmonic_counts[slot] = culture.partial_count;
-                    for (int h = 0; h < culture.partial_count
-                         && h < AS_MAX_HARMONICS; h++) {
-                        audio.harmonic_amps[slot][h] = culture.partials[h];
+                int slot = 8; /* dedicated cultural timbre slot */
+
+                if (fm == 2) {
+                    /* FOCUS_MODE_KIN — Dreamspell seal-specific planetary tone */
+                    tzolkin_day_t tz = tzolkin_from_jd(g_state.simulation_jd);
+                    dreamspell_planet_t dp = dreamspell_planet(tz.seal);
+                    if (dp.freq_planet_index >= 0) {
+                        audio_planet_profile_t prof = audio_planet_profile(dp.freq_planet_index);
+                        audio.focused_system = CD_SYS_TZOLKIN;
+                        audio.frequencies[slot] = (float)(prof.fundamental_hz * (double)dp.freq_multiplier);
+                        audio.amplitudes[slot] = (float)prof.base_amplitude * 0.5f;
+                        audio.waveform_types[slot] = (int)prof.waveform;
+                        audio.harmonic_counts[slot] = prof.harmonic_count;
+                        for (int h = 0; h < prof.harmonic_count && h < AS_MAX_HARMONICS; h++)
+                            audio.harmonic_amps[slot][h] = (float)prof.harmonics[h].amplitude;
+                        audio.pan_positions[slot] = 0.0f;
+                        if (audio.planet_count <= slot)
+                            audio.planet_count = slot + 1;
                     }
-                    audio.pan_positions[slot] = 0.0f;
-                    if (audio.planet_count <= slot)
-                        audio.planet_count = slot + 1;
+                } else {
+                    /* A/I/C/D — cultural timbre */
+                    static const int FOCUS_TO_CD[] = {
+                        -1, CD_SYS_ASTROLOGY, -1, CD_SYS_ICHING, CD_SYS_CHINESE, -1
+                    };
+                    int cd_sys = FOCUS_TO_CD[fm];
+                    if (cd_sys >= 0 && audio_culture_has_timbre((cd_system_t)cd_sys)) {
+                        audio_culture_t culture = audio_culture_get((cd_system_t)cd_sys);
+                        audio.focused_system = cd_sys;
+                        audio.frequencies[slot] = culture.base_freq_hz;
+                        audio.amplitudes[slot] = culture.base_amplitude * 0.5f;
+                        audio.waveform_types[slot] = 0;
+                        audio.harmonic_counts[slot] = culture.partial_count;
+                        for (int h = 0; h < culture.partial_count && h < AS_MAX_HARMONICS; h++)
+                            audio.harmonic_amps[slot][h] = culture.partials[h];
+                        audio.pan_positions[slot] = 0.0f;
+                        if (audio.planet_count <= slot)
+                            audio.planet_count = slot + 1;
+                    }
                 }
             }
         }
