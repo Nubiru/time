@@ -219,7 +219,7 @@ void main_loop(void) {
         .log_zoom      = g_state.camera.log_zoom,
         .observer_lat  = g_state.observer_lat,
         .observer_lon  = g_state.observer_lon,
-        .theme_id      = (int)g_state.auto_theme.active_theme,
+        .theme_id      = 0, /* THEME_COSMOS — always dark, Dawn disabled */
         .focus_mode    = g_state.view.focus_mode,
     };
     memcpy(frame.headline, g_state.headline, sizeof(frame.headline));

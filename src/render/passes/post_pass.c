@@ -13,7 +13,6 @@
 #include <GLES3/gl3.h>
 #include "../shader.h"
 #include "../post_process.h"
-#include "../../ui/theme.h"
 
 /* --- Module-static GL handles --- */
 
@@ -198,9 +197,10 @@ int post_pass_init(int width, int height) {
 }
 
 void post_pass_begin(const render_frame_t *frame) {
-    /* Set clear color from active theme (Cosmos=space-black, Dawn=warm white) */
-    theme_t t = theme_get((theme_id_t)frame->theme_id);
-    glClearColor(t.bg_space.r, t.bg_space.g, t.bg_space.b, 1.0f);
+    (void)frame;
+    /* Cosmos space-black — hardcoded per visual design Principle 1.
+     * Theme-dependent clear color caused Dawn flash bug. */
+    glClearColor(0.024f, 0.027f, 0.036f, 1.0f);
 
     if (s_pp_active) {
         glBindFramebuffer(GL_FRAMEBUFFER, s_pp_scene_fbo);
