@@ -233,6 +233,8 @@ time_add_test(NAME test_telektonon_journey TEST tests/systems/tzolkin/test_telek
 time_add_test(NAME test_force_lines  TEST tests/systems/tzolkin/test_force_lines.c  DEPS force_lines)
 time_add_test(NAME test_telektonon_cards TEST tests/systems/tzolkin/test_telektonon_cards.c DEPS telektonon_cards)
 time_add_test(NAME test_synchronotron TEST tests/systems/tzolkin/test_synchronotron.c DEPS synchronotron)
+time_add_test(NAME test_matrix_441   TEST tests/systems/tzolkin/test_matrix_441.c   DEPS matrix_441)
+time_add_test(NAME test_haab_vinal   TEST tests/systems/tzolkin/test_haab_vinal.c   DEPS haab_vinal)
 time_add_test(NAME test_coptic         TEST tests/systems/coptic/test_coptic.c        DEPS coptic calendar_fixed)
 time_add_test(NAME test_coptic_interpret TEST tests/systems/coptic/test_coptic_interpret.c DEPS coptic_interpret content_i18n i18n)
 time_add_test(NAME test_coptic_i18n TEST tests/systems/coptic/test_coptic_i18n.c DEPS coptic_interpret content_i18n i18n)
