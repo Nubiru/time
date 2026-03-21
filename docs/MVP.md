@@ -16,7 +16,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | L4 | **Earth Through Time** | Cinematic 4.5Ga voyage: Pangea → continents, dinosaurs → humans, chemical composition, population counter | Data: partial Display: ❌ |
 | L5 | **The Concentric Wheel** | Layered information — zoom from today → cycle → era → cosmos. Fly through depth. 3D card navigation. | Module: ✅ Wired: partial |
 | L6 | **Sound of the Spheres** | Planetary frequencies, convergence chords, viewpoint soundscapes. Pianist recordings. | Engine: ✅ Content: ❌ |
-| L7 | **21 Languages** | Every text in 21 languages with poetic voice influenced by humanity's greatest minds | UI labels: ✅ 111 keys × 21 langs. Content: 🔄 642+ keys EN+ES across 7 systems. 7/33 modules locale-wired (commit fd41df2). |
+| L7 | **21 Languages** | Every text in 21 languages with poetic voice influenced by humanity's greatest minds | UI labels: ✅ 111 keys × 21 langs. Content: ✅ EN 3534 / ES 3533 / PT 3534 keys. Spanish + Portuguese COMPLETE. 2/21 languages done. Wisdom voice: 10 archetypes defined. |
 | L8 | **The "Enter Time" Experience** | Click threshold → cinematic zoom → solar system reveals → first hint → discovery | CSS: ✅ Animation: ✅ Wiring: ✅ (commit ff0b1fd). Camera fly-in active on load. Skip on key/touch. |
 | L9 | **Personal Space (Diamond Room)** | Your identity across all systems. Birth chart + Kin + hexagram + HD. Customizable 3D space. | Data: ✅ Display: ❌ |
 | L10 | **Wave Watch & Earth View** | Tide, surf, weather from astronomical computation. 24h forecast. Surfer's dream. | Data: ✅ Display: ❌ |
@@ -59,7 +59,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | S18 | Focus modes (A/K/I/C/D keys) | ✅ wired |
 | S19 | "Enter Time" threshold CSS | ✅ built |
 | S20 | Zoom animation (threshold → solar system) | ✅ Built + WIRED (commit ff0b1fd). enter_zoom in main_loop. Accessibility: prefers-reduced-motion. |
-| S21 | Card fly-through between layers | ✅ Built (`card_flight.h/.c`, commit 7f761b4). 6 depth stops, spring animation, crossfade. Wiring: ❌ |
+| S21 | Card fly-through between layers | ✅ Built + WIRED (commits 7f761b4 + 695f3c2). 6 depth stops, spring animation, crossfade. PageDown/PageUp + Escape cancel. |
 | S22 | Universal card layout | ✅ WIRED (commit a0c7676). Card backgrounds + text themed per system. card_pass + text_pass render live. Remaining: populate card_content from interpret modules. |
 | S23 | Birth moment sky rendering | ✅ Built + Wired (commit bd00931). B key toggles. 25 tests. Default date only — needs onboarding wire. |
 | S24 | Audio engine (WebAudio) | ✅ built |
@@ -87,7 +87,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | S41 | Birth date entry onboarding | ✅ Data built (`birth_entry.h/.c`, 84 tests, 3-step state machine). Display: ❌ needs wheel UI |
 | S42 | "Author of Time" profile card | ✅ Built (`author_card.h/.c`, 38 tests). Display: ❌ needs card renderer |
 | S43 | 21 language translations (ES, HE, PT, AR, ZH, FR, DE, JA, HI, KO, RU, TR, ID, BN, VI, TH, FA, MY, SW, AM) | ✅ ALL 21 shipped |
-| S44 | Wisdom voice guide (how great minds communicate) | ✅ researched |
+| S44 | Wisdom voice guide (how great minds communicate) | ✅ Built (`data/content/voice_guide.json`, 10 archetypes, 124 keys, commit 537c80a). Display: ❌ |
 | S45 | Wisdom display module | ✅ built |
 | S46 | 30 narrative templates (5 per thread) | ✅ built |
 | S47 | Seasonal greetings | ✅ built |
@@ -105,9 +105,9 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | S54 | Personal View (birth chart focus) | ❌ NOT BUILT |
 | S55 | Deep Time View (geological timeline cinematic) | ❌ NOT BUILT |
 | S56 | City View (local horizon + sky + social) | ❌ NOT BUILT |
-| S57 | Room View (personal 3D diamond space) | ❌ LONG-TERM |
+| S57 | Room View (personal 3D diamond space) | ✅ Data built (`diamond_room.h/.c`, 79 tests, commit 046bfbf). Crystal from birth profile. Display: ❌ |
 | S58 | View selector UI (switch between views) | ❌ NOT BUILT |
-| S59 | View transition animations (smooth fly between) | ❌ NOT WIRED |
+| S59 | View transition animations (smooth fly between) | 🔄 Partial — earth_transition wired (E key, commit ff0b1fd), birth_flight wired (B key). Other views need similar choreography. |
 
 ### Social & Community
 
@@ -158,16 +158,23 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 
 ## Score
 
-**Large MVPs**: 1/15 near-delivered (L8 "Enter Time" — CSS+animation+wiring all done). L7: 7/33 modules locale-wired.
-**Small MVPs**: ~64/107 built, ~43 remaining. 426 tests pass. 101K LOC.
-**Overall**: Infrastructure 90%. Experience 25%. WASM 345 KB.
+**Large MVPs**: 2/15 near-delivered (L7 ES+PT COMPLETE, L8 "Enter Time" wired). L7: 3 languages, 3534 keys each.
+**Small MVPs**: ~85/120 built, ~35 remaining. 496 tests pass. 110K LOC (src/), 469 .c files.
+**Overall**: Infrastructure 94%. Modules 85%. Display 33%. Experience 20%. WASM 365 KB.
+**New MVPs added**: S108-S113 (Audio/Voice), S114-S120 (Kin Maya Visual Layouts). Total: 120.
+**Wiring gap**: 27 Kin Maya layouts + 33 interpret modules + 18 PERSONA modules = massive data. 0 Kin Maya layouts wired to card_pass.
 
 **MILESTONES (2026-03-20)**:
 - Cards visible (a0c7676) + polished (aa3e791)
 - "Enter Time" zoom WIRED (ff0b1fd) — camera fly-in active on page load
 - localStorage bridge DELIVERED (668cc19) — PERSONA WASM unblocked
-- 101K LOC milestone (fe57c81)
-- LANGUAGE: 7/33 modules locale-wired, 642+ keys EN+ES
+- 105K LOC milestone (1d8da43)
+- **LANGUAGE SPANISH COMPLETE** (7c8b9da): 3534 EN / 3533 ES keys, 33/33 systems, 100% key coverage
+- Brain wiring LIVE (38c850a): headline + convergence_motion in main_loop
+- Convergence visualization READY (5867a0d): quad lines + ring glow, dormant until MSG-V012
+- 6 world calendar palettes (ff08e8d): Coptic, Ethiopian, Persian, Japanese, Korean, Thai
+- 15 E2E tests (e9bd455): 7 pass, 2 skip, 1 fail (SwiftShader)
+- BRAIN explain DB: 75 entries, 72 score pairs, 70 stored dates
 
 ### NERVE Audit Notes (2026-03-20)
 - **BRAIN S85, S86, S87, S96**: ✅ Verified in `brain_stats.h/.c` (commit f3d0042). 28 tests.
@@ -175,7 +182,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 - **BRAIN S99, S101**: ✅ Verified `grand_cycle.h/.c` + `time_entropy.h/.c` (commit f236b1f).
 - **S106**: ✅ Verified natal aspects in `birth_sky.c` (commit 96e0168). 6 aspect tests.
 - **S23**: ✅ Birth sky wired (commit bd00931). B key works. Default 2000-01-01.
-- **Stream test count discrepancies**: MOTION claims 389, found 215. DEPTH claims 1360+, isolated depth tests show 287 (may include cross-system interpret tests).
+- **Stream test count discrepancies**: MOTION verified 416 RUN_TEST across 20 modules (previous claim 389 was undercount, NERVE's 215 was partial scan). DEPTH claims 1360+, isolated depth tests show 287 (may include cross-system interpret tests).
 - **All module code verified as real implementations, not stubs.**
 
 ---
@@ -194,16 +201,39 @@ Every stream session: check which MVPs your work addresses. If none — you're b
 | S100 | **System Correlation Matrix** — 21×21 grid showing which system pairs co-fire most often across decades. Heatmap of resonance. | ✅ Built (commit 04958a2). `system_correlation.h/.c` — `sc_corr_compute()`, `sc_corr_top_pairs()`. Display: ❌ |
 | S101 | **Time Entropy Display** — Shannon entropy of today's alignment pattern. "Today's time-entropy: 0.87 — 87% of maximum information." Most rigorous "wow" metric. | ✅ Built (commit f236b1f). `time_entropy.h/.c` — `te_entropy()`, `te_interpret()`. Display: ❌ |
 | S102 | **Time Travel Explorer** — Navigate to any date in history, see all 25+ systems at that moment. Historical exploration mode. | ❌ ts_compute works for any JD |
-| S103 | **Deep Tzolkin Experience** — 260-day interactive board, wavespell journey, Dreamspell game mechanics. Juan's daily Kin energy page. | ❌ tzolkin_interpret built, ZERO game UI |
-| S104 | **Calendar Round Flower** — 52-year visualization showing Tzolkin + Haab interlocking cycles. Sacred geometry mandala. | ❌ NOT BUILT |
+| S103 | **Deep Tzolkin Experience** — 260-day interactive board, wavespell journey, Dreamspell game mechanics. Juan's daily Kin energy page. | 🔄 Data modules: kin_board (260 cells), kin_oracle, kin_wavespell_journey, kin_daily_chrono, kin_pulsar, kin_castle, kin_moon_page, heptad_gate. Display: ❌ |
+| S104 | **Calendar Round Flower** — 52-year visualization showing Tzolkin + Haab interlocking cycles. Sacred geometry mandala. | ✅ Built (`kin_round_layout.h/.c`, 24 tests, commit 277dde8). Display: ❌ |
 
 ### Personalization & Adaptive Experience (NEW — from vision audit)
 
 | # | MVP | Status |
 |---|-----|--------|
-| S105 | **Usage-Based Personalization** — Automatic interest profile from behavior. "Visited Kin Maya 4/7 days" → surface Kin content. No forms, no questions. Privacy-first. | ❌ NOT BUILT |
+| S105 | **Usage-Based Personalization** — Automatic interest profile from behavior. "Visited Kin Maya 4/7 days" → surface Kin content. No forms, no questions. Privacy-first. | ✅ Built (`usage_interest.h/.c`, 62 tests). Display: ❌ |
 | S106 | **Aspect Lines at Birth** — Visible planet connection lines rendered in birth moment view. Geometric beauty of your natal sky. | ✅ Built (commit 96e0168). Natal aspects + geo_longitudes in `birth_sky_t`. 25 tests. Display: ❌ |
 | S107 | **Procedural Glyph Generation** — Code-generated seals, zodiac, planet icons. "Every pixel earned" alternative/fallback to AI/human art. | ❌ NOT BUILT (design decision needed) |
+
+### Audio & Voice Experience (NEW — from Gabriel vision 2026-03-20)
+
+| # | MVP | Status |
+|---|-----|--------|
+| S108 | **Seal tone frequencies** — Each of 20 seals plays a unique tone when its card is focused. Map seal→planet→frequency from `audio_data.h`. | ✅ Built (commit 3b02690). Dreamspell Planetary Holon: 20 seals→10 planets, P5/8va multipliers, slot 8. 28 tests. |
+| S109 | **Color family soundscapes** — Red=drums, White=wind, Blue=water, Yellow=fire. Background ambient shifts with active seal color. | ❌ AUDIO + pianist |
+| S110 | **Archetype voice-over (Gabriel)** — Gabriel records 20 archetype poems. ElevenLabs clones voice for other languages. Toggle: text/voice/off. | ❌ Gabriel records → ElevenLabs |
+| S111 | **Convergence chord** — When systems converge, their frequencies resolve into a chord. Rare convergence = richer chord. | ✅ Built (commit 9de7091). Multi-system timbre blend: average freq weighted by score, merged partials. |
+| S112 | **Wavespell musical motif** — Each 13-day wavespell has a motif that evolves from tone 1→13. Pianist collaboration. | ❌ LONG-TERM, pianist |
+| S113 | **Narration accessibility** — Voice reads daily narrative aloud. Blind users get full experience. Toggle in settings. | ❌ ElevenLabs + PERSONA |
+
+### Kin Maya Visual Layouts (NEW — from visual inventory 2026-03-20)
+
+| # | MVP | Status |
+|---|-----|--------|
+| S114 | **Oracle cross layout** — 5-kin daily reading: center + guide/analog/antipode/occult. THE daily Kin Maya view. | ✅ Built (`kin_oracle_layout.h/.c`, 31 tests, commit 63b097c). Display: ❌ |
+| S115 | **Kin card (complete daily info)** — Seal + tone + color + oracle + wavespell position + castle. | ✅ Built (`kin_cell.h/.c` 24 tests + `kin_card_layout.h/.c` 35 tests, commits 63b097c + bd73cc2). Display: ❌ |
+| S116 | **Wavespell skeleton** — 13 connected cells showing current position in 13-day journey. | ✅ Built (`kin_wavespell_layout.h/.c`, 31 tests, commit 63b097c). Display: ❌ |
+| S117 | **260-day Harmonic Module board** — Full 20×13 grid with today highlighted. Seals Y, tones X. | ✅ Built (`kin_board_layout.h/.c`, commit bd73cc2). Display: ❌ |
+| S118 | **Concentric Tzolkin wheel** — Seals outer, tones inner, color quadrants. Interactive rotation. | ✅ Built (`kin_wheel_layout.h/.c`, commit 277dde8). Display: ❌ |
+| S119 | **Calendar Round wheel** — 52-year cycle with kin + Gregorian year. | ✅ Built (`kin_round_layout.h/.c`, commit 277dde8). Display: ❌ |
+| S120 | **Telektonon game board** — 28-day prophecy journey. Needs book extraction first. | ✅ Data built: `telektonon_board.h/.c` + `telektonon_journey.h/.c` + `telektonon_cards.h/.c` + `force_lines.h/.c` + `clear_signs.h/.c` (DEPTH). Layout: `kin_telektonon_layout.h/.c` (VISUALS L11). Display: ❌ |
 
 ### Statistics & Mathematical Displays (from MEGA audit)
 
@@ -215,8 +245,8 @@ Every stream session: check which MVPs your work addresses. If none — you're b
 | S88 | **Decade convergence heatmap** — visual grid showing convergence intensity across years. Find meta-patterns. | ✅ Built (commit 84721d7). `decade_heatmap.h/.c` — 12yr×366day grid. 20 tests. Display: ❌ |
 | S89 | **Sacred number frequency analysis** — how often do 7, 12, 13, 19, 22, 64, 108, 260, 432 appear across systems on the same day? | ✅ Built (commit 84721d7). `sacred_scan.h/.c` — scans 6 calendars for 13 sacred numbers. 27 tests. Display: ❌ |
 | S90 | **Precession clock** — where are we in the 25,772-year cycle? Visual display showing the Great Year position. | ❌ precession_detect.h exists |
-| S91 | **Human existence as fraction of Earth** — "Humans have existed for 0.0065% of Earth's history" with visual scale | ❌ NOT BUILT |
-| S92 | **"You are alive during..."** — probability of being alive NOW vs any point in history (7.4% of all humans who ever lived are alive today) | ❌ NOT BUILT |
+| S91 | **Human existence as fraction of Earth** — "Humans have existed for 0.0065% of Earth's history" with visual scale | ✅ Built (`earth_fraction.h/.c`, commit 5f04907, 395 test LOC). Display: ❌ |
+| S92 | **"You are alive during..."** — probability of being alive NOW vs any point in history (7.4% of all humans who ever lived are alive today) | ✅ Built (`earth_fraction.h/.c`, commit 5f04907). Display: ❌ |
 | S93 | **Heartbeat of humanity** — collective heartbeats since dawn of humans. Running counter. | ❌ biorhythm.h has data |
 | S94 | **Convergence calendar for the year** — which days this year will be most aligned? Plan your life around cosmic rhythms. | ✅ BRAIN just built 2026 report! |
 | S95 | **Population counter overlay** — live estimate of humans alive, layered on Earth View | ❌ human_population queued |

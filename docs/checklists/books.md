@@ -1,7 +1,176 @@
 # Books I Need — Gabriel's Shopping List
 
 Claude maintains this list. You find them, drop them in `~/Desktop/temp/time/inbox/`. Done.
-Full library catalog: `LIBRARY.md` (215 items acquired).
+Full library catalog: `LIBRARY.md` (~290 items acquired).
+
+---
+
+## ACQUIRED 2026-03-21 — GABRIEL'S MEGA DROP (75 books!)
+
+Cataloged by NERVE session 17. 75 book files + 1 directory (3 files) + 1 image (skipped). Moved from inbox/ to new/.
+
+### Tzolkin / Arguelles (P0-P1)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **The Art Planet Chronicles** | Jose Arguelles | P0 | DUPLICATE — already in library (3 copies). epub in inbox. |
+
+### Taoism / Eastern Philosophy (P1)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **Lao-tzu's Taoteching** | Lao Tzu (Red Pine trans.) | P1 | Core Taoist text. Connects to I Ching, Chinese systems. |
+| **The Daode Jing: A Guide** | Livia Kohn | P1 | Academic guide to Daodejing. Oxford UP. |
+| **Siddhartha** | Hermann Hesse | P1 | Buddhist literature. Wisdom voice source. |
+
+### Astronomy / Cosmology (P1)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **100 Astronomical Images That Changed the World** | Various | P1 | Visual astronomy. Reference for VISUALS. |
+| **Elementary Cosmology** | James Kolata | P1 | Aristotle → Big Bang. Universe structure. |
+
+### Astrology (P1)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| ~~Unleashing the Power of Astro~~ | ~~Tamas Piros~~ | REMOVED | **WRONG BOOK — Astro.js framework, NOT astrology.** |
+| **The Inner Sky** | Steven Forrest | P0 | Dynamic modern astrology. Visual chart reading. IN INBOX. |
+| **The Only Astrology Book You'll Ever Need** | Joanna Woolfolk | P0 | Comprehensive visual reference. Downloading. |
+
+### Philosophy / Wisdom Voice (P1-P2)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **The Meditations** | Marcus Aurelius | P1 | Stoic philosophy. Wisdom voice: one of humanity's greatest. |
+| **Synchronicity** | (Unknown — check) | P1 | May duplicate existing Jung Synchronicity. Verify. |
+
+### Earth Science / Geology (P2)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **A Short History of Nearly Everything** | Bill Bryson | P2 | Science history, geology, Earth. Reference for DEPTH. |
+| **Essay on the Theory of the Earth** | Georges Cuvier | P2 | Early geological theory. Cambridge Library. |
+| **Evidence as to Man's Place in Nature** | T.H. Huxley | P2 | Human evolution classic. Cambridge Library. |
+
+### History / Civilization (P2)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **Guns, Germs, and Steel** | Jared Diamond | P2 | Human civilizations arc. Cross-cultural. |
+| **Sapiens** | Yuval Noah Harari | P2 | Brief history of humankind. |
+| **Homo Deus** | Yuval Noah Harari | P2 | Brief history of tomorrow. |
+| **De animales a dioses** | Yuval Noah Harari | P2 | Sapiens in Spanish. |
+| **El imperio socialista de los Incas** | Louis Baudin | P2 | Inca civilization. Andean calendar context. |
+| **Central Asia: A New History** | Adeeb Khalid | P2 | Central Asian history. |
+
+### Hebrew / Biblical (P2)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **Genesis 1-11 Hebrew Text Handbook** | Barry Bandstra | P2 | Hebrew text analysis. Calendar/creation context. |
+
+### Spirituality / Esoteric (P2)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **A Course in Miracles** | Helen Schucman | P2 | Spiritual wisdom text. |
+| **The Four Agreements** | Don Miguel Ruiz | P2 | Toltec wisdom. Mesoamerican philosophy. |
+| **LOS 4 ACUERDOS** | Don Miguel Ruiz | P2 | Four Agreements in Spanish. |
+| **El Libro del Conocimiento** | Unknown | P2 | Esoteric knowledge (Spanish). |
+| **Libro del Conocimiento** | Unknown | P2 | May duplicate above. |
+| **Guia conocimiento esoterico** | Unknown | P2 | Esoteric guide (Spanish). |
+| **Diccionario de Simbolos** | Unknown | P2 | Symbol dictionary (Spanish). Cross-system reference. |
+| **Diccionario Esotarico** | Unknown | P2 | Esoteric dictionary (Spanish). |
+| **War of the Worldviews** | Deepak Chopra & Leonard Mlodinow | P2 | Science vs Spirituality debate. |
+| **Wisdom Cards** | Louise L. Hay | P2 | Card design reference + wisdom content. |
+| **La Mente Holotrópica** | Stanislav Grof | P2 | Transpersonal psychology (Spanish). |
+| **La Sabiduría del Eneagrama** | Unknown | P2 | Enneagram system (Spanish). PERSONA relevance. |
+
+### Science / Spirituality Intersection (P2)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **Worlds Beyond The Poles** | (Unknown) | P2 | Physical continuity of universe. Alternative cosmology. |
+
+### Self-Help / Psychology (P3)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **Mindset: The New Psychology of Success** | Carol Dweck | P3 | Psychology. 2 editions in inbox. |
+| **La Sabiduria de las Emociones** | Norberto Levy | P3 | Emotional wisdom (Spanish). |
+| **Las neuronas de Dios** | Diego Golombek | P3 | Neuroscience/spirituality (Spanish). |
+
+### Biography / History (P3)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **The Autobiography of Malcolm X** | Malcolm X & Alex Haley | P3 | Wisdom voice potential. |
+| **Alexander the Great** | Peter Chrisp | P3 | Historical biography. |
+| **The Beauty and the Terror** (Italian Renaissance) | Catherine Fletcher | P3 | Renaissance history. |
+| **The Ascent of Money** | Niall Ferguson | P3 | Financial history. |
+| **A Short History of Man** | Hans-Hermann Hoppe | P3 | Progress and decline. |
+
+### Deepak Chopra Collection (P3)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **Teens Ask Deepak** | Deepak Chopra | P3 | Spiritual Q&A. |
+| **Fire in the Heart** | Deepak Chopra | P3 | Spiritual guide for teens. |
+| **Reinventing the Body** | Deepak Chopra | P3 | Body/soul. |
+| **The Soul of Leadership** | Deepak Chopra | P3 | Leadership. |
+| **The Ultimate Happiness Prescription** | Deepak Chopra | P3 | Happiness. |
+| **Boundless Energy** | Deepak Chopra | P3 | Mind-body energy. |
+
+### Religion / Theology (P3)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **Great Doctrines of the Bible** | Martyn Lloyd-Jones | P3 | Christian theology. |
+| **Experiencing the New Birth** | Martyn Lloyd-Jones | P3 | Christian theology (AZW format). |
+| **Living Water** | Martyn Lloyd-Jones | P3 | Christian theology (AZW format). |
+| **Vintage Jesus** | Mark Driscoll | P3 | Christian theology. |
+| **None Like Him** | Jen Wilkin | P3 | Christian theology. |
+| **Prayer Coach** | James Nicodem | P3 | Prayer guide. |
+| **destino del alma segun el cristianismo** | Unknown | P3 | Soul destiny — Christianity (Spanish). |
+| **Destino de las Almas** | Unknown | P3 | Soul destiny (Spanish). |
+
+### Fiction / Literature (P3)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **All the Skills 1** | Honour Rae | P3 | LitRPG fiction. |
+| **All the Skills 2** | Honour Rae | P3 | LitRPG fiction. |
+| **Juan Salvador Gaviota** | Richard Bach | P3 | Jonathan Livingston Seagull (Spanish). |
+| **La Novena Revelación** | James Redfield | P3 | Celestine Prophecy (Spanish). |
+
+### Language / Linguistics (P3)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **A Word A Day** | Anu Garg | P3 | Unusual English words. |
+| **Lengua materna** | Miryam Yataco | P3 | Indigenous languages (Spanish). |
+
+### Software / Tech (P3)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **Domain-Driven Design** | Eric Evans | P3 | Software architecture classic. |
+| **Creating Software with Modern Diagramming** | Unknown | P3 | Diagramming techniques. |
+| **AI Agents Unleashed** | Unknown | P3 | AI agents 2025. |
+| **How To Use AI Agents in 2025** | Unknown | P3 | AI agents guide. |
+
+### Other (P3)
+| Book | Author | Priority | Notes |
+|------|--------|----------|-------|
+| **Own the Room** | Amy Jen Su | P3 | Leadership presence. |
+| **Nourishing Diets** | Sally Fallon | P3 | Traditional nutrition. |
+| **Sana tu Cuerpo** | Unknown | P3 | Heal your body (Spanish). |
+| **SIMBOLISMO DE LOS SUEÑOS** | Unknown | P3 | Dream symbolism (Spanish). |
+| **diccionario de los sueños** | Unknown | P3 | Dream dictionary (Spanish). |
+| **diccionario filosofico** | Unknown | P3 | Philosophical dictionary (Spanish). |
+| **La vida entre vidas** | Unknown | P3 | Life between lives (Spanish). |
+| **Yogi Ramacharaka — La vida después de la muerte** | Yogi Ramacharaka | P3 | Afterlife (Spanish). |
+| **LIBRO LEY DEL ESPEJO** | Unknown | P3 | Mirror Law (Spanish). |
+| **The Cartoon Guide to Geometry** | Larry Gonick | P3 | Fun geometry. |
+
+### Non-Books (Skipped)
+| File | Type | Notes |
+|------|------|-------|
+| Agent_Mind_Map.png | PNG image | AI agent mind map. Not a book. |
+| Cosmic Disclosure/ | Directory | Contains 3 files: S09-12.pdf, deeper disclosures S03-06.epub, ep 01-02.epub |
+
+### Duplicates Noted
+- **Art Planet Chronicles** (epub) — already 3 copies in library
+- **Synchronicity.pdf** — may duplicate existing `Synchronicity _ an acausal connecting principle.pdf`
+- **LOS4ACUERDOS / Four Agreements** — same book, Spanish/English
+- **El Libro del Conocimiento / Libro del Conocimiento** — possibly same book
+- **Carol Dweck Mindset** — 2 editions (2006 + 2012)
+
+**Totals**: 9 P1, 22 P2, 44 P3. 1 P0 duplicate. ~75 books + 3 Cosmic Disclosure files + 1 image.
 
 ---
 

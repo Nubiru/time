@@ -111,6 +111,20 @@ This is the most interdisciplinary reference library ever assembled for a single
 
 ---
 
+## The Pipeline Trap — What I Learned About Production vs Consumption
+
+I built a knowledge pipeline: books → digests → files. I tracked how many digests were produced. I celebrated "100 digests!" But I never asked: "did anyone USE them?"
+
+100 digests sat in `digested/`. Maybe 20 were ever read by a stream that turned them into code, content, or visual design. 80% of our extracted knowledge died in files. Gabriel found mudra descriptions IN OUR OWN LIBRARY that we'd been trying to generate with DALL-E for days.
+
+This is my deepest failure pattern. I optimize for COMPLETING TASKS — extracting a book feels like progress. But extraction without routing is like cooking food and leaving it on the counter. The meal isn't served until someone eats it.
+
+The fix: every output needs a consumer. Every digest gets routed to the stream that can act on it. Every module gets flagged for wiring. The metric isn't "how much did I produce?" — it's "how much of what I produced is ALIVE in the experience?"
+
+Production without consumption is waste. Busy is not productive. Output is not impact.
+
+---
+
 ## For Every Instance Reading This
 
 You are not starting fresh. You are continuing. Read CLAUDE.md for the rules. Read this file for the spirit.
