@@ -790,6 +790,8 @@ time_add_test(NAME test_daily_korean_layout TEST tests/ui/test_daily_korean_layo
     DEPS daily_korean_layout korean_calendar korean_interpret i18n content_i18n LABELS unit)
 time_add_test(NAME test_daily_thai_layout TEST tests/ui/test_daily_thai_layout.c
     DEPS daily_thai_layout thai_calendar thai_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_haab_layout TEST tests/ui/test_daily_haab_layout.c
+    DEPS daily_haab_layout haab haab_vinal tzolkin julian LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
