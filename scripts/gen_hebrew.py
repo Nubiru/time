@@ -162,6 +162,114 @@ VALUE_MAP = {
     "Neptune": "\u05e0\u05e4\u05d8\u05d5\u05df",           # נפטון
     "Pluto": "\u05e4\u05dc\u05d5\u05d8\u05d5",             # פלוטו
 
+    # I Ching hexagram names
+    "The Creative": "\u05d4\u05d9\u05d5\u05e6\u05e8",       # היוצר
+    "The Receptive": "\u05d4\u05e7\u05d5\u05dc\u05d8\u05ea", # הקולטת
+    "Difficulty at the Beginning": "\u05e7\u05d5\u05e9\u05d9 \u05d1\u05d4\u05ea\u05d7\u05dc\u05d4",
+    "Youthful Folly": "\u05d0\u05d9\u05d5\u05d5\u05dc\u05ea \u05e0\u05e2\u05d5\u05e8\u05d9\u05dd",
+    "Waiting": "\u05d4\u05de\u05ea\u05e0\u05d4",
+    "Conflict": "\u05e1\u05db\u05e1\u05d5\u05da",
+    "The Army": "\u05d4\u05e6\u05d1\u05d0",
+    "Holding Together": "\u05d0\u05d7\u05d3\u05d5\u05ea",
+    "Small Taming": "\u05e8\u05d9\u05e1\u05d5\u05df \u05e7\u05d8\u05df",
+    "Treading": "\u05d3\u05e8\u05d9\u05db\u05d4",
+    "Peace": "\u05e9\u05dc\u05d5\u05dd",
+    "Standstill": "\u05e7\u05d9\u05e4\u05d0\u05d5\u05df",
+    "Fellowship": "\u05d0\u05d7\u05d5\u05d5\u05d4",
+    "Great Possession": "\u05e7\u05e0\u05d9\u05d9\u05df \u05d2\u05d3\u05d5\u05dc",
+    "Modesty": "\u05e6\u05e0\u05d9\u05e2\u05d5\u05ea",
+    "Enthusiasm": "\u05d4\u05ea\u05dc\u05d4\u05d1\u05d5\u05ea",
+    "Following": "\u05de\u05e2\u05e7\u05d1",
+    "Work on the Decayed": "\u05ea\u05d9\u05e7\u05d5\u05df \u05d4\u05e0\u05e8\u05e7\u05d1",
+    "Approach": "\u05d4\u05ea\u05e7\u05e8\u05d1\u05d5\u05ea",
+    "Contemplation": "\u05d4\u05ea\u05d1\u05d5\u05e0\u05e0\u05d5\u05ea",
+    "Biting Through": "\u05e0\u05e9\u05d9\u05db\u05d4 \u05d7\u05d5\u05d3\u05e8\u05ea",
+    "Grace": "\u05d7\u05df",
+    "Splitting Apart": "\u05d4\u05ea\u05e4\u05e8\u05e7\u05d5\u05ea",
+    "Return": "\u05d7\u05d6\u05e8\u05d4",
+    "Innocence": "\u05ea\u05de\u05d9\u05de\u05d5\u05ea",
+    "Great Taming": "\u05e8\u05d9\u05e1\u05d5\u05df \u05d2\u05d3\u05d5\u05dc",
+    "Nourishment": "\u05d4\u05d6\u05e0\u05d4",
+    "Great Preponderance": "\u05e2\u05d5\u05d3\u05e3 \u05d2\u05d3\u05d5\u05dc",
+    "The Abysmal": "\u05d4\u05ea\u05d4\u05d5\u05dd",
+    "The Clinging": "\u05d4\u05e0\u05d0\u05d7\u05d6\u05ea",
+    "Influence": "\u05d4\u05e9\u05e4\u05e2\u05d4",
+    "Duration": "\u05de\u05e9\u05da",
+    "Retreat": "\u05e0\u05e1\u05d9\u05d2\u05d4",
+    "Great Power": "\u05db\u05d5\u05d7 \u05d2\u05d3\u05d5\u05dc",
+    "Progress": "\u05d4\u05ea\u05e7\u05d3\u05de\u05d5\u05ea",
+    "Darkening of the Light": "\u05d4\u05d7\u05e9\u05db\u05ea \u05d4\u05d0\u05d5\u05e8",
+    "The Family": "\u05d4\u05de\u05e9\u05e4\u05d7\u05d4",
+    "Opposition": "\u05e0\u05d9\u05d2\u05d5\u05d3",
+    "Obstruction": "\u05de\u05db\u05e9\u05d5\u05dc",
+    "Deliverance": "\u05e9\u05d7\u05e8\u05d5\u05e8",
+    "Decrease": "\u05de\u05d9\u05e2\u05d5\u05d8",
+    "Increase": "\u05ea\u05d5\u05e1\u05e4\u05ea",
+    "Breakthrough": "\u05e4\u05e8\u05d9\u05e6\u05ea \u05d3\u05e8\u05da",
+    "Coming to Meet": "\u05de\u05e4\u05d2\u05e9",
+    "Gathering Together": "\u05d4\u05ea\u05db\u05e0\u05e1\u05d5\u05ea",
+    "Pushing Upward": "\u05e2\u05dc\u05d9\u05d9\u05d4",
+    "Oppression": "\u05d3\u05d9\u05db\u05d5\u05d9",
+    "The Well": "\u05d4\u05d1\u05d0\u05e8",
+    "Revolution": "\u05de\u05d4\u05e4\u05db\u05d4",
+    "The Cauldron": "\u05d4\u05d3\u05d5\u05d3",
+    "The Arousing": "\u05d4\u05de\u05e2\u05d5\u05e8\u05e8",
+    "Keeping Still": "\u05e9\u05e7\u05d8",
+    "Development": "\u05d4\u05ea\u05e4\u05ea\u05d7\u05d5\u05ea",
+    "The Marrying Maiden": "\u05d4\u05e0\u05e2\u05e8\u05d4 \u05d4\u05e0\u05d9\u05e9\u05d0\u05ea",
+    "Abundance": "\u05e9\u05e4\u05e2",
+    "The Wanderer": "\u05d4\u05e0\u05d5\u05d3\u05d3",
+    "The Gentle": "\u05d4\u05e2\u05d3\u05d9\u05e0\u05d4",
+    "The Joyous": "\u05d4\u05e9\u05de\u05d7\u05d4",
+    "Dispersion": "\u05e4\u05d9\u05d6\u05d5\u05e8",
+    "Limitation": "\u05d4\u05d2\u05d1\u05dc\u05d4",
+    "Inner Truth": "\u05d0\u05de\u05ea \u05e4\u05e0\u05d9\u05de\u05d9\u05ea",
+    "Small Preponderance": "\u05e2\u05d5\u05d3\u05e3 \u05e7\u05d8\u05df",
+    "After Completion": "\u05dc\u05d0\u05d7\u05e8 \u05d4\u05e9\u05dc\u05de\u05d4",
+    "Before Completion": "\u05dc\u05e4\u05e0\u05d9 \u05d4\u05e9\u05dc\u05de\u05d4",
+
+    # Tzolkin seal names
+    "Dragon": "\u05d3\u05e8\u05e7\u05d5\u05df",              # דרקון
+    "Night": "\u05dc\u05d9\u05dc\u05d4",                     # לילה
+    "Seed": "\u05d6\u05e8\u05e2",                             # זרע
+    "Serpent": "\u05e0\u05d7\u05e9",                          # נחש (already in Chinese zodiac)
+    "World-Bridger": "\u05de\u05d2\u05e9\u05e8 \u05e2\u05d5\u05dc\u05de\u05d5\u05ea",
+    "Hand": "\u05d9\u05d3",                                   # יד
+    "Star": "\u05db\u05d5\u05db\u05d1",                       # כוכב
+    "Skywalker": "\u05d4\u05d5\u05dc\u05da \u05e9\u05de\u05d9\u05dd",
+    "Wizard": "\u05e7\u05d5\u05e1\u05dd",                    # קוסם
+    "Eagle": "\u05e0\u05e9\u05e8",                            # נשר
+    "Warrior": "\u05dc\u05d5\u05d7\u05dd",                    # לוחם
+    "Mirror": "\u05de\u05e8\u05d0\u05d4",                     # מראה
+    "Storm": "\u05e1\u05e2\u05e8\u05d4",                      # סערה
+
+    # Tzolkin tone names
+    "Magnetic": "\u05de\u05d2\u05e0\u05d8\u05d9",
+    "Lunar": "\u05d9\u05e8\u05d7\u05d9",
+    "Electric": "\u05d7\u05e9\u05de\u05dc\u05d9",
+    "Self-Existing": "\u05e2\u05e6\u05de\u05d9",
+    "Overtone": "\u05e2\u05dc-\u05d8\u05d5\u05e0\u05d9",
+    "Rhythmic": "\u05e8\u05d9\u05ea\u05de\u05d9",
+    "Resonant": "\u05de\u05d4\u05d3\u05d4\u05d3",
+    "Galactic": "\u05d2\u05dc\u05e7\u05d8\u05d9",
+    "Solar": "\u05e9\u05de\u05e9\u05d9",
+    "Planetary": "\u05e4\u05dc\u05e0\u05d8\u05e8\u05d9",
+    "Spectral": "\u05e1\u05e4\u05e7\u05d8\u05e8\u05dc\u05d9",
+    "Crystal": "\u05e7\u05e8\u05d9\u05e1\u05d8\u05dc\u05d9",
+    "Cosmic": "\u05e7\u05d5\u05e1\u05de\u05d9",
+
+    # Kabbalah sefirah meditations (Hebrew)
+    "kabbalah.sefirah.0.meditation": "\u05d0\u05d9\u05df \u05e1\u05d5\u05e3 \u05d5\u05d0\u05d9\u05df \u05ea\u05d7\u05d9\u05dc\u05d4",
+    "kabbalah.sefirah.1.meditation": "\u05d7\u05db\u05de\u05d4 \u05e2\u05dc\u05d9\u05d5\u05e0\u05d4",
+    "kabbalah.sefirah.2.meditation": "\u05d1\u05d9\u05e0\u05d4 \u05e2\u05de\u05d5\u05e7\u05d4",
+    "kabbalah.sefirah.3.meditation": "\u05d0\u05d4\u05d1\u05ea \u05d7\u05d9\u05e0\u05dd",
+    "kabbalah.sefirah.4.meditation": "\u05d2\u05d1\u05d5\u05e8\u05d4 \u05de\u05de\u05d5\u05e7\u05d3\u05ea",
+    "kabbalah.sefirah.5.meditation": "\u05d9\u05d5\u05e4\u05d9 \u05de\u05d0\u05d5\u05d6\u05df",
+    "kabbalah.sefirah.6.meditation": "\u05e0\u05e6\u05d7\u05d5\u05df \u05de\u05ea\u05de\u05d9\u05d3",
+    "kabbalah.sefirah.7.meditation": "\u05d4\u05d5\u05d3 \u05d5\u05d4\u05db\u05e8\u05ea \u05ea\u05d5\u05d3\u05d4",
+    "kabbalah.sefirah.8.meditation": "\u05d9\u05e1\u05d5\u05d3 \u05d5\u05d7\u05d9\u05d1\u05d5\u05e8",
+    "kabbalah.sefirah.9.meditation": "\u05de\u05dc\u05db\u05d5\u05ea \u05d5\u05e0\u05d5\u05db\u05d7\u05d5\u05ea",
+
     # Convergence terms
     "ordinary": "\u05e8\u05d2\u05d9\u05dc",                # רגיל
     "notable": "\u05de\u05e9\u05de\u05e2\u05d5\u05ea\u05d9",  # משמעותי
