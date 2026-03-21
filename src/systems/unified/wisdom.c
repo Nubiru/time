@@ -1,6 +1,6 @@
 /* wisdom.c -- Curated wisdom quotes from great minds across civilizations.
  *
- * 192 quotes spanning Greek, Eastern, Islamic, Indian, Mayan/Indigenous,
+ * 199 quotes spanning Greek, Eastern, Islamic, Indian, Mayan/Indigenous,
  * Hebrew, Modern Science, and Other traditions (Egyptian, Buddhist,
  * Japanese, African, Celtic, Persian).
  *
@@ -865,6 +865,36 @@ static const wisdom_t QUOTES[] = {
     { 191, "Today it stands on the verge of becoming a god, poised to acquire not only eternal youth, but also the divine abilities of creation and destruction.",
       "Yuval Noah Harari", "Sapiens", 2011, "Modern Science",
       { WISDOM_TAG_POWER, WISDOM_TAG_TIME, WISDOM_TAG_CONSCIOUSNESS, WISDOM_TAG_COSMOS, 0,0 }, 4,
+      SENSITIVITY_GENERAL },
+
+    /* ===== HOMO DEUS + GUNS, GERMS AND STEEL (7 quotes, indices 192-198) ===== */
+    { 192, "At the dawn of the third millennium, humanity wakes up, stretching its limbs and rubbing its eyes.",
+      "Yuval Noah Harari", "Homo Deus", 2016, "Modern Science",
+      { WISDOM_TAG_TIME, WISDOM_TAG_CONSCIOUSNESS, WISDOM_TAG_COSMOS, 0,0,0 }, 3,
+      SENSITIVITY_GENERAL },
+    { 193, "For thousands of years the answer remained unchanged. Famine, plague and war were always at the top of the list.",
+      "Yuval Noah Harari", "Homo Deus", 2016, "Modern Science",
+      { WISDOM_TAG_TIME, WISDOM_TAG_CYCLES, WISDOM_TAG_EARTH, 0,0,0 }, 3,
+      SENSITIVITY_GENERAL },
+    { 194, "Success breeds ambition, and our recent achievements are now pushing humankind to set itself even more daring goals.",
+      "Yuval Noah Harari", "Homo Deus", 2016, "Modern Science",
+      { WISDOM_TAG_POWER, WISDOM_TAG_CONSCIOUSNESS, WISDOM_TAG_CYCLES, 0,0,0 }, 3,
+      SENSITIVITY_GENERAL },
+    { 195, "It is not easy to live knowing that you are going to die, but it is even harder to believe in immortality and be proven wrong.",
+      "Yuval Noah Harari", "Homo Deus", 2016, "Modern Science",
+      { WISDOM_TAG_TIME, WISDOM_TAG_CONSCIOUSNESS, WISDOM_TAG_POWER, 0,0,0 }, 3,
+      SENSITIVITY_GENERAL },
+    { 196, "History followed different courses for different peoples because of differences among peoples' environments, not because of biological differences among peoples themselves.",
+      "Jared Diamond", "Guns, Germs, and Steel", 1997, "Modern Science",
+      { WISDOM_TAG_EARTH, WISDOM_TAG_CYCLES, WISDOM_TAG_NATURE, 0,0,0 }, 3,
+      SENSITIVITY_GENERAL },
+    { 197, "There really are broad patterns to history, and the search for their explanation is as productive as it is fascinating.",
+      "Jared Diamond", "Guns, Germs, and Steel", 1997, "Modern Science",
+      { WISDOM_TAG_CYCLES, WISDOM_TAG_TIME, WISDOM_TAG_CONSCIOUSNESS, 0,0,0 }, 3,
+      SENSITIVITY_GENERAL },
+    { 198, "Why is it that you white people developed so much cargo and brought it to New Guinea, but we black people had little cargo of our own?",
+      "Jared Diamond", "Guns, Germs, and Steel", 1997, "Modern Science",
+      { WISDOM_TAG_CONSCIOUSNESS, WISDOM_TAG_EARTH, WISDOM_TAG_POWER, 0,0,0 }, 3,
       SENSITIVITY_GENERAL },
 };
 
