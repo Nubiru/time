@@ -1,18 +1,18 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-21 (INFRA session 33)
+**Last refreshed**: 2026-03-21 (INFRA session 37)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 469 |
-| Header files (.h) | 472 |
-| Lines of code (src/) | 155,000+ |
-| Lines of tests | 200,000+ |
-| Test suites (CTest) | 496 |
+| Source files (.c) | 481 |
+| Header files (.h) | 484 |
+| Lines of code (src/) | 160,000+ |
+| Lines of tests | 210,000+ |
+| Test suites (CTest) | 508 |
 | Render pass files | 19 |
-| Pure modules | 399+ |
+| Pure modules | 410+ |
 | Stateful modules | 29 |
 | Contributors | 186 |
 
@@ -20,11 +20,11 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 496 |
-| Test functions (RUN_TEST) | 17,500+ |
-| Test assertions (TEST_ASSERT) | 29,891+ |
+| Test suites (CTest) | 508 |
+| Test functions (RUN_TEST) | 18,000+ |
+| Test assertions (TEST_ASSERT) | 30,000+ |
 | Failures | 0 |
-| CTest time | 1.43s (with -j4, benchmarks included) |
+| CTest time | 1.34s (with -j12) |
 | E2E tests (Playwright) | 15 (5 basic + 10 visual) |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -89,7 +89,7 @@
 | CMake native | PASS (zero warnings) |
 | CTest -j4 | PASS (496/496, 1.19s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
-| WASM build | PASS (363 KB raw, ~143 KB gzipped) — brain visual bridge wired |
+| WASM build | PASS (618 KB dev — MSDF atlas embedded) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
@@ -156,23 +156,23 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 373,690 bytes (365 KB) |
-| Gzipped | ~143 KB |
+| Raw .wasm | 632,832 bytes (618 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
-| Release .wasm | 311,718 bytes (304 KB) — with full LTO |
-| Growth since session 18 | +44 KB raw (all wiring + 20 Kin Maya layouts + focus-mode audio) |
+| MSDF font atlas | JetBrains Mono 512×512 RGB (~250 KB in binary) |
+| Sans atlas | Excluded (MSDF_SANS_ENABLED not set) — saves ~251 KB |
+| Growth since session 33 | +253 KB raw (MSDF atlas data embedded) |
 
 ## God Functions (>80 lines)
 
 | Lines | File | Function | Notes |
 |-------|------|----------|-------|
 | 241 | convergence_detect.c | cd_is_significant | 18-case switch — domain logic |
-| 273 | main.c | main_loop | Central render loop — well-sectioned, AUDIO added focus-mode timbres |
-| 189 | text_pass.c | draw_card_text | Complex text render |
+| 273 | main.c | main_loop | Central render loop — well-sectioned |
+| ~120 | card_pass.c | draw_oracle_cross | Oracle cross + wavespell quads |
+| ~100 | text_pass.c | draw_oracle_text | MSDF oracle text |
 | 142 | text_pass.c | text_pass_draw | GL text rendering |
 | 130 | hud.c | hud_update | HUD overlay update |
 | 105 | weather_overlay.c | wov_arrow_glyph | Wind arrow glyph geometry |
-| 103 | card_pass.c | card_pass_draw | GL card rendering |
 | 102 | brain_personal.c | br_personal_scan | Personal convergence analysis |
 | 99 | timeline_data.c | format_label | Label formatting |
 | 99 | post_pass.c | post_pass_init | FBO + shader setup |
@@ -192,7 +192,7 @@
 | Build system sync | OK (469 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 23) |
 | Native build | PASS (496/496 tests, 1.19s) — use -j4 for clean builds |
-| WASM build | PASS (365 KB raw, ~143 KB gzipped) |
+| WASM build | PASS (618 KB dev) |
 | E2E tests | PASS (5/5 basic + 7/10 visual, 2 skips, 1 SwiftShader) |
 | Coverage | 96.0% lines (35,581/37,053), 99.98% functions (4,233/4,234) |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
