@@ -39,6 +39,10 @@
 #include "../../ui/daily_hd_layout.h"
 #include "../../ui/zodiac_wheel_layout.h"
 #include "../../ui/zodiac_animals_layout.h"
+#include "../../ui/bagua_layout.h"
+#include "../../ui/dignity_table_layout.h"
+#include "../../ui/prayer_times_layout.h"
+#include "../../ui/nakshatra_wheel_layout.h"
 #include "../msdf_text.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
@@ -516,6 +520,36 @@ static void draw_iching_text(const render_frame_t *frame)
                       th.text_secondary.b, 0.6f);
     }
 
+    /* Bagua trigrams — upper and lower with element/direction */
+    {
+        bagua_layout_t bagua = bagua_layout_compute(hl.upper_trigram);
+        float by = info_y + 160.0f;
+        msdf_add_text("Trigrams:", info_x, by, 16.0f,
+                      th.text_secondary.r, th.text_secondary.g,
+                      th.text_secondary.b, th.text_secondary.a);
+        for (int t = 0; t < 2; t++) {
+            int tri = (t == 0) ? hl.upper_trigram : hl.lower_trigram;
+            bagua_trigram_t bt = bagua_trigram_at(&bagua, -1);
+            /* Find the trigram by index */
+            for (int k = 0; k < BAGUA_TRIGRAM_COUNT; k++) {
+                if (bagua.trigrams[k].trigram_index == tri) {
+                    bt = bagua.trigrams[k];
+                    break;
+                }
+            }
+            char tri_line[64];
+            snprintf(tri_line, sizeof(tri_line), "%s: %s (%s, %s)",
+                     (t == 0) ? "Upper" : "Lower",
+                     bt.name ? bt.name : "?",
+                     bt.element ? bt.element : "?",
+                     bt.direction ? bt.direction : "?");
+            by += 20.0f;
+            msdf_add_text(tri_line, info_x, by, 14.0f,
+                          th.text_primary.r, th.text_primary.g,
+                          th.text_primary.b, th.text_primary.a);
+        }
+    }
+
     /* Headline */
     if (frame->headline[0] != '\0') {
         float hl_w = msdf_text_width(MSDF_FONT_MONO, frame->headline, 20.0f);
@@ -651,6 +685,31 @@ static void draw_astrology_text(const render_frame_t *frame)
                   wl.sun_y * (float)vh + 14.0f, 14.0f,
                   th.brand_primary.r, th.brand_primary.g,
                   th.brand_primary.b, 0.9f);
+
+    /* Dignity summary for Sun's current sign */
+    {
+        dignity_table_layout_t dt = dignity_table_compute();
+        /* Find Sun row (planet index 8 in dignity convention) */
+        for (int r = 0; r < DT_PLANET_COUNT; r++) {
+            if (dt.rows[r].planet == 8) { /* Sun */
+                char dig[64];
+                if (dt.rows[r].domicile_sign == wl.sun_sign)
+                    snprintf(dig, sizeof(dig), "Sun in domicile (rules this sign)");
+                else if (dt.rows[r].exaltation_sign == wl.sun_sign)
+                    snprintf(dig, sizeof(dig), "Sun exalted in this sign");
+                else if (dt.rows[r].detriment_sign == wl.sun_sign)
+                    snprintf(dig, sizeof(dig), "Sun in detriment");
+                else if (dt.rows[r].fall_sign == wl.sun_sign)
+                    snprintf(dig, sizeof(dig), "Sun in fall");
+                else
+                    snprintf(dig, sizeof(dig), "Sun: peregrine");
+                msdf_add_text(dig, 0.08f * (float)vw, 0.92f * (float)vh, 14.0f,
+                              th.text_secondary.r, th.text_secondary.g,
+                              th.text_secondary.b, 0.7f);
+                break;
+            }
+        }
+    }
 
     /* Headline */
     if (frame->headline[0] != '\0') {

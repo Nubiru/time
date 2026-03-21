@@ -40,6 +40,7 @@
 #include "daily_iching_layout.h"
 #include "daily_hd_layout.h"
 #include "daily_transit_layout.h"
+#include "nakshatra_wheel_layout.h"
 
 /* ------------------------------------------------------------------ */
 
@@ -153,9 +154,20 @@ static card_content_t make_hindu(double jd, double sun_lon, double moon_lon)
     if (dl.vara_deity && dl.vara_deity[0])
         snprintf(c.line3, sizeof(c.line3), "%s — %s",
                  dl.vara_name ? dl.vara_name : "", dl.vara_deity);
-    if (dl.yoga_quality && dl.yoga_quality[0])
-        snprintf(c.detail, sizeof(c.detail), "Yoga: %s (%s)",
-                 dl.yoga_name ? dl.yoga_name : "", dl.yoga_quality);
+
+    /* Enrich with nakshatra deity from wheel layout */
+    nakshatra_wheel_layout_t nw = nakshatra_wheel_compute(moon_lon, jd);
+    int ni = dl.nakshatra_index;
+    if (ni >= 0 && ni < 27) {
+        nw_nakshatra_t nak = nakshatra_wheel_at(&nw, ni);
+        if (nak.deity && nak.deity[0] && dl.yoga_quality && dl.yoga_quality[0])
+            snprintf(c.detail, sizeof(c.detail), "%s (deity: %s) | Yoga: %s (%s)",
+                     nak.name ? nak.name : "", nak.deity,
+                     dl.yoga_name ? dl.yoga_name : "", dl.yoga_quality);
+        else if (dl.yoga_quality && dl.yoga_quality[0])
+            snprintf(c.detail, sizeof(c.detail), "Yoga: %s (%s)",
+                     dl.yoga_name ? dl.yoga_name : "", dl.yoga_quality);
+    }
     return c;
 }
 
