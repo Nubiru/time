@@ -25,6 +25,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/font_atlas.c
     ${CMAKE_CURRENT_SOURCE_DIR}/font_bitmap.c
     ${CMAKE_CURRENT_SOURCE_DIR}/glyph_batch.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/msdf_text.c
     ${CMAKE_CURRENT_SOURCE_DIR}/decan_stars.c
     ${CMAKE_CURRENT_SOURCE_DIR}/megalithic.c
     ${CMAKE_CURRENT_SOURCE_DIR}/tarot_visual.c
@@ -120,6 +121,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_font_atlas          OBJECT font_atlas.c)
     add_library(time_font_bitmap         OBJECT font_bitmap.c)
     add_library(time_glyph_batch         OBJECT glyph_batch.c)
+    add_library(time_msdf_text           OBJECT msdf_text.c)
     add_library(time_decan_stars         OBJECT decan_stars.c)
     add_library(time_megalithic          OBJECT megalithic.c)
     add_library(time_tarot_visual        OBJECT tarot_visual.c)

@@ -90,6 +90,7 @@ time_add_test(NAME test_earth_pack    TEST tests/render/test_earth_pack.c    DEP
 time_add_test(NAME test_tree_pack    TEST tests/render/test_tree_pack.c    DEPS tree_pack tree_geometry sefirot)
 time_add_test(NAME test_eclipse_geometry TEST tests/render/test_eclipse_geometry.c DEPS eclipse_geometry lunar solar_events)
 time_add_test(NAME test_glyph_batch     TEST tests/render/test_glyph_batch.c     DEPS glyph_batch vec3)
+time_add_test(NAME test_msdf_text       TEST tests/render/test_msdf_text.c       DEPS msdf_text)
 time_add_test(NAME test_color_theory    TEST tests/render/test_color_theory.c    DEPS color_theory color)
 time_add_test(NAME test_star_catalog_ext TEST tests/render/test_star_catalog_ext.c DEPS star_catalog_ext)
 time_add_test(NAME test_decan_stars     TEST tests/render/test_decan_stars.c     DEPS decan_stars)
