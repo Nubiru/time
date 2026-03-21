@@ -1,8 +1,8 @@
 {
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
-    "last_updated": "2026-03-20",
-    "total_contributors": 185
+    "last_updated": "2026-03-21",
+    "total_contributors": 190
   },
   "contributors": [
     {
@@ -114,6 +114,11 @@
           "work": "Time and the Technosphere",
           "description": "Law of Time theory (12:60 vs 13:20 paradigm)",
           "year": 2002
+        },
+        {
+          "work": "Telektonon: El Juego de la Profecía",
+          "description": "Prophecy board game: 28-day tube journey, 16-day Cube of the Warrior, 5 telepathy circuits, 52 cards in 4 Books of Wisdom, 13 game pieces, daily synchronometric practice",
+          "year": 1995
         }
       ],
       "references": [
@@ -4726,6 +4731,41 @@
       "role": "Cognitive scientist, usability pioneer",
       "contribution": "The Design of Everyday Things (1988) — affordances, natural mapping, visibility, feedback, Gulf of Execution/Evaluation, seven principles of user-centered design",
       "source": "The Design of Everyday Things",
+      "added_by": "PERSONA stream"
+    },
+    {
+      "name": "Lloydine Argüelles",
+      "role": "Co-creator of Dreamspell and Telektonon systems",
+      "contribution": "Telektonon: El Juego de la Profecía (1995) — co-designed the 28-day prophecy board game, 52-card system, synchronometric daily practice. Co-created Dreamspell with José Argüelles.",
+      "source": "Telektonon El Juego De La Profecia",
+      "added_by": "DEPTH stream"
+    },
+    {
+      "name": "Rodrigo Urrea",
+      "role": "Translator",
+      "contribution": "Spanish translation of the Telektonon manual (1995)",
+      "source": "Telektonon El Juego De La Profecia",
+      "added_by": "DEPTH stream"
+    },
+    {
+      "name": "Randy Bruner",
+      "role": "Game designer",
+      "contribution": "Design support for Telektonon board game (1995)",
+      "source": "Telektonon El Juego De La Profecia",
+      "added_by": "DEPTH stream"
+    },
+    {
+      "name": "Raphil Lee",
+      "role": "Game designer",
+      "contribution": "Design support for Telektonon board game (1995)",
+      "source": "Telektonon El Juego De La Profecia",
+      "added_by": "DEPTH stream"
+    },
+    {
+      "name": "International Union of Crystallography (IUCr)",
+      "role": "Scientific body",
+      "contribution": "Crystal system classification (6 systems: cubic, hexagonal, tetragonal, orthorhombic, monoclinic, triclinic) used in Diamond Room procedural geometry",
+      "source": "International Tables for Crystallography",
       "added_by": "PERSONA stream"
     }
   ]

@@ -352,6 +352,7 @@ time_add_test(NAME test_heartbeat_counter TEST tests/systems/earth/test_heartbea
 time_add_test(NAME test_pop_counter TEST tests/systems/earth/test_pop_counter.c DEPS pop_counter human_population)
 time_add_test(NAME test_persona_card TEST tests/systems/earth/test_persona_card.c DEPS persona_card card_data)
 time_add_test(NAME test_usage_interest TEST tests/systems/earth/test_usage_interest.c DEPS usage_interest)
+time_add_test(NAME test_diamond_room TEST tests/systems/earth/test_diamond_room.c DEPS diamond_room)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)
