@@ -16,6 +16,10 @@
 #include "../../ui/card_layout.h"
 #include "../../ui/card_selector.h"
 #include "../../ui/card_style.h"
+#include "../../ui/kin_oracle_layout.h"
+#include "../../ui/kin_cell.h"
+#include "../../ui/focus_mode.h"
+#include "../../systems/tzolkin/tzolkin.h"
 
 /* --- Module-static GL handles --- */
 
@@ -102,6 +106,109 @@ int card_pass_init(void) {
     return 0;
 }
 
+/* Draw Kin Maya oracle cross — 5 directionally-colored cells in cross pattern.
+ * Replaces standard card layout when focus_mode == FOCUS_MODE_KIN. */
+static void draw_oracle_cross(const render_frame_t *frame, float vw, float vh)
+{
+    tzolkin_day_t today = tzolkin_from_jd(frame->simulation_jd);
+    kin_oracle_layout_t oracle = kin_oracle_compute(today.kin);
+
+    /* Build card layout from oracle cross positions (center → top-left) */
+    card_layout_t layout;
+    for (int i = 0; i < CARD_TYPE_COUNT; i++) {
+        kin_cell_t cell = kin_oracle_cell_at(&oracle, i);
+        layout.cards[i].x = cell.x - cell.w * 0.5f;
+        layout.cards[i].y = cell.y - cell.h * 0.5f;
+        layout.cards[i].w = cell.w;
+        layout.cards[i].h = cell.h;
+        layout.cards[i].opacity = 1.0f;
+        layout.cards[i].visible = 1;
+        layout.cards[i].type = (card_type_t)i;
+    }
+
+    /* Pack background quads */
+    cp_quad_data_t qdata = cp_pack_quads(&layout, vw, vh,
+                                          0.0f, 0.0f, 0.0f, 0.0f);
+
+    /* Color each quad with Arguelles directional tint */
+    for (int i = 0; i < qdata.card_count; i++) {
+        kin_cell_t cell = kin_oracle_cell_at(&oracle, i);
+        float rgba[4];
+        kin_cell_rgba(cell.color, rgba);
+        float top_a = cell.highlighted ? 0.9f : 0.8f;
+        float bot_a = top_a * 0.618f;
+        for (int v = 0; v < CP_VERTS_PER_QUAD; v++) {
+            int base = (i * CP_VERTS_PER_QUAD + v) * CP_VERTEX_FLOATS;
+            qdata.vertices[base + 4] = rgba[0] * 0.2f;
+            qdata.vertices[base + 5] = rgba[1] * 0.2f;
+            qdata.vertices[base + 6] = rgba[2] * 0.2f;
+            qdata.vertices[base + 7] = (v < 2) ? bot_a : top_a;
+        }
+    }
+
+    /* Draw background quads */
+    if (qdata.vertex_count > 0) {
+        glUseProgram(s_quad_program);
+        glUniform2f(s_quad_loc_resolution, vw, vh);
+        theme_t t = theme_get((theme_id_t)frame->theme_id);
+        glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
+
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_DEPTH_TEST);
+
+        glBindVertexArray(s_quad_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, s_quad_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_quad_vertex_bytes(&qdata),
+                        qdata.vertices);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_quad_ebo);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_quad_index_bytes(&qdata),
+                        qdata.indices);
+
+        glDrawElements(GL_TRIANGLES, qdata.index_count,
+                        GL_UNSIGNED_INT, (void*)0);
+        glBindVertexArray(0);
+    }
+
+    /* Pack border lines then override per-card with directional colors */
+    cp_line_data_t ldata = cp_pack_lines(&layout, vw, vh,
+                                          1.0f, 1.0f, 1.0f, 0.6f, 0);
+    for (int i = 0; i < CARD_TYPE_COUNT; i++) {
+        kin_cell_t cell = kin_oracle_cell_at(&oracle, i);
+        float rgba[4];
+        kin_cell_rgba(cell.color, rgba);
+        float alpha = cell.highlighted ? 1.0f : 0.7f;
+        for (int v = 0; v < 8; v++) {
+            int idx = i * 8 + v;
+            if (idx >= ldata.vertex_count) break;
+            int base = idx * CP_LINE_VERTEX_FLOATS;
+            ldata.vertices[base + 2] = rgba[0];
+            ldata.vertices[base + 3] = rgba[1];
+            ldata.vertices[base + 4] = rgba[2];
+            ldata.vertices[base + 5] = alpha;
+        }
+    }
+
+    if (ldata.vertex_count > 0) {
+        glUseProgram(s_line_program);
+        glUniform2f(s_line_loc_resolution, vw, vh);
+
+        glBindVertexArray(s_line_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, s_line_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_line_vertex_bytes(&ldata),
+                        ldata.vertices);
+
+        glDrawArrays(GL_LINES, 0, ldata.vertex_count);
+        glBindVertexArray(0);
+    }
+
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+}
+
 void card_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
@@ -113,6 +220,13 @@ void card_pass_draw(const render_frame_t *frame) {
     float vh = (float)viewport[3];
     if (vw < 1.0f) vw = 1920.0f;  /* fallback */
     if (vh < 1.0f) vh = 1080.0f;
+
+    /* Oracle cross: Kin Maya focus renders 5-cell oracle */
+    if (frame->focus_mode == FOCUS_MODE_KIN) {
+        draw_oracle_cross(frame, vw, vh);
+        return;
+    }
+
     float aspect = vw / vh;
 
     /* Select cards: focus mode overrides zoom-based selection */

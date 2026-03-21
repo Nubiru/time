@@ -29,6 +29,10 @@
 #include "../../ui/card_selector.h"
 #include "../../ui/card_style.h"
 #include "../../ui/today_card.h"
+#include "../../ui/kin_oracle_layout.h"
+#include "../../ui/kin_cell.h"
+#include "../../ui/focus_mode.h"
+#include "../../systems/tzolkin/dreamspell.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
 static const float TEXT_ORBIT_SCALE = 3.0f;
@@ -192,12 +196,160 @@ static double approx_sun_longitude(double jd)
     return lon;
 }
 
+/* Draw Kin Maya oracle cross text — position names, seal+tone, kin numbers.
+ * Called instead of normal card text when focus_mode == FOCUS_MODE_KIN. */
+static void draw_oracle_text(const render_frame_t *frame)
+{
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    int vw = viewport[2];
+    int vh = viewport[3];
+    if (vw < 1) vw = 1920;
+    if (vh < 1) vh = 1080;
+
+    tzolkin_day_t today = tzolkin_from_jd(frame->simulation_jd);
+    kin_oracle_layout_t oracle = kin_oracle_compute(today.kin);
+
+    glyph_instance_t instances[GLYPH_BATCH_MAX];
+    int len = 0;
+
+    theme_t th = theme_get((theme_id_t)frame->theme_id);
+    glyph_color_t body_color = {th.text_primary.r, th.text_primary.g,
+                                 th.text_primary.b, th.text_primary.a};
+    glyph_color_t muted_color = {th.text_secondary.r, th.text_secondary.g,
+                                  th.text_secondary.b, th.text_secondary.a};
+
+    float title_scale = 1.8f;
+    float body_scale = 1.4f;
+    float margin_x = 8.0f;
+    float margin_y = 6.0f;
+    float line_h = 18.0f;
+
+    for (int i = 0; i < KIN_ORACLE_POSITIONS && len < GLYPH_BATCH_MAX - 80; i++) {
+        kin_cell_t cell = kin_oracle_cell_at(&oracle, i);
+        float card_x = (cell.x - cell.w * 0.5f) * (float)vw + margin_x;
+        float card_y = (cell.y - cell.h * 0.5f) * (float)vh + margin_y;
+
+        /* Title: position name in directional color */
+        float rgba[4];
+        kin_cell_rgba(cell.color, rgba);
+        glyph_color_t title_color = {rgba[0], rgba[1], rgba[2], 1.0f};
+        const char *pos_name = kin_oracle_position_name(i);
+        len = append_text_glyphs(instances, len, pos_name,
+                                 CARD_TEXT_LINE_MAX, card_x, card_y,
+                                 title_scale, title_color);
+
+        /* Line 1: Color + Seal name */
+        card_y += line_h * title_scale;
+        dreamspell_color_t dc = dreamspell_color(cell.seal);
+        char seal_line[64];
+        snprintf(seal_line, sizeof(seal_line), "%s %s",
+                 dc.name, tzolkin_seal_name(cell.seal));
+        len = append_text_glyphs(instances, len, seal_line,
+                                 CARD_TEXT_LINE_MAX, card_x, card_y,
+                                 body_scale, body_color);
+
+        /* Line 2: Tone name + number */
+        card_y += line_h * body_scale;
+        dreamspell_tone_t dt = dreamspell_tone(cell.tone);
+        char tone_line[64];
+        snprintf(tone_line, sizeof(tone_line), "%s %d",
+                 dt.name, cell.tone);
+        len = append_text_glyphs(instances, len, tone_line,
+                                 CARD_TEXT_LINE_MAX, card_x, card_y,
+                                 body_scale, body_color);
+
+        /* Line 3: Kin number */
+        card_y += line_h * body_scale;
+        char kin_line[32];
+        snprintf(kin_line, sizeof(kin_line), "Kin %d", cell.kin);
+        len = append_text_glyphs(instances, len, kin_line,
+                                 CARD_TEXT_LINE_MAX, card_x, card_y,
+                                 body_scale, muted_color);
+    }
+
+    /* Headline at bottom center */
+    if (frame->headline[0] != '\0') {
+        glyph_color_t hl_color = {th.brand_secondary.r,
+                                  th.brand_secondary.g,
+                                  th.brand_secondary.b, 0.85f};
+        float hl_scale = 1.6f;
+        int hl_chars = 0;
+        while (frame->headline[hl_chars] != '\0' && hl_chars < 60) hl_chars++;
+        float hl_width = (float)hl_chars * 10.0f * hl_scale;
+        float hl_x = ((float)vw - hl_width) * 0.5f;
+        float hl_y = (float)vh - 40.0f;
+        len = append_text_glyphs(instances, len, frame->headline,
+                                 60, hl_x, hl_y, hl_scale, hl_color);
+    }
+
+    if (len == 0) return;
+
+    /* Orthographic projection: pixel coords → NDC */
+    mat4_t ortho;
+    memset(&ortho, 0, sizeof(ortho));
+    ortho.m[0]  =  2.0f / (float)vw;
+    ortho.m[5]  = -2.0f / (float)vh;
+    ortho.m[10] = -1.0f;
+    ortho.m[12] = -1.0f;
+    ortho.m[13] =  1.0f;
+    ortho.m[14] =  0.0f;
+    ortho.m[15] =  1.0f;
+
+    vec3_t cam_right = vec3_create(1.0f, 0.0f, 0.0f);
+    vec3_t cam_up    = vec3_create(0.0f, -1.0f, 0.0f);
+
+    glyph_atlas_t batch_atlas = {
+        .cols     = FONT_BITMAP_COLS,
+        .rows     = FONT_BITMAP_ROWS,
+        .first_id = FONT_BITMAP_FIRST,
+        .last_id  = FONT_BITMAP_LAST
+    };
+
+    glyph_batch_t batch = glyph_batch_create(
+        instances, len, batch_atlas,
+        cam_right, cam_up,
+        8.0f, 14.0f);
+
+    if (batch.glyph_count == 0) return;
+
+    glBindVertexArray(s_text_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, s_text_vbo);
+    glBufferSubData(GL_ARRAY_BUFFER, 0,
+                    (GLsizeiptr)glyph_batch_vertex_bytes(&batch),
+                    batch.vertices);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_text_ebo);
+    glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                    (GLsizeiptr)glyph_batch_index_bytes(&batch),
+                    batch.indices);
+
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glUseProgram(s_text_program);
+    glUniformMatrix4fv(s_text_loc_mvp, 1, GL_FALSE, ortho.m);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, s_text_atlas_tex);
+    glUniform1i(s_text_loc_atlas, 0);
+
+    glDrawElements(GL_TRIANGLES, batch.index_count, GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(0);
+}
+
 /* Draw card text as a 2D screen-space overlay.
  * Called after the 3D planet label draw; reuses same VAO/VBO/EBO. */
 static void draw_card_text(const render_frame_t *frame)
 {
     if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
+
+    /* Oracle cross text: Kin Maya focus mode */
+    if (frame->focus_mode == FOCUS_MODE_KIN) {
+        draw_oracle_text(frame);
+        return;
+    }
 
     /* Get viewport dimensions */
     GLint viewport[4];
