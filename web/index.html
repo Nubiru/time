@@ -64,6 +64,9 @@
                 enterScreen.addEventListener('click', function() {
                     enterScreen.classList.add('hidden');
                     localStorage.setItem('time_entered', '1');
+                    /* Resume AudioContext — this click IS a user gesture */
+                    var ta = window._timeAudio;
+                    if (ta && ta.ctx && ta.ctx.state === 'suspended') ta.ctx.resume();
                 });
             }
         }

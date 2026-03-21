@@ -37,8 +37,18 @@ static const double TIME_SPEEDS[] = {
     864000.0     /* 5: 10 days/sec */
 };
 
+/* Resume AudioContext on first user gesture (browser autoplay policy).
+ * Must be called from actual gesture handlers — NOT from rAF. */
+static void audio_resume_on_gesture(void) {
+    EM_ASM({
+        var ta = window._timeAudio;
+        if (ta && ta.ctx && ta.ctx.state === 'suspended') ta.ctx.resume();
+    });
+}
+
 static EM_BOOL on_mouse_down(int type, const EmscriptenMouseEvent *e, void *data) {
     (void)type; (void)data;
+    audio_resume_on_gesture();
     g_input_state->mouse_down = 1;
     g_input_state->mouse_x = e->clientX;
     g_input_state->mouse_y = e->clientY;
@@ -72,6 +82,7 @@ static EM_BOOL on_wheel(int type, const EmscriptenWheelEvent *e, void *data) {
 
 static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *data) {
     (void)type; (void)data;
+    audio_resume_on_gesture();
 
     /* Skip "Enter Time" zoom on any keypress */
     if (g_input_state->enter_zoom_active) {
@@ -264,6 +275,7 @@ static float touch_pinch_distance(const EmscriptenTouchEvent *e) {
 
 static EM_BOOL on_touchstart(int type, const EmscriptenTouchEvent *e, void *data) {
     (void)type; (void)data;
+    audio_resume_on_gesture();
 
     /* Skip "Enter Time" zoom on any touch */
     if (g_input_state->enter_zoom_active) {
