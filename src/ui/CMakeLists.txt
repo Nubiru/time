@@ -111,6 +111,17 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_base_matrix.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_sync_matrix.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_cube_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/natal_chart_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_transit_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/hexagram_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/bagua_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/bodygraph_chart_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_hd_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/tree_of_life_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_hebrew_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/zodiac_wheel_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/dignity_table_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_iching_layout.c
     PARENT_SCOPE
 )
 
@@ -223,5 +234,16 @@ if(NOT EMSCRIPTEN)
     add_library(time_kin_base_matrix OBJECT kin_base_matrix.c)
     add_library(time_kin_sync_matrix OBJECT kin_sync_matrix.c)
     add_library(time_kin_cube_layout OBJECT kin_cube_layout.c)
+    add_library(time_natal_chart_layout OBJECT natal_chart_layout.c)
+    add_library(time_daily_transit_layout OBJECT daily_transit_layout.c)
+    add_library(time_hexagram_layout OBJECT hexagram_layout.c)
+    add_library(time_bagua_layout OBJECT bagua_layout.c)
+    add_library(time_bodygraph_chart_layout OBJECT bodygraph_chart_layout.c)
+    add_library(time_daily_hd_layout OBJECT daily_hd_layout.c)
+    add_library(time_tree_of_life_layout OBJECT tree_of_life_layout.c)
+    add_library(time_daily_hebrew_layout OBJECT daily_hebrew_layout.c)
+    add_library(time_zodiac_wheel_layout OBJECT zodiac_wheel_layout.c)
+    add_library(time_dignity_table_layout OBJECT dignity_table_layout.c)
+    add_library(time_daily_iching_layout OBJECT daily_iching_layout.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()

@@ -716,6 +716,18 @@ time_add_test(NAME test_kin_sync_matrix TEST tests/ui/test_kin_sync_matrix.c
     DEPS kin_sync_matrix matrix_441 synchronotron tzolkin thirteen_moon julian gregorian LABELS unit)
 time_add_test(NAME test_kin_cube_layout TEST tests/ui/test_kin_cube_layout.c
     DEPS kin_cube_layout thirteen_moon julian gregorian LABELS unit)
+time_add_test(NAME test_natal_chart_layout TEST tests/ui/test_natal_chart_layout.c
+    DEPS natal_chart_layout zodiac houses aspects dignity LABELS unit)
+time_add_test(NAME test_daily_transit_layout TEST tests/ui/test_daily_transit_layout.c
+    DEPS daily_transit_layout zodiac aspects dignity LABELS unit)
+time_add_test(NAME test_hexagram_layout TEST tests/ui/test_hexagram_layout.c
+    DEPS hexagram_layout iching iching_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_bagua_layout TEST tests/ui/test_bagua_layout.c
+    DEPS bagua_layout iching LABELS unit)
+time_add_test(NAME test_bodygraph_chart_layout TEST tests/ui/test_bodygraph_chart_layout.c
+    DEPS bodygraph_chart_layout bodygraph LABELS unit)
+time_add_test(NAME test_daily_hd_layout TEST tests/ui/test_daily_hd_layout.c
+    DEPS daily_hd_layout human_design LABELS unit)
 time_add_test(NAME test_earth_transition TEST tests/ui/test_earth_transition.c
     DEPS earth_transition camera_path spring vec_interp vec3 animation easing LABELS unit)
 time_add_test(NAME test_motion_prefs TEST tests/ui/test_motion_prefs.c
@@ -730,6 +742,16 @@ time_add_test(NAME test_transition_fx TEST tests/ui/test_transition_fx.c
     DEPS transition_fx LABELS unit)
 time_add_test(NAME test_card_flight TEST tests/ui/test_card_flight.c
     DEPS card_flight spring LABELS unit)
+time_add_test(NAME test_tree_of_life_layout TEST tests/ui/test_tree_of_life_layout.c
+    DEPS tree_of_life_layout sefirot tree_geometry LABELS unit)
+time_add_test(NAME test_daily_hebrew_layout TEST tests/ui/test_daily_hebrew_layout.c
+    DEPS daily_hebrew_layout hebrew hebrew_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_zodiac_wheel_layout TEST tests/ui/test_zodiac_wheel_layout.c
+    DEPS zodiac_wheel_layout zodiac LABELS unit)
+time_add_test(NAME test_dignity_table_layout TEST tests/ui/test_dignity_table_layout.c
+    DEPS dignity_table_layout dignity zodiac LABELS unit)
+time_add_test(NAME test_daily_iching_layout TEST tests/ui/test_daily_iching_layout.c
+    DEPS daily_iching_layout iching iching_interpret i18n content_i18n LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)
