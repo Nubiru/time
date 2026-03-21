@@ -4781,6 +4781,13 @@
       "contribution": "Revered Taoist teacher who transmitted esoteric I Ching knowledge in secret during 1960s China, taught Alfred Huang the authentic tradition",
       "source": "The Complete I Ching (Huang)",
       "added_by": "BRAIN stream"
+    },
+    {
+      "name": "Jenifer Tidwell",
+      "role": "Interaction designer, author",
+      "contribution": "UI design pattern catalog: Safe Exploration, Instant Gratification, Satisficing, Deferred Choices, Responsive Disclosure, Good Defaults, Dashboard, Settings Editor, Wizard — foundational patterns for Time's onboarding, settings, and personal space UX",
+      "source": "Designing Interfaces (O'Reilly, 2nd ed., 2011)",
+      "added_by": "PERSONA stream"
     }
   ]
 }
