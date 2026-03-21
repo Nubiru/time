@@ -707,6 +707,8 @@ time_add_test(NAME test_kin_seven_gen TEST tests/ui/test_kin_seven_gen.c
     DEPS kin_seven_gen kin_cell dreamspell LABELS unit)
 time_add_test(NAME test_kin_moon_detail TEST tests/ui/test_kin_moon_detail.c
     DEPS kin_moon_detail kin_cell thirteen_moon tzolkin tzolkin_board dreamspell julian gregorian LABELS unit)
+time_add_test(NAME test_kin_base_matrix TEST tests/ui/test_kin_base_matrix.c
+    DEPS kin_base_matrix synchronotron tzolkin thirteen_moon julian gregorian LABELS unit)
 time_add_test(NAME test_earth_transition TEST tests/ui/test_earth_transition.c
     DEPS earth_transition camera_path spring vec_interp vec3 animation easing LABELS unit)
 time_add_test(NAME test_motion_prefs TEST tests/ui/test_motion_prefs.c
