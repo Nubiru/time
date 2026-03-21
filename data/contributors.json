@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-21",
-    "total_contributors": 190
+    "total_contributors": 226
   },
   "contributors": [
     {
@@ -4788,6 +4788,310 @@
       "contribution": "UI design pattern catalog: Safe Exploration, Instant Gratification, Satisficing, Deferred Choices, Responsive Disclosure, Good Defaults, Dashboard, Settings Editor, Wizard — foundational patterns for Time's onboarding, settings, and personal space UX",
       "source": "Designing Interfaces (O'Reilly, 2nd ed., 2011)",
       "added_by": "PERSONA stream"
+    },
+    {
+      "name": "Wolfgang Pauli",
+      "role": "Physicist",
+      "contribution": "Nobel Prize-winning physicist who co-developed the quaternio model of synchronicity with Jung. Proposed replacing the classical triad (space, time, causality) with a quaternio adding synchronicity as the fourth principle.",
+      "source": "Synchronicity: An Acausal Connecting Principle (Jung)",
+      "added_by": "BRAIN stream"
+    },
+    {
+      "name": "Sonu Shamdasani",
+      "role": "Scholar",
+      "contribution": "Jung historian who wrote the 2010 foreword to Synchronicity, contextualizing it within Liber Novus and the Red Book tradition.",
+      "source": "Synchronicity: An Acausal Connecting Principle (Jung)",
+      "added_by": "BRAIN stream"
+    },
+    {
+      "name": "R.F.C. Hull",
+      "role": "Translator",
+      "contribution": "Translator of Jung Collected Works into English, including Synchronicity: An Acausal Connecting Principle.",
+      "source": "Synchronicity: An Acausal Connecting Principle (Jung)",
+      "added_by": "BRAIN stream"
+    },
+    {
+      "name": "J.B. Rhine",
+      "role": "Parapsychologist",
+      "contribution": "Pioneer of experimental parapsychology at Duke University. ESP card experiments provided statistical evidence (1:250,000 probability) that Jung cited as empirical support for synchronicity.",
+      "source": "Synchronicity: An Acausal Connecting Principle (Jung)",
+      "added_by": "BRAIN stream"
+    },
+    {
+      "name": "Paul Kammerer",
+      "role": "Biologist",
+      "contribution": "Proposed the \"law of series\" (seriality) — aperiodic clustering of chance events. Precursor to synchronicity concept, though Kammerer stayed within causal framework.",
+      "source": "Synchronicity: An Acausal Connecting Principle (Jung)",
+      "added_by": "BRAIN stream"
+    },
+    {
+      "name": "Gret Baumann-Jung",
+      "role": "Astrologer, Lecturer",
+      "born": 1906,
+      "died": 1995,
+      "contribution": "Jung's second daughter. Studied astrology from age 16, became respected practitioner and lecturer at Jung Institute Zurich. Wrote 'Some Reflections on the Horoscope of C.G. Jung' (1975) demonstrating depth-psychological chart reading. Provided initial idea for Jung's synchronicity-astrology experiment.",
+      "source": "Jung on Astrology (Rossi & Le Grice, 2018), Appendix",
+      "added_by": "DEPTH stream S34"
+    },
+    {
+      "name": "Erhard Schoen",
+      "role": "Artist, Woodcutter",
+      "born": 1491,
+      "died": 1542,
+      "contribution": "Created the 1515 horoscope woodcut for Leonhard Reymann's nativity calendar — a mandala-form chart showing houses, zodiac animals, and planetary positions in concentric circles. Reproduced in Jung's Psychology and Alchemy (CW 12).",
+      "source": "Jung on Astrology, Fig 4.6",
+      "added_by": "DEPTH stream S34"
+    },
+    {
+      "name": "Dane Rudhyar",
+      "role": "Astrologer, Philosopher, Composer",
+      "born": 1895,
+      "died": 1985,
+      "contribution": "First to synthesize Jungian psychological ideas with astrology. Emigrated from France to U.S. in 1930s. Pioneered humanistic and transpersonal astrology — astrology as tool for self-understanding rather than prediction.",
+      "source": "Jung on Astrology, Introduction p.5",
+      "added_by": "DEPTH stream S34"
+    },
+    {
+      "name": "Stephen Arroyo",
+      "role": "Astrologer, Author",
+      "contribution": "Developed the canonical correspondence between astrological elements and Jungian psychological types: Fire=Intuition, Earth=Sensation, Air=Thinking, Water=Feeling. Published 'Astrology, Psychology, and the Four Elements' (1975).",
+      "source": "Jung on Astrology, Introduction p.7",
+      "added_by": "DEPTH stream S34"
+    },
+    {
+      "name": "Liz Greene",
+      "role": "Astrologer, Jungian Analyst",
+      "contribution": "Developed Saturn-Shadow correspondence in psychological astrology. Books: 'Saturn: A New Look at an Old Devil', 'Relating'. Confirmed element-type correlation: 'Jung's four function types fit hand in glove with astrology's ancient division of the four elements.'",
+      "source": "Jung on Astrology, Introduction p.7",
+      "added_by": "DEPTH stream S34"
+    },
+    {
+      "name": "Richard Tarnas",
+      "role": "Philosopher, Astrologer",
+      "contribution": "Pioneered archetypal cosmology — worldview merging Jungian archetypes with astrological paradigm. Author of 'Cosmos and Psyche' (2006). Co-founder of ITAS. 'Between the astronomical and human is an archetypally informed synchronicity.'",
+      "source": "Jung on Astrology, Introduction p.8",
+      "added_by": "DEPTH stream S34"
+    },
+    {
+      "name": "Alice O. Howell",
+      "role": "Jungian Analyst, Astrologer",
+      "contribution": "Wrote 'Jungian Symbolism in Astrology' (1987). Called the birth chart 'in potentia, a treasure map to the individuation process or greater awareness of the Self.' Connected astrology to individuation journey.",
+      "source": "Jung on Astrology, Introduction p.8",
+      "added_by": "DEPTH stream S34"
+    },
+    {
+      "name": "Karen Hamaker-Zondag",
+      "role": "Jungian Analyst, Astrologer",
+      "contribution": "Written in depth on correspondence between Jung's typology and astrological elements. Contributed to psychological astrology framework linking Jungian analytical psychology with astrological practice.",
+      "source": "Jung on Astrology, Introduction p.7",
+      "added_by": "DEPTH stream S34"
+    },
+    {
+      "name": "Paracelsus",
+      "role": "Physician, Alchemist, Astrologer",
+      "born": 1493,
+      "died": 1541,
+      "contribution": "Developed the 'star in the body' (astrum) doctrine — an inner firmament in each human mirroring the outer heaven. Planet-organ correspondences: Moon=brain, Saturn=spleen, Sun=heart, Venus=kidneys, Jupiter=liver, Mars=bile. 'In every human being there is a special heaven, whole and unbroken.'",
+      "source": "Jung on Astrology, Ch.6 Astrology and Medicine",
+      "added_by": "DEPTH stream S34"
+    },
+    {
+      "name": "Marcus Aurelius",
+      "role": "Roman Emperor, Stoic Philosopher",
+      "born": 121,
+      "died": 180,
+      "contribution": "Meditations — foundational Stoic philosophy text. Wisdom voice source for Time. \"The universe is change; our life is what our thoughts make it.\"",
+      "source": "The Meditations of Marcus Aurelius (library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Lao Tzu",
+      "role": "Philosopher, Founder of Taoism",
+      "born": -601,
+      "died": -531,
+      "contribution": "Tao Te Ching — foundational Taoist text. Core philosophy connecting to I Ching and Chinese calendar systems. \"The Tao that can be told is not the eternal Tao.\"",
+      "source": "Lao-tzu's Taoteching (Red Pine translation, library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Red Pine (Bill Porter)",
+      "role": "Translator, Sinologist",
+      "born": 1943,
+      "contribution": "Definitive English translation of the Tao Te Ching with historical commentary. Bridges ancient Chinese wisdom to modern understanding.",
+      "source": "Lao-tzu's Taoteching (Copper Canyon Press, 2009)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Hermann Hesse",
+      "role": "Novelist, Nobel Laureate",
+      "born": 1877,
+      "died": 1962,
+      "contribution": "Siddhartha — Buddhist journey narrative. Wisdom voice source. Explored Eastern philosophy through Western literary lens.",
+      "source": "Siddhartha (library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Georges Cuvier",
+      "role": "Naturalist, Paleontologist",
+      "born": 1769,
+      "died": 1832,
+      "contribution": "Father of paleontology. Essay on the Theory of the Earth established geological catastrophism. Pioneer of deep time understanding.",
+      "source": "Essay on the Theory of the Earth (Cambridge Library, library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Thomas Henry Huxley",
+      "role": "Biologist, Anthropologist",
+      "born": 1825,
+      "died": 1895,
+      "contribution": "Evidence as to Man's Place in Nature — first book on human evolution. Established humanity's connection to geological time.",
+      "source": "Evidence as to Man's Place in Nature (Cambridge Library, library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Yuval Noah Harari",
+      "role": "Historian, Author",
+      "born": 1976,
+      "contribution": "Sapiens and Homo Deus — sweeping human timeline from cognitive revolution to posthuman future. Framework for Time's Earth/civilization layers.",
+      "source": "Sapiens + Homo Deus (library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Jared Diamond",
+      "role": "Geographer, Biologist, Author",
+      "born": 1937,
+      "contribution": "Guns, Germs, and Steel — cross-civilizational analysis of human societies. Framework for understanding why civilizations developed different calendar systems.",
+      "source": "Guns, Germs, and Steel (library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Livia Kohn",
+      "role": "Sinologist, Taoist Scholar",
+      "born": 1956,
+      "contribution": "Academic guide to the Daodejing. Contextualizes Taoist philosophy for modern understanding. Oxford University Press.",
+      "source": "The Daode Jing: A Guide (Oxford UP 2019, library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Don Miguel Ruiz",
+      "role": "Spiritual Teacher, Toltec Tradition",
+      "born": 1952,
+      "contribution": "The Four Agreements — Toltec wisdom rooted in Mesoamerican tradition. Connects to Tzolkin/Maya philosophical framework.",
+      "source": "The Four Agreements (library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Barry Bandstra",
+      "role": "Biblical Scholar",
+      "contribution": "Genesis 1-11 Hebrew Text Handbook — detailed Hebrew text analysis relevant to Hebrew calendar system and creation narrative.",
+      "source": "Genesis 1-11 Hebrew Text Handbook (Baylor, library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Louis Baudin",
+      "role": "Historian, Economist",
+      "born": 1887,
+      "died": 1964,
+      "contribution": "El imperio socialista de los Incas — study of Inca civilization. Context for Andean calendar systems and pre-Columbian time-keeping.",
+      "source": "El imperio socialista de los Incas (library acquisition 2026-03-21)",
+      "added_by": "NERVE session 17"
+    },
+    {
+      "name": "Zou Yan",
+      "role": "Philosopher, Yin-Yang Cosmologist",
+      "born": -340,
+      "died": -260,
+      "contribution": "First formal codifier of Yin-Yang Cosmology and Five Phases (wu xing). Developed systematic description of the universe in terms of yin-yang energetic interaction and five concrete entities: wood, fire, earth, metal, water.",
+      "source": "The Daode Jing: A Guide (Kohn 2019, p.15)",
+      "added_by": "NERVE session 20"
+    },
+    {
+      "name": "Wang Bi",
+      "role": "Philosopher, Commentator",
+      "born": 226,
+      "died": 249,
+      "contribution": "Created the standard edition of the Daode Jing (still used today) and wrote an exegesis of the Yijing (I Ching). His metaphysical reading set the stage for the text as a key philosophical document. Also wrote the Laozi zhilue analyzing chapter structure.",
+      "source": "The Daode Jing: A Guide (Kohn 2019, p.41-43)",
+      "added_by": "NERVE session 20"
+    },
+    {
+      "name": "Steven Forrest",
+      "role": "Astrologer, Author",
+      "contribution": "Pioneer of evolutionary astrology. Author of 'The Inner Sky' (1984) — foundational modern psychological astrology textbook. Developed the 34-word vocabulary (12 signs + 10 planets + 12 houses) with evolutionary framing: signs as growth methods, not fixed traits. 5-step interpretation: WHAT (planet) + WHY (sign) + HOW+ (resources) + HOW- (shadow) + WHERE (house). Founding member of ISAR.",
+      "source": "The Inner Sky: The Dynamic New Astrology for Everyone (Forrest, 1984/1988)",
+      "added_by": "DEPTH stream S35"
+    },
+    {
+      "name": "Aryeh Kaplan",
+      "role": "Rabbi, Physicist, Author",
+      "born": 1934,
+      "died": 1983,
+      "contribution": "Translated and commented on Sefer Yetzirah with unprecedented depth. Mapped 22 Hebrew letters to zodiac (12), planets (7), and elements (3). Documented 231 Gates, planetary hours, Tree of Life paths, cube geometry, and cross-system correspondences. Also authored 'Meditation and Kabbalah' and 'Inner Space.'",
+      "source": "Sefer Yetzirah: The Book of Creation (Kaplan, 1990/1997)",
+      "added_by": "DEPTH stream S37"
+    },
+    {
+      "name": "Abraham ben Samuel Abulafia",
+      "role": "Kabbalist, Mystic",
+      "born": 1240,
+      "died": 1291,
+      "contribution": "Developed prophetic Kabbalah meditation using Hebrew letter permutations combined with vowels, breathing exercises, and head motions. Created the 231 Gates array system. His technique represents the most systematic approach to mystical letter meditation.",
+      "source": "Sefer Yetzirah (Kaplan), Chapter 2",
+      "added_by": "DEPTH stream S37"
+    },
+    {
+      "name": "Rabbi Eliahu (Gaon of Vilna / the Gra)",
+      "role": "Rabbi, Scholar",
+      "born": 1720,
+      "died": 1797,
+      "contribution": "Produced the definitive Gra version of Sefer Yetzirah — the version considered most authentic by Kabbalists and used in Kaplan's primary translation. His arrangement of letter-planet-day-body correspondences agrees with the Zohar.",
+      "source": "Sefer Yetzirah (Kaplan), Introduction",
+      "added_by": "DEPTH stream S37"
+    },
+    {
+      "name": "Johannes Kepler",
+      "role": "Astronomer, Mathematician",
+      "born": 1571,
+      "died": 1630,
+      "contribution": "Discovered the three laws of planetary motion. In Harmonices Mundi (1619), demonstrated that planetary orbital velocities produce musical intervals — the last great synthesis of astronomy and music.",
+      "source": "The Music of the Spheres (Jamie James)",
+      "added_by": "LANGUAGE stream S35"
+    },
+    {
+      "name": "Macrobius",
+      "role": "Roman Scholar, Neoplatonist",
+      "born": 370,
+      "died": 430,
+      "contribution": "Commentary on the Dream of Scipio transmitted Pythagorean cosmic harmony to the medieval world. Connected Apollo's seven-stringed lyre to the seven celestial spheres.",
+      "source": "The Music of the Spheres (Jamie James)",
+      "added_by": "LANGUAGE stream S35"
+    },
+    {
+      "name": "Ho-shang Kung",
+      "role": "Taoist Commentator",
+      "born": -200,
+      "died": -100,
+      "contribution": "Authored the earliest surviving line-by-line commentary on the Tao Te Ching. His practical perspective illuminated astronomical dimensions of Taoist cosmology — lunar phases, solar zenith, and seasonal cycles.",
+      "source": "Lao-tzu's Taoteching (Red Pine translation)",
+      "added_by": "LANGUAGE stream S35"
+    },
+    {
+      "name": "Sung Ch'ang-hsing",
+      "role": "Taoist Scholar",
+      "born": 1650,
+      "died": 1720,
+      "contribution": "Internal alchemy commentator on the Tao Te Ching. His synthesis 'Emptiness is the Way of Heaven, Stillness is the Way of Earth' distills the Taoist cosmological framework.",
+      "source": "Lao-tzu's Taoteching (Red Pine translation)",
+      "added_by": "LANGUAGE stream S35"
+    },
+    {
+      "name": "Li Hsi-chai",
+      "role": "Taoist Commentator",
+      "born": 1050,
+      "died": 1130,
+      "contribution": "Song Dynasty commentator on the Tao Te Ching. His yin-yang cosmogony interpretation provides the clearest explanation of Verse 42's creation sequence.",
+      "source": "Lao-tzu's Taoteching (Red Pine translation)",
+      "added_by": "LANGUAGE stream S35"
     }
   ]
 }
