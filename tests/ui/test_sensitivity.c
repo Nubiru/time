@@ -65,10 +65,10 @@ void test_wisdom_sacred_count_small(void)
 
 void test_wisdom_sensitivity_sums_to_total(void)
 {
-    int results[128];
-    int general = wisdom_by_sensitivity(SENSITIVITY_GENERAL, results, 128);
-    int respectful = wisdom_by_sensitivity(SENSITIVITY_RESPECTFUL, results, 128);
-    int sacred = wisdom_by_sensitivity(SENSITIVITY_SACRED, results, 128);
+    int results[256];
+    int general = wisdom_by_sensitivity(SENSITIVITY_GENERAL, results, 256);
+    int respectful = wisdom_by_sensitivity(SENSITIVITY_RESPECTFUL, results, 256);
+    int sacred = wisdom_by_sensitivity(SENSITIVITY_SACRED, results, 256);
     TEST_ASSERT_EQUAL_INT(wisdom_quote_count(), general + respectful + sacred);
 }
 
