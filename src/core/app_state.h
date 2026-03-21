@@ -20,6 +20,7 @@
 #include "../ui/card_flight.h"
 #include "../ui/focus_flow.h"
 #include "../systems/unified/brain_visual_bridge.h"
+#include "../systems/unified/birth_profile.h"
 
 /* All mutable application state in one place.
  * Pure functions never touch this — they receive data and return data.
@@ -80,6 +81,16 @@ typedef struct {
     int show_trails;       /* orbit trail lines */
     int show_hud;          /* time HUD overlay */
     int meditation_active; /* 1=meditation mode on */
+
+    /* Locale (persisted via localStorage) */
+    int locale;                  /* i18n_locale_t value */
+
+    /* Birth profile (entered by user, persisted via localStorage) */
+    int birth_year;
+    int birth_month;
+    int birth_day;
+    int birth_entered;           /* 1 if user has entered birth date */
+    birth_profile_t birth_profile; /* computed from birth date */
 
     /* Brain scan cache (refreshed once per simulated day) */
     double headline_jd;          /* floor(jd) of last brain scan */

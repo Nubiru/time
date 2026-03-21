@@ -16,6 +16,7 @@
 
     <div id="ui-overlay">
         <div id="time-hud"></div>
+        <div id="settings-btn" class="corner-btn corner-btn-settings" title="Settings (,)">&#9881;</div>
         <div id="help-btn" class="corner-btn" title="Keyboard shortcuts (?)">?</div>
 
         <div id="help-panel" class="panel frosted centered hidden" role="dialog" aria-label="Keyboard shortcuts">
@@ -38,12 +39,42 @@
             <div class="panel-body" id="layer-content"></div>
         </div>
 
+        <div id="settings-panel" class="panel frosted edge-right hidden" role="dialog" aria-label="Settings">
+            <div class="panel-header">
+                <span class="text-accent">Settings</span>
+                <span class="panel-close" role="button" aria-label="Close" tabindex="0">&times;</span>
+            </div>
+            <div class="panel-body" id="settings-content"></div>
+        </div>
+
         <div id="time-bar" class="toolbar edge-bottom">
             <div id="time-bar-inner">
                 <button id="tb-pause" class="tb-btn" title="Pause/Resume (Space)">&#9654;</button>
                 <span id="tb-speed" class="text-secondary">1x</span>
                 <span id="tb-date" class="text-primary"></span>
                 <button id="tb-now" class="tb-btn text-accent" title="Jump to Now (N)">Now</button>
+            </div>
+        </div>
+
+        <div id="birth-panel" class="panel frosted centered hidden" role="dialog" aria-label="Birth date">
+            <div class="panel-header">
+                <span class="text-accent">When did you arrive?</span>
+                <span class="panel-close" role="button" aria-label="Close" tabindex="0">&times;</span>
+            </div>
+            <div class="panel-body">
+                <form id="birth-form" autocomplete="off">
+                    <label class="text-secondary">Day
+                        <input type="number" id="birth-day" min="1" max="31" placeholder="DD" class="cmd-input" style="width:4em">
+                    </label>
+                    <label class="text-secondary">Month
+                        <input type="number" id="birth-month" min="1" max="12" placeholder="MM" class="cmd-input" style="width:4em">
+                    </label>
+                    <label class="text-secondary">Year
+                        <input type="number" id="birth-year" min="1" max="2100" placeholder="YYYY" class="cmd-input" style="width:5em">
+                    </label>
+                    <button type="submit" class="tb-btn text-accent" style="margin-left:1em">Reveal</button>
+                </form>
+                <div id="birth-result" class="text-primary" style="margin-top:0.8em"></div>
             </div>
         </div>
 
@@ -97,6 +128,7 @@
             }
             switch(e.key) {
                 case '?': if (Module && Module._ui_toggle_help) Module._ui_toggle_help(); break;
+                case ',': if (Module && Module._ui_toggle_settings) Module._ui_toggle_settings(); break;
                 case '/':
                     e.preventDefault();
                     if (Module && Module._ui_toggle_command_palette) {
@@ -115,6 +147,55 @@
         if (helpBtn) helpBtn.addEventListener('click', function() {
             if (Module && Module._ui_toggle_help) Module._ui_toggle_help();
         });
+        var settingsBtn = document.getElementById('settings-btn');
+        if (settingsBtn) settingsBtn.addEventListener('click', function() {
+            if (Module && Module._ui_toggle_settings) Module._ui_toggle_settings();
+        });
+
+        /* Settings panel: event delegation for toggles, choices, sliders */
+        var settingsContent = document.getElementById('settings-content');
+        if (settingsContent) {
+            settingsContent.addEventListener('click', function(e) {
+                var toggle = e.target.closest('.settings-toggle');
+                if (toggle) {
+                    var item = toggle.closest('.settings-item');
+                    if (!item) return;
+                    var sec = parseInt(item.dataset.sec, 10);
+                    var opt = parseInt(item.dataset.opt, 10);
+                    var active = toggle.classList.toggle('active');
+                    if (Module && Module._ui_settings_toggle)
+                        Module._ui_settings_toggle(sec, opt, active ? 1 : 0);
+                    return;
+                }
+                var pill = e.target.closest('.settings-pill');
+                if (pill) {
+                    var item = pill.closest('.settings-item');
+                    if (!item) return;
+                    var sec = parseInt(item.dataset.sec, 10);
+                    var opt = parseInt(item.dataset.opt, 10);
+                    var idx = parseInt(pill.dataset.idx, 10);
+                    pill.parentElement.querySelectorAll('.settings-pill').forEach(function(p) {
+                        p.classList.remove('active');
+                    });
+                    pill.classList.add('active');
+                    if (Module && Module._ui_settings_choice)
+                        Module._ui_settings_choice(sec, opt, idx);
+                    return;
+                }
+            });
+            settingsContent.addEventListener('input', function(e) {
+                if (e.target.classList.contains('settings-slider')) {
+                    var item = e.target.closest('.settings-item');
+                    if (!item) return;
+                    var sec = parseInt(item.dataset.sec, 10);
+                    var opt = parseInt(item.dataset.opt, 10);
+                    var valSpan = item.querySelector('.settings-slider-val');
+                    if (valSpan) valSpan.textContent = parseFloat(e.target.value).toFixed(1);
+                    if (Module && Module._ui_settings_slider)
+                        Module._ui_settings_slider(sec, opt, e.target.valueAsNumber);
+                }
+            });
+        }
         document.querySelectorAll('.panel-close').forEach(function(btn) {
             btn.addEventListener('click', function() {
                 if (Module && Module._ui_close_panels) Module._ui_close_panels();
@@ -127,6 +208,107 @@
         var tbNow = document.getElementById('tb-now');
         if (tbNow) tbNow.addEventListener('click', function() {
             if (Module && Module._ui_jump_to_now) Module._ui_jump_to_now();
+        });
+
+        /* Birth date panel — P key */
+        var birthPanel = document.getElementById('birth-panel');
+        var birthForm = document.getElementById('birth-form');
+        function toggleBirth() {
+            if (birthPanel) birthPanel.classList.toggle('hidden');
+        }
+        document.addEventListener('keydown', function(e) {
+            if (e.target.tagName === 'INPUT') return;
+            if (e.key === 'p' || e.key === 'P') toggleBirth();
+        });
+        if (birthForm) {
+            birthForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                var y = parseInt(document.getElementById('birth-year').value, 10);
+                var m = parseInt(document.getElementById('birth-month').value, 10);
+                var d = parseInt(document.getElementById('birth-day').value, 10);
+                if (!y || !m || !d) return;
+                if (Module && Module._ui_set_birth_date) {
+                    Module._ui_set_birth_date(y, m, d);
+                    localStorage.setItem('time_birth', JSON.stringify({y:y, m:m, d:d}));
+                    var kin = Module._ui_get_birth_kin ? Module._ui_get_birth_kin() : 0;
+                    var res = document.getElementById('birth-result');
+                    if (res) res.textContent = kin > 0
+                        ? 'Your Galactic Signature: Kin ' + kin
+                        : 'Birth profile computed.';
+                }
+            });
+            /* Restore from localStorage on load */
+            var saved = localStorage.getItem('time_birth');
+            if (saved) {
+                try {
+                    var b = JSON.parse(saved);
+                    document.getElementById('birth-year').value = b.y;
+                    document.getElementById('birth-month').value = b.m;
+                    document.getElementById('birth-day').value = b.d;
+                    /* Apply after WASM loads */
+                    if (typeof Module !== 'undefined' && Module._ui_set_birth_date) {
+                        Module._ui_set_birth_date(b.y, b.m, b.d);
+                    } else {
+                        window.addEventListener('load', function() {
+                            setTimeout(function() {
+                                if (Module && Module._ui_set_birth_date)
+                                    Module._ui_set_birth_date(b.y, b.m, b.d);
+                            }, 500);
+                        });
+                    }
+                } catch(ex) { /* ignore parse errors */ }
+            }
+        }
+
+        /* Locale toggle — L key cycles EN→ES→AR→ZH */
+        var LOCALES = [
+            {id: 0, code: 'EN', name: 'English'},
+            {id: 1, code: 'ES', name: 'Espanol'},
+            {id: 2, code: 'AR', name: 'Arabic'},
+            {id: 4, code: 'ZH', name: 'Chinese'}
+        ];
+        var localeIdx = 0;
+        (function restoreLocale() {
+            var saved = localStorage.getItem('time_locale');
+            if (saved !== null) {
+                var id = parseInt(saved, 10);
+                for (var i = 0; i < LOCALES.length; i++) {
+                    if (LOCALES[i].id === id) { localeIdx = i; break; }
+                }
+            }
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    if (Module && Module._ui_set_locale)
+                        Module._ui_set_locale(LOCALES[localeIdx].id);
+                }, 500);
+            });
+        })();
+        document.addEventListener('keydown', function(e) {
+            if (e.target.tagName === 'INPUT') return;
+            if (e.key === 'l' || e.key === 'L') {
+                localeIdx = (localeIdx + 1) % LOCALES.length;
+                var loc = LOCALES[localeIdx];
+                if (Module && Module._ui_set_locale) Module._ui_set_locale(loc.id);
+                localStorage.setItem('time_locale', String(loc.id));
+                /* Brief toast */
+                var toast = document.getElementById('toast-area');
+                if (toast) {
+                    toast.textContent = 'Language: ' + loc.name;
+                    toast.classList.add('visible');
+                    setTimeout(function() { toast.classList.remove('visible'); }, 1500);
+                }
+            }
+        });
+
+        /* Earth View toggle — E key also wired in C input.c, this adds WASM bridge */
+        document.addEventListener('keydown', function(e) {
+            if (e.target.tagName === 'INPUT') return;
+            if (e.key === 'e' || e.key === 'E') {
+                if (Module && Module._ui_get_view && Module._ui_set_view) {
+                    var cur = Module._ui_get_view();
+                    Module._ui_set_view(cur === 0 ? 1 : 0);
+                }
+            }
         });
 
         var hint = document.getElementById('first-hint');

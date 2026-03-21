@@ -459,4 +459,53 @@ EMSCRIPTEN_KEEPALIVE float ui_get_log_zoom(void) {
     return g_state.camera.log_zoom;
 }
 
+EMSCRIPTEN_KEEPALIVE void ui_set_birth_date(int year, int month, int day) {
+    if (year < 1 || year > 9999 || month < 1 || month > 12 ||
+        day < 1 || day > 31)
+        return;
+    g_state.birth_year = year;
+    g_state.birth_month = month;
+    g_state.birth_day = day;
+    g_state.birth_entered = 1;
+    g_state.birth_profile = bp_compute(year, month, day);
+}
+
+EMSCRIPTEN_KEEPALIVE int ui_get_birth_entered(void) {
+    return g_state.birth_entered;
+}
+
+EMSCRIPTEN_KEEPALIVE int ui_get_birth_kin(void) {
+    return g_state.birth_entered ? g_state.birth_profile.tzolkin.kin : 0;
+}
+
+EMSCRIPTEN_KEEPALIVE int ui_get_birth_year(void) {
+    return g_state.birth_year;
+}
+
+EMSCRIPTEN_KEEPALIVE int ui_get_birth_month(void) {
+    return g_state.birth_month;
+}
+
+EMSCRIPTEN_KEEPALIVE int ui_get_birth_day(void) {
+    return g_state.birth_day;
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_set_locale(int locale_id) {
+    if (locale_id < 0 || locale_id >= 20) return;
+    g_state.locale = locale_id;
+}
+
+EMSCRIPTEN_KEEPALIVE int ui_get_locale(void) {
+    return g_state.locale;
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_set_view(int view_id) {
+    if (view_id < 0 || view_id > 1) return;
+    g_state.view = vs_set_view(g_state.view, view_id);
+}
+
+EMSCRIPTEN_KEEPALIVE int ui_get_view(void) {
+    return g_state.view.current_view;
+}
+
 #endif /* __EMSCRIPTEN__ */
