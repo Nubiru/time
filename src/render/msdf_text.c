@@ -7,7 +7,19 @@
 
 #include "msdf_text.h"
 #include "msdf_mono_data.h"
+#ifdef MSDF_SANS_ENABLED
 #include "msdf_sans_data.h"
+#else
+/* Sans atlas stub — define constants to satisfy code paths */
+#define MSDF_SANS_ATLAS_W    1
+#define MSDF_SANS_ATLAS_H    1
+#define MSDF_SANS_GLYPH_COUNT 0
+typedef struct { int unicode; float advance;
+    struct { float left, bottom, right, top; } plane, atlas;
+} msdf_sans_glyph_t;
+static inline const msdf_sans_glyph_t *msdf_sans_find(int u) { (void)u; return 0; }
+static const unsigned char MSDF_SANS_PIXELS[3] = {0,0,0};
+#endif
 #include <string.h>
 
 /* Line height multiplier relative to font_size */

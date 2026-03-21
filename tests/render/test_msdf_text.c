@@ -18,21 +18,25 @@ void test_mono_atlas_dimensions(void)
     TEST_ASSERT_EQUAL_INT(512, msdf_text_atlas_height(MSDF_FONT_MONO));
 }
 
+#ifdef MSDF_SANS_ENABLED
 void test_sans_atlas_dimensions(void)
 {
     TEST_ASSERT_EQUAL_INT(512, msdf_text_atlas_width(MSDF_FONT_SANS));
     TEST_ASSERT_EQUAL_INT(512, msdf_text_atlas_height(MSDF_FONT_SANS));
 }
+#endif
 
 void test_mono_glyph_count(void)
 {
     TEST_ASSERT_EQUAL_INT(190, msdf_text_glyph_count(MSDF_FONT_MONO));
 }
 
+#ifdef MSDF_SANS_ENABLED
 void test_sans_glyph_count(void)
 {
     TEST_ASSERT_EQUAL_INT(191, msdf_text_glyph_count(MSDF_FONT_SANS));
 }
+#endif
 
 /* --- Empty / NULL input --- */
 
@@ -87,6 +91,7 @@ void test_mono_equal_advance(void)
     TEST_ASSERT_FLOAT_WITHIN(0.1f, l1.total_width, l2.total_width);
 }
 
+#ifdef MSDF_SANS_ENABLED
 void test_sans_variable_advance(void)
 {
     /* Proportional font: 'i' should be narrower than 'W' */
@@ -94,6 +99,7 @@ void test_sans_variable_advance(void)
     float w_w = msdf_text_width(MSDF_FONT_SANS, "WWW", 32.0f);
     TEST_ASSERT_TRUE(w_i < w_w);
 }
+#endif
 
 /* --- Width measurement --- */
 
@@ -267,9 +273,13 @@ int main(void)
 
     /* Atlas info */
     RUN_TEST(test_mono_atlas_dimensions);
+#ifdef MSDF_SANS_ENABLED
     RUN_TEST(test_sans_atlas_dimensions);
+#endif
     RUN_TEST(test_mono_glyph_count);
+#ifdef MSDF_SANS_ENABLED
     RUN_TEST(test_sans_glyph_count);
+#endif
 
     /* Empty / NULL */
     RUN_TEST(test_layout_null_text);
@@ -279,7 +289,9 @@ int main(void)
     RUN_TEST(test_layout_single_char);
     RUN_TEST(test_layout_multiple_chars);
     RUN_TEST(test_mono_equal_advance);
+#ifdef MSDF_SANS_ENABLED
     RUN_TEST(test_sans_variable_advance);
+#endif
 
     /* Width */
     RUN_TEST(test_width_null);
