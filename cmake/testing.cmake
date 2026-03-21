@@ -662,6 +662,10 @@ time_add_test(NAME test_kin_wheel_layout TEST tests/ui/test_kin_wheel_layout.c
     DEPS kin_wheel_layout kin_cell tzolkin julian LABELS unit)
 time_add_test(NAME test_kin_round_layout TEST tests/ui/test_kin_round_layout.c
     DEPS kin_round_layout kin_cell cr_cycle haab tzolkin julian LABELS unit)
+time_add_test(NAME test_kin_castle_layout TEST tests/ui/test_kin_castle_layout.c
+    DEPS kin_castle_layout kin_cell dreamspell tzolkin julian LABELS unit)
+time_add_test(NAME test_kin_color_compass TEST tests/ui/test_kin_color_compass.c
+    DEPS kin_color_compass kin_cell LABELS unit)
 time_add_test(NAME test_earth_transition TEST tests/ui/test_earth_transition.c
     DEPS earth_transition camera_path spring vec_interp vec3 animation easing LABELS unit)
 time_add_test(NAME test_motion_prefs TEST tests/ui/test_motion_prefs.c

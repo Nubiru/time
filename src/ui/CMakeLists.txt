@@ -92,6 +92,8 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_board_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_wheel_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_round_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/kin_castle_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/kin_color_compass.c
     PARENT_SCOPE
 )
 
@@ -185,5 +187,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_kin_board_layout OBJECT kin_board_layout.c)
     add_library(time_kin_wheel_layout OBJECT kin_wheel_layout.c)
     add_library(time_kin_round_layout OBJECT kin_round_layout.c)
+    add_library(time_kin_castle_layout OBJECT kin_castle_layout.c)
+    add_library(time_kin_color_compass OBJECT kin_color_compass.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
