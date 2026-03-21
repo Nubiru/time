@@ -31,6 +31,7 @@
 #include "../render/passes/convergence_pass.h"
 #include "../render/passes/post_pass.h"
 #include "../render/passes/natal_chart_pass.h"
+#include "../render/passes/tree_of_life_pass.h"
 #include "../render/earth_view_frame.h"
 #include "../systems/astronomy/planets.h"
 #include "../ui/ui_bridge.h"
@@ -251,7 +252,10 @@ void main_loop(void) {
     if (ps_is_enabled(&sched, PASS_EARTH))          earth_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_BODYGRAPH))      bodygraph_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_HEXAGRAM))       hexagram_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_TREE))           tree_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_TREE)) {
+        tree_pass_draw(&frame);
+        tree_of_life_pass_draw(&frame); /* Richer Sefirot visualization */
+    }
     if (frame.focus_mode == 1) natal_chart_pass_draw(&frame); /* Astrology wheel */
     if (ps_is_enabled(&sched, PASS_CARD))           card_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_TEXT))           text_pass_draw(&frame);
@@ -386,6 +390,7 @@ int main(void) {
     if (ring_pass_init() != 0) return 1;
     if (convergence_pass_init() != 0) return 1;
     natal_chart_pass_init();
+    tree_of_life_pass_init();
     if (card_pass_init() != 0) return 1;
     if (text_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;

@@ -43,6 +43,8 @@
 #include "../../ui/dignity_table_layout.h"
 #include "../../ui/prayer_times_layout.h"
 #include "../../ui/nakshatra_wheel_layout.h"
+#include "../../ui/daily_transit_layout.h"
+#include "../../systems/astronomy/lunar.h"
 #include "../msdf_text.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
@@ -708,6 +710,23 @@ static void draw_astrology_text(const render_frame_t *frame)
                               th.text_secondary.b, 0.7f);
                 break;
             }
+        }
+    }
+
+    /* Transit aspects summary (consumes daily_transit_layout) */
+    {
+        double lons[10];
+        for (int i = 0; i < 8; i++) lons[i] = frame->planet_lon[i];
+        lons[8] = sun_lon;
+        lunar_info_t moon_info = lunar_phase(frame->simulation_jd);
+        lons[9] = moon_info.moon_longitude;
+        daily_transit_layout_t dtl = daily_transit_compute(lons, 8.0);
+        if (dtl.aspect_count > 0) {
+            char asp[48];
+            snprintf(asp, sizeof(asp), "%d active aspects", dtl.aspect_count);
+            msdf_add_text(asp, 0.08f * (float)vw, 0.88f * (float)vh, 14.0f,
+                          th.text_secondary.r, th.text_secondary.g,
+                          th.text_secondary.b, 0.6f);
         }
     }
 
