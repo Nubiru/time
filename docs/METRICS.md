@@ -1,30 +1,30 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-21 (INFRA session 37)
+**Last refreshed**: 2026-03-21 (INFRA session 50)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 481 |
-| Header files (.h) | 484 |
-| Lines of code (src/) | 160,000+ |
-| Lines of tests | 210,000+ |
-| Test suites (CTest) | 508 |
-| Render pass files | 19 |
-| Pure modules | 410+ |
-| Stateful modules | 29 |
+| Source files (.c) | 494 |
+| Header files (.h) | 497 |
+| Lines of code (src/) | 175,000+ |
+| Lines of tests | 215,000+ |
+| Test suites (CTest) | 518 |
+| Render pass files | 22 |
+| Pure modules | 425+ |
+| Stateful modules | 32 |
 | Contributors | 186 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 508 |
-| Test functions (RUN_TEST) | 18,000+ |
-| Test assertions (TEST_ASSERT) | 30,000+ |
+| Test suites (CTest) | 518 |
+| Test functions (RUN_TEST) | 18,500+ |
+| Test assertions (TEST_ASSERT) | 31,000+ |
 | Failures | 0 |
-| CTest time | 1.34s (with -j12) |
+| CTest time | ~1.3s (with -j12) |
 | E2E tests (Playwright) | 15 (5 basic + 10 visual) |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -89,7 +89,7 @@
 | CMake native | PASS (zero warnings) |
 | CTest -j4 | PASS (496/496, 1.19s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
-| WASM build | PASS (618 KB dev — MSDF atlas embedded) |
+| WASM build | PASS (705 KB dev — MSDF + 3 geometric passes) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
@@ -156,11 +156,11 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 632,832 bytes (618 KB) |
+| Raw .wasm | 721,920 bytes (705 KB) |
 | Build mode | Development (-Os, ASSERTIONS=2) |
 | MSDF font atlas | JetBrains Mono 512×512 RGB (~250 KB in binary) |
-| Sans atlas | Excluded (MSDF_SANS_ENABLED not set) — saves ~251 KB |
-| Growth since session 33 | +253 KB raw (MSDF atlas data embedded) |
+| Sans atlas | Excluded (MSDF_SANS_ENABLED not set) |
+| Growth since session 37 | +87 KB (natal chart + tree of life + bagua passes, Hebrew locale data) |
 
 ## God Functions (>80 lines)
 
@@ -192,7 +192,7 @@
 | Build system sync | OK (469 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 23) |
 | Native build | PASS (496/496 tests, 1.19s) — use -j4 for clean builds |
-| WASM build | PASS (618 KB dev) |
+| WASM build | PASS (705 KB dev) |
 | E2E tests | PASS (5/5 basic + 7/10 visual, 2 skips, 1 SwiftShader) |
 | Coverage | 96.0% lines (35,581/37,053), 99.98% functions (4,233/4,234) |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
