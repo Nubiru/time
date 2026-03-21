@@ -518,6 +518,26 @@ static void test_compose_first_significant_insight_used(void)
 
 /* === Main === */
 
+/* === Locale tests === */
+
+static void test_compose_hebrew_month_name(void)
+{
+    dn_input_t in = make_date_input();
+    in.locale = I18N_LOCALE_HE;
+    daily_narrative_t n = dn_compose(&in);
+    /* Hebrew March = מרץ — should NOT contain English "March" */
+    TEST_ASSERT_NULL(strstr(n.headline, "March"));
+    /* Should contain the Hebrew month name from content_get */
+    TEST_ASSERT_TRUE(strlen(n.headline) > 0);
+}
+
+static void test_compose_default_locale_is_en(void)
+{
+    dn_input_t in = dn_default_input();
+    /* locale field is 0 from memset = I18N_LOCALE_EN */
+    TEST_ASSERT_EQUAL_INT(I18N_LOCALE_EN, in.locale);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -575,6 +595,10 @@ int main(void)
     RUN_TEST(test_compose_insight_count_clamped);
     RUN_TEST(test_compose_systems_format_separator);
     RUN_TEST(test_compose_date_headline_with_insights_count);
+
+    /* Locale */
+    RUN_TEST(test_compose_default_locale_is_en);
+    RUN_TEST(test_compose_hebrew_month_name);
 
     return UNITY_END();
 }

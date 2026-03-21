@@ -6,9 +6,10 @@
  * Pure module: no GL, no malloc, no globals, no side effects. */
 
 #include "daily_narrative.h"
+#include "../../ui/content_i18n.h"
 #include <string.h>
 
-/* Tzolkin seal names indexed 0-19 for seal matching */
+/* Tzolkin seal names indexed 0-19 (English fallback for seal matching) */
 static const char *const SEAL_NAMES[20] = {
     "Dragon", "Wind", "Night", "Seed", "Serpent",
     "Worldbridger", "Hand", "Star", "Moon", "Dog",
@@ -16,11 +17,8 @@ static const char *const SEAL_NAMES[20] = {
     "Warrior", "Earth", "Mirror", "Storm", "Sun"
 };
 
-/* Month names for headline formatting */
-static const char *const MONTH_NAMES[12] = {
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-};
+/* Content key format for locale lookups */
+static const char MONTH_KEY_FMT[] = "gregorian.month.%d.name";
 
 /* Internal headline type marker stored in unused bytes of headline.
  * We use the convergence_score + a simple tag approach instead. */
@@ -48,14 +46,16 @@ static int seal_matches(const char *birth_seal, int today_seal)
     return (strcmp(birth_seal, SEAL_NAMES[today_seal]) == 0);
 }
 
-/* --- Internal: get month name --- */
+/* --- Internal: get month name (locale-aware) --- */
 
-static const char *month_name(int month)
+static const char *month_name(int month, i18n_locale_t locale)
 {
     if (month < 1 || month > 12) {
         return "Unknown";
     }
-    return MONTH_NAMES[month - 1];
+    char key[40];
+    snprintf(key, sizeof(key), MONTH_KEY_FMT, month);
+    return content_get(key, locale);
 }
 
 /* --- Internal: compose headline --- */
@@ -89,18 +89,18 @@ static headline_kind_t compose_headline(const dn_input_t *input,
         }
     }
 
-    /* Priority 3: date-based */
+    /* Priority 3: date-based (locale-aware month name) */
     if (input->weekday) {
         snprintf(buf, (size_t)buf_size, "%s%s, %s %d — %d systems speak today",
                  DN_HEADLINE_TAG_DATE,
                  input->weekday,
-                 month_name(input->gregorian_month),
+                 month_name(input->gregorian_month, input->locale),
                  input->gregorian_day,
                  count);
     } else {
         snprintf(buf, (size_t)buf_size, "%s%s %d — %d systems speak today",
                  DN_HEADLINE_TAG_DATE,
-                 month_name(input->gregorian_month),
+                 month_name(input->gregorian_month, input->locale),
                  input->gregorian_day,
                  count);
     }

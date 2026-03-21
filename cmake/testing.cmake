@@ -476,7 +476,7 @@ time_add_test(NAME test_brain_language_bridge TEST tests/systems/unified/test_br
 time_add_test(NAME test_brain_visual_bridge TEST tests/systems/unified/test_brain_visual_bridge.c
     DEPS brain_visual_bridge brain_types)
 time_add_test(NAME test_daily_narrative TEST tests/systems/unified/test_daily_narrative.c
-    DEPS daily_narrative)
+    DEPS daily_narrative content_i18n i18n)
 time_add_test(NAME test_personal_resonance TEST tests/systems/unified/test_personal_resonance.c
     DEPS personal_resonance)
 time_add_test(NAME test_depth_temporal TEST tests/systems/unified/test_depth_temporal.c

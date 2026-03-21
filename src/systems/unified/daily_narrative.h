@@ -10,6 +10,7 @@
 #ifndef TIME_DAILY_NARRATIVE_H
 #define TIME_DAILY_NARRATIVE_H
 
+#include "../../ui/i18n.h"
 #include <stdio.h>
 
 #define DN_MAX_SYSTEMS  8
@@ -63,6 +64,9 @@ typedef struct {
     /* Wisdom quote (optional, pre-selected) */
     const char *wisdom_quote;   /* NULL if none */
     const char *wisdom_author;  /* NULL if none */
+
+    /* Locale for translated output (0 = EN default via memset) */
+    i18n_locale_t locale;
 } dn_input_t;
 
 /* Output: the daily narrative */
