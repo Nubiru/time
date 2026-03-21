@@ -267,6 +267,19 @@ void test_unknown_glyph_skipped(void)
     TEST_ASSERT_TRUE(has_b);
 }
 
+void test_mono_atlas_pixels(void)
+{
+    const unsigned char *px = msdf_text_atlas_pixels(MSDF_FONT_MONO);
+    TEST_ASSERT_NOT_NULL(px);
+    /* First pixel should exist (512x512x3 = 786432 bytes) */
+    /* Just verify the pointer is non-null and first bytes are accessible */
+    unsigned char r = px[0];
+    unsigned char g = px[1];
+    unsigned char b = px[2];
+    /* At least one channel should be non-max (atlas has margins) */
+    TEST_ASSERT_TRUE(r < 255 || g < 255 || b < 255);
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -280,6 +293,7 @@ int main(void)
 #ifdef MSDF_SANS_ENABLED
     RUN_TEST(test_sans_glyph_count);
 #endif
+    RUN_TEST(test_mono_atlas_pixels);
 
     /* Empty / NULL */
     RUN_TEST(test_layout_null_text);
