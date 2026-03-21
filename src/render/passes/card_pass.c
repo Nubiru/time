@@ -20,7 +20,10 @@
 #include "../../ui/kin_wavespell_layout.h"
 #include "../../ui/kin_cell.h"
 #include "../../ui/focus_mode.h"
+#include "../../ui/hexagram_layout.h"
+#include "../../ui/daily_hd_layout.h"
 #include "../../systems/tzolkin/tzolkin.h"
+#include "../../systems/iching/iching.h"
 
 /* --- Module-static GL handles --- */
 
@@ -280,6 +283,224 @@ static void draw_oracle_cross(const render_frame_t *frame, float vw, float vh)
     glDisable(GL_BLEND);
 }
 
+/* Draw I Ching hexagram overlay — 6 lines + info card.
+ * Replaces standard card layout when focus_mode == FOCUS_MODE_ICHING. */
+static void draw_iching_overlay(const render_frame_t *frame, float vw, float vh)
+{
+    hexagram_t hex = iching_from_jd(frame->simulation_jd);
+    hexagram_layout_t layout = hexagram_layout_compute(hex.king_wen);
+
+    /* Build card layout: lines block + info card */
+    card_layout_t cl;
+
+    /* Card 0: lines block (left half) */
+    cl.cards[0].x = layout.lines_x;
+    cl.cards[0].y = layout.lines_y;
+    cl.cards[0].w = layout.lines_w;
+    cl.cards[0].h = layout.lines_h;
+    cl.cards[0].opacity = 1.0f;
+    cl.cards[0].visible = 1;
+    cl.cards[0].type = (card_type_t)0;
+
+    /* Card 1: info card (right half) */
+    cl.cards[1].x = 0.55f;
+    cl.cards[1].y = 0.10f;
+    cl.cards[1].w = 0.40f;
+    cl.cards[1].h = 0.80f;
+    cl.cards[1].opacity = 1.0f;
+    cl.cards[1].visible = 1;
+    cl.cards[1].type = (card_type_t)1;
+
+    for (int i = 2; i < CARD_TYPE_COUNT; i++) {
+        cl.cards[i].visible = 0;
+        cl.cards[i].opacity = 0.0f;
+        cl.cards[i].x = 0; cl.cards[i].y = 0;
+        cl.cards[i].w = 0; cl.cards[i].h = 0;
+        cl.cards[i].type = (card_type_t)i;
+    }
+
+    /* Pack and draw background quads */
+    cp_quad_data_t qdata = cp_pack_quads(&cl, vw, vh, 0, 0, 0, 0);
+
+    /* I Ching blue tint for backgrounds */
+    for (int i = 0; i < qdata.card_count; i++) {
+        float top_a = 0.8f;
+        float bot_a = top_a * 0.618f;
+        for (int v = 0; v < CP_VERTS_PER_QUAD; v++) {
+            int base = (i * CP_VERTS_PER_QUAD + v) * CP_VERTEX_FLOATS;
+            qdata.vertices[base + 4] = 0.04f;  /* dark blue tint */
+            qdata.vertices[base + 5] = 0.06f;
+            qdata.vertices[base + 6] = 0.12f;
+            qdata.vertices[base + 7] = (v < 2) ? bot_a : top_a;
+        }
+    }
+
+    if (qdata.vertex_count > 0) {
+        glUseProgram(s_quad_program);
+        glUniform2f(s_quad_loc_resolution, vw, vh);
+        theme_t t = theme_get((theme_id_t)frame->theme_id);
+        glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_DEPTH_TEST);
+        glBindVertexArray(s_quad_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, s_quad_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_quad_vertex_bytes(&qdata), qdata.vertices);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_quad_ebo);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_quad_index_bytes(&qdata), qdata.indices);
+        glDrawElements(GL_TRIANGLES, qdata.index_count, GL_UNSIGNED_INT, (void*)0);
+        glBindVertexArray(0);
+    }
+
+    /* Draw hexagram lines as quads (yang=solid, yin=two halves with gap) */
+    for (int batch = 0; batch < 2; batch++) {
+        int start = batch * CP_MAX_CARDS;
+        int count = 6 - start;
+        if (count > CP_MAX_CARDS) count = CP_MAX_CARDS;
+        if (count <= 0) break;
+
+        card_layout_t line_cl;
+        for (int j = 0; j < CARD_TYPE_COUNT; j++) {
+            if (j < count) {
+                hex_line_t hl = layout.lines[start + j];
+                line_cl.cards[j].x = hl.x;
+                line_cl.cards[j].y = hl.y;
+                line_cl.cards[j].w = hl.is_yang ? hl.w : hl.w * 0.42f;
+                line_cl.cards[j].h = hl.h;
+                line_cl.cards[j].opacity = 1.0f;
+                line_cl.cards[j].visible = 1;
+                line_cl.cards[j].type = (card_type_t)j;
+            } else {
+                line_cl.cards[j].visible = 0;
+                line_cl.cards[j].opacity = 0.0f;
+                line_cl.cards[j].x = 0; line_cl.cards[j].y = 0;
+                line_cl.cards[j].w = 0; line_cl.cards[j].h = 0;
+                line_cl.cards[j].type = (card_type_t)j;
+            }
+        }
+
+        cp_quad_data_t lq = cp_pack_quads(&line_cl, vw, vh, 0, 0, 0, 0);
+        for (int j = 0; j < lq.card_count; j++) {
+            float top_a = 0.95f, bot_a = 0.95f;
+            for (int v = 0; v < CP_VERTS_PER_QUAD; v++) {
+                int base = (j * CP_VERTS_PER_QUAD + v) * CP_VERTEX_FLOATS;
+                lq.vertices[base + 4] = 0.85f;  /* warm white lines */
+                lq.vertices[base + 5] = 0.82f;
+                lq.vertices[base + 6] = 0.70f;
+                lq.vertices[base + 7] = (v < 2) ? bot_a : top_a;
+            }
+        }
+
+        if (lq.vertex_count > 0) {
+            glBindVertexArray(s_quad_vao);
+            glBindBuffer(GL_ARRAY_BUFFER, s_quad_vbo);
+            glBufferSubData(GL_ARRAY_BUFFER, 0,
+                            (GLsizeiptr)cp_quad_vertex_bytes(&lq), lq.vertices);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_quad_ebo);
+            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                            (GLsizeiptr)cp_quad_index_bytes(&lq), lq.indices);
+            glDrawElements(GL_TRIANGLES, lq.index_count, GL_UNSIGNED_INT, (void*)0);
+            glBindVertexArray(0);
+        }
+
+        /* Yin lines: draw right half too */
+        for (int j = 0; j < CARD_TYPE_COUNT && j < count; j++) {
+            hex_line_t hl = layout.lines[start + j];
+            if (hl.is_yang) { line_cl.cards[j].visible = 0; continue; }
+            line_cl.cards[j].x = hl.x + hl.w * 0.58f;
+            line_cl.cards[j].w = hl.w * 0.42f;
+        }
+
+        lq = cp_pack_quads(&line_cl, vw, vh, 0, 0, 0, 0);
+        for (int j = 0; j < lq.card_count; j++) {
+            for (int v = 0; v < CP_VERTS_PER_QUAD; v++) {
+                int base = (j * CP_VERTS_PER_QUAD + v) * CP_VERTEX_FLOATS;
+                lq.vertices[base + 4] = 0.85f;
+                lq.vertices[base + 5] = 0.82f;
+                lq.vertices[base + 6] = 0.70f;
+                lq.vertices[base + 7] = 0.95f;
+            }
+        }
+        if (lq.vertex_count > 0) {
+            glBindVertexArray(s_quad_vao);
+            glBindBuffer(GL_ARRAY_BUFFER, s_quad_vbo);
+            glBufferSubData(GL_ARRAY_BUFFER, 0,
+                            (GLsizeiptr)cp_quad_vertex_bytes(&lq), lq.vertices);
+            glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_quad_ebo);
+            glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                            (GLsizeiptr)cp_quad_index_bytes(&lq), lq.indices);
+            glDrawElements(GL_TRIANGLES, lq.index_count, GL_UNSIGNED_INT, (void*)0);
+            glBindVertexArray(0);
+        }
+    }
+
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+}
+
+/* Draw Human Design focus overlay — Sun/Earth gate cards.
+ * Replaces standard card layout when focus_mode == FOCUS_MODE_HD. */
+static void draw_hd_overlay(const render_frame_t *frame, float vw, float vh)
+{
+    /* Two gate cards: Sun (left) and Earth (right) */
+    card_layout_t cl;
+    cl.cards[0].x = 0.05f; cl.cards[0].y = 0.20f;
+    cl.cards[0].w = 0.40f; cl.cards[0].h = 0.60f;
+    cl.cards[0].opacity = 1.0f; cl.cards[0].visible = 1;
+    cl.cards[0].type = (card_type_t)0;
+
+    cl.cards[1].x = 0.55f; cl.cards[1].y = 0.20f;
+    cl.cards[1].w = 0.40f; cl.cards[1].h = 0.60f;
+    cl.cards[1].opacity = 1.0f; cl.cards[1].visible = 1;
+    cl.cards[1].type = (card_type_t)1;
+
+    for (int i = 2; i < CARD_TYPE_COUNT; i++) {
+        cl.cards[i].visible = 0; cl.cards[i].opacity = 0.0f;
+        cl.cards[i].x = 0; cl.cards[i].y = 0;
+        cl.cards[i].w = 0; cl.cards[i].h = 0;
+        cl.cards[i].type = (card_type_t)i;
+    }
+
+    cp_quad_data_t qdata = cp_pack_quads(&cl, vw, vh, 0, 0, 0, 0);
+
+    /* HD purple tint */
+    for (int i = 0; i < qdata.card_count; i++) {
+        float top_a = (i == 0) ? 0.85f : 0.75f;
+        float bot_a = top_a * 0.618f;
+        for (int v = 0; v < CP_VERTS_PER_QUAD; v++) {
+            int base = (i * CP_VERTS_PER_QUAD + v) * CP_VERTEX_FLOATS;
+            qdata.vertices[base + 4] = 0.10f;
+            qdata.vertices[base + 5] = 0.04f;
+            qdata.vertices[base + 6] = 0.12f;
+            qdata.vertices[base + 7] = (v < 2) ? bot_a : top_a;
+        }
+    }
+
+    if (qdata.vertex_count > 0) {
+        glUseProgram(s_quad_program);
+        glUniform2f(s_quad_loc_resolution, vw, vh);
+        theme_t t = theme_get((theme_id_t)frame->theme_id);
+        glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_DEPTH_TEST);
+        glBindVertexArray(s_quad_vao);
+        glBindBuffer(GL_ARRAY_BUFFER, s_quad_vbo);
+        glBufferSubData(GL_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_quad_vertex_bytes(&qdata), qdata.vertices);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, s_quad_ebo);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0,
+                        (GLsizeiptr)cp_quad_index_bytes(&qdata), qdata.indices);
+        glDrawElements(GL_TRIANGLES, qdata.index_count, GL_UNSIGNED_INT, (void*)0);
+        glBindVertexArray(0);
+    }
+
+    glEnable(GL_DEPTH_TEST);
+    glDisable(GL_BLEND);
+}
+
 void card_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
@@ -292,9 +513,17 @@ void card_pass_draw(const render_frame_t *frame) {
     if (vw < 1.0f) vw = 1920.0f;  /* fallback */
     if (vh < 1.0f) vh = 1080.0f;
 
-    /* Oracle cross: Kin Maya focus renders 5-cell oracle */
+    /* System-specific overlays for focus modes */
     if (frame->focus_mode == FOCUS_MODE_KIN) {
         draw_oracle_cross(frame, vw, vh);
+        return;
+    }
+    if (frame->focus_mode == FOCUS_MODE_ICHING) {
+        draw_iching_overlay(frame, vw, vh);
+        return;
+    }
+    if (frame->focus_mode == FOCUS_MODE_HD) {
+        draw_hd_overlay(frame, vw, vh);
         return;
     }
 

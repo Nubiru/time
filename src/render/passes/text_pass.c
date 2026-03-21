@@ -34,6 +34,9 @@
 #include "../../ui/kin_cell.h"
 #include "../../ui/focus_mode.h"
 #include "../../systems/tzolkin/dreamspell.h"
+#include "../../systems/iching/iching.h"
+#include "../../ui/hexagram_layout.h"
+#include "../../ui/daily_hd_layout.h"
 #include "../msdf_text.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
@@ -425,6 +428,184 @@ static void draw_oracle_text(const render_frame_t *frame)
     msdf_flush(vw, vh);
 }
 
+/* Draw I Ching hexagram text — MSDF rendering.
+ * Name, number, trigrams, keywords, judgment. */
+static void draw_iching_text(const render_frame_t *frame)
+{
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    int vw = viewport[2], vh = viewport[3];
+    if (vw < 1) vw = 1920;
+    if (vh < 1) vh = 1080;
+
+    hexagram_t hex = iching_from_jd(frame->simulation_jd);
+    hexagram_layout_t hl = hexagram_layout_compute(hex.king_wen);
+    theme_t th = theme_get((theme_id_t)frame->theme_id);
+
+    msdf_begin();
+
+    /* Hexagram number + name (positioned from layout) */
+    char num_str[16];
+    snprintf(num_str, sizeof(num_str), "Hexagram %d", hl.king_wen);
+    msdf_add_text(num_str, hl.number_x * (float)vw, hl.number_y * (float)vh, 20.0f,
+                  th.text_secondary.r, th.text_secondary.g,
+                  th.text_secondary.b, th.text_secondary.a);
+
+    if (hl.name)
+        msdf_add_text(hl.name, hl.name_x * (float)vw, hl.name_y * (float)vh, 28.0f,
+                      th.brand_primary.r, th.brand_primary.g,
+                      th.brand_primary.b, 1.0f);
+
+    /* Trigram labels */
+    if (hl.upper_name) {
+        char upper[48];
+        snprintf(upper, sizeof(upper), "Upper: %s", hl.upper_name);
+        msdf_add_text(upper, hl.upper_label_x * (float)vw,
+                      hl.upper_label_y * (float)vh, 16.0f,
+                      th.text_primary.r, th.text_primary.g,
+                      th.text_primary.b, th.text_primary.a);
+    }
+    if (hl.lower_name) {
+        char lower[48];
+        snprintf(lower, sizeof(lower), "Lower: %s", hl.lower_name);
+        msdf_add_text(lower, hl.lower_label_x * (float)vw,
+                      hl.lower_label_y * (float)vh, 16.0f,
+                      th.text_primary.r, th.text_primary.g,
+                      th.text_primary.b, th.text_primary.a);
+    }
+
+    /* Keywords on info card (right side) */
+    float info_x = 0.57f * (float)vw;
+    float info_y = 0.15f * (float)vh;
+    if (hl.keywords)
+        msdf_add_text(hl.keywords, info_x, info_y, 18.0f,
+                      th.brand_secondary.r, th.brand_secondary.g,
+                      th.brand_secondary.b, 0.9f);
+
+    /* Judgment text (wrapped) */
+    if (hl.judgment) {
+        msdf_add_text("Judgment:", info_x, info_y + 30.0f, 16.0f,
+                      th.text_secondary.r, th.text_secondary.g,
+                      th.text_secondary.b, th.text_secondary.a);
+        msdf_add_text(hl.judgment, info_x, info_y + 52.0f, 14.0f,
+                      th.text_primary.r, th.text_primary.g,
+                      th.text_primary.b, th.text_primary.a);
+    }
+
+    /* Image text */
+    if (hl.image) {
+        msdf_add_text("Image:", info_x, info_y + 100.0f, 16.0f,
+                      th.text_secondary.r, th.text_secondary.g,
+                      th.text_secondary.b, th.text_secondary.a);
+        msdf_add_text(hl.image, info_x, info_y + 122.0f, 14.0f,
+                      th.text_primary.r, th.text_primary.g,
+                      th.text_primary.b, th.text_primary.a);
+    }
+
+    /* Line labels (yang/yin per position) */
+    for (int i = 0; i < 6; i++) {
+        hex_line_t line = hl.lines[i];
+        char line_label[8];
+        snprintf(line_label, sizeof(line_label), "%d", i + 1);
+        float lx = (line.x - 0.03f) * (float)vw;
+        float ly = (line.y + line.h * 0.3f) * (float)vh;
+        msdf_add_text(line_label, lx, ly, 14.0f,
+                      th.text_secondary.r, th.text_secondary.g,
+                      th.text_secondary.b, 0.6f);
+    }
+
+    /* Headline */
+    if (frame->headline[0] != '\0') {
+        float hl_w = msdf_text_width(MSDF_FONT_MONO, frame->headline, 20.0f);
+        msdf_add_text(frame->headline,
+                      ((float)vw - hl_w) * 0.5f, (float)vh - 40.0f, 20.0f,
+                      th.brand_secondary.r, th.brand_secondary.g,
+                      th.brand_secondary.b, 0.85f);
+    }
+
+    msdf_flush(vw, vh);
+}
+
+/* Draw Human Design focus text — Sun/Earth gate info via MSDF. */
+static void draw_hd_text(const render_frame_t *frame)
+{
+    GLint viewport[4];
+    glGetIntegerv(GL_VIEWPORT, viewport);
+    int vw = viewport[2], vh = viewport[3];
+    if (vw < 1) vw = 1920;
+    if (vh < 1) vh = 1080;
+
+    double T = (frame->simulation_jd - 2451545.0) / 36525.0;
+    double sun_lon = 280.46646 + 36000.76983 * T;
+    sun_lon = sun_lon - 360.0 * (int)(sun_lon / 360.0);
+    if (sun_lon < 0.0) sun_lon += 360.0;
+
+    daily_hd_layout_t dl = daily_hd_compute(sun_lon);
+    theme_t th = theme_get((theme_id_t)frame->theme_id);
+
+    msdf_begin();
+
+    /* Title */
+    msdf_add_text("Human Design", 0.30f * (float)vw, 0.12f * (float)vh, 28.0f,
+                  th.brand_primary.r, th.brand_primary.g,
+                  th.brand_primary.b, 1.0f);
+
+    /* Sun gate card (left) */
+    float sx = 0.08f * (float)vw, sy = 0.28f * (float)vh;
+    msdf_add_text("Sun Gate", sx, sy, 20.0f,
+                  th.brand_primary.r, th.brand_primary.g,
+                  th.brand_primary.b, 0.9f);
+
+    char sun_info[64];
+    snprintf(sun_info, sizeof(sun_info), "Gate %d.%d",
+             dl.sun_gate.gate, dl.sun_gate.line);
+    msdf_add_text(sun_info, sx, sy + 28.0f, 24.0f,
+                  th.text_primary.r, th.text_primary.g,
+                  th.text_primary.b, th.text_primary.a);
+
+    if (dl.sun_gate.gate_name)
+        msdf_add_text(dl.sun_gate.gate_name, sx, sy + 58.0f, 18.0f,
+                      th.text_primary.r, th.text_primary.g,
+                      th.text_primary.b, th.text_primary.a);
+    if (dl.sun_gate.keyword)
+        msdf_add_text(dl.sun_gate.keyword, sx, sy + 82.0f, 16.0f,
+                      th.text_secondary.r, th.text_secondary.g,
+                      th.text_secondary.b, th.text_secondary.a);
+
+    /* Earth gate card (right) */
+    float ex = 0.58f * (float)vw, ey = 0.28f * (float)vh;
+    msdf_add_text("Earth Gate", ex, ey, 20.0f,
+                  th.brand_secondary.r, th.brand_secondary.g,
+                  th.brand_secondary.b, 0.9f);
+
+    char earth_info[64];
+    snprintf(earth_info, sizeof(earth_info), "Gate %d.%d",
+             dl.earth_gate.gate, dl.earth_gate.line);
+    msdf_add_text(earth_info, ex, ey + 28.0f, 24.0f,
+                  th.text_primary.r, th.text_primary.g,
+                  th.text_primary.b, th.text_primary.a);
+
+    if (dl.earth_gate.gate_name)
+        msdf_add_text(dl.earth_gate.gate_name, ex, ey + 58.0f, 18.0f,
+                      th.text_primary.r, th.text_primary.g,
+                      th.text_primary.b, th.text_primary.a);
+    if (dl.earth_gate.keyword)
+        msdf_add_text(dl.earth_gate.keyword, ex, ey + 82.0f, 16.0f,
+                      th.text_secondary.r, th.text_secondary.g,
+                      th.text_secondary.b, th.text_secondary.a);
+
+    /* Headline */
+    if (frame->headline[0] != '\0') {
+        float hl_w = msdf_text_width(MSDF_FONT_MONO, frame->headline, 20.0f);
+        msdf_add_text(frame->headline,
+                      ((float)vw - hl_w) * 0.5f, (float)vh - 40.0f, 20.0f,
+                      th.brand_secondary.r, th.brand_secondary.g,
+                      th.brand_secondary.b, 0.85f);
+    }
+
+    msdf_flush(vw, vh);
+}
+
 /* Draw card text as a 2D screen-space overlay.
  * Called after the 3D planet label draw; reuses same VAO/VBO/EBO. */
 static void draw_card_text(const render_frame_t *frame)
@@ -432,9 +613,17 @@ static void draw_card_text(const render_frame_t *frame)
     if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
 
-    /* Oracle cross text: Kin Maya focus mode */
+    /* System-specific focus mode overlays */
     if (frame->focus_mode == FOCUS_MODE_KIN) {
         draw_oracle_text(frame);
+        return;
+    }
+    if (frame->focus_mode == FOCUS_MODE_ICHING) {
+        draw_iching_text(frame);
+        return;
+    }
+    if (frame->focus_mode == FOCUS_MODE_HD) {
+        draw_hd_text(frame);
         return;
     }
 
