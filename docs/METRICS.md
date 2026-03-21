@@ -1,6 +1,6 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-20 (INFRA session 25)
+**Last refreshed**: 2026-03-20 (INFRA session 26)
 
 ## Codebase
 
@@ -8,7 +8,7 @@
 |--------|-------|
 | Source files (.c) | 428 |
 | Header files (.h) | 429 |
-| Lines of code (src/) | 105,052 |
+| Lines of code (src/) | 143,487 |
 | Lines of tests | 185,000+ |
 | Test suites (CTest) | 455 |
 | Render pass files | 19 |
@@ -21,8 +21,8 @@
 | Metric | Count |
 |--------|-------|
 | Test suites (CTest) | 455 |
-| Test functions (RUN_TEST) | 17,124 |
-| Test assertions (TEST_ASSERT) | 29,145 |
+| Test functions (RUN_TEST) | 17,132 |
+| Test assertions (TEST_ASSERT) | 29,891 |
 | Failures | 0 |
 | CTest time | 1.15s (with -j4, benchmarks included) |
 | E2E tests (Playwright) | 15 (5 basic + 10 visual) |
@@ -89,7 +89,7 @@
 | CMake native | PASS (zero warnings) |
 | CTest -j4 | PASS (455/455, 1.15s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
-| WASM build | PASS (367 KB raw, 143 KB gzipped) — brain pipeline wired |
+| WASM build | PASS (363 KB raw, ~143 KB gzipped) — brain visual bridge wired |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
@@ -156,10 +156,10 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 366,713 bytes (358 KB) |
-| Gzipped | 143,147 bytes (140 KB) |
+| Raw .wasm | 371,853 bytes (363 KB) |
+| Gzipped | ~143 KB |
 | Build mode | Development (-Os, ASSERTIONS=2) |
-| Growth since session 18 | +37 KB raw (storage_bridge_wasm + motion wiring + interpret locale x32 + brain pipeline) |
+| Growth since session 18 | +42 KB raw (storage_bridge_wasm + motion wiring + interpret locale x32 + brain pipeline + visual bridge) |
 
 ## God Functions (>80 lines)
 
@@ -181,22 +181,22 @@
 
 *13 functions >80L (5 over 100L). All domain-specific logic. No refactoring urgency.*
 
-## Health (INFRA sweep — 2026-03-20, session 25)
+## Health (INFRA sweep — 2026-03-20, session 26)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
 | Build system sync | OK (428 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones, session 23) |
-| Native build | PASS (455/455 tests, 1.15s) — use -j4 for clean builds |
-| WASM build | PASS (367 KB raw, 143 KB gzipped) |
+| Native build | PASS (455/455 tests, 0.90s) — use -j4 for clean builds |
+| WASM build | PASS (363 KB raw, ~143 KB gzipped) |
 | E2E tests | PASS (5/5 basic + 7/10 visual, 2 skips, 1 SwiftShader) |
 | Coverage | 95.9% lines (34,125/35,590), 99.9% functions (4,054/4,057) |
-| Git hooks | pre-commit (build safety) + commit-msg (stream domain) — both active |
+| Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
 | Render pipeline | 19/19 passes |
-| Brain pipeline | WIRED — headline + convergence_strength per-day cache (session 24) |
+| Brain pipeline | WIRED — headline + convergence_strength + brain_visual per-day cache (session 24+26) |
 | Motion wiring | ALL 9 motion modules in core — MOTION fully wired |
 | Interpret locale | 32 systems have interpret_locale — LANGUAGE i18n fully deployed |
 | Content encoding | CLEAN — encoding fix (session 22→23, commit 67079b7) |
