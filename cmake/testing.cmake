@@ -689,6 +689,10 @@ time_add_test(NAME test_kin_daily_chrono TEST tests/ui/test_kin_daily_chrono.c
     DEPS kin_daily_chrono kin_cell dreamspell tzolkin thirteen_moon heptad_gate julian gregorian LABELS unit)
 time_add_test(NAME test_kin_moon_schematic TEST tests/ui/test_kin_moon_schematic.c
     DEPS kin_moon_schematic thirteen_moon julian gregorian LABELS unit)
+time_add_test(NAME test_kin_hk21_layout TEST tests/ui/test_kin_hk21_layout.c
+    DEPS kin_hk21_layout hunab_ku_21 LABELS unit)
+time_add_test(NAME test_kin_telektonon_layout TEST tests/ui/test_kin_telektonon_layout.c
+    DEPS kin_telektonon_layout telektonon_board thirteen_moon julian gregorian LABELS unit)
 time_add_test(NAME test_earth_transition TEST tests/ui/test_earth_transition.c
     DEPS earth_transition camera_path spring vec_interp vec3 animation easing LABELS unit)
 time_add_test(NAME test_motion_prefs TEST tests/ui/test_motion_prefs.c
