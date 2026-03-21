@@ -91,7 +91,7 @@ canvas { width: 100vw; height: 100vh; display: block; }
 
 .panel {
     position: fixed; z-index: 300;
-    border-radius: var(--sp-3); overflow: hidden;
+    border-radius: var(--sp-3);
     transition: opacity var(--t-medium) ease-out, transform var(--t-medium) ease-out;
 }
 .panel.hidden { opacity: 0; pointer-events: none; transform: translateY(var(--sp-5)); }

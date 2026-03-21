@@ -163,14 +163,19 @@ void main_loop(void) {
     g_state.lod = lod_record_frame(g_state.lod, (float)(dt_sec * 1000.0));
     g_state.view = vs_set_lod(g_state.view, (int)lod_current_tier(&g_state.lod));
 
-    /* --- Auto-theme: sun elevation → Cosmos/Dawn blend --- */
-    if (g_state.auto_theme_enabled) {
-        auto_theme_state_t target = at_from_location(
-            g_state.simulation_jd, g_state.observer_lat, g_state.observer_lon);
-        g_state.auto_theme = at_smooth(g_state.auto_theme, target,
-                                        (float)dt_sec, 2.0f);
-        /* Export key theme colors to DOM as CSS custom properties */
-        theme_t theme = at_blended_theme(g_state.auto_theme);
+    /* --- Theme: export CSS custom properties --- */
+    {
+        theme_t theme;
+        if (g_state.auto_theme_enabled) {
+            auto_theme_state_t target = at_from_location(
+                g_state.simulation_jd, g_state.observer_lat, g_state.observer_lon);
+            g_state.auto_theme = at_smooth(g_state.auto_theme, target,
+                                            (float)dt_sec, 2.0f);
+            theme = at_blended_theme(g_state.auto_theme);
+        } else {
+            /* Forced Cosmos (dark) — always export CSS for correct UI styling */
+            theme = theme_get(THEME_COSMOS);
+        }
         EM_ASM({
             var s = document.documentElement.style;
             s.setProperty("--bg-space",
