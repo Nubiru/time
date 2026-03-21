@@ -3,6 +3,7 @@
  * calendar data. Pure module: no GL, no malloc, no globals. */
 
 #include "a11y_narrative.h"
+#include "content_i18n.h"
 
 #include <stdarg.h>
 #include <stddef.h>
@@ -124,6 +125,35 @@ int a11y_brightness_count(void)
 int a11y_transition_type_count(void)
 {
     return A11Y_TRANS_COUNT;
+}
+
+/* ===== Locale-aware getters ===== */
+
+const char *a11y_sky_position_desc_locale(sky_position_t pos,
+                                          i18n_locale_t locale)
+{
+    if ((int)pos < 0 || (int)pos >= SKY_POS_COUNT) return "?";
+    char key[32];
+    snprintf(key, sizeof(key), "a11y.sky.pos.%d", (int)pos);
+    return content_get(key, locale);
+}
+
+const char *a11y_brightness_desc_locale(sky_brightness_t bright,
+                                        i18n_locale_t locale)
+{
+    if ((int)bright < 0 || (int)bright >= SKY_BRIGHT_COUNT) return "?";
+    char key[32];
+    snprintf(key, sizeof(key), "a11y.sky.bright.%d", (int)bright);
+    return content_get(key, locale);
+}
+
+const char *a11y_transition_name_locale(a11y_transition_t type,
+                                        i18n_locale_t locale)
+{
+    if ((int)type < 0 || (int)type >= A11Y_TRANS_COUNT) return "?";
+    char key[32];
+    snprintf(key, sizeof(key), "a11y.trans.%d.name", (int)type);
+    return content_get(key, locale);
 }
 
 int a11y_narr_planet(const a11y_planet_t *planet, char *out, int max_len)

@@ -10,6 +10,7 @@
 #ifndef TIME_A11Y_NARRATIVE_H
 #define TIME_A11Y_NARRATIVE_H
 
+#include "i18n.h"
 #include <stdbool.h>
 
 #define A11Y_NARR_MAX 512
@@ -110,5 +111,13 @@ const char *a11y_transition_name(a11y_transition_t type);
 int a11y_sky_position_count(void);
 int a11y_brightness_count(void);
 int a11y_transition_type_count(void);
+
+/* Locale-aware getters (return translated strings via content_get). */
+const char *a11y_sky_position_desc_locale(sky_position_t pos,
+                                          i18n_locale_t locale);
+const char *a11y_brightness_desc_locale(sky_brightness_t bright,
+                                        i18n_locale_t locale);
+const char *a11y_transition_name_locale(a11y_transition_t type,
+                                        i18n_locale_t locale);
 
 #endif /* TIME_A11Y_NARRATIVE_H */

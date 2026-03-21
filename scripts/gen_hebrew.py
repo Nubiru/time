@@ -722,6 +722,28 @@ KEY_TRANSLATIONS = {
     "convergence.system.11.system_name": "\u05e7\u05d1\u05dc\u05d4",  # קבלה
     "convergence.system.12.system_name": "\u05d2\u05d9\u05d0\u05d5\u05dc\u05d5\u05d2\u05d9\u05d4",  # גיאולוגיה
 
+    # A11y accessibility narrative terms
+    "a11y.sky.pos.0": "\u05e2\u05d5\u05dc\u05d4 \u05d1\u05de\u05d6\u05e8\u05d7",
+    "a11y.sky.pos.1": "\u05e0\u05de\u05d5\u05da \u05d1\u05de\u05d6\u05e8\u05d7",
+    "a11y.sky.pos.2": "\u05d2\u05d1\u05d5\u05d4 \u05d1\u05e9\u05de\u05d9\u05dd",
+    "a11y.sky.pos.3": "\u05db\u05de\u05e2\u05d8 \u05de\u05e2\u05dc \u05d4\u05e8\u05d0\u05e9",
+    "a11y.sky.pos.4": "\u05e0\u05de\u05d5\u05da \u05d1\u05de\u05e2\u05e8\u05d1",
+    "a11y.sky.pos.5": "\u05e9\u05d5\u05e7\u05e2 \u05d1\u05de\u05e2\u05e8\u05d1",
+    "a11y.sky.pos.6": "\u05de\u05ea\u05d7\u05ea \u05dc\u05d0\u05d5\u05e4\u05e7",
+    "a11y.sky.bright.0": "\u05d6\u05d5\u05e8\u05d7 \u05d1\u05e2\u05d5\u05e6\u05de\u05d4",
+    "a11y.sky.bright.1": "\u05e0\u05e8\u05d0\u05d4 \u05d1\u05d1\u05d9\u05e8\u05d5\u05e8",
+    "a11y.sky.bright.2": "\u05e0\u05e8\u05d0\u05d4",
+    "a11y.sky.bright.3": "\u05e0\u05e8\u05d0\u05d4 \u05d1\u05e7\u05d5\u05e9\u05d9",
+    "a11y.sky.bright.4": "\u05dc\u05d0 \u05e0\u05e8\u05d0\u05d4 \u05d1\u05e2\u05d9\u05df \u05d1\u05dc\u05ea\u05d9 \u05de\u05d6\u05d5\u05d9\u05e0\u05ea",
+    "a11y.trans.0.name": "\u05d4\u05ea\u05e7\u05e8\u05d1\u05d5\u05ea",
+    "a11y.trans.1.name": "\u05d4\u05ea\u05e8\u05d7\u05e7\u05d5\u05ea",
+    "a11y.trans.2.name": "\u05ea\u05e6\u05d5\u05d2\u05ea \u05d7\u05dc\u05dc",
+    "a11y.trans.3.name": "\u05ea\u05e6\u05d5\u05d2\u05ea \u05db\u05d3\u05d5\u05e8 \u05d4\u05d0\u05e8\u05e5",
+    "a11y.trans.4.name": "\u05db\u05e0\u05d9\u05e1\u05d4 \u05dc\u05de\u05e2\u05e8\u05db\u05ea",
+    "a11y.trans.5.name": "\u05d9\u05e6\u05d9\u05d0\u05d4 \u05de\u05de\u05e2\u05e8\u05db\u05ea",
+    "a11y.trans.6.name": "\u05e7\u05d3\u05d9\u05de\u05d4 \u05d1\u05d6\u05de\u05df",
+    "a11y.trans.7.name": "\u05d0\u05d7\u05d5\u05e8\u05d4 \u05d1\u05d6\u05de\u05df",
+
     # Islamic months (Hebrew transliteration)
     "islamic.month.1.name": "\u05de\u05d5\u05d7\u05e8\u05dd",  # מוחרם
     "islamic.month.2.name": "\u05e6\u05e4\u05e8",           # צפר

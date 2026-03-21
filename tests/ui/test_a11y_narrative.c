@@ -427,6 +427,44 @@ void test_transition_small_buffer(void)
 }
 
 /* ================================================================
+ * Locale-aware getters
+ * ================================================================ */
+
+static void test_position_desc_locale_en(void)
+{
+    const char *desc = a11y_sky_position_desc_locale(SKY_POS_RISING, I18N_LOCALE_EN);
+    TEST_ASSERT_NOT_NULL(strstr(desc, "rising"));
+}
+
+static void test_position_desc_locale_he(void)
+{
+    const char *desc = a11y_sky_position_desc_locale(SKY_POS_RISING, I18N_LOCALE_HE);
+    /* Hebrew "rising in the east" should NOT be English */
+    TEST_ASSERT_NULL(strstr(desc, "rising"));
+    TEST_ASSERT_TRUE(strlen(desc) > 0);
+}
+
+static void test_brightness_desc_locale_en(void)
+{
+    const char *desc = a11y_brightness_desc_locale(SKY_BRIGHT_BRILLIANT, I18N_LOCALE_EN);
+    TEST_ASSERT_NOT_NULL(strstr(desc, "brilliantly"));
+}
+
+static void test_transition_name_locale_en(void)
+{
+    const char *name = a11y_transition_name_locale(A11Y_TRANS_ZOOM_IN, I18N_LOCALE_EN);
+    TEST_ASSERT_EQUAL_STRING("Zoom In", name);
+}
+
+static void test_transition_name_locale_he(void)
+{
+    const char *name = a11y_transition_name_locale(A11Y_TRANS_ZOOM_IN, I18N_LOCALE_HE);
+    /* Hebrew should NOT be "Zoom In" */
+    TEST_ASSERT_TRUE(strcmp(name, "Zoom In") != 0);
+    TEST_ASSERT_TRUE(strlen(name) > 0);
+}
+
+/* ================================================================
  * Runner
  * ================================================================ */
 
@@ -495,6 +533,13 @@ int main(void)
     /* Buffer safety */
     RUN_TEST(test_planet_small_buffer);
     RUN_TEST(test_transition_small_buffer);
+
+    /* Locale-aware getters */
+    RUN_TEST(test_position_desc_locale_en);
+    RUN_TEST(test_position_desc_locale_he);
+    RUN_TEST(test_brightness_desc_locale_en);
+    RUN_TEST(test_transition_name_locale_en);
+    RUN_TEST(test_transition_name_locale_he);
 
     return UNITY_END();
 }
