@@ -31,6 +31,16 @@
 #include "../systems/korean/korean_calendar.h"     /* korean_from_jd */
 #include "../systems/thai/thai_calendar.h"         /* thai_from_jd */
 
+/* Daily layout modules — richer card content */
+#include "daily_hebrew_layout.h"
+#include "daily_islamic_layout.h"
+#include "daily_buddhist_layout.h"
+#include "daily_hindu_layout.h"
+#include "daily_chinese_layout.h"
+#include "daily_iching_layout.h"
+#include "daily_hd_layout.h"
+#include "daily_transit_layout.h"
+
 /* ------------------------------------------------------------------ */
 
 static card_content_t empty_card(void)
@@ -72,57 +82,81 @@ static card_content_t make_haab(double jd)
 
 static card_content_t make_iching(double jd)
 {
-    hexagram_t hex = iching_from_jd(jd);
-    const char *name = iching_hexagram_name(hex.king_wen);
-    const char *upper = iching_trigram_name(hex.upper_trigram);
-    const char *lower = iching_trigram_name(hex.lower_trigram);
-    return card_format_iching(hex.king_wen, name, upper, lower, hex.lines);
+    daily_iching_layout_t dl = daily_iching_compute(jd);
+    card_content_t c = card_format_iching(dl.king_wen, dl.name,
+                                           dl.upper_name, dl.lower_name,
+                                           dl.lines);
+    /* Enrich with judgment and keywords from daily layout */
+    if (dl.keywords && dl.keywords[0])
+        snprintf(c.line3, sizeof(c.line3), "%s", dl.keywords);
+    if (dl.judgment && dl.judgment[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dl.judgment);
+    return c;
 }
 
 static card_content_t make_chinese(double jd)
 {
-    chinese_year_t cy = chinese_year_from_jd(jd);
-    const char *symbol  = chinese_animal_symbol(cy.animal);
-    const char *element = chinese_element_name(cy.element);
-    const char *animal  = chinese_animal_name(cy.animal);
-    const char *polarity = chinese_polarity_name(cy.polarity);
-    return card_format_chinese(symbol, element, animal, polarity,
-                               cy.stem, cy.branch);
+    daily_chinese_layout_t dl = daily_chinese_compute(jd);
+    card_content_t c = card_format_chinese(
+        dl.animal_symbol, dl.element_name, dl.animal_name,
+        dl.polarity_name, dl.stem, dl.branch);
+    /* Enrich with stem/branch names and cycle position */
+    if (dl.stem_name && dl.branch_name)
+        snprintf(c.line3, sizeof(c.line3), "%s-%s (Year %d of 60)",
+                 dl.stem_name, dl.branch_name, dl.cycle_year);
+    return c;
 }
 
 static card_content_t make_hebrew(double jd)
 {
-    hebrew_date_t hd = hebrew_from_jd(jd);
-    bool is_leap = hebrew_is_leap(hd.year);
-    const char *mname = hebrew_month_name(hd.month, is_leap);
-    return card_format_hebrew(hd.year, hd.month, hd.day, mname);
+    daily_hebrew_layout_t dl = daily_hebrew_compute(jd);
+    card_content_t c = card_format_hebrew(dl.date.year, dl.date.month,
+                                           dl.date.day, dl.month_name);
+    /* Enrich with daily layout fields */
+    if (dl.quality && dl.quality[0])
+        snprintf(c.line3, sizeof(c.line3), "%s — %s",
+                 dl.quality, dl.hebrew_letter ? dl.hebrew_letter : "");
+    if (dl.brief && dl.brief[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dl.brief);
+    return c;
 }
 
 static card_content_t make_islamic(double jd)
 {
-    hijri_date_t hi = hijri_from_jd(jd);
-    const char *mname = hijri_month_name(hi.month);
-    return card_format_islamic(hi.year, hi.month, hi.day, mname);
+    daily_islamic_layout_t dl = daily_islamic_compute(jd);
+    card_content_t c = card_format_islamic(dl.date.year, dl.date.month,
+                                            dl.date.day, dl.month_name);
+    if (dl.significance && dl.significance[0])
+        snprintf(c.line3, sizeof(c.line3), "%s", dl.significance);
+    if (dl.brief && dl.brief[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dl.brief);
+    return c;
 }
 
 static card_content_t make_buddhist(double jd)
 {
-    /* Extract CE year from JD for Buddhist Era */
-    int year = 0, month_unused = 0;
-    jd_to_gregorian(jd, &year, &month_unused);
-    int be = buddhist_era(year);
-
-    uposatha_t u = buddhist_uposatha(jd);
-    return card_format_buddhist(be, (int)u.type, u.name, u.illumination);
+    daily_buddhist_layout_t dl = daily_buddhist_compute(jd);
+    card_content_t c = card_format_buddhist(dl.be_year, dl.uposatha_type,
+                                             dl.uposatha_name,
+                                             dl.illumination);
+    if (dl.uposatha_desc && dl.uposatha_desc[0])
+        snprintf(c.line3, sizeof(c.line3), "%s", dl.uposatha_desc);
+    return c;
 }
 
 static card_content_t make_hindu(double jd, double sun_lon, double moon_lon)
 {
-    panchanga_t p = panchanga_compute(jd, sun_lon, moon_lon);
-    const char *nak_name = nakshatra_name(p.nakshatra_index);
-    return card_format_hindu(p.nakshatra_index, nak_name,
-                             p.tithi.number, p.vara.number,
-                             p.yoga.name);
+    daily_hindu_layout_t dl = daily_hindu_compute(jd, sun_lon, moon_lon);
+    card_content_t c = card_format_hindu(dl.nakshatra_index, dl.tithi_name,
+                                          dl.tithi_number, dl.vara_number,
+                                          dl.yoga_name);
+    if (dl.vara_deity && dl.vara_deity[0])
+        snprintf(c.line3, sizeof(c.line3), "%s — %s",
+                 dl.vara_name ? dl.vara_name : "", dl.vara_deity);
+    if (dl.yoga_quality && dl.yoga_quality[0])
+        snprintf(c.detail, sizeof(c.detail), "Yoga: %s (%s)",
+                 dl.yoga_name ? dl.yoga_name : "", dl.yoga_quality);
+    return c;
 }
 
 static card_content_t make_astrology(double sun_lon, double moon_lon)
@@ -138,12 +172,16 @@ static card_content_t make_astrology(double sun_lon, double moon_lon)
 
 static card_content_t make_human_design(double sun_lon)
 {
-    hd_incarnation_t inc = hd_incarnation(sun_lon);
-    const char *name = hd_gate_name(inc.sun.gate);
-    const char *keyword = hd_gate_keyword(inc.sun.gate);
-    return card_format_human_design(inc.sun.gate, inc.sun.line,
-                                    inc.earth.gate, inc.earth.line,
-                                    name, keyword);
+    daily_hd_layout_t dl = daily_hd_compute(sun_lon);
+    card_content_t c = card_format_human_design(
+        dl.sun_gate.gate, dl.sun_gate.line,
+        dl.earth_gate.gate, dl.earth_gate.line,
+        dl.sun_gate.gate_name, dl.sun_gate.keyword);
+    /* Enrich with Earth gate info */
+    if (dl.earth_gate.gate_name && dl.earth_gate.keyword)
+        snprintf(c.line3, sizeof(c.line3), "Earth: Gate %d — %s",
+                 dl.earth_gate.gate, dl.earth_gate.keyword);
+    return c;
 }
 
 static card_content_t make_kabbalah(double jd)
