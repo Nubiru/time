@@ -134,6 +134,16 @@ canvas { width: 100vw; height: 100vh; display: block; }
 .panel.edge-left.proximity,
 .panel.edge-left.mode-open { opacity: 1; pointer-events: auto; transform: translateX(0); }
 
+.panel.edge-right {
+    top: var(--sp-7); right: 0; bottom: var(--sp-7);
+    width: var(--panel-width);
+    border-radius: var(--sp-3) 0 0 var(--sp-3);
+    transform: translateX(100%);
+    transition: transform var(--t-medium) ease-out, opacity var(--t-medium) ease-out;
+}
+.panel.edge-right.hidden { opacity: 0; transform: translateX(100%); pointer-events: none; }
+.panel.edge-right:not(.hidden) { opacity: 1; pointer-events: auto; transform: translateX(0); }
+
 .toolbar.edge-bottom {
     position: fixed; bottom: 0; left: 0; right: 0; height: var(--sp-7);
     display: flex; align-items: center; justify-content: center;
@@ -259,6 +269,104 @@ kbd, .kbd {
     text-transform: uppercase;
 }
 
+/* Settings gear button: below the ? button */
+.corner-btn-settings {
+    top: calc(var(--sp-4) + var(--sp-6) + var(--sp-3));
+    font-size: var(--font-size-base);
+}
+
+/* Settings panel styles */
+.settings-group { margin-bottom: var(--sp-4); }
+.settings-group-title {
+    color: rgb(var(--brand-primary)); font-weight: 700;
+    font-size: var(--font-size-sm); text-transform: uppercase;
+    letter-spacing: 0.05em; margin-bottom: var(--sp-2);
+    padding-bottom: var(--sp-1);
+    border-bottom: 1px solid rgba(var(--border), 0.3);
+}
+
+.settings-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: var(--sp-2) 0; gap: var(--sp-3);
+}
+.settings-label {
+    color: rgb(var(--text-secondary));
+    font-size: var(--font-size-base);
+    flex-shrink: 0;
+}
+
+/* Toggle switch */
+.settings-toggle {
+    width: 36px; height: 20px;
+    background: rgba(var(--border), 0.5);
+    border-radius: 10px; cursor: pointer;
+    position: relative;
+    transition: background var(--t-fast) ease;
+    flex-shrink: 0;
+}
+.settings-toggle.active {
+    background: rgba(var(--brand-secondary), 0.6);
+}
+.settings-toggle-knob {
+    width: 16px; height: 16px;
+    background: rgb(var(--text-primary));
+    border-radius: 50%;
+    position: absolute; top: 2px; left: 2px;
+    transition: transform var(--t-fast) ease;
+}
+.settings-toggle.active .settings-toggle-knob {
+    transform: translateX(16px);
+}
+
+/* Choice pills */
+.settings-pills {
+    display: flex; gap: var(--sp-1);
+    flex-wrap: wrap; justify-content: flex-end;
+}
+.settings-pill {
+    padding: var(--sp-1) var(--sp-3);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--corner-radius);
+    font-size: var(--font-size-sm);
+    color: rgb(var(--text-muted)); cursor: pointer;
+    transition: all var(--t-fast) ease;
+}
+.settings-pill:hover { color: rgb(var(--text-primary)); border-color: rgba(var(--brand-secondary), 0.4); }
+.settings-pill.active {
+    background: rgba(var(--brand-secondary), 0.2);
+    color: rgb(var(--brand-secondary));
+    border-color: rgba(var(--brand-secondary), 0.5);
+}
+
+/* Slider */
+.settings-slider-wrap {
+    display: flex; align-items: center; gap: var(--sp-2);
+    flex: 1; min-width: 0;
+}
+.settings-slider {
+    flex: 1; min-width: 0;
+    -webkit-appearance: none; appearance: none;
+    height: 4px; border-radius: 2px;
+    background: rgba(var(--border), 0.5);
+    outline: none; cursor: pointer;
+}
+.settings-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: rgb(var(--brand-secondary));
+    cursor: pointer;
+}
+.settings-slider::-moz-range-thumb {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: rgb(var(--brand-secondary));
+    border: none; cursor: pointer;
+}
+.settings-slider-val {
+    color: rgb(var(--text-muted));
+    font-size: var(--font-size-sm);
+    min-width: 2.5em; text-align: right;
+}
+
 /* ==========================================================================
    Responsive Design Foundation
    Breakpoints: Desktop (default), Tablet (<=1024), Phone-landscape (<=767),
@@ -350,6 +458,21 @@ kbd, .kbd {
     }
     .panel.edge-left.proximity,
     .panel.edge-left.mode-open {
+        transform: translateY(0);
+    }
+
+    /* Settings panel: full-width bottom sheet on phone */
+    .panel.edge-right {
+        top: auto; bottom: 0; left: 0; right: 0;
+        width: 100%; height: auto;
+        max-height: 60vh;
+        border-radius: var(--sp-3) var(--sp-3) 0 0;
+        transform: translateY(100%);
+    }
+    .panel.edge-right.hidden {
+        transform: translateY(100%);
+    }
+    .panel.edge-right:not(.hidden) {
         transform: translateY(0);
     }
 

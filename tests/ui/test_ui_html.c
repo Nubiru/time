@@ -397,6 +397,98 @@ void test_help_zero_buf_size_returns_zero(void)
     TEST_ASSERT_EQUAL_INT(0, n);
 }
 
+/* ==================================================================
+ * 38-46: ui_html_settings — settings panel HTML generation
+ * ================================================================== */
+
+void test_settings_null_panel_returns_zero(void)
+{
+    char buf[1024];
+    int n = ui_html_settings(NULL, buf, 1024);
+    TEST_ASSERT_EQUAL_INT(0, n);
+}
+
+void test_settings_null_buf_returns_zero(void)
+{
+    up_prefs_t prefs = up_default();
+    sp_panel_t panel = sp_build(&prefs);
+    int n = ui_html_settings(&panel, NULL, 1024);
+    TEST_ASSERT_EQUAL_INT(0, n);
+}
+
+void test_settings_returns_positive(void)
+{
+    up_prefs_t prefs = up_default();
+    sp_panel_t panel = sp_build(&prefs);
+    char buf[UI_HTML_BUF_SIZE];
+    int n = ui_html_settings(&panel, buf, UI_HTML_BUF_SIZE);
+    TEST_ASSERT_TRUE(n > 0);
+}
+
+void test_settings_contains_group(void)
+{
+    up_prefs_t prefs = up_default();
+    sp_panel_t panel = sp_build(&prefs);
+    char buf[UI_HTML_BUF_SIZE];
+    ui_html_settings(&panel, buf, UI_HTML_BUF_SIZE);
+    TEST_ASSERT_NOT_NULL(strstr(buf, "settings-group"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Appearance"));
+}
+
+void test_settings_contains_toggle(void)
+{
+    up_prefs_t prefs = up_default();
+    sp_panel_t panel = sp_build(&prefs);
+    char buf[UI_HTML_BUF_SIZE];
+    ui_html_settings(&panel, buf, UI_HTML_BUF_SIZE);
+    TEST_ASSERT_NOT_NULL(strstr(buf, "settings-toggle"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "settings-toggle-knob"));
+}
+
+void test_settings_contains_pills(void)
+{
+    up_prefs_t prefs = up_default();
+    sp_panel_t panel = sp_build(&prefs);
+    char buf[UI_HTML_BUF_SIZE];
+    ui_html_settings(&panel, buf, UI_HTML_BUF_SIZE);
+    TEST_ASSERT_NOT_NULL(strstr(buf, "settings-pills"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "settings-pill"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Cosmos"));
+}
+
+void test_settings_contains_slider(void)
+{
+    up_prefs_t prefs = up_default();
+    sp_panel_t panel = sp_build(&prefs);
+    char buf[UI_HTML_BUF_SIZE];
+    ui_html_settings(&panel, buf, UI_HTML_BUF_SIZE);
+    TEST_ASSERT_NOT_NULL(strstr(buf, "settings-slider"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "type=\"range\""));
+}
+
+void test_settings_data_attributes(void)
+{
+    up_prefs_t prefs = up_default();
+    sp_panel_t panel = sp_build(&prefs);
+    char buf[UI_HTML_BUF_SIZE];
+    ui_html_settings(&panel, buf, UI_HTML_BUF_SIZE);
+    TEST_ASSERT_NOT_NULL(strstr(buf, "data-sec="));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "data-opt="));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "data-idx="));
+}
+
+void test_settings_all_sections_present(void)
+{
+    up_prefs_t prefs = up_default();
+    sp_panel_t panel = sp_build(&prefs);
+    char buf[UI_HTML_BUF_SIZE];
+    ui_html_settings(&panel, buf, UI_HTML_BUF_SIZE);
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Appearance"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Time"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Social"));
+    TEST_ASSERT_NOT_NULL(strstr(buf, "Location"));
+}
+
 /* ---- Main runner ---- */
 
 int main(void)
@@ -453,6 +545,17 @@ int main(void)
     /* Additional: 36-37 */
     RUN_TEST(test_time_bar_tb_btn_class);
     RUN_TEST(test_help_zero_buf_size_returns_zero);
+
+    /* ui_html_settings: 38-46 */
+    RUN_TEST(test_settings_null_panel_returns_zero);
+    RUN_TEST(test_settings_null_buf_returns_zero);
+    RUN_TEST(test_settings_returns_positive);
+    RUN_TEST(test_settings_contains_group);
+    RUN_TEST(test_settings_contains_toggle);
+    RUN_TEST(test_settings_contains_pills);
+    RUN_TEST(test_settings_contains_slider);
+    RUN_TEST(test_settings_data_attributes);
+    RUN_TEST(test_settings_all_sections_present);
 
     return UNITY_END();
 }

@@ -198,6 +198,7 @@ const char *ui_mode_name(ui_mode_t mode)
     case UI_MODE_HELP:        return "Help";
     case UI_MODE_PALETTE:     return "Palette";
     case UI_MODE_LAYER_PANEL: return "Layer Panel";
+    case UI_MODE_SETTINGS:    return "Settings";
     default:                  return "Unknown";
     }
 }

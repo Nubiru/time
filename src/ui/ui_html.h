@@ -13,6 +13,7 @@
 #include "command_palette.h"
 #include "layer_panel.h"
 #include "toast_message.h"
+#include "../systems/earth/settings_panel.h"
 
 #define UI_HTML_BUF_SIZE 8192
 
@@ -37,5 +38,10 @@ int ui_html_toasts(const toast_queue_t *queue, char *buf, int buf_size);
  * Returns chars written. */
 int ui_html_time_bar(int is_paused, const char *speed_str,
                       const char *date_str, char *buf, int buf_size);
+
+/* Generate settings panel HTML: sections with toggles, choices, sliders.
+ * Each interactive element has data-sec and data-opt attributes.
+ * Returns chars written. */
+int ui_html_settings(const sp_panel_t *panel, char *buf, int buf_size);
 
 #endif /* TIME_UI_HTML_H */

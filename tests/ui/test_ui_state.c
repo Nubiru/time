@@ -328,7 +328,7 @@ void test_mode_name_non_null_for_all(void)
 void test_mode_count_equals_enum(void)
 {
     TEST_ASSERT_EQUAL_INT(UI_MODE_COUNT, ui_mode_count());
-    TEST_ASSERT_EQUAL_INT(4, ui_mode_count());
+    TEST_ASSERT_EQUAL_INT(5, ui_mode_count());
 }
 
 /* ---- 34: full cycle: open -> fully open -> close -> fully closed ---- */

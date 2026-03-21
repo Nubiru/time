@@ -22,6 +22,9 @@
 #include "theme_css.h"
 #include "i18n.h"
 #include "../systems/gregorian/gregorian.h"
+#include "../systems/earth/settings_panel.h"
+#include "../systems/earth/user_prefs.h"
+#include "../platform/storage_bridge.h"
 
 /* ------------------------------------------------------------------ */
 /* Module-static state (S1)                                            */
@@ -31,6 +34,7 @@ static ui_state_t s_ui_state;
 static char s_search_buf[256];
 static int s_current_theme; /* 0 = Cosmos (dark), 1 = Dawn (light) */
 static i18n_locale_t s_locale; /* detected from browser */
+static up_prefs_t s_prefs; /* user preferences (loaded from localStorage) */
 
 /* ------------------------------------------------------------------ */
 /* ui_bridge_init                                                      */
@@ -119,6 +123,27 @@ void ui_bridge_init(void) {
             });
         }
     });
+
+    /* --- Settings panel: load prefs + generate HTML --- */
+    {
+        char prefs_buf[UP_MAX_SERIAL_SIZE];
+        int prefs_len = sb_load("time_prefs", prefs_buf, UP_MAX_SERIAL_SIZE);
+        if (prefs_len > 0) {
+            s_prefs = up_deserialize(prefs_buf, prefs_len);
+        } else {
+            s_prefs = up_default();
+        }
+        /* Sync theme from prefs */
+        s_current_theme = (int)s_prefs.visual.theme;
+
+        sp_panel_t panel = sp_build(&s_prefs);
+        char settings_buf[UI_HTML_BUF_SIZE];
+        ui_html_settings(&panel, settings_buf, UI_HTML_BUF_SIZE);
+        EM_ASM({
+            var el = document.getElementById('settings-content');
+            if (el) el.innerHTML = UTF8ToString($0);
+        }, settings_buf);
+    }
 }
 
 /* ------------------------------------------------------------------ */
@@ -168,12 +193,14 @@ EMSCRIPTEN_KEEPALIVE void ui_toggle_help(void) {
         var panel = document.getElementById('help-panel');
         var cmd   = document.getElementById('cmd-palette');
         var layer = document.getElementById('layer-panel');
+        var sett  = document.getElementById('settings-panel');
         if (panel) {
             if ($0) panel.classList.remove('hidden');
             else    panel.classList.add('hidden');
         }
         if (cmd)   cmd.classList.add('hidden');
         if (layer) layer.classList.remove('mode-open');
+        if (sett)  sett.classList.add('hidden');
     }, show);
 }
 
@@ -184,12 +211,14 @@ EMSCRIPTEN_KEEPALIVE void ui_toggle_command_palette(void) {
         var panel = document.getElementById('cmd-palette');
         var help  = document.getElementById('help-panel');
         var layer = document.getElementById('layer-panel');
+        var sett  = document.getElementById('settings-panel');
         if (panel) {
             if ($0) panel.classList.remove('hidden');
             else    panel.classList.add('hidden');
         }
         if (help)  help.classList.add('hidden');
         if (layer) layer.classList.remove('mode-open');
+        if (sett)  sett.classList.add('hidden');
     }, show);
 }
 
@@ -200,13 +229,74 @@ EMSCRIPTEN_KEEPALIVE void ui_toggle_layer_panel(void) {
         var panel = document.getElementById('layer-panel');
         var help  = document.getElementById('help-panel');
         var cmd   = document.getElementById('cmd-palette');
+        var sett  = document.getElementById('settings-panel');
         if (panel) {
             if ($0) panel.classList.add('mode-open');
             else    panel.classList.remove('mode-open');
         }
         if (help) help.classList.add('hidden');
         if (cmd)  cmd.classList.add('hidden');
+        if (sett) sett.classList.add('hidden');
     }, show);
+}
+
+/* ------------------------------------------------------------------ */
+/* Settings: save prefs + refresh panel HTML                           */
+/* ------------------------------------------------------------------ */
+
+static void settings_save_and_refresh(void) {
+    /* Serialize and persist */
+    char prefs_buf[UP_MAX_SERIAL_SIZE];
+    up_serial_result_t res = up_serialize(&s_prefs, prefs_buf, UP_MAX_SERIAL_SIZE);
+    if (res.length > 0) {
+        sb_save("time_prefs", prefs_buf);
+    }
+    /* Rebuild settings panel HTML */
+    sp_panel_t panel = sp_build(&s_prefs);
+    char html_buf[UI_HTML_BUF_SIZE];
+    ui_html_settings(&panel, html_buf, UI_HTML_BUF_SIZE);
+    EM_ASM({
+        var el = document.getElementById('settings-content');
+        if (el) el.innerHTML = UTF8ToString($0);
+    }, html_buf);
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_toggle_settings(void) {
+    s_ui_state = ui_state_toggle_mode(s_ui_state, UI_MODE_SETTINGS);
+    int show = ui_state_is_mode(s_ui_state, UI_MODE_SETTINGS);
+    EM_ASM({
+        var panel = document.getElementById('settings-panel');
+        var help  = document.getElementById('help-panel');
+        var cmd   = document.getElementById('cmd-palette');
+        var layer = document.getElementById('layer-panel');
+        if (panel) {
+            if ($0) panel.classList.remove('hidden');
+            else    panel.classList.add('hidden');
+        }
+        if (help)  help.classList.add('hidden');
+        if (cmd)   cmd.classList.add('hidden');
+        if (layer) layer.classList.remove('mode-open');
+    }, show);
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_settings_toggle(int section, int option, int value) {
+    s_prefs = sp_apply_toggle(&s_prefs, section, option, value);
+    settings_save_and_refresh();
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_settings_choice(int section, int option, int choice_idx) {
+    s_prefs = sp_apply_choice(&s_prefs, section, option, choice_idx);
+    /* If theme changed, apply immediately */
+    if (section == 0 && option == 0) {
+        s_current_theme = (int)s_prefs.visual.theme;
+        inject_theme_css();
+    }
+    settings_save_and_refresh();
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_settings_slider(int section, int option, float value) {
+    s_prefs = sp_apply_slider(&s_prefs, section, option, value);
+    settings_save_and_refresh();
 }
 
 EMSCRIPTEN_KEEPALIVE void ui_toggle_theme(void) {
@@ -223,9 +313,11 @@ EMSCRIPTEN_KEEPALIVE void ui_close_panels(void) {
         var help  = document.getElementById('help-panel');
         var cmd   = document.getElementById('cmd-palette');
         var layer = document.getElementById('layer-panel');
+        var sett  = document.getElementById('settings-panel');
         if (help)  help.classList.add('hidden');
         if (cmd)   cmd.classList.add('hidden');
         if (layer) layer.classList.remove('mode-open');
+        if (sett)  sett.classList.add('hidden');
     });
 }
 

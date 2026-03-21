@@ -11,6 +11,7 @@ typedef enum {
     UI_MODE_HELP,            /* Help overlay visible (? key) */
     UI_MODE_PALETTE,         /* Command palette visible (/ key) */
     UI_MODE_LAYER_PANEL,     /* Layer toggle panel visible */
+    UI_MODE_SETTINGS,        /* Settings panel visible (, key) */
     UI_MODE_COUNT
 } ui_mode_t;
 

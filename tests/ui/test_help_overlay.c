@@ -132,8 +132,8 @@ void test_total_entries_sum(void)
                                      HELP_MAX_ENTRIES_PER_CAT);
     }
     TEST_ASSERT_EQUAL_INT(expected, help_total_entries());
-    /* Exact: 8+9+5+2+5+2 = 31 */
-    TEST_ASSERT_EQUAL_INT(31, help_total_entries());
+    /* Exact: 8+9+5+2+5+3 = 32 */
+    TEST_ASSERT_EQUAL_INT(32, help_total_entries());
 }
 
 /* ---- 15-17: help_format_entry ---- */

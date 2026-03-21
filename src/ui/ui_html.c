@@ -211,6 +211,90 @@ int ui_html_toasts(const toast_queue_t *queue, char *buf, int buf_size)
 }
 
 /* ------------------------------------------------------------------ */
+/* ui_html_settings                                                    */
+/* ------------------------------------------------------------------ */
+
+int ui_html_settings(const sp_panel_t *panel, char *buf, int buf_size)
+{
+    if (!buf || buf_size <= 0) {
+        return 0;
+    }
+    buf[0] = '\0';
+
+    if (!panel || panel->section_count <= 0) {
+        return 0;
+    }
+
+    int pos = 0;
+
+    for (int s = 0; s < panel->section_count; s++) {
+        const sp_section_t *sec = &panel->sections[s];
+
+        pos = append(buf, buf_size, pos,
+                     "<div class=\"settings-group\">"
+                     "<div class=\"settings-group-title\">%s</div>",
+                     sec->name);
+
+        for (int o = 0; o < sec->option_count; o++) {
+            const sp_option_t *opt = &sec->options[o];
+
+            pos = append(buf, buf_size, pos,
+                         "<div class=\"settings-item\" data-sec=\"%d\" data-opt=\"%d\">",
+                         s, o);
+
+            switch (opt->type) {
+            case SP_OPT_TOGGLE:
+                pos = append(buf, buf_size, pos,
+                    "<span class=\"settings-label\">%s</span>"
+                    "<div class=\"settings-toggle%s\">"
+                    "<div class=\"settings-toggle-knob\"></div>"
+                    "</div>",
+                    opt->label,
+                    opt->toggle_value ? " active" : "");
+                break;
+
+            case SP_OPT_CHOICE:
+                pos = append(buf, buf_size, pos,
+                    "<span class=\"settings-label\">%s</span>"
+                    "<div class=\"settings-pills\">",
+                    opt->label);
+                for (int c = 0; c < opt->choice_count; c++) {
+                    pos = append(buf, buf_size, pos,
+                        "<span class=\"settings-pill%s\" data-idx=\"%d\">%s</span>",
+                        (c == opt->choice_selected) ? " active" : "",
+                        c, opt->choices[c]);
+                }
+                pos = append(buf, buf_size, pos, "</div>");
+                break;
+
+            case SP_OPT_SLIDER:
+                pos = append(buf, buf_size, pos,
+                    "<span class=\"settings-label\">%s</span>"
+                    "<div class=\"settings-slider-wrap\">"
+                    "<input type=\"range\" class=\"settings-slider\""
+                    " min=\"%.2f\" max=\"%.2f\" step=\"%.2f\" value=\"%.2f\">"
+                    "<span class=\"settings-slider-val\">%.1f</span>"
+                    "</div>",
+                    opt->label,
+                    (double)opt->slider_min, (double)opt->slider_max,
+                    (double)opt->slider_step, (double)opt->slider_value,
+                    (double)opt->slider_value);
+                break;
+
+            default:
+                break;
+            }
+
+            pos = append(buf, buf_size, pos, "</div>");
+        }
+
+        pos = append(buf, buf_size, pos, "</div>");
+    }
+
+    return pos;
+}
+
+/* ------------------------------------------------------------------ */
 /* ui_html_time_bar                                                    */
 /* ------------------------------------------------------------------ */
 

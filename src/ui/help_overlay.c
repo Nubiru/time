@@ -83,8 +83,9 @@ static const help_entry_t SYSTEM_ENTRIES[] = {
 static const help_entry_t UI_ENTRIES[] = {
     { "?", "Show help overlay",        HELP_CAT_UI },
     { "/", "Command palette (future)", HELP_CAT_UI },
+    { ",", "Settings panel",           HELP_CAT_UI },
 };
-#define UI_ENTRY_COUNT 2
+#define UI_ENTRY_COUNT 3
 
 /* Entry table indexed by category */
 static const help_entry_t *const ENTRY_TABLES[HELP_CAT_COUNT] = {
