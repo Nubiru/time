@@ -36,6 +36,7 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/persona_card.c
     ${CMAKE_CURRENT_SOURCE_DIR}/usage_interest.c
     ${CMAKE_CURRENT_SOURCE_DIR}/diamond_room.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/earth_fraction.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -76,4 +77,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_persona_card    OBJECT persona_card.c)
     add_library(time_usage_interest  OBJECT usage_interest.c)
     add_library(time_diamond_room    OBJECT diamond_room.c)
+    add_library(time_earth_fraction  OBJECT earth_fraction.c)
 endif()
