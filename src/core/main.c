@@ -186,8 +186,18 @@ void main_loop(void) {
         if (g_state.enter_zoom_active && ez_active(g_state.enter_zoom)) {
             motion_pose = ez_pose(g_state.enter_zoom);
             motion_active = 1;
-            if (ez_just_done(g_state.enter_zoom))
+            if (ez_just_done(g_state.enter_zoom)) {
                 g_state.enter_zoom_active = 0;
+                /* Post-zoom orientation label (About Face ACTION 1) */
+                EM_ASM({
+                    var t = document.getElementById('toast-area');
+                    if (t) {
+                        t.textContent = 'The Solar System';
+                        t.classList.add('visible');
+                        setTimeout(function() { t.classList.remove('visible'); }, 5000);
+                    }
+                });
+            }
         } else if (et_active(g_state.earth_trans)) {
             motion_pose = et_pose(g_state.earth_trans);
             motion_active = 1;
