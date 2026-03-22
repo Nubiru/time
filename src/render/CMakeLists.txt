@@ -79,6 +79,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/view_state.c
     ${CMAKE_CURRENT_SOURCE_DIR}/ring_today.c
     ${CMAKE_CURRENT_SOURCE_DIR}/birth_sky.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/sdf_glyph.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/star_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/planet_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/zodiac_pass.c
@@ -182,4 +183,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_view_state          OBJECT view_state.c)
     add_library(time_ring_today          OBJECT ring_today.c)
     add_library(time_birth_sky           OBJECT birth_sky.c)
+    add_library(time_sdf_glyph          OBJECT sdf_glyph.c)
 endif()

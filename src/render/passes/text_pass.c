@@ -47,6 +47,8 @@
 #include "../../ui/daily_transit_layout.h"
 #include "../../systems/astronomy/lunar.h"
 #include "../msdf_text.h"
+#include "../zoom_fade.h"
+#include "../constellation_label.h"
 
 /* Must match ORBIT_SCALE in planet_pass.c so labels align with planet sprites */
 static const float TEXT_ORBIT_SCALE = 3.0f;
@@ -842,8 +844,10 @@ static void draw_card_text(const render_frame_t *frame)
     if (focus_sys >= 0) {
         sel.filled_count = 1;
         sel.slots[0].system_id = focus_sys;
-        sel.slots[0].opacity = 1.0f;
+        sel.slots[0].opacity = frame->card_slide;
     }
+    /* Per-word text reveal: multiply all card text alpha during focus transitions */
+    float text_alpha = frame->card_text_reveal;
 
     card_content_t card_contents[CARD_TYPE_COUNT];
     for (int i = 0; i < CARD_TYPE_COUNT; i++) {
@@ -895,9 +899,10 @@ static void draw_card_text(const render_frame_t *frame)
         float px = r->x * (float)vw + margin_x;
         float py = r->y * (float)vh + margin_y;
 
-        /* Title */
+        /* Title — alpha modulated by text reveal during focus transitions */
+        float ta = text_alpha * r->opacity;
         msdf_add_text(content->title, px, py, title_fs,
-                      style.title.r, style.title.g, style.title.b, style.title.a);
+                      style.title.r, style.title.g, style.title.b, style.title.a * ta);
 
         /* Focus key hint — top-right of card, subtle */
         {
@@ -911,25 +916,25 @@ static void draw_card_text(const render_frame_t *frame)
             if (key) {
                 float kx = (r->x + r->w * 0.5f) * (float)vw - margin_x - 8.0f;
                 msdf_add_text(key, kx, py, 11.0f,
-                              style.muted.r, style.muted.g, style.muted.b, 0.30f);
+                              style.muted.r, style.muted.g, style.muted.b, 0.30f * ta);
             }
         }
 
         /* Line 1 */
         py += title_gap + title_fs;
         msdf_add_text(content->line1, px, py, body_fs,
-                      style.body.r, style.body.g, style.body.b, style.body.a);
+                      style.body.r, style.body.g, style.body.b, style.body.a * ta);
 
         /* Line 2 */
         py += line_h;
         msdf_add_text(content->line2, px, py, body_fs,
-                      style.body.r, style.body.g, style.body.b, style.body.a);
+                      style.body.r, style.body.g, style.body.b, style.body.a * ta);
 
         /* Line 3 (detail — smaller, muted) */
         if (content->line3[0] != '\0') {
             py += line_h;
             msdf_add_text(content->line3, px, py, detail_fs,
-                          style.muted.r, style.muted.g, style.muted.b, style.muted.a);
+                          style.muted.r, style.muted.g, style.muted.b, style.muted.a * ta);
         }
     }
 
@@ -1059,16 +1064,24 @@ void text_pass_draw(const render_frame_t *frame) {
     glyph_instance_t instances[GLYPH_BATCH_MAX];
     int len = 0;
 
+    /* Zoom-based label opacity: smooth fade at zoom boundaries */
+    float label_alpha = zf_opacity(ZF_TEXT_LABEL, frame->log_zoom);
+    if (label_alpha < 0.01f) {
+        /* Labels invisible at this zoom — skip 3D labels, still draw card text */
+        draw_card_text(frame);
+        return;
+    }
+
     /* Cosmos-scope label colors — astronomical labels never change with theme.
      * Sun = solar gold (brand_primary), planets = warm off-white. */
     theme_cosmos_t cosmos = theme_cosmos_constant();
     glyph_color_t sun_label_color = {cosmos.brand_primary.r,
                                      cosmos.brand_primary.g,
-                                     cosmos.brand_primary.b, 1.0f};
+                                     cosmos.brand_primary.b, label_alpha};
     glyph_color_t planet_label_color = {cosmos.planet_label.r,
                                         cosmos.planet_label.g,
                                         cosmos.planet_label.b,
-                                        cosmos.planet_label.a};
+                                        cosmos.planet_label.a * label_alpha};
 
     /* Get camera basis vectors FIRST — needed for text placement */
     vec3_t cam_right, cam_up;
@@ -1141,6 +1154,39 @@ void text_pass_draw(const render_frame_t *frame) {
             instances[len].scale    = 0.3f * zoom_scale;
             instances[len].color    = planet_label_color;
             len++;
+        }
+    }
+
+    /* Constellation name labels — 88 IAU names on celestial sphere */
+    {
+        float const_alpha = zf_opacity(ZF_CONSTELLATION, frame->log_zoom);
+        if (const_alpha > 0.01f) {
+            cl_label_t labels[CL_COUNT];
+            int nlabels = cl_compute(100.0f, labels);
+            /* Dimmer than planet labels, zodiac constellations slightly brighter */
+            glyph_color_t const_color = {0.5f, 0.55f, 0.65f,
+                                          const_alpha * 0.6f};
+            glyph_color_t zodiac_color = {0.7f, 0.75f, 0.8f,
+                                           const_alpha * 0.8f};
+            float const_scale = 0.25f * zoom_scale;
+            for (int c = 0; c < nlabels && len < GLYPH_BATCH_MAX - 20; c++) {
+                const char *name = labels[c].abbr; /* 3-letter IAU abbreviation */
+                int nlen = (int)strlen(name);
+                vec3_t base = vec3_create(labels[c].x,
+                                           labels[c].y + 0.5f * zoom_scale,
+                                           labels[c].z);
+                float spacing = 0.15f * zoom_scale;
+                float sx = -spacing * (float)(nlen - 1) * 0.5f;
+                glyph_color_t col = labels[c].is_zodiac ? zodiac_color : const_color;
+                for (int i = 0; i < nlen && len < GLYPH_BATCH_MAX; i++) {
+                    vec3_t offset = vec3_scale(cam_right, sx + (float)i * spacing);
+                    instances[len].glyph_id = (int)name[i];
+                    instances[len].position = vec3_add(base, offset);
+                    instances[len].scale    = const_scale;
+                    instances[len].color    = col;
+                    len++;
+                }
+            }
         }
     }
 
