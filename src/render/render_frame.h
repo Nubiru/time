@@ -31,6 +31,7 @@ typedef struct {
     char   percentile_text[64];   /* "Day #47 of 365 — top 12.9%" */
     char   red_thread[256];       /* convergence narrative (why systems align) */
     char   grand_cycle[128];      /* grand cycle mind-blowing stat */
+    char   last_similar[96];      /* last time this convergence happened */
     br_visual_frame_t brain_visual; /* visual encoding of brain scan (convergence lines, glow) */
     double sun_lon;               /* Sun ecliptic longitude (degrees, 0-360) */
     double planet_lon[8];         /* Mercury..Neptune ecliptic longitudes (degrees) */

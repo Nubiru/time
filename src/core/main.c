@@ -140,6 +140,37 @@ void main_loop(void) {
                     g_state.red_thread[0] = '\0';
                 }
             }
+
+            /* S96: "Last time this happened" — signature search backward */
+            g_state.last_similar[0] = '\0';
+            if (br.correlation_count > 0) {
+                /* Extract unique system IDs from correlations */
+                int sys[16];
+                int sc = 0;
+                for (int ci = 0; ci < br.correlation_count && sc < 14; ci++) {
+                    int a = br.correlations[ci].system_a;
+                    int b = br.correlations[ci].system_b;
+                    int found_a = 0, found_b = 0;
+                    for (int j = 0; j < sc; j++) {
+                        if (sys[j] == a) found_a = 1;
+                        if (sys[j] == b) found_b = 1;
+                    }
+                    if (!found_a) sys[sc++] = a;
+                    if (!found_b && sc < 16) sys[sc++] = b;
+                }
+                if (sc >= 2) {
+                    double prev = br_stats_signature_last(
+                        g_state.simulation_jd, sys, sc, 365);
+                    if (prev > 0.0) {
+                        int days_ago = (int)(g_state.simulation_jd - prev);
+                        if (days_ago > 0)
+                            snprintf(g_state.last_similar,
+                                     sizeof(g_state.last_similar),
+                                     "Last similar convergence: %d days ago",
+                                     days_ago);
+                    }
+                }
+            }
         }
     }
 
@@ -276,6 +307,7 @@ void main_loop(void) {
     memcpy(frame.percentile_text, g_state.percentile_text, sizeof(frame.percentile_text));
     memcpy(frame.red_thread, g_state.red_thread, sizeof(frame.red_thread));
     memcpy(frame.grand_cycle, g_state.grand_cycle, sizeof(frame.grand_cycle));
+    memcpy(frame.last_similar, g_state.last_similar, sizeof(frame.last_similar));
     frame.brain_visual = g_state.brain_visual;
 
     /* Planet data for natal chart pass */

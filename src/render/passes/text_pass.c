@@ -969,6 +969,16 @@ static void draw_card_text(const render_frame_t *frame)
                           btc.brand_secondary.b, 0.45f);
         }
 
+        /* Last similar — "Last similar convergence: X days ago" */
+        if (frame->last_similar[0] != '\0') {
+            bot_y -= 14.0f;
+            float lw = msdf_text_width(MSDF_FONT_MONO, frame->last_similar, 10.0f);
+            msdf_add_text(frame->last_similar,
+                          ((float)vw - lw) * 0.5f, bot_y, 10.0f,
+                          btc.brand_secondary.r, btc.brand_secondary.g,
+                          btc.brand_secondary.b, 0.35f);
+        }
+
         /* Red thread — convergence narrative (only when systems align) */
         if (frame->red_thread[0] != '\0') {
             bot_y -= 16.0f;
