@@ -60,6 +60,10 @@
 #include "../systems/unified/system_correlation.h"
 #include "../systems/earth/author_card.h"
 #include "../ui/share_moment.h"
+#include "../systems/tzolkin/tzolkin_interpret.h"
+#include "../systems/astrology/astrology_interpret.h"
+#include "../systems/iching/iching_interpret.h"
+#include "../systems/hebrew/hebrew_interpret.h"
 #include <string.h>
 #endif
 
@@ -830,33 +834,35 @@ EMSCRIPTEN_KEEPALIVE void ui_show_birth_profile(void) {
     if (!g_state.birth_entered) return;
     const birth_profile_t *p = &g_state.birth_profile;
 
-    /* Build HTML string in C to avoid EM_ASM parameter limits */
-    static char html[1024];
+    /* Get interpret glances for rich meaning */
+    tzolkin_interp_t ti = ti_interpret(p->tzolkin.kin, p->tzolkin.seal, p->tzolkin.tone);
+    astrology_interp_t ai = ai_interpret(p->astrology.sun_sign, 0, 0);
+    iching_interp_t ii = ii_interpret(p->iching.king_wen, "", "");
+    hebrew_date_t hd = { p->hebrew.year, p->hebrew.month, p->hebrew.day };
+    hebrew_interp_t hi = hi_interpret(hd, 0, 0);
+
+    /* Build HTML with human meaning from interpret modules */
+    static char html[2048];
     snprintf(html, sizeof(html),
         "<b>Your Cosmic Identity</b><br>"
-        "Kin %d — %s %s<br>"
-        "%s %s (%s)<br>"
-        "Hebrew: %d %s %d<br>"
-        "Islamic: %d %s %d<br>"
-        "Buddhist Era: %d<br>"
-        "I Ching: Hexagram %d — %s<br>"
-        "%s | HD Gate %d.%d",
-        p->tzolkin.kin,
-        p->tzolkin.tone_name ? p->tzolkin.tone_name : "?",
-        p->tzolkin.seal_name ? p->tzolkin.seal_name : "?",
+        "<b>Kin Maya:</b> %.200s<br>"
+        "<b>Astrology:</b> %.200s<br>"
+        "<b>Chinese:</b> %s %s<br>"
+        "<b>Hebrew:</b> %.120s<br>"
+        "<b>Islamic:</b> %d %s %d AH<br>"
+        "<b>Buddhist:</b> BE %d<br>"
+        "<b>I Ching:</b> %.120s<br>"
+        "<b>Human Design:</b> Sun Gate %d / Earth Gate %d",
+        ti.glance[0] ? ti.glance : "?",
+        ai.glance[0] ? ai.glance : (p->western_zodiac ? p->western_zodiac : "?"),
         p->chinese.element_name ? p->chinese.element_name : "?",
         p->chinese.animal_name ? p->chinese.animal_name : "?",
-        p->western_zodiac ? p->western_zodiac : "?",
-        p->hebrew.year,
-        p->hebrew.month_name ? p->hebrew.month_name : "?",
-        p->hebrew.day,
+        hi.glance[0] ? hi.glance : "?",
         p->islamic.year,
         p->islamic.month_name ? p->islamic.month_name : "?",
         p->islamic.day,
         p->buddhist.era_year,
-        p->iching.king_wen,
-        p->iching.name ? p->iching.name : "?",
-        p->astrology.sun_sign_name ? p->astrology.sun_sign_name : "?",
+        ii.glance[0] ? ii.glance : (p->iching.name ? p->iching.name : "?"),
         p->astrology.hd_sun_gate, p->astrology.hd_earth_gate
     );
 
