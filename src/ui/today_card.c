@@ -173,13 +173,18 @@ static card_content_t make_chinese(double jd)
 static card_content_t make_hebrew(double jd)
 {
     daily_hebrew_layout_t dl = daily_hebrew_compute(jd);
-    card_content_t c = card_format_hebrew(dl.date.year, dl.date.month,
-                                           dl.date.day, dl.month_name);
-    /* Enrich with daily layout fields */
-    if (dl.quality && dl.quality[0])
-        snprintf(c.line3, sizeof(c.line3), "%s — %s",
-                 dl.quality, dl.hebrew_letter ? dl.hebrew_letter : "");
-    if (dl.brief && dl.brief[0])
+    hebrew_interp_t hi = hi_interpret(dl.date, 0, 0);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Hebrew");
+    if (hi.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", hi.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%d %s %d",
+                 dl.date.day, dl.month_name ? dl.month_name : "", dl.date.year);
+    if (hi.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", hi.detail);
+    else if (dl.brief && dl.brief[0])
         snprintf(c.detail, sizeof(c.detail), "%s", dl.brief);
     return c;
 }
@@ -187,11 +192,18 @@ static card_content_t make_hebrew(double jd)
 static card_content_t make_islamic(double jd)
 {
     daily_islamic_layout_t dl = daily_islamic_compute(jd);
-    card_content_t c = card_format_islamic(dl.date.year, dl.date.month,
-                                            dl.date.day, dl.month_name);
-    if (dl.significance && dl.significance[0])
-        snprintf(c.line3, sizeof(c.line3), "%s", dl.significance);
-    if (dl.brief && dl.brief[0])
+    islamic_interp_t ii = isi_interpret(dl.date);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Islamic");
+    if (ii.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", ii.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%d %s %d AH",
+                 dl.date.day, dl.month_name ? dl.month_name : "", dl.date.year);
+    if (ii.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", ii.detail);
+    else if (dl.brief && dl.brief[0])
         snprintf(c.detail, sizeof(c.detail), "%s", dl.brief);
     return c;
 }
