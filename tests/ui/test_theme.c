@@ -85,12 +85,14 @@ void test_cosmos_brand_secondary_is_celestial_teal(void) {
 
 void test_cosmos_text_secondary_dimmer_than_primary(void) {
     theme_t t = theme_get(THEME_COSMOS);
-    TEST_ASSERT_TRUE(t.text_secondary.a < t.text_primary.a);
+    /* RefUI: opaque stepped lightness. Secondary is visually dimmer (lower RGB). */
+    TEST_ASSERT_TRUE(t.text_secondary.r < t.text_primary.r);
 }
 
 void test_cosmos_text_muted_dimmer_than_secondary(void) {
     theme_t t = theme_get(THEME_COSMOS);
-    TEST_ASSERT_TRUE(t.text_muted.a < t.text_secondary.a);
+    /* RefUI: opaque stepped lightness. Muted is visually dimmer (lower RGB). */
+    TEST_ASSERT_TRUE(t.text_muted.r < t.text_secondary.r);
 }
 
 void test_cosmos_all_alpha_valid(void) {

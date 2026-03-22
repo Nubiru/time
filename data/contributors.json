@@ -1,8 +1,8 @@
 {
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
-    "last_updated": "2026-03-21",
-    "total_contributors": 271
+    "last_updated": "2026-03-22",
+    "total_contributors": 283
   },
   "contributors": [
     {
@@ -5395,6 +5395,69 @@
       "contribution": "7 wisdom quotes on eternal soul, time dimensions, karmic cycles, and introspective seeking. Hindu-Theosophical voice archetype bridging Vedanta and Western esotericism.",
       "source": "Life After Death (1912)",
       "added_by": "LANGUAGE stream S50"
+    },
+    {
+      "name": "Arcot Preetham",
+      "role": "Researcher, SIGGRAPH",
+      "contribution": "Practical Analytic Model for Daylight (SIGGRAPH 1999) — physically-based sky color from sun position and turbidity via Perez luminance distribution with Rayleigh/Mie scattering. Foundation for Earth View sky rendering.",
+      "source": "A Practical Analytic Model for Daylight (1999)",
+      "added_by": "VISUALS stream S49"
+    },
+    {
+      "name": "Marco Sporl",
+      "role": "Graphics programmer",
+      "contribution": "Shader implementation of Preetham daylight model with aerial perspective. Distribution coefficient matrices, zenith chromaticity polynomials, CIE xyY to RGB pipeline. Complete real-time sky rendering system.",
+      "source": "ShaderX3: A Practical Analytic Model for Daylight with Shaders (2004)",
+      "added_by": "VISUALS stream S49"
+    },
+    {
+      "name": "Naty Hoffman",
+      "role": "Graphics researcher",
+      "contribution": "Real-time outdoor light scattering techniques. Evolved Preetham model for practical game engine use. Atmospheric extinction and inscattering for aerial perspective.",
+      "source": "Photorealistic Real-Time Outdoor Light Scattering, Game Developer Magazine (2002)",
+      "added_by": "VISUALS stream S49"
+    },
+    {
+      "name": "Jason L. Mitchell",
+      "role": "3D Application Research, ATI Research",
+      "contribution": "Light shaft (god ray) rendering via volumetric sampling planes. Original technique that GPU Gems 3 screen-space radial blur built upon.",
+      "source": "ShaderX3: Light Shaft Rendering (2004)",
+      "added_by": "VISUALS stream S49"
+    },
+    {
+      "name": "Thorsten Scheuermann",
+      "role": "Graphics programmer, ATI",
+      "contribution": "Improved depth-of-field rendering with thin-lens camera model. Circle of confusion formula for physically-based focus blur.",
+      "source": "ShaderX3: Improved Depth-of-Field Rendering (2004)",
+      "added_by": "VISUALS stream S49"
+    },
+    {
+      "name": "Natalya Tatarchuk",
+      "role": "Graphics researcher, ATI/AMD",
+      "contribution": "GLSL real-time shader development techniques. Co-authored improved DOF rendering. Parallax occlusion mapping.",
+      "source": "ShaderX3: GLSL Real-Time Shader Development (2004)",
+      "added_by": "VISUALS stream S49"
+    },
+    {
+      "name": "Tiago Sousa",
+      "role": "Graphics programmer, Crytek (CryEngine)",
+      "contribution": "Adaptive glare rendering with bloom and directional streak filters for star-like diffraction patterns.",
+      "source": "ShaderX3: Adaptive Glare (2004)",
+      "added_by": "VISUALS stream S49"
+    },
+    {
+      "name": "Clint S. Brewer",
+      "role": "Graphics programmer",
+      "contribution": "Photo-realistic rainbow rendering using Mie scattering angle-of-deviation and spectral color lookup.",
+      "source": "ShaderX3: Rendering Rainbows (2004)",
+      "added_by": "VISUALS stream S49"
+    },
+    {
+      "name": "Wolfgang Engel",
+      "role": "Editor, ShaderX book series",
+      "contribution": "Editor of ShaderX/GPU Pro series — comprehensive shader technique collections that advanced real-time rendering knowledge.",
+      "source": "ShaderX3: Advanced Rendering with DirectX and OpenGL (2004)",
+      "added_by": "VISUALS stream S49"
     }
   ]
 }

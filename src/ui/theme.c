@@ -40,8 +40,8 @@ static void theme_fill_layout(theme_t *t, float base_font)
     t->timing = gl_timing_scale(THEME_BASE_TIMING);
     t->opacity = gl_opacity_cascade();
 
-    /* Derived metrics from phi proportions */
-    t->corner_radius = THEME_BASE_SPACE * (float)PHI_INV2;
+    /* Derived metrics — corner_radius 5.0 (fibonacci, RefUI) */
+    t->corner_radius = 5.0f;
     t->border_width = 1.0f;
     t->shadow_blur = THEME_BASE_SPACE * (float)PHI_RATIO;
     t->icon_size = t->typography.sizes[3] * (float)PHI_RATIO;
@@ -62,12 +62,11 @@ static theme_t theme_build_cosmos(void)
     /* Elevated: floating elements */
     t.bg_elevated = color_rgba(0.09f, 0.09f, 0.12f, 1.0f);
 
-    /* Text: warm off-white, cascading alpha for hierarchy */
-    t.text_primary = color_rgba(0.90f, 0.90f, 0.92f, 1.0f);
-    t.text_secondary = color_rgba(0.90f, 0.90f, 0.92f,
-                                  (float)PHI_INV);
-    t.text_muted = color_rgba(0.90f, 0.90f, 0.92f,
-                              (float)PHI_INV2);
+    /* Text: opaque stepped lightness — no alpha blending (RefUI).
+     * Alpha-blended white over colored cards looks washed out. */
+    t.text_primary   = color_rgba(0.93f, 0.93f, 0.95f, 1.0f);
+    t.text_secondary = color_rgba(0.68f, 0.68f, 0.72f, 1.0f);
+    t.text_muted     = color_rgba(0.48f, 0.48f, 0.52f, 1.0f);
 
     /* Brand: solar gold + celestial teal */
     t.brand_primary = color_rgba(1.0f, 0.85f, 0.55f, 1.0f);
@@ -110,12 +109,10 @@ static theme_t theme_build_dawn(void)
     /* Elevated: pure white — floating UI elements only */
     t.bg_elevated = color_rgba(1.0f, 1.0f, 0.99f, 1.0f);
 
-    /* Text: dark charcoal, cascading alpha */
-    t.text_primary = color_rgba(0.12f, 0.12f, 0.14f, 1.0f);
-    t.text_secondary = color_rgba(0.12f, 0.12f, 0.14f,
-                                  (float)PHI_INV);
-    t.text_muted = color_rgba(0.12f, 0.12f, 0.14f,
-                              (float)PHI_INV2);
+    /* Text: opaque stepped darkness — no alpha blending (RefUI) */
+    t.text_primary   = color_rgba(0.12f, 0.12f, 0.14f, 1.0f);
+    t.text_secondary = color_rgba(0.38f, 0.38f, 0.40f, 1.0f);
+    t.text_muted     = color_rgba(0.58f, 0.58f, 0.60f, 1.0f);
 
     /* Brand: same solar gold + celestial teal */
     t.brand_primary = color_rgba(1.0f, 0.85f, 0.55f, 1.0f);

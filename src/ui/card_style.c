@@ -5,15 +5,13 @@
 #include "card_style.h"
 #include "golden_layout.h"
 
-/* Card background alpha — translucent wash over cosmos (Tufte: maximize data-ink).
- * System color at 15% opacity: enough to identify the system, not enough to
- * obscure the astronomical data behind the card. */
-#define CS_BG_BASE_ALPHA 0.15f
+/* Card background alpha — translucent wash over cosmos (RefUI: needs visible
+ * reading surface. 0.22 = grounding plane without obscuring stars). */
+#define CS_BG_BASE_ALPHA 0.22f
 
-/* Border alpha — structural only, not data-encoding.
- * Tufte: borders are redundant when background color already identifies
- * the system. Use minimal structural line. */
-#define CS_BORDER_ALPHA  0.12f
+/* Border alpha — system accent at 20% (RefUI: border reinforces system identity,
+ * turning chartjunk into data-ink). */
+#define CS_BORDER_ALPHA  0.20f
 
 int card_style_to_ct_system(int ts_system_id)
 {
@@ -76,14 +74,17 @@ card_style_t card_style_for_system(int system_id, float opacity,
     style.background   = theme_system_accent(&theme, (ct_system_t)ct);
     style.background.a = CS_BG_BASE_ALPHA * opacity;
 
-    /* Border: structural only — theme border, not system accent.
-     * Tufte: border would be redundant data-ink (system already encoded
-     * by background color). */
-    style.border   = theme.border;
+    /* Border: system accent at low alpha — reinforces identity (RefUI).
+     * Turns structural line into data-ink. */
+    style.border   = theme_system_accent(&theme, (ct_system_t)ct);
     style.border.a = CS_BORDER_ALPHA * opacity;
 
-    /* System accent for title text */
-    style.title = theme_system_accent(&theme, (ct_system_t)ct);
+    /* System accent mixed toward white — guarantees readability (RefUI) */
+    color_rgba_t accent = theme_system_accent(&theme, (ct_system_t)ct);
+    style.title.r = accent.r * 0.7f + 0.3f;
+    style.title.g = accent.g * 0.7f + 0.3f;
+    style.title.b = accent.b * 0.7f + 0.3f;
+    style.title.a = 1.0f;
 
     /* Theme text colors for body content */
     style.body  = theme.text_primary;

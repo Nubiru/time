@@ -675,7 +675,8 @@ void card_pass_draw(const render_frame_t *frame) {
                                           0.0f, 0.0f, 0.0f, 0.0f);
 
     /* Overwrite per-card vertex colors from card_style.
-     * Phi gradient: top vertices full alpha, bottom fades to phi^-1.
+     * Top-lit gradient: top vertices brighter (1.15x), bottom dimmer (0.85x).
+     * Alpha gradient: top full, bottom fades to phi^-1 (RefUI + Tufte).
      * Vertex order: 0=BL, 1=BR, 2=TR, 3=TL */
     for (int i = 0; i < qdata.card_count && i < sel.filled_count; i++) {
         card_style_t style = card_style_for_system(
@@ -684,9 +685,14 @@ void card_pass_draw(const render_frame_t *frame) {
         float bot_alpha = style.background.a * 0.618f; /* phi^-1 fade */
         for (int v = 0; v < CP_VERTS_PER_QUAD; v++) {
             int base = (i * CP_VERTS_PER_QUAD + v) * CP_VERTEX_FLOATS;
-            qdata.vertices[base + 4] = style.background.r;
-            qdata.vertices[base + 5] = style.background.g;
-            qdata.vertices[base + 6] = style.background.b;
+            /* Top-lit color gradient: depth via subtle brightness (RefUI) */
+            float lum = (v < 2) ? 0.85f : 1.15f;
+            float r = style.background.r * lum;
+            float g = style.background.g * lum;
+            float b = style.background.b * lum;
+            qdata.vertices[base + 4] = (r > 1.0f) ? 1.0f : r;
+            qdata.vertices[base + 5] = (g > 1.0f) ? 1.0f : g;
+            qdata.vertices[base + 6] = (b > 1.0f) ? 1.0f : b;
             /* v=0,1 (bottom): faded. v=2,3 (top): full. */
             qdata.vertices[base + 7] = (v < 2) ? bot_alpha : top_alpha;
         }
