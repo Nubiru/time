@@ -1,19 +1,19 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-22 (INFRA session 81)
+**Last refreshed**: 2026-03-22 (INFRA session 84)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 510 |
-| Header files (.h) | 514 |
-| Lines of code (src/) | 119,133 |
-| Lines of tests | 213,000+ |
-| Test suites (CTest) | 532 |
+| Source files (.c) | 512 |
+| Header files (.h) | 516 |
+| Lines of code (src/) | 119,572 |
+| Lines of tests | 214,000+ |
+| Test suites (CTest) | 534 |
 | Render pass files | 24 |
 | Knowledge systems | 34 |
-| Pure modules | 460+ |
+| Pure modules | 465+ |
 | Stateful modules | 33 |
 | Contributors | 283 |
 
@@ -21,9 +21,9 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 532 |
-| Test functions (RUN_TEST) | 20,091 |
-| Test assertions (TEST_ASSERT) | 34,479 |
+| Test suites (CTest) | 534 |
+| Test functions (RUN_TEST) | 20,157 |
+| Test assertions (TEST_ASSERT) | 34,601 |
 | Failures | 0 |
 | CTest time | ~0.9s (with -j12) |
 | E2E tests (Playwright) | 17 (5 basic + 12 visual) |
@@ -88,7 +88,7 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (532/532, ~1s) |
+| CTest -j12 | PASS (534/534, ~1s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
 | WASM build | PASS (737 KB Release — 34 systems, 23 passes, god rays + DOF) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
@@ -193,21 +193,21 @@
 | 1073 | text_pass.c | Candidate: split cards/labels/overlays |
 | 756 | card_pass.c | Render pass with multiple overlays |
 
-## Health (INFRA sweep — 2026-03-22, session 81)
+## Health (INFRA sweep — 2026-03-22, session 84)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (510 .c files, 0 orphans) |
+| Build system sync | OK (512 .c files, 1 expected orphan: sdf_glyph.c — deferred) |
 | Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (532/532 tests, ~1s) — use -j12 |
+| Native build | PASS (534/534 tests, ~1s) — use -j12 |
 | WASM build | PASS (753 KB Release — 24 passes, god rays, DOF, stardust) |
 | E2E tests | PASS (5/5 basic + 12 visual) |
 | Coverage | 96.0% lines, 99.98% functions |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
-| Render pipeline | 24/24 passes (+stardust since last sweep) |
+| Render pipeline | 24/24 passes |
 | Theme audit | CLEAN — 23/23 passes audited. Cosmos-scope uses theme_cosmos_constant(). UI-scope uses theme_get(). Zero leakage. |
 | Canvas resize | WIRED — ui_on_resize KEEPALIVE, debounced JS listener (session 59) |
 | Audio envelope | WIRED — setTargetAtTime, attack/release envelope, volume 0.12 (session 59) |
