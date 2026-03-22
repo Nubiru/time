@@ -37,6 +37,7 @@
 #include "../render/passes/gates_mandala_pass.h"
 #include "../render/passes/stardust_pass.h"
 #include "../render/passes/diamond_room_pass.h"
+#include "../render/passes/sky_pass.h"
 #include "../render/earth_view_frame.h"
 #include "../systems/astronomy/planets.h"
 #include "../ui/ui_bridge.h"
@@ -468,6 +469,7 @@ void main_loop(void) {
     /* --- Clear + draw (post-process wraps all passes) --- */
     post_pass_begin(&frame);
 
+    sky_pass_draw(&frame);  /* Preetham sky dome — Earth View only */
     if (ps_is_enabled(&sched, PASS_STARS))         star_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_CONSTELLATION)) constellation_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_DEEP_SKY))      deep_sky_pass_draw(&frame);
@@ -638,6 +640,7 @@ int main(void) {
     gates_mandala_pass_init();
     stardust_pass_init();
     diamond_room_pass_init();
+    sky_pass_init();
     if (card_pass_init() != 0) return 1;
     if (text_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;

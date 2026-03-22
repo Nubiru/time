@@ -35,6 +35,8 @@
 #include "../../ui/kin_cell.h"
 #include "../../ui/focus_mode.h"
 #include "../../ui/earth_timeline_layout.h"
+#include "../constellation_label.h"
+#include "../zoom_fade.h"
 #include "../../systems/tzolkin/dreamspell.h"
 #include "../../systems/iching/iching.h"
 #include "../../ui/hexagram_layout.h"
@@ -1201,6 +1203,36 @@ void text_pass_draw(const render_frame_t *frame) {
                     instances[len].position = vec3_add(base, offset);
                     instances[len].scale    = const_scale;
                     instances[len].color    = col;
+                    len++;
+                }
+            }
+        }
+    }
+
+    /* Constellation labels — 88 IAU names on celestial sphere */
+    {
+        float con_alpha = zf_opacity(ZF_CONSTELLATION, frame->log_zoom);
+        if (con_alpha > 0.02f && len < GLYPH_BATCH_MAX - 400) {
+            cl_label_t labels[CL_COUNT];
+            int lcount = cl_compute(50.0f, labels);
+            float con_scale = 0.25f * zoom_scale;
+            glyph_color_t con_color = {
+                cosmos.brand_secondary.r, cosmos.brand_secondary.g,
+                cosmos.brand_secondary.b, con_alpha * 0.5f
+            };
+            for (int ci = 0; ci < lcount && len < GLYPH_BATCH_MAX - 10; ci++) {
+                const char *abbr = labels[ci].abbr;
+                if (!abbr) continue;
+                int alen = (int)strlen(abbr);
+                vec3_t base = vec3_create(labels[ci].x, labels[ci].y, labels[ci].z);
+                float spacing = 0.08f * zoom_scale;
+                float sx = -spacing * (float)(alen - 1) * 0.5f;
+                for (int ai = 0; ai < alen && len < GLYPH_BATCH_MAX; ai++) {
+                    vec3_t offset = vec3_scale(cam_right, sx + (float)ai * spacing);
+                    instances[len].glyph_id = (int)abbr[ai];
+                    instances[len].position = vec3_add(base, offset);
+                    instances[len].scale    = con_scale;
+                    instances[len].color    = con_color;
                     len++;
                 }
             }
