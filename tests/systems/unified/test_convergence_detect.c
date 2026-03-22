@@ -866,7 +866,7 @@ void test_cd_max_convergences(void)
 
 void test_cd_max_systems(void)
 {
-    TEST_ASSERT_EQUAL_INT(24, CD_MAX_SYSTEMS);
+    TEST_ASSERT_EQUAL_INT(38, CD_MAX_SYSTEMS);
 }
 
 void test_cd_sys_count_value(void)

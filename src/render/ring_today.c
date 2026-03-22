@@ -21,6 +21,20 @@
 #include "../systems/korean/korean_calendar.h"
 #include "../systems/thai/thai_calendar.h"
 #include "../systems/geology/geo_time.h"
+#include "../systems/astronomy/lunar.h"
+#include "../systems/zoroastrian/zoroastrian.h"
+#include "../systems/balinese/pawukon.h"
+#include "../systems/french_republican/french_republican.h"
+#include "../systems/aztec/aztec.h"
+#include "../systems/egyptian/egyptian.h"
+#include "../systems/celtic/celtic_tree.h"
+#include "../systems/lao/lao_calendar.h"
+#include "../systems/myanmar/myanmar.h"
+#include "../systems/bahai/bahai.h"
+#include "../systems/tamil/tamil_calendar.h"
+#include "../systems/tarot/tarot.h"
+#include "../systems/numerology/numerology.h"
+#include "../systems/chakra/chakra.h"
 
 ring_today_t ring_today_compute(double jd, double sun_lon_deg,
                                  double moon_lon_deg)
@@ -157,6 +171,93 @@ ring_today_t ring_today_compute(double jd, double sun_lon_deg,
 
     /* TS_SYS_EARTH (20): daily cycle, map to Gregorian ring */
     rt.indices[TS_SYS_EARTH] = rt.indices[TS_SYS_GREGORIAN];
+
+    /* TS_SYS_ASTRONOMY (21): moon phase 0-7 */
+    {
+        lunar_info_t li = lunar_phase(jd);
+        rt.indices[TS_SYS_ASTRONOMY] = li.phase;
+    }
+
+    /* TS_SYS_TAROT (22): major arcanum 0-21 from JD */
+    {
+        int card = ((int)(jd + 0.5)) % 22;
+        if (card < 0) card += 22;
+        rt.indices[TS_SYS_TAROT] = card;
+    }
+
+    /* TS_SYS_NUMEROLOGY (23): root number 1-9 -> 0-8 */
+    {
+        int d_sum = ((int)(jd + 0.5)) % 9;
+        if (d_sum < 0) d_sum += 9;
+        rt.indices[TS_SYS_NUMEROLOGY] = d_sum;
+    }
+
+    /* TS_SYS_CHAKRA (24): day of week 0-6 */
+    {
+        int dow = ((int)(jd + 0.5) + 1) % 7;
+        if (dow < 0) dow += 7;
+        rt.indices[TS_SYS_CHAKRA] = dow;
+    }
+
+    /* TS_SYS_ZOROASTRIAN (25): month 1-12 -> 0-11 */
+    {
+        zoro_date_t zd = zoro_from_jd(jd);
+        rt.indices[TS_SYS_ZOROASTRIAN] = (zd.month >= 1 && zd.month <= 12) ? zd.month - 1 : 0;
+    }
+
+    /* TS_SYS_BALINESE (26): day in 210-day cycle */
+    {
+        pawukon_t pw = pawukon_from_jd(jd);
+        rt.indices[TS_SYS_BALINESE] = pw.day_in_cycle;
+    }
+
+    /* TS_SYS_FRENCH_REPUBLICAN (27): month 0-12 -> 0-11 */
+    {
+        fr_date_t fd = fr_from_jd(jd);
+        rt.indices[TS_SYS_FRENCH_REPUBLICAN] = (fd.month >= 1) ? fd.month - 1 : 11;
+    }
+
+    /* TS_SYS_AZTEC (28): Tonalpohualli day 1-260 -> 0-259 */
+    {
+        aztec_tonalpohualli_t at = aztec_tonalpohualli(jd);
+        rt.indices[TS_SYS_AZTEC] = at.day_index;
+    }
+
+    /* TS_SYS_EGYPTIAN (29): month 1-13 -> 0-11 */
+    {
+        egypt_date_t ed = egypt_from_jd(jd);
+        rt.indices[TS_SYS_EGYPTIAN] = (ed.month >= 1 && ed.month <= 12) ? ed.month - 1 : 0;
+    }
+
+    /* TS_SYS_CELTIC (30): tree month 0-13 */
+    {
+        celtic_tree_date_t cd = celtic_tree_from_jd(jd);
+        rt.indices[TS_SYS_CELTIC] = (cd.month >= 1) ? cd.month - 1 : 12;
+    }
+
+    /* TS_SYS_LAO (31): month 1-12 -> 0-11 */
+    {
+        lao_date_t ld = lao_from_jd(jd);
+        rt.indices[TS_SYS_LAO] = (ld.month >= 1 && ld.month <= 12) ? ld.month - 1 : 0;
+    }
+
+    /* TS_SYS_MYANMAR (32): month enum 0-12 */
+    {
+        myanmar_date_t md = myanmar_from_jd(jd);
+        rt.indices[TS_SYS_MYANMAR] = (int)md.month;
+    }
+
+    /* TS_SYS_BAHAI (33): month 0-19 -> 0-18 */
+    {
+        bahai_date_t bd = bahai_from_jd(jd);
+        rt.indices[TS_SYS_BAHAI] = (bd.month >= 1) ? bd.month - 1 : 18;
+    }
+
+    /* TS_SYS_TAMIL (34): month 1-12 -> 0-11 */
+    {
+        tamil_date_t td = tamil_from_jd(jd);
+        rt.indices[TS_SYS_TAMIL] = (td.month >= 1 && td.month <= 12) ? td.month - 1 : 0;
+    }
 
     return rt;
 }

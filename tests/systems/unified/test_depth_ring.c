@@ -203,35 +203,35 @@ static void test_systems_age_count(void)
 {
     int ids[TS_SYS_COUNT];
     int count = depth_ring_systems(DEPTH_RING_AGE, ids, TS_SYS_COUNT);
-    TEST_ASSERT_EQUAL_INT(2, count);
+    TEST_ASSERT_EQUAL_INT(3, count);
 }
 
 static void test_systems_era_count(void)
 {
     int ids[TS_SYS_COUNT];
     int count = depth_ring_systems(DEPTH_RING_ERA, ids, TS_SYS_COUNT);
-    TEST_ASSERT_EQUAL_INT(2, count);
+    TEST_ASSERT_EQUAL_INT(3, count);
 }
 
 static void test_systems_year_count(void)
 {
     int ids[TS_SYS_COUNT];
     int count = depth_ring_systems(DEPTH_RING_YEAR, ids, TS_SYS_COUNT);
-    TEST_ASSERT_EQUAL_INT(9, count);
+    TEST_ASSERT_EQUAL_INT(16, count);
 }
 
 static void test_systems_cycle_count(void)
 {
     int ids[TS_SYS_COUNT];
     int count = depth_ring_systems(DEPTH_RING_CYCLE, ids, TS_SYS_COUNT);
-    TEST_ASSERT_EQUAL_INT(2, count);
+    TEST_ASSERT_EQUAL_INT(3, count);
 }
 
 static void test_systems_today_count(void)
 {
     int ids[TS_SYS_COUNT];
     int count = depth_ring_systems(DEPTH_RING_TODAY, ids, TS_SYS_COUNT);
-    TEST_ASSERT_EQUAL_INT(4, count);
+    TEST_ASSERT_EQUAL_INT(8, count);
 }
 
 /* ========== depth_ring_systems — NULL out_ids ========== */
@@ -239,7 +239,7 @@ static void test_systems_today_count(void)
 static void test_systems_null_returns_count_only(void)
 {
     int count = depth_ring_systems(DEPTH_RING_YEAR, NULL, 0);
-    TEST_ASSERT_EQUAL_INT(9, count);
+    TEST_ASSERT_EQUAL_INT(16, count);
 }
 
 static void test_systems_null_cosmic_returns_count(void)
@@ -271,10 +271,10 @@ static void test_systems_max_out_limits_output(void)
     int ids[2];
     int count = depth_ring_systems(DEPTH_RING_YEAR, ids, 2);
     /* Should return total count (9) but only write 2 */
-    TEST_ASSERT_EQUAL_INT(9, count);
+    TEST_ASSERT_EQUAL_INT(16, count);
 }
 
-/* ========== All 20 systems assigned ========== */
+/* ========== All 35 systems assigned ========== */
 
 static void test_all_systems_assigned_to_some_ring(void)
 {

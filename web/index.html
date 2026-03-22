@@ -504,6 +504,17 @@
             }
         });
 
+        /* Personal View toggle — R key */
+        document.addEventListener('keydown', function(e) {
+            if (e.target.tagName === 'INPUT') return;
+            if (e.key === 'r' || e.key === 'R') {
+                if (Module && Module._ui_get_view && Module._ui_set_view) {
+                    var cur = Module._ui_get_view();
+                    Module._ui_set_view(cur === 3 ? 0 : 3);
+                }
+            }
+        });
+
         /* Canvas resize — keep WebGL drawing buffer matched to CSS layout */
         var resizeTimeout;
         window.addEventListener('resize', function() {

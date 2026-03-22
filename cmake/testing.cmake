@@ -144,9 +144,11 @@ time_add_test(NAME test_convergence_visual TEST tests/render/test_convergence_vi
 time_add_test(NAME test_pass_schedule TEST tests/render/test_pass_schedule.c DEPS pass_schedule)
 time_add_test(NAME test_view_state TEST tests/render/test_view_state.c DEPS view_state pass_schedule)
 time_add_test(NAME test_ring_today TEST tests/render/test_ring_today.c
-    DEPS ring_today system_rings concentric_ring color_theory color gregorian julian tzolkin haab chinese hebrew hijri buddhist lunar nakshatra iching zodiac human_design coptic ethiopian persian japanese korean_calendar thai_calendar geo_time calendar_fixed)
+    DEPS ring_today system_rings concentric_ring color_theory color gregorian julian tzolkin haab chinese hebrew hijri buddhist lunar nakshatra iching zodiac human_design coptic ethiopian persian japanese korean_calendar thai_calendar geo_time calendar_fixed
+    zoroastrian pawukon french_republican aztec egyptian celtic_tree lao_calendar myanmar bahai tamil_calendar tarot numerology chakra)
 time_add_test(NAME test_birth_sky TEST tests/render/test_birth_sky.c
-    DEPS birth_sky ring_today system_rings concentric_ring color_theory color birth_profile gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar nakshatra iching zodiac aspects human_design planets orbit kepler coptic ethiopian persian japanese korean_calendar thai_calendar geo_time calendar_fixed)
+    DEPS birth_sky ring_today system_rings concentric_ring color_theory color birth_profile gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar nakshatra iching zodiac aspects human_design planets orbit kepler coptic ethiopian persian japanese korean_calendar thai_calendar geo_time calendar_fixed
+    zoroastrian pawukon french_republican aztec egyptian celtic_tree lao_calendar myanmar bahai tamil_calendar tarot numerology chakra)
 
 # Core tests
 time_add_test(NAME test_date_parse      TEST tests/core/test_date_parse.c       DEPS date_parse julian)
@@ -429,7 +431,8 @@ time_add_test(NAME test_user_context TEST tests/systems/unified/test_user_contex
 time_add_test(NAME test_calendar_fixed TEST tests/systems/unified/test_calendar_fixed.c
     DEPS calendar_fixed egyptian coptic ethiopian zoroastrian)
 time_add_test(NAME test_today_summary TEST tests/systems/unified/test_today_summary.c
-    DEPS today_summary gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar panchanga nakshatra iching zodiac human_design sefirot coptic ethiopian persian japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed)
+    DEPS today_summary gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar panchanga nakshatra iching zodiac human_design sefirot coptic ethiopian persian japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed
+    zoroastrian pawukon french_republican aztec egyptian celtic_tree lao_calendar myanmar bahai tamil_calendar tarot numerology chakra)
 time_add_test(NAME test_cal_vectors TEST tests/systems/unified/test_cal_vectors.c
     DEPS cal_vectors)
 time_add_test(NAME test_depth_tier TEST tests/systems/unified/test_depth_tier.c
@@ -451,6 +454,7 @@ time_add_test(NAME test_depth_integration TEST tests/systems/unified/test_depth_
     gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar
     panchanga nakshatra iching zodiac human_design sefirot coptic ethiopian persian
     japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed
+    zoroastrian pawukon french_republican aztec egyptian celtic_tree lao_calendar myanmar bahai tamil_calendar tarot numerology chakra
     LABELS integration)
 time_add_test(NAME test_brain_narrative TEST tests/systems/unified/test_brain_narrative.c
     DEPS brain_narrative brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed retrograde planets orbit kepler zodiac)
@@ -461,7 +465,8 @@ time_add_test(NAME test_brain_personal TEST tests/systems/unified/test_brain_per
 time_add_test(NAME test_brain_adapt TEST tests/systems/unified/test_brain_adapt.c
     DEPS brain_adapt brain_types user_context birth_profile julian tzolkin dreamspell chinese hebrew hijri buddhist lunar iching zodiac human_design planets orbit kepler)
 time_add_test(NAME test_brain_depth TEST tests/systems/unified/test_brain_depth.c
-    DEPS brain_depth brain_types depth_tier today_summary gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar panchanga nakshatra iching zodiac human_design sefirot coptic ethiopian persian japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed)
+    DEPS brain_depth brain_types depth_tier today_summary gregorian julian tzolkin dreamspell haab chinese hebrew hijri buddhist lunar panchanga nakshatra iching zodiac human_design sefirot coptic ethiopian persian japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed
+    zoroastrian pawukon french_republican aztec egyptian celtic_tree lao_calendar myanmar bahai tamil_calendar tarot numerology chakra)
 time_add_test(NAME test_brain_surprise TEST tests/systems/unified/test_brain_surprise.c
     DEPS brain_surprise brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_brain_predict TEST tests/systems/unified/test_brain_predict.c
@@ -541,7 +546,18 @@ time_add_test(NAME test_today_card     TEST tests/ui/test_today_card.c
     gregorian_interpret geology_interpret earth_fraction daylight seasons solar_events
     astrology_interpret tzolkin_interpret dreamspell chinese_interpret human_design_interpret
     buddhist_interpret kalpa hindu_interpret
-    pop_today human_population earth_fraction heartbeat_counter pop_counter)
+    pop_today human_population earth_fraction heartbeat_counter pop_counter
+    daily_astronomy_layout daily_tarot_layout daily_numerology_layout daily_chakra_layout
+    daily_zoroastrian_layout daily_balinese_layout daily_french_republican_layout daily_aztec_layout
+    daily_egyptian_layout daily_celtic_layout daily_lao_layout daily_myanmar_layout
+    daily_bahai_layout daily_tamil_layout
+    astronomy_interpret tarot tarot_interpret numerology numerology_interpret
+    chakra chakra_interpret zoroastrian zoroastrian_interpret pawukon pawukon_interpret
+    french_republican french_republican_interpret aztec aztec_interpret
+    egyptian egyptian_interpret celtic_tree celtic_interpret wheel_of_year
+    lao_calendar lao_interpret myanmar myanmar_interpret
+    bahai bahai_interpret tamil_calendar tamil_interpret
+    tide_predict tidal surf_spots)
 time_add_test(NAME test_daily_greeting  TEST tests/ui/test_daily_greeting.c  DEPS daily_greeting content_i18n i18n)
 time_add_test(NAME test_zodiac_glyphs   TEST tests/ui/test_zodiac_glyphs.c   DEPS zodiac_glyphs)
 time_add_test(NAME test_hexagram_visual TEST tests/ui/test_hexagram_visual.c  DEPS hexagram_visual iching)

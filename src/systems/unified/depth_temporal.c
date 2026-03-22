@@ -34,6 +34,20 @@ static const dt_cycle_t s_cycles[TS_SYS_COUNT] = {
     [TS_SYS_GEOLOGICAL]   = { TS_SYS_GEOLOGICAL,   "Geological Epoch",       0.0,      0.0,    "No recurrence (linear deep time)" },
     [TS_SYS_COSMIC]       = { TS_SYS_COSMIC,       "Cosmic Age",             0.0,      0.0,    "No recurrence (linear cosmic time)" },
     [TS_SYS_EARTH]        = { TS_SYS_EARTH,        "Earth Day",              1.0,      1.0,    "Solar day (daylight cycle)" },
+    [TS_SYS_ASTRONOMY]    = { TS_SYS_ASTRONOMY,    "Synodic Month",          29.53,    0.0808, "Moon phase cycle" },
+    [TS_SYS_TAROT]        = { TS_SYS_TAROT,        "Major Arcana Cycle",     22.0,     0.0602, "22-day rotation through Major Arcana" },
+    [TS_SYS_NUMEROLOGY]   = { TS_SYS_NUMEROLOGY,   "Numerology Day",         9.0,      0.0246, "9-day root number cycle" },
+    [TS_SYS_CHAKRA]       = { TS_SYS_CHAKRA,       "Chakra Week",            7.0,      0.0192, "7-day chakra cycle" },
+    [TS_SYS_ZOROASTRIAN]  = { TS_SYS_ZOROASTRIAN,  "Yazdgerdi Year",         365.0,    1.0,    "365-day year (no leap)" },
+    [TS_SYS_BALINESE]     = { TS_SYS_BALINESE,     "Pawukon Cycle",          210.0,    0.575,  "210-day Balinese cycle" },
+    [TS_SYS_FRENCH_REPUBLICAN] = { TS_SYS_FRENCH_REPUBLICAN, "Republican Year", 365.2425, 1.0, "Decimal calendar year" },
+    [TS_SYS_AZTEC]        = { TS_SYS_AZTEC,        "Tonalpohualli",          260.0,    0.712,  "260-day sacred count" },
+    [TS_SYS_EGYPTIAN]     = { TS_SYS_EGYPTIAN,      "Egyptian Year",          365.0,    1.0,    "365-day civil year (no leap)" },
+    [TS_SYS_CELTIC]       = { TS_SYS_CELTIC,       "Tree Year",              365.0,    1.0,    "13 tree months + intercalary" },
+    [TS_SYS_LAO]          = { TS_SYS_LAO,          "Lao Year",               365.2425, 1.0,    "Buddhist Era solar year" },
+    [TS_SYS_MYANMAR]      = { TS_SYS_MYANMAR,      "Myanmar Year",           365.2587, 1.0,    "Myanmar Era year" },
+    [TS_SYS_BAHAI]        = { TS_SYS_BAHAI,        "Badi' Year",             365.2425, 1.0,    "19 months of 19 days" },
+    [TS_SYS_TAMIL]        = { TS_SYS_TAMIL,        "Tamil Year",             365.2587, 1.0,    "Sidereal solar year" },
 };
 
 dt_cycle_t dt_cycle_info(int system_id)

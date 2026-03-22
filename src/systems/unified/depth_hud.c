@@ -113,7 +113,77 @@ static const dh_system_spec_t s_specs[TS_SYS_COUNT] = {
     /* TS_SYS_EARTH (20) */
     { TS_SYS_EARTH,      "Earth",        'e', HUD_POS_BOTTOM_CENTER,
       "{season}", "{season} ({progress}%)",
-      "{season} — {daylight}h daylight", 19 }
+      "{season} — {daylight}h daylight", 19 },
+
+    /* TS_SYS_ASTRONOMY (21) */
+    { TS_SYS_ASTRONOMY,  "Astronomy",    '*', HUD_POS_TOP_RIGHT,
+      "{phase}", "{phase} ({illum}%)",
+      "{phase} — {age} days", 20 },
+
+    /* TS_SYS_TAROT (22) */
+    { TS_SYS_TAROT,      "Tarot",        'T', HUD_POS_RIGHT_PANEL,
+      "{card}", "{name} ({n})",
+      "{name} — {hebrew} — Path {path}", 21 },
+
+    /* TS_SYS_NUMEROLOGY (23) */
+    { TS_SYS_NUMEROLOGY, "Numerology",   'N', HUD_POS_RIGHT_PANEL,
+      "{root}", "Day {root}",
+      "Day {root} — {meaning}", 22 },
+
+    /* TS_SYS_CHAKRA (24) */
+    { TS_SYS_CHAKRA,     "Chakra",       'U', HUD_POS_RIGHT_PANEL,
+      "{name}", "{sanskrit}",
+      "{sanskrit} ({english}) — {theme}", 23 },
+
+    /* TS_SYS_ZOROASTRIAN (25) */
+    { TS_SYS_ZOROASTRIAN, "Zoroastrian", 'Z', HUD_POS_LEFT_PANEL,
+      "{month}", "{year} {month} {day}",
+      "{day} {month} {year} — {festival}", 24 },
+
+    /* TS_SYS_BALINESE (26) */
+    { TS_SYS_BALINESE,   "Balinese",     'W', HUD_POS_LEFT_PANEL,
+      "{wuku}", "{wuku} day {d}",
+      "{wuku} — day {d}/210", 25 },
+
+    /* TS_SYS_FRENCH_REPUBLICAN (27) */
+    { TS_SYS_FRENCH_REPUBLICAN, "French Republican", 'F', HUD_POS_BOTTOM_RIGHT,
+      "{month}", "An {year} {month}",
+      "{day} {month} An {year}", 26 },
+
+    /* TS_SYS_AZTEC (28) */
+    { TS_SYS_AZTEC,      "Aztec",        'z', HUD_POS_LEFT_PANEL,
+      "{sign}", "{num} {sign}",
+      "{num} {sign} — {meaning}", 27 },
+
+    /* TS_SYS_EGYPTIAN (29) */
+    { TS_SYS_EGYPTIAN,   "Egyptian",     'E', HUD_POS_BOTTOM_RIGHT,
+      "{month}", "{year} {month} {day}",
+      "{day} {month} Year {year}", 28 },
+
+    /* TS_SYS_CELTIC (30) */
+    { TS_SYS_CELTIC,     "Celtic",       'c', HUD_POS_BOTTOM_LEFT,
+      "{tree}", "{tree} day {d}",
+      "{tree} — {ogham}", 29 },
+
+    /* TS_SYS_LAO (31) */
+    { TS_SYS_LAO,        "Lao",          'l', HUD_POS_BOTTOM_RIGHT,
+      "BE", "BE {year}",
+      "BE {year} — {festival}", 30 },
+
+    /* TS_SYS_MYANMAR (32) */
+    { TS_SYS_MYANMAR,    "Myanmar",      'm', HUD_POS_BOTTOM_RIGHT,
+      "{month}", "ME {year}",
+      "ME {year} {month} {day}", 31 },
+
+    /* TS_SYS_BAHAI (33) */
+    { TS_SYS_BAHAI,      "Baha'i",       'b', HUD_POS_LEFT_PANEL,
+      "{month}", "{year} {month} {day}",
+      "{day} {month} {year} BE — {holy}", 32 },
+
+    /* TS_SYS_TAMIL (34) */
+    { TS_SYS_TAMIL,      "Tamil",        't', HUD_POS_BOTTOM_LEFT,
+      "{month}", "{year} {month}",
+      "{day} {month} {year}", 33 }
 };
 
 /* Invalid/sentinel spec */

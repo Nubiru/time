@@ -99,6 +99,20 @@ void test_all_indices_in_range(void) {
         99,   /* GEOLOGICAL: index depends on era count */
         -1,   /* COSMIC: always -1 */
         6,    /* EARTH: maps to Gregorian ring (0-6) */
+        7,    /* ASTRONOMY: moon phase 0-7 */
+        21,   /* TAROT: major arcanum 0-21 */
+        8,    /* NUMEROLOGY: root 0-8 */
+        6,    /* CHAKRA: day of week 0-6 */
+        11,   /* ZOROASTRIAN: month 0-11 */
+        209,  /* BALINESE: day in cycle 0-209 */
+        11,   /* FRENCH_REPUBLICAN: month 0-11 */
+        259,  /* AZTEC: tonalpohualli 0-259 */
+        11,   /* EGYPTIAN: month 0-11 */
+        12,   /* CELTIC: tree month 0-12 */
+        11,   /* LAO: month 0-11 */
+        12,   /* MYANMAR: month enum 0-12 */
+        18,   /* BAHAI: month 0-18 */
+        11,   /* TAMIL: month 0-11 */
     };
 
     for (int i = 0; i < TS_SYS_COUNT; i++) {

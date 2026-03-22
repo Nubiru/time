@@ -47,12 +47,12 @@ static const view_config_t s_views[VIEW_COUNT] = {
         .name         = "Personal View",
         .short_name   = "Personal",
         .description  = "Birth chart focus with zodiac wheel and personal gates",
-        .shortcut     = "P",
+        .shortcut     = "R",
         .scale_min    = 0,
         .scale_max    = 0,
         .default_scale = 0,
         .layers_enabled = 0xF1,  /* Stars+Zodiac+Labels+Cards+HUD */
-        .implemented  = 0
+        .implemented  = 1
     },
     {
         .id           = VIEW_DEEP_TIME,

@@ -13,7 +13,7 @@
 #define TIME_CONVERGENCE_DETECT_H
 
 #define CD_MAX_CONVERGENCES 32
-#define CD_MAX_SYSTEMS 24
+#define CD_MAX_SYSTEMS 38
 
 typedef enum {
     CD_SYS_ASTRONOMY = 0,   /* lunar phases, solstice/equinox */

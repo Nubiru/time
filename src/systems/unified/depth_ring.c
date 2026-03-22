@@ -38,7 +38,21 @@ static const depth_ring_t s_ring_map[TS_SYS_COUNT] = {
     /* [TS_SYS_THAI         = 17] */ DEPTH_RING_YEAR,
     /* [TS_SYS_GEOLOGICAL   = 18] */ DEPTH_RING_COSMIC,
     /* [TS_SYS_COSMIC       = 19] */ DEPTH_RING_COSMIC,
-    /* [TS_SYS_EARTH        = 20] */ DEPTH_RING_TODAY
+    /* [TS_SYS_EARTH        = 20] */ DEPTH_RING_TODAY,
+    /* [TS_SYS_ASTRONOMY    = 21] */ DEPTH_RING_TODAY,
+    /* [TS_SYS_TAROT        = 22] */ DEPTH_RING_ERA,
+    /* [TS_SYS_NUMEROLOGY   = 23] */ DEPTH_RING_TODAY,
+    /* [TS_SYS_CHAKRA       = 24] */ DEPTH_RING_TODAY,
+    /* [TS_SYS_ZOROASTRIAN  = 25] */ DEPTH_RING_YEAR,
+    /* [TS_SYS_BALINESE     = 26] */ DEPTH_RING_CYCLE,
+    /* [TS_SYS_FRENCH_REP   = 27] */ DEPTH_RING_YEAR,
+    /* [TS_SYS_AZTEC        = 28] */ DEPTH_RING_TODAY,
+    /* [TS_SYS_EGYPTIAN     = 29] */ DEPTH_RING_AGE,
+    /* [TS_SYS_CELTIC       = 30] */ DEPTH_RING_YEAR,
+    /* [TS_SYS_LAO          = 31] */ DEPTH_RING_YEAR,
+    /* [TS_SYS_MYANMAR      = 32] */ DEPTH_RING_YEAR,
+    /* [TS_SYS_BAHAI        = 33] */ DEPTH_RING_YEAR,
+    /* [TS_SYS_TAMIL        = 34] */ DEPTH_RING_YEAR
 };
 
 depth_ring_t depth_ring_for_system(int system_id)

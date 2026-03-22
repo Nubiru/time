@@ -142,6 +142,90 @@ static const sys_meta_t SYS_META[TS_SYS_COUNT] = {
         "Right now on Earth: %s — daylight, season, and sun position shape your day.",
         "Solar geometry, axial tilt",
         SENSITIVITY_GENERAL
+    },
+    [TS_SYS_ASTRONOMY] = {
+        "Astronomy",
+        "The night sky shows %s — the Moon's eternal conversation with the Sun.",
+        "Observational Astronomy / Jean Meeus",
+        SENSITIVITY_GENERAL
+    },
+    [TS_SYS_TAROT] = {
+        "Tarot",
+        "Today's arcanum: %s — the universe deals one card from the major mysteries.",
+        "Thoth Tarot / Aleister Crowley & Frieda Harris",
+        SENSITIVITY_RESPECTFUL
+    },
+    [TS_SYS_NUMEROLOGY] = {
+        "Numerology",
+        "The numbers reveal %s — digits reduced to their root essence.",
+        "Pythagorean Numerology",
+        SENSITIVITY_GENERAL
+    },
+    [TS_SYS_CHAKRA] = {
+        "Chakra",
+        "Today's energy center: %s — the body's map of consciousness.",
+        "Vedic Chakra System",
+        SENSITIVITY_RESPECTFUL
+    },
+    [TS_SYS_ZOROASTRIAN] = {
+        "Zoroastrian",
+        "The Yazdgerdi calendar reads %s — the fire temple's count of days.",
+        "Zoroastrian (Yazdgerdi) Calendar",
+        SENSITIVITY_SACRED
+    },
+    [TS_SYS_BALINESE] = {
+        "Balinese",
+        "The Pawukon cycle shows %s — ten concurrent weeks weaving sacred time.",
+        "Balinese Pawukon Calendar",
+        SENSITIVITY_SACRED
+    },
+    [TS_SYS_FRENCH_REPUBLICAN] = {
+        "French Republican",
+        "The calendar of reason reads %s — nature replaces saints.",
+        "French Republican Calendar (Romme)",
+        SENSITIVITY_GENERAL
+    },
+    [TS_SYS_AZTEC] = {
+        "Aztec",
+        "The Tonalpohualli reveals %s — the sacred count of days.",
+        "Aztec Sacred Calendar",
+        SENSITIVITY_RESPECTFUL
+    },
+    [TS_SYS_EGYPTIAN] = {
+        "Egyptian",
+        "The calendar of the pharaohs reads %s — time by the Nile's rhythm.",
+        "Ancient Egyptian Civil Calendar",
+        SENSITIVITY_RESPECTFUL
+    },
+    [TS_SYS_CELTIC] = {
+        "Celtic",
+        "The tree calendar whispers %s — Ogham letters written in wood.",
+        "Celtic Tree Calendar (Robert Graves)",
+        SENSITIVITY_RESPECTFUL
+    },
+    [TS_SYS_LAO] = {
+        "Lao",
+        "The Lao calendar shows %s — Buddhist time along the Mekong.",
+        "Lao Buddhist Calendar",
+        SENSITIVITY_RESPECTFUL
+    },
+    [TS_SYS_MYANMAR] = {
+        "Myanmar",
+        "The Myanmar calendar reads %s — a calendar shaped by monsoons and moons.",
+        "Myanmar (Burmese) Calendar",
+        SENSITIVITY_RESPECTFUL
+    },
+    [TS_SYS_BAHAI] = {
+        "Baha'i",
+        "The Badi' calendar marks %s — nineteen times nineteen, unity in form.",
+        "Baha'i (Badi') Calendar",
+        SENSITIVITY_SACRED
+    },
+    [TS_SYS_TAMIL] = {
+        "Tamil",
+        "The Tamil calendar shows %s — time by the sidereal sun's passage.",
+        "Tamil Solar Calendar (Thiruvalluvar)",
+        SENSITIVITY_RESPECTFUL
     }
 };
 

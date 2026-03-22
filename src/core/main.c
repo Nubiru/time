@@ -919,7 +919,7 @@ EMSCRIPTEN_KEEPALIVE const char *ui_get_share_url(void) {
 }
 
 EMSCRIPTEN_KEEPALIVE void ui_set_view(int view_id) {
-    if (view_id < 0 || view_id > 1) return;
+    if (view_id < 0 || view_id > 3) return;
     g_state.view = vs_set_view(g_state.view, view_id);
 }
 

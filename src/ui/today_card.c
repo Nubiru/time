@@ -46,6 +46,7 @@
 #include "daily_earth_layout.h"
 #include "../systems/earth/pop_today.h"
 #include "../systems/earth/earth_fraction.h"
+#include "../systems/earth/tide_predict.h"
 #include "../systems/earth/heartbeat_counter.h"
 #include "../systems/earth/pop_counter.h"
 #include "daily_coptic_layout.h"
@@ -56,6 +57,22 @@
 #include "daily_thai_layout.h"
 #include "daily_haab_layout.h"
 #include "daily_kabbalah_layout.h"
+
+/* New daily layout modules — 14 additional systems */
+#include "daily_astronomy_layout.h"
+#include "daily_tarot_layout.h"
+#include "daily_numerology_layout.h"
+#include "daily_chakra_layout.h"
+#include "daily_zoroastrian_layout.h"
+#include "daily_balinese_layout.h"
+#include "daily_french_republican_layout.h"
+#include "daily_aztec_layout.h"
+#include "daily_egyptian_layout.h"
+#include "daily_celtic_layout.h"
+#include "daily_lao_layout.h"
+#include "daily_myanmar_layout.h"
+#include "daily_bahai_layout.h"
+#include "daily_tamil_layout.h"
 
 /* Interpret modules — human meaning from raw numbers */
 #include "../systems/astrology/astrology_interpret.h"
@@ -456,9 +473,18 @@ static card_content_t make_earth(double jd, double lat, double lon)
         snprintf(c.line1, sizeof(c.line1), "Daylight: %.1f hours",
                  el.day_length_hours);
 
-    snprintf(c.line2, sizeof(c.line2), "Sun: %.1f\xc2\xb0 %s",
-             el.sun_elevation_deg,
-             el.sun_elevation_deg >= 0.0 ? "above" : "below");
+    /* Tidal estimate (lunar/solar gravity) */
+    {
+        tide_state_t ts = tide_predict_state(jd, lat, lon);
+        const char *tide_type = ts.is_king ? "King" : ts.is_spring ? "Spring" : ts.is_neap ? "Neap" : "";
+        snprintf(c.line2, sizeof(c.line2), "Sun: %.1f\xc2\xb0 %s | Tide: %s %s (%.1fh to %s)",
+                 el.sun_elevation_deg,
+                 el.sun_elevation_deg >= 0.0 ? "above" : "below",
+                 tide_type,
+                 ts.rising ? "rising" : "falling",
+                 ts.rising ? ts.hours_to_next_high : ts.hours_to_next_low,
+                 ts.rising ? "high" : "low");
+    }
 
     /* Line3: earth_fraction awe fact — rotates daily */
     {
@@ -499,6 +525,220 @@ static card_content_t make_earth(double jd, double lat, double lon)
 }
 
 /* ------------------------------------------------------------------ */
+/* New system card functions (14 systems)                               */
+/* ------------------------------------------------------------------ */
+
+static card_content_t make_astronomy(double jd)
+{
+    daily_astronomy_layout_t dl = daily_astronomy_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Astronomy");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%s (%.0f%%)",
+                 dl.moon_phase_name ? dl.moon_phase_name : "Moon",
+                 dl.illumination * 100.0);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_tarot(double jd)
+{
+    daily_tarot_layout_t dl = daily_tarot_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Tarot");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%s (%d)",
+                 dl.card_name ? dl.card_name : "?", dl.card_number);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_numerology(double jd)
+{
+    daily_numerology_layout_t dl = daily_numerology_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Numerology");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "Day %d%s — %s",
+                 dl.daily_number, dl.is_master ? " (Master)" : "",
+                 dl.number_meaning ? dl.number_meaning : "");
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_chakra(double jd)
+{
+    daily_chakra_layout_t dl = daily_chakra_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Chakra");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%s — %s",
+                 dl.sanskrit_name ? dl.sanskrit_name : "?",
+                 dl.english_name ? dl.english_name : "?");
+    if (dl.theme)
+        snprintf(c.line2, sizeof(c.line2), "%s", dl.theme);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_zoroastrian(double jd)
+{
+    daily_zoroastrian_layout_t dl = daily_zoroastrian_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Zoroastrian");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%d %s %d",
+                 dl.date.day,
+                 dl.month_name ? dl.month_name : "",
+                 dl.date.year);
+    if (dl.festival_name && dl.festival_name[0])
+        snprintf(c.line2, sizeof(c.line2), "%s", dl.festival_name);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_balinese(double jd)
+{
+    daily_balinese_layout_t dl = daily_balinese_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Balinese");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_french_republican(double jd)
+{
+    daily_french_republican_layout_t dl = daily_french_republican_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "French Republican");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_aztec(double jd)
+{
+    daily_aztec_layout_t dl = daily_aztec_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Aztec");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%d %s",
+                 dl.tonal.day_number,
+                 dl.sign_name ? dl.sign_name : "?");
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_egyptian(double jd)
+{
+    daily_egyptian_layout_t dl = daily_egyptian_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Egyptian");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_celtic(double jd)
+{
+    daily_celtic_layout_t dl = daily_celtic_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Celtic");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_lao(double jd)
+{
+    daily_lao_layout_t dl = daily_lao_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Lao");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_myanmar(double jd)
+{
+    daily_myanmar_layout_t dl = daily_myanmar_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Myanmar");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_bahai(double jd)
+{
+    daily_bahai_layout_t dl = daily_bahai_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Baha'i");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+static card_content_t make_tamil(double jd)
+{
+    daily_tamil_layout_t dl = daily_tamil_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Tamil");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    return c;
+}
+
+/* ------------------------------------------------------------------ */
 
 card_content_t today_card_for_system(int system_id, double jd,
                                       double sun_lon_deg,
@@ -528,6 +768,20 @@ card_content_t today_card_for_system(int system_id, double jd,
     case TS_SYS_GEOLOGICAL:   return make_geology(jd);
     case TS_SYS_COSMIC:       return empty_card();
     case TS_SYS_EARTH:        return make_earth(jd, observer_lat, observer_lon);
+    case TS_SYS_ASTRONOMY:    return make_astronomy(jd);
+    case TS_SYS_TAROT:        return make_tarot(jd);
+    case TS_SYS_NUMEROLOGY:   return make_numerology(jd);
+    case TS_SYS_CHAKRA:       return make_chakra(jd);
+    case TS_SYS_ZOROASTRIAN:  return make_zoroastrian(jd);
+    case TS_SYS_BALINESE:     return make_balinese(jd);
+    case TS_SYS_FRENCH_REPUBLICAN: return make_french_republican(jd);
+    case TS_SYS_AZTEC:        return make_aztec(jd);
+    case TS_SYS_EGYPTIAN:     return make_egyptian(jd);
+    case TS_SYS_CELTIC:       return make_celtic(jd);
+    case TS_SYS_LAO:          return make_lao(jd);
+    case TS_SYS_MYANMAR:      return make_myanmar(jd);
+    case TS_SYS_BAHAI:        return make_bahai(jd);
+    case TS_SYS_TAMIL:        return make_tamil(jd);
     default:                  return empty_card();
     }
 }

@@ -14,9 +14,9 @@ void tearDown(void) { }
 
 /* ========== dh_system_count ========== */
 
-static void test_system_count_returns_21(void)
+static void test_system_count_returns_35(void)
 {
-    TEST_ASSERT_EQUAL_INT(21, dh_system_count());
+    TEST_ASSERT_EQUAL_INT(35, dh_system_count());
 }
 
 /* ========== dh_position_count ========== */
@@ -181,9 +181,9 @@ static void test_all_20_systems_have_valid_names(void)
 
 /* ========== dh_system_spec — invalid ========== */
 
-static void test_spec_invalid_21(void)
+static void test_spec_invalid_35(void)
 {
-    dh_system_spec_t s = dh_system_spec(21);
+    dh_system_spec_t s = dh_system_spec(35);
     TEST_ASSERT_EQUAL_INT(-1, s.system_id);
     TEST_ASSERT_EQUAL_STRING("?", s.display_name);
 }
@@ -222,9 +222,9 @@ static void test_key_X_is_iching(void)
     TEST_ASSERT_EQUAL_INT(TS_SYS_ICHING, dh_system_by_key('X'));
 }
 
-static void test_key_Z_not_found(void)
+static void test_key_Z_is_zoroastrian(void)
 {
-    TEST_ASSERT_EQUAL_INT(-1, dh_system_by_key('Z'));
+    TEST_ASSERT_EQUAL_INT(TS_SYS_ZOROASTRIAN, dh_system_by_key('Z'));
 }
 
 static void test_key_nul_not_found(void)
@@ -238,22 +238,22 @@ static void test_left_panel_has_multiple_systems(void)
 {
     int ids[24];
     int n = dh_systems_at_position(HUD_POS_LEFT_PANEL, ids, 24);
-    /* Hebrew, Islamic, Buddhist, Hindu, Coptic, Ethiopian, Persian = 7 */
-    TEST_ASSERT_EQUAL_INT(7, n);
+    /* Hebrew, Islamic, Buddhist, Hindu, Coptic, Ethiopian, Persian + Zoroastrian, Balinese, Aztec, Baha'i = 11 */
+    TEST_ASSERT_EQUAL_INT(11, n);
 }
 
 static void test_top_right_has_systems(void)
 {
     int ids[24];
     int n = dh_systems_at_position(HUD_POS_TOP_RIGHT, ids, 24);
-    /* Tzolkin, Haab, I Ching = 3 */
-    TEST_ASSERT_EQUAL_INT(3, n);
+    /* Tzolkin, Haab, I Ching, Astronomy = 4 */
+    TEST_ASSERT_EQUAL_INT(4, n);
 }
 
 static void test_systems_at_position_null_out(void)
 {
     int n = dh_systems_at_position(HUD_POS_LEFT_PANEL, NULL, 0);
-    TEST_ASSERT_EQUAL_INT(7, n);
+    TEST_ASSERT_EQUAL_INT(11, n);
 }
 
 static void test_systems_at_position_invalid(void)
@@ -400,7 +400,7 @@ int main(void)
     UNITY_BEGIN();
 
     /* counts */
-    RUN_TEST(test_system_count_returns_21);
+    RUN_TEST(test_system_count_returns_35);
     RUN_TEST(test_position_count_returns_8);
 
     /* individual system specs */
@@ -423,7 +423,7 @@ int main(void)
     RUN_TEST(test_all_20_systems_have_valid_names);
 
     /* invalid specs */
-    RUN_TEST(test_spec_invalid_21);
+    RUN_TEST(test_spec_invalid_35);
     RUN_TEST(test_spec_invalid_negative);
 
     /* key lookup */
@@ -432,7 +432,7 @@ int main(void)
     RUN_TEST(test_key_Q_is_kabbalah);
     RUN_TEST(test_key_T_is_tzolkin);
     RUN_TEST(test_key_X_is_iching);
-    RUN_TEST(test_key_Z_not_found);
+    RUN_TEST(test_key_Z_is_zoroastrian);
     RUN_TEST(test_key_nul_not_found);
 
     /* position queries */

@@ -62,6 +62,21 @@ static const double PERIODS[TS_SYS_COUNT] = {
     /* THAI       */ 30.44,
     /* GEOLOGICAL */  0.0,
     /* COSMIC     */  0.0,
+    /* EARTH      */  1.0,
+    /* ASTRONOMY  */ 29.53,
+    /* TAROT      */ 22.0,
+    /* NUMEROLOGY */  9.0,
+    /* CHAKRA     */  7.0,
+    /* ZOROASTRIAN*/ 30.0,
+    /* BALINESE   */ 35.0,
+    /* FRENCH_REP */ 30.0,
+    /* AZTEC      */ 13.0,
+    /* EGYPTIAN   */ 30.0,
+    /* CELTIC     */ 28.0,
+    /* LAO        */ 30.44,
+    /* MYANMAR    */ 29.53,
+    /* BAHAI      */ 19.0,
+    /* TAMIL      */ 30.44,
 };
 
 static const char *EVENT_NAMES[TS_SYS_COUNT] = {
@@ -85,6 +100,21 @@ static const char *EVENT_NAMES[TS_SYS_COUNT] = {
     /* THAI       */ "Month boundary",
     /* GEOLOGICAL */ "",
     /* COSMIC     */ "",
+    /* EARTH      */ "Solar noon",
+    /* ASTRONOMY  */ "Moon phase",
+    /* TAROT      */ "The Fool",
+    /* NUMEROLOGY */ "Root number 1",
+    /* CHAKRA     */ "Root chakra",
+    /* ZOROASTRIAN*/ "Month boundary",
+    /* BALINESE   */ "Wuku transition",
+    /* FRENCH_REP */ "Decade boundary",
+    /* AZTEC      */ "Trecena start",
+    /* EGYPTIAN   */ "Month boundary",
+    /* CELTIC     */ "Tree month",
+    /* LAO        */ "Month boundary",
+    /* MYANMAR    */ "Month boundary",
+    /* BAHAI      */ "Feast day",
+    /* TAMIL      */ "Month boundary",
 };
 
 /* Short names for headline formatting */
@@ -94,6 +124,9 @@ static const char *SHORT_NAMES[TS_SYS_COUNT] = {
     "I Ching", "Astrology", "Human Design", "Kabbalah",
     "Coptic", "Ethiopian", "Persian", "Japanese",
     "Korean", "Thai", "Geological", "Cosmic", "Earth",
+    "Astronomy", "Tarot", "Numerology", "Chakra",
+    "Zoroastrian", "Balinese", "French Republican", "Aztec",
+    "Egyptian", "Celtic", "Lao", "Myanmar", "Baha'i", "Tamil",
 };
 
 /* ===== cf_schedule ===== */

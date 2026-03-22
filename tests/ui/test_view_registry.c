@@ -14,9 +14,9 @@ void test_view_count_equals_enum(void)
     TEST_ASSERT_EQUAL_INT(7, view_count());
 }
 
-void test_view_implemented_count_is_three(void)
+void test_view_implemented_count_is_four(void)
 {
-    TEST_ASSERT_EQUAL_INT(3, view_implemented_count());
+    TEST_ASSERT_EQUAL_INT(4, view_implemented_count());
 }
 
 void test_view_count_positive(void)
@@ -74,12 +74,12 @@ void test_view_get_personal(void)
     TEST_ASSERT_EQUAL_INT(VIEW_PERSONAL, v.id);
     TEST_ASSERT_EQUAL_STRING("Personal View", v.name);
     TEST_ASSERT_EQUAL_STRING("Personal", v.short_name);
-    TEST_ASSERT_EQUAL_STRING("P", v.shortcut);
+    TEST_ASSERT_EQUAL_STRING("R", v.shortcut);
     TEST_ASSERT_EQUAL_INT(0, v.scale_min);
     TEST_ASSERT_EQUAL_INT(0, v.scale_max);
     TEST_ASSERT_EQUAL_INT(0, v.default_scale);
     TEST_ASSERT_EQUAL_INT(0xF1, v.layers_enabled);
-    TEST_ASSERT_EQUAL_INT(0, v.implemented);
+    TEST_ASSERT_EQUAL_INT(1, v.implemented);
 }
 
 void test_view_get_deep_time(void)
@@ -286,10 +286,10 @@ void test_space_is_implemented(void)
     TEST_ASSERT_EQUAL_INT(1, v.implemented);
 }
 
-void test_personal_is_not_implemented(void)
+void test_personal_is_implemented(void)
 {
     view_config_t v = view_get(VIEW_PERSONAL);
-    TEST_ASSERT_EQUAL_INT(0, v.implemented);
+    TEST_ASSERT_EQUAL_INT(1, v.implemented);
 }
 
 void test_implemented_count_matches_individual_checks(void)
@@ -324,7 +324,7 @@ int main(void)
 
     /* Count: 1-3 */
     RUN_TEST(test_view_count_equals_enum);
-    RUN_TEST(test_view_implemented_count_is_three);
+    RUN_TEST(test_view_implemented_count_is_four);
     RUN_TEST(test_view_count_positive);
 
     /* view_get all views: 4-10 */
@@ -370,7 +370,7 @@ int main(void)
 
     /* Implemented: 31-33 */
     RUN_TEST(test_space_is_implemented);
-    RUN_TEST(test_personal_is_not_implemented);
+    RUN_TEST(test_personal_is_implemented);
     RUN_TEST(test_implemented_count_matches_individual_checks);
 
     /* Scale edge values: 34-35 */

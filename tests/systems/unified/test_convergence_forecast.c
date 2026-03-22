@@ -14,9 +14,9 @@ void tearDown(void) { }
 
 /* ========== cf_schedule_count ========== */
 
-static void test_schedule_count_returns_21(void)
+static void test_schedule_count_returns_35(void)
 {
-    TEST_ASSERT_EQUAL_INT(21, cf_schedule_count());
+    TEST_ASSERT_EQUAL_INT(35, cf_schedule_count());
 }
 
 /* ========== cf_schedule — specific systems ========== */
@@ -158,7 +158,7 @@ static void test_schedule_all_nonempty_name_for_active(void)
 
 static void test_schedule_invalid_positive(void)
 {
-    cf_schedule_t s = cf_schedule(21);
+    cf_schedule_t s = cf_schedule(35);
     TEST_ASSERT_EQUAL_INT(-1, s.system_id);
     TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.0f, (float)s.period_days);
 }
@@ -359,7 +359,7 @@ int main(void)
     UNITY_BEGIN();
 
     /* schedule count */
-    RUN_TEST(test_schedule_count_returns_21);
+    RUN_TEST(test_schedule_count_returns_35);
 
     /* schedule — specific systems */
     RUN_TEST(test_schedule_hebrew);

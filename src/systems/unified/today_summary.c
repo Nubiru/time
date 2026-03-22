@@ -31,9 +31,23 @@
 #include "../geology/geo_time.h"
 #include "../astronomy/cosmic_time.h"
 #include "../astronomy/lunar.h"
+#include "../zoroastrian/zoroastrian.h"
+#include "../balinese/pawukon.h"
+#include "../french_republican/french_republican.h"
+#include "../aztec/aztec.h"
+#include "../egyptian/egyptian.h"
+#include "../celtic/celtic_tree.h"
+#include "../lao/lao_calendar.h"
+#include "../myanmar/myanmar.h"
+#include "../bahai/bahai.h"
+#include "../tamil/tamil_calendar.h"
+#include "../tarot/tarot.h"
+#include "../numerology/numerology.h"
+#include "../chakra/chakra.h"
 
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 /* ------------------------------------------------------------------ */
 /* System name table                                                    */
@@ -60,7 +74,21 @@ static const char *SYSTEM_NAMES[TS_SYS_COUNT] = {
     "Thai",
     "Geological",
     "Cosmic",
-    "Earth"
+    "Earth",
+    "Astronomy",
+    "Tarot",
+    "Numerology",
+    "Chakra",
+    "Zoroastrian",
+    "Balinese",
+    "French Republican",
+    "Aztec",
+    "Egyptian",
+    "Celtic",
+    "Lao",
+    "Myanmar",
+    "Baha'i",
+    "Tamil"
 };
 
 /* ------------------------------------------------------------------ */
@@ -708,6 +736,250 @@ static void compute_headline(ts_summary_t *s)
 }
 
 /* ------------------------------------------------------------------ */
+/* New system compute functions (14 systems)                            */
+/* ------------------------------------------------------------------ */
+
+static ts_entry_t compute_astronomy_sys(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_ASTRONOMY);
+    lunar_info_t li = lunar_phase(jd);
+    snprintf(e.date_str, TS_DATE_MAX, "%s (%.0f%%)",
+             lunar_phase_name(li.phase), li.illumination * 100.0);
+    if (li.phase == MOON_NEW || li.phase == MOON_FULL) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "%s", lunar_phase_name(li.phase));
+    } else if (li.phase == MOON_FIRST_QUARTER || li.phase == MOON_LAST_QUARTER) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "%s", lunar_phase_name(li.phase));
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_tarot(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_TAROT);
+    int card = ((int)(jd + 0.5)) % 22;
+    if (card < 0) card += 22;
+    const char *name = tarot_major_name(card);
+    snprintf(e.date_str, TS_DATE_MAX, "%s (%d)", name ? name : "?", card);
+    /* The Fool (0) and The World (21) are significant */
+    if (card == 0 || card == 21) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "%s", name ? name : "");
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_numerology(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_NUMEROLOGY);
+    int y, m, d;
+    jd_to_ymd(jd, &y, &m, &d);
+    int root = num_digit_sum(y * 10000 + m * 100 + d);
+    while (root > 9 && root != 11 && root != 22 && root != 33)
+        root = num_digit_sum(root);
+    const char *meaning = num_meaning(root);
+    snprintf(e.date_str, TS_DATE_MAX, "Day %d — %s", root,
+             meaning ? meaning : "");
+    if (root == 11 || root == 22 || root == 33) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Master Number %d", root);
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_chakra(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_CHAKRA);
+    /* Day of week: Mon=0..Sun=6, mapped to Root..Crown */
+    int dow = ((int)(jd + 0.5) + 1) % 7; /* 0=Mon */
+    if (dow < 0) dow += 7;
+    const char *sanskrit = chakra_sanskrit_name((chakra_t)dow);
+    const char *english = chakra_english_name((chakra_t)dow);
+    snprintf(e.date_str, TS_DATE_MAX, "%s (%s)",
+             sanskrit ? sanskrit : "?", english ? english : "?");
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_zoroastrian(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_ZOROASTRIAN);
+    zoro_date_t zd = zoro_from_jd(jd);
+    const char *mn = zoro_month_name(zd.month);
+    snprintf(e.date_str, TS_DATE_MAX, "%d %s %d",
+             zd.day, mn ? mn : "", zd.year);
+    if (zd.month == 13) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Gatha days");
+    } else if (zd.month == 1 && zd.day == 1) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Nowruz");
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_balinese(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_BALINESE);
+    pawukon_t pw = pawukon_from_jd(jd);
+    const char *wn = pawukon_wuku_name(pw.wuku);
+    snprintf(e.date_str, TS_DATE_MAX, "%s day %d (cycle %d/210)",
+             wn ? wn : "?", pw.wuku_day + 1, pw.day_in_cycle + 1);
+    /* Galungan (wuku 11 = Dungulan, day 3) is major */
+    if (pw.day_in_cycle == 0) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Pawukon cycle begins");
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_french_republican(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_FRENCH_REPUBLICAN);
+    fr_date_t fd = fr_from_jd(jd);
+    const char *mn = fr_month_name(fd.month);
+    if (fd.month == 0)
+        snprintf(e.date_str, TS_DATE_MAX, "Sansculottide %d, An %d",
+                 fd.day, fd.year);
+    else
+        snprintf(e.date_str, TS_DATE_MAX, "%d %s An %d",
+                 fd.day, mn ? mn : "", fd.year);
+    if (fd.month == 1 && fd.day == 1) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "New Year (Vendemiaire)");
+    } else if (fd.month == 0) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Complementary days");
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_aztec(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_AZTEC);
+    aztec_tonalpohualli_t t = aztec_tonalpohualli(jd);
+    const char *sign = aztec_day_sign_name(t.day_sign);
+    snprintf(e.date_str, TS_DATE_MAX, "%d %s",
+             t.day_number, sign ? sign : "?");
+    if (t.day_number == 1) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Trecena begins");
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_egyptian(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_EGYPTIAN);
+    egypt_date_t ed = egypt_from_jd(jd);
+    const char *mn = egypt_month_name(ed.month);
+    if (ed.month == 13)
+        snprintf(e.date_str, TS_DATE_MAX, "Epagomenal day %d, Year %d",
+                 ed.day, ed.year);
+    else
+        snprintf(e.date_str, TS_DATE_MAX, "%d %s, Year %d",
+                 ed.day, mn ? mn : "", ed.year);
+    if (ed.month == 13) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Epagomenal days");
+    } else if (ed.month == 1 && ed.day == 1) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "1 Thoth — New Year");
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_celtic(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_CELTIC);
+    celtic_tree_date_t cd = celtic_tree_from_jd(jd);
+    const char *tree = celtic_tree_name(cd.month);
+    if (cd.month == 0)
+        snprintf(e.date_str, TS_DATE_MAX, "Yew (intercalary)");
+    else
+        snprintf(e.date_str, TS_DATE_MAX, "%s, day %d",
+                 tree ? tree : "?", cd.day);
+    if (cd.month == 0) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Yew intercalary day");
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_lao(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_LAO);
+    lao_date_t ld = lao_from_jd(jd);
+    const char *mn = lao_month_name(ld.month);
+    snprintf(e.date_str, TS_DATE_MAX, "%d %s BE %d",
+             ld.day, mn ? mn : "", ld.be_year);
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_myanmar(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_MYANMAR);
+    myanmar_date_t md = myanmar_from_jd(jd);
+    const char *mn = myanmar_month_name(md.month);
+    snprintf(e.date_str, TS_DATE_MAX, "%d %s ME %d",
+             md.day, mn ? mn : "", md.year);
+    if (md.is_watat_year && md.month == MY_SECOND_WASO) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Second Waso (intercalary)");
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_bahai(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_BAHAI);
+    bahai_date_t bd = bahai_from_jd(jd);
+    const char *mn = bahai_month_name(bd.month);
+    if (bd.month == 0)
+        snprintf(e.date_str, TS_DATE_MAX, "Ayyam-i-Ha day %d, %d BE",
+                 bd.day, bd.year);
+    else
+        snprintf(e.date_str, TS_DATE_MAX, "%d %s %d BE",
+                 bd.day, mn ? mn : "", bd.year);
+    if (bd.month == 1 && bd.day == 1) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Naw-Ruz (New Year)");
+    } else if (bd.month == 0) {
+        e.significance = 1;
+        snprintf(e.note, TS_NOTE_MAX, "Ayyam-i-Ha");
+    }
+    e.active = 1;
+    return e;
+}
+
+static ts_entry_t compute_tamil(double jd)
+{
+    ts_entry_t e = make_entry(TS_SYS_TAMIL);
+    tamil_date_t td = tamil_from_jd(jd);
+    const char *mn = tamil_month_name(td.month);
+    snprintf(e.date_str, TS_DATE_MAX, "%d %s %d",
+             td.day, mn ? mn : "", td.year);
+    if (td.month == 1 && td.day == 1) {
+        e.significance = 2;
+        snprintf(e.note, TS_NOTE_MAX, "Puthandu (Tamil New Year)");
+    }
+    e.active = 1;
+    return e;
+}
+
+/* ------------------------------------------------------------------ */
 /* Public API                                                           */
 /* ------------------------------------------------------------------ */
 
@@ -739,6 +1011,20 @@ ts_summary_t ts_compute(double jd)
     s.entries[TS_SYS_GEOLOGICAL]   = compute_geological(jd);
     s.entries[TS_SYS_COSMIC]       = compute_cosmic(jd);
     s.entries[TS_SYS_EARTH]        = compute_earth();
+    s.entries[TS_SYS_ASTRONOMY]    = compute_astronomy_sys(jd);
+    s.entries[TS_SYS_TAROT]        = compute_tarot(jd);
+    s.entries[TS_SYS_NUMEROLOGY]   = compute_numerology(jd);
+    s.entries[TS_SYS_CHAKRA]       = compute_chakra(jd);
+    s.entries[TS_SYS_ZOROASTRIAN]  = compute_zoroastrian(jd);
+    s.entries[TS_SYS_BALINESE]     = compute_balinese(jd);
+    s.entries[TS_SYS_FRENCH_REPUBLICAN] = compute_french_republican(jd);
+    s.entries[TS_SYS_AZTEC]        = compute_aztec(jd);
+    s.entries[TS_SYS_EGYPTIAN]     = compute_egyptian(jd);
+    s.entries[TS_SYS_CELTIC]       = compute_celtic(jd);
+    s.entries[TS_SYS_LAO]          = compute_lao(jd);
+    s.entries[TS_SYS_MYANMAR]      = compute_myanmar(jd);
+    s.entries[TS_SYS_BAHAI]        = compute_bahai(jd);
+    s.entries[TS_SYS_TAMIL]        = compute_tamil(jd);
 
     s.entry_count = TS_SYS_COUNT;
 

@@ -33,6 +33,20 @@ static const int CYCLE_LENGTHS[TS_SYS_COUNT] = {
     [TS_SYS_THAI]         = 12,   /* 12 months */
     [TS_SYS_GEOLOGICAL]   = 10,   /* 10 geological periods (simplified) */
     [TS_SYS_COSMIC]       = 8,    /* 8 cosmic epochs (simplified) */
+    [TS_SYS_ASTRONOMY]    = 8,    /* 8 moon phases */
+    [TS_SYS_TAROT]        = 22,   /* 22 Major Arcana */
+    [TS_SYS_NUMEROLOGY]   = 9,    /* 9 root numbers */
+    [TS_SYS_CHAKRA]       = 7,    /* 7 chakras */
+    [TS_SYS_ZOROASTRIAN]  = 12,   /* 12 months */
+    [TS_SYS_BALINESE]     = 210,  /* 210-day Pawukon cycle */
+    [TS_SYS_FRENCH_REPUBLICAN] = 12, /* 12 months */
+    [TS_SYS_AZTEC]        = 260,  /* 260-day Tonalpohualli */
+    [TS_SYS_EGYPTIAN]     = 12,   /* 12 months + epagomenal */
+    [TS_SYS_CELTIC]       = 13,   /* 13 tree months */
+    [TS_SYS_LAO]          = 12,   /* 12 months */
+    [TS_SYS_MYANMAR]      = 12,   /* 12 months */
+    [TS_SYS_BAHAI]        = 19,   /* 19 months */
+    [TS_SYS_TAMIL]        = 12,   /* 12 months */
 };
 
 /* Map ts_system_t -> ct_system_t.
@@ -58,6 +72,20 @@ static const int TS_TO_CT[TS_SYS_COUNT] = {
     [TS_SYS_THAI]         = CT_SYSTEM_THAI,
     [TS_SYS_GEOLOGICAL]   = CT_SYSTEM_GEOLOGY,
     [TS_SYS_COSMIC]       = CT_SYSTEM_ASTRONOMY,   /* Cosmic shares Astronomy palette */
+    [TS_SYS_ASTRONOMY]    = CT_SYSTEM_ASTRONOMY,
+    [TS_SYS_TAROT]        = CT_SYSTEM_KABBALAH,   /* Tree of Life connection */
+    [TS_SYS_NUMEROLOGY]   = CT_SYSTEM_GREGORIAN,  /* mathematical/numerical */
+    [TS_SYS_CHAKRA]       = CT_SYSTEM_HINDU,      /* Vedic tradition */
+    [TS_SYS_ZOROASTRIAN]  = CT_SYSTEM_PERSIAN,    /* Persian heritage */
+    [TS_SYS_BALINESE]     = CT_SYSTEM_BUDDHIST,   /* Buddhist influenced */
+    [TS_SYS_FRENCH_REPUBLICAN] = CT_SYSTEM_GREGORIAN,
+    [TS_SYS_AZTEC]        = CT_SYSTEM_TZOLKIN,    /* Mesoamerican */
+    [TS_SYS_EGYPTIAN]     = CT_SYSTEM_COPTIC,     /* Egyptian heritage */
+    [TS_SYS_CELTIC]       = CT_SYSTEM_GEOLOGY,    /* Earth-based */
+    [TS_SYS_LAO]          = CT_SYSTEM_BUDDHIST,
+    [TS_SYS_MYANMAR]      = CT_SYSTEM_BUDDHIST,
+    [TS_SYS_BAHAI]        = CT_SYSTEM_PERSIAN,    /* Persian origin */
+    [TS_SYS_TAMIL]        = CT_SYSTEM_HINDU,      /* Indian tradition */
 };
 
 /* Human-readable labels for each system */
@@ -83,6 +111,20 @@ static const char *SYSTEM_LABELS[TS_SYS_COUNT] = {
     [TS_SYS_GEOLOGICAL]   = "Geological",
     [TS_SYS_COSMIC]       = "Cosmic",
     [TS_SYS_EARTH]        = "Earth",
+    [TS_SYS_ASTRONOMY]    = "Astronomy",
+    [TS_SYS_TAROT]        = "Tarot",
+    [TS_SYS_NUMEROLOGY]   = "Numerology",
+    [TS_SYS_CHAKRA]       = "Chakra",
+    [TS_SYS_ZOROASTRIAN]  = "Zoroastrian",
+    [TS_SYS_BALINESE]     = "Balinese",
+    [TS_SYS_FRENCH_REPUBLICAN] = "French Republican",
+    [TS_SYS_AZTEC]        = "Aztec",
+    [TS_SYS_EGYPTIAN]     = "Egyptian",
+    [TS_SYS_CELTIC]       = "Celtic",
+    [TS_SYS_LAO]          = "Lao",
+    [TS_SYS_MYANMAR]      = "Myanmar",
+    [TS_SYS_BAHAI]        = "Baha'i",
+    [TS_SYS_TAMIL]        = "Tamil",
 };
 
 /* Depth ring representatives: one system per ring for the standard layout */

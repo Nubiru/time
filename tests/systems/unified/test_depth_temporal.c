@@ -15,9 +15,9 @@ void tearDown(void) { }
 
 /* ========== dt_cycle_count ========== */
 
-static void test_cycle_count_returns_21(void)
+static void test_cycle_count_returns_35(void)
 {
-    TEST_ASSERT_EQUAL_INT(21, dt_cycle_count());
+    TEST_ASSERT_EQUAL_INT(35, dt_cycle_count());
 }
 
 /* ========== dt_cycle_info — specific systems ========== */
@@ -165,7 +165,7 @@ static void test_cycle_info_all_systems_have_nonempty_description(void)
 
 static void test_cycle_info_invalid_positive(void)
 {
-    dt_cycle_t c = dt_cycle_info(21);
+    dt_cycle_t c = dt_cycle_info(35);
     TEST_ASSERT_EQUAL_INT(-1, c.system_id);
     TEST_ASSERT_EQUAL_STRING("?", c.cycle_name);
 }
@@ -374,7 +374,7 @@ int main(void)
     UNITY_BEGIN();
 
     /* count */
-    RUN_TEST(test_cycle_count_returns_21);
+    RUN_TEST(test_cycle_count_returns_35);
 
     /* cycle info — specific systems */
     RUN_TEST(test_cycle_info_tzolkin);

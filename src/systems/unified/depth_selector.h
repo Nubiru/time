@@ -30,7 +30,7 @@ typedef struct {
     int score;               /* raw relevance score for debugging */
 } ds_entry_t;
 
-#define DS_MAX_SYSTEMS 24
+#define DS_MAX_SYSTEMS 38
 
 typedef struct {
     ds_entry_t entries[DS_MAX_SYSTEMS];
