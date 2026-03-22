@@ -8,6 +8,7 @@
 #include "../math/vec3.h"
 #include "../math/spring.h"
 #include "../math/vec_interp.h"
+#include "../math/easing.h"
 
 /* Snapshot of orbital camera state */
 typedef struct {
@@ -33,6 +34,7 @@ typedef struct {
     float duration;    /* total seconds */
     float elapsed;     /* current time */
     float arc_height;  /* extra log_zoom at midpoint (0 = direct path) */
+    ease_fn_t ease_fn; /* easing curve (NULL = ease_in_out_cubic) */
 
     /* Spring mode */
     spring_t az_spring;

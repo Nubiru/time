@@ -47,6 +47,25 @@ double ease_in_out_cubic(double t) {
     return 1.0 - u * u * u / 2.0;
 }
 
+/* --- Quartic --- */
+
+double ease_in_quart(double t) {
+    return t * t * t * t;
+}
+
+double ease_out_quart(double t) {
+    double u = 1.0 - t;
+    return 1.0 - u * u * u * u;
+}
+
+double ease_in_out_quart(double t) {
+    if (t < 0.5) {
+        return 8.0 * t * t * t * t;
+    }
+    double u = -2.0 * t + 2.0;
+    return 1.0 - u * u * u * u / 2.0;
+}
+
 /* --- Sine --- */
 
 double ease_in_sine(double t) {

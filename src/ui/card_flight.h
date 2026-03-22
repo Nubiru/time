@@ -12,12 +12,16 @@
 #define CF_DEPTH_CYCLE     4.5f
 #define CF_DEPTH_TODAY     5.5f
 
-/* Spring parameters for zoom animation */
-#define CF_SPRING_STIFFNESS 250.0f
-#define CF_SPRING_DAMPING   22.0f
+/* Spring parameters for depth animation (~0.8s settle, near-critical damping) */
+#define CF_SPRING_STIFFNESS 100.0f
+#define CF_SPRING_DAMPING   18.0f
 
-/* Crossfade timing: how fast old cards fade out / new fade in */
-#define CF_CROSSFADE_SPEED  3.0f   /* per second */
+/* Crossfade timing: synced with spring settle (~0.67s to complete) */
+#define CF_CROSSFADE_SPEED  1.5f   /* per second */
+
+/* Subtle camera zoom shift during depth changes.
+ * Scales spring velocity → log_zoom offset for kinetic feel. */
+#define CF_ZOOM_VELOCITY_SCALE 0.03f
 
 typedef struct {
     spring_t zoom_spring;    /* animates zoom level between layers */
@@ -79,6 +83,10 @@ float cf_layer_depth(int layer_index);
 /* Find the nearest layer index for an arbitrary depth.
  * Returns 0-5. */
 int cf_nearest_layer(float depth);
+
+/* Camera zoom offset: small delta proportional to depth-change velocity.
+ * Apply to camera log_zoom for kinetic depth-feel. Returns 0 when idle. */
+float cf_zoom_offset(card_flight_t cf);
 
 /* Get layer count (always CF_LAYER_COUNT = 6) */
 int cf_layer_count(void);

@@ -12,6 +12,7 @@
 #include <emscripten/html5.h>
 #include "../render/camera.h"
 #include "../render/camera_scale.h"
+#include "../math/spring.h"
 #include "../ui/touch_gestures.h"
 #include "../ui/audio_engine.h"
 #include <math.h>
@@ -74,9 +75,19 @@ static EM_BOOL on_mouse_move(int type, const EmscriptenMouseEvent *e, void *data
     return EM_TRUE;
 }
 
+static float clamp_zoom_target(float target) {
+    if (target < CAMERA_LOG_ZOOM_MIN) return CAMERA_LOG_ZOOM_MIN;
+    if (target > CAMERA_LOG_ZOOM_MAX) return CAMERA_LOG_ZOOM_MAX;
+    return target;
+}
+
 static EM_BOOL on_wheel(int type, const EmscriptenWheelEvent *e, void *data) {
     (void)type; (void)data;
-    camera_zoom(&g_input_state->camera, (float)(e->deltaY * 0.01));
+    float delta = (float)(e->deltaY * 0.01);
+    float new_target = clamp_zoom_target(
+        g_input_state->zoom_spring.target + delta);
+    g_input_state->zoom_spring = spring_set_target(
+        g_input_state->zoom_spring, new_target);
     return EM_TRUE;
 }
 
@@ -356,12 +367,15 @@ static EM_BOOL on_touchmove(int type, const EmscriptenTouchEvent *e, void *data)
         }
     }
 
-    /* Two-finger continuous pinch zoom */
+    /* Two-finger continuous pinch zoom (spring-driven) */
     if (e->numTouches >= 2) {
         float dist = touch_pinch_distance(e);
         if (s_prev_pinch_dist > 1.0f && dist > 1.0f) {
             float delta = (s_prev_pinch_dist - dist) * 0.005f;
-            camera_zoom(&g_input_state->camera, delta);
+            float new_target = clamp_zoom_target(
+                g_input_state->zoom_spring.target + delta);
+            g_input_state->zoom_spring = spring_set_target(
+                g_input_state->zoom_spring, new_target);
         }
         s_prev_pinch_dist = dist;
     }

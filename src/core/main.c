@@ -42,6 +42,7 @@
 #include "../ui/audio_engine.h"
 #include "../ui/audio_meditation.h"
 #include "../ui/audio_culture.h"
+#include "../ui/audio_focus_timbre.h"
 #include "../systems/tzolkin/tzolkin.h"
 #include "../systems/tzolkin/dreamspell.h"
 #include "../systems/unified/audio_data.h"
@@ -193,9 +194,9 @@ void main_loop(void) {
     g_state.earth_trans = et_tick(g_state.earth_trans, (float)dt_sec);
     g_state.birth_flight = bf_tick(g_state.birth_flight, (float)dt_sec);
 
+    int motion_active = 0;
     {
         camera_pose_t motion_pose;
-        int motion_active = 0;
 
         if (g_state.enter_zoom_active && ez_active(g_state.enter_zoom)) {
             motion_pose = ez_pose(g_state.enter_zoom);
@@ -229,6 +230,28 @@ void main_loop(void) {
         }
     }
 
+    /* --- Scroll zoom spring: momentum + friction + settle --- */
+    {
+        int zoom_driven = motion_active || g_state.scale_transition.active;
+        if (zoom_driven) {
+            /* Choreography/scale driving camera — sync spring to current pos */
+            g_state.zoom_spring = spring_reset(g_state.zoom_spring,
+                                                g_state.camera.log_zoom);
+            g_state.zoom_spring = spring_set_target(g_state.zoom_spring,
+                                                     g_state.camera.log_zoom);
+        } else {
+            /* Tick spring and apply to camera */
+            g_state.zoom_spring = spring_update(g_state.zoom_spring,
+                                                 (float)dt_sec);
+            if (!spring_settled(g_state.zoom_spring, 0.0001f)) {
+                g_state.camera.log_zoom = g_state.zoom_spring.position;
+                g_state.camera.distance = expf(g_state.camera.log_zoom);
+                g_state.camera.fov = camera_dynamic_fov(
+                    g_state.camera.log_zoom, 0.785f);
+            }
+        }
+    }
+
     /* --- Zoom-depth: track camera zoom → depth tier mapping --- */
     g_state.zoom_depth = zoom_depth_update(g_state.zoom_depth,
                                             g_state.camera.log_zoom,
@@ -241,6 +264,15 @@ void main_loop(void) {
 
     /* --- Card flight: spring-animated depth navigation --- */
     g_state.cards = cf_tick(g_state.cards, (float)dt_sec);
+
+    /* Apply subtle camera zoom shift during depth changes */
+    {
+        float zoom_offset = cf_zoom_offset(g_state.cards);
+        if (zoom_offset != 0.0f && !motion_active) {
+            g_state.camera.log_zoom += zoom_offset;
+            g_state.camera.distance = expf(g_state.camera.log_zoom);
+        }
+    }
 
     /* --- Focus flow: click-to-focus camera (idle until triggered) --- */
     g_state.focus = focus_flow_update(g_state.focus, (float)dt_sec);
@@ -423,12 +455,13 @@ void main_loop(void) {
                 audio.reverb_wet = 0.85f;
         }
 
-        /* Focus-mode audio override (S108):
-         * K key: seal-specific planetary tone from Dreamspell correspondence.
-         * A/I/C keys: cultural timbre from audio_culture. */
+        /* Focus-mode audio override (S108 + sound design quality):
+         * K key: Dreamspell seal-specific planetary tone (special path).
+         * A/I/C/D/T keys: rich sonic profiles from audio_focus_timbre.
+         * Each system has distinct brightness, attack, reverb character. */
         {
             int fm = g_state.view.focus_mode;
-            if (fm > 0 && fm < 6) {
+            if (fm > 0 && fm <= 6) {
                 int slot = 8; /* dedicated cultural timbre slot */
 
                 if (fm == 2) {
@@ -448,26 +481,23 @@ void main_loop(void) {
                         if (audio.planet_count <= slot)
                             audio.planet_count = slot + 1;
                     }
-                } else {
-                    /* A/I/C/D — cultural timbre */
-                    static const int FOCUS_TO_CD[] = {
-                        -1, CD_SYS_ASTROLOGY, -1, CD_SYS_ICHING, CD_SYS_CHINESE, -1
-                    };
-                    int cd_sys = FOCUS_TO_CD[fm];
-                    if (cd_sys >= 0 && audio_culture_has_timbre((cd_system_t)cd_sys)) {
-                        audio_culture_t culture = audio_culture_get((cd_system_t)cd_sys);
-                        audio.focused_system = cd_sys;
-                        audio.frequencies[slot] = culture.base_freq_hz;
-                        audio.amplitudes[slot] = culture.base_amplitude * 0.5f;
-                        audio.waveform_types[slot] = 0;
-                        audio.harmonic_counts[slot] = culture.partial_count;
-                        for (int h = 0; h < culture.partial_count && h < AS_MAX_HARMONICS; h++)
-                            audio.harmonic_amps[slot][h] = culture.partials[h];
-                        audio.pan_positions[slot] = 0.0f;
-                        if (audio.planet_count <= slot)
-                            audio.planet_count = slot + 1;
-                    }
+                    /* Apply Kin focus timbre's reverb character */
+                    audio_focus_timbre_t ft = audio_focus_timbre_get(fm);
+                    audio.reverb_wet += ft.reverb_boost;
+                } else if (audio_focus_timbre_has(fm)) {
+                    /* A/I/C/D/T — rich focus timbre profiles */
+                    audio_focus_timbre_t ft = audio_focus_timbre_get(fm);
+                    audio.focused_system = fm;
+                    audio_focus_timbre_apply(fm, slot,
+                        audio.frequencies, audio.amplitudes,
+                        audio.waveform_types, audio.harmonic_counts,
+                        audio.harmonic_amps, audio.pan_positions);
+                    if (audio.planet_count <= slot)
+                        audio.planet_count = slot + 1;
+                    audio.reverb_wet += ft.reverb_boost;
                 }
+                if (audio.reverb_wet > 0.85f)
+                    audio.reverb_wet = 0.85f;
             }
         }
 

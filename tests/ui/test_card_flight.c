@@ -242,6 +242,38 @@ void test_cf_layer_count(void)
     TEST_ASSERT_EQUAL_INT(6, cf_layer_count());
 }
 
+/* --- cf_zoom_offset tests --- */
+
+void test_cf_zoom_offset_zero_when_idle(void)
+{
+    card_flight_t cf = cf_create(CF_DEPTH_TODAY);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.0f, cf_zoom_offset(cf));
+}
+
+void test_cf_zoom_offset_nonzero_during_flight(void)
+{
+    card_flight_t cf = cf_create(CF_DEPTH_TODAY);
+    cf = cf_fly_shallower(cf);
+    /* Tick a few frames to build velocity */
+    for (int i = 0; i < 5; i++) {
+        cf = cf_tick(cf, 0.016f);
+    }
+    float offset = cf_zoom_offset(cf);
+    /* Moving shallower = negative velocity → negative offset */
+    TEST_ASSERT_TRUE(offset != 0.0f);
+}
+
+void test_cf_zoom_offset_returns_zero_after_settle(void)
+{
+    card_flight_t cf = cf_create(CF_DEPTH_COSMIC);
+    cf = cf_fly_deeper(cf);
+    /* Settle fully */
+    for (int i = 0; i < 300; i++) {
+        cf = cf_tick(cf, 0.016f);
+    }
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.0f, cf_zoom_offset(cf));
+}
+
 /* --- edge case: layer_depth out of range returns 0.5 --- */
 
 void test_cf_layer_depth_out_of_range(void)
@@ -278,5 +310,8 @@ int main(void)
     RUN_TEST(test_cf_nearest_layer_midpoint);
     RUN_TEST(test_cf_layer_count);
     RUN_TEST(test_cf_layer_depth_out_of_range);
+    RUN_TEST(test_cf_zoom_offset_zero_when_idle);
+    RUN_TEST(test_cf_zoom_offset_nonzero_during_flight);
+    RUN_TEST(test_cf_zoom_offset_returns_zero_after_settle);
     return UNITY_END();
 }

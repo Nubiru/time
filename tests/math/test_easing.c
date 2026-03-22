@@ -14,6 +14,7 @@ void test_all_easing_at_zero(void) {
     ease_fn_t fns[] = {
         ease_linear, ease_in_quad, ease_out_quad, ease_in_out_quad,
         ease_in_cubic, ease_out_cubic, ease_in_out_cubic,
+        ease_in_quart, ease_out_quart, ease_in_out_quart,
         ease_in_sine, ease_out_sine, ease_in_out_sine,
         ease_in_expo, ease_out_expo,
         ease_in_elastic, ease_out_elastic,
@@ -29,6 +30,7 @@ void test_all_easing_at_one(void) {
     ease_fn_t fns[] = {
         ease_linear, ease_in_quad, ease_out_quad, ease_in_out_quad,
         ease_in_cubic, ease_out_cubic, ease_in_out_cubic,
+        ease_in_quart, ease_out_quart, ease_in_out_quart,
         ease_in_sine, ease_out_sine, ease_in_out_sine,
         ease_in_expo, ease_out_expo,
         ease_in_elastic, ease_out_elastic,
@@ -56,6 +58,30 @@ void test_out_quad_midpoint(void) {
 
 void test_in_cubic_midpoint(void) {
     TEST_ASSERT_FLOAT_WITHIN(EPSILON, 0.125f, (float)ease_in_cubic(0.5));
+}
+
+void test_in_quart_midpoint(void) {
+    /* 0.5^4 = 0.0625 */
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, 0.0625f, (float)ease_in_quart(0.5));
+}
+
+void test_out_quart_midpoint(void) {
+    /* 1 - (0.5)^4 = 0.9375 */
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, 0.9375f, (float)ease_out_quart(0.5));
+}
+
+void test_in_out_quart_midpoint(void) {
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, 0.5f, (float)ease_in_out_quart(0.5));
+}
+
+void test_out_quart_monotonic(void) {
+    double prev = ease_out_quart(0.0);
+    for (int i = 1; i <= 20; i++) {
+        double t = (double)i / 20.0;
+        double val = ease_out_quart(t);
+        TEST_ASSERT_TRUE(val >= prev);
+        prev = val;
+    }
 }
 
 void test_in_sine_midpoint(void) {
@@ -212,6 +238,12 @@ int main(void) {
     RUN_TEST(test_in_cubic_midpoint);
     RUN_TEST(test_in_sine_midpoint);
     RUN_TEST(test_out_sine_midpoint);
+
+    /* Quartic */
+    RUN_TEST(test_in_quart_midpoint);
+    RUN_TEST(test_out_quart_midpoint);
+    RUN_TEST(test_in_out_quart_midpoint);
+    RUN_TEST(test_out_quart_monotonic);
 
     /* Symmetry */
     RUN_TEST(test_in_out_quad_midpoint);

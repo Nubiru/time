@@ -22,6 +22,11 @@ double ease_in_cubic(double t);
 double ease_out_cubic(double t);
 double ease_in_out_cubic(double t);
 
+/* Quartic */
+double ease_in_quart(double t);
+double ease_out_quart(double t);
+double ease_in_out_quart(double t);
+
 /* Sine */
 double ease_in_sine(double t);
 double ease_out_sine(double t);

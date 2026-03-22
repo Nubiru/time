@@ -1,6 +1,7 @@
 #include "camera_path.h"
 #include "../math/easing.h"
 #include <math.h>
+#include <stddef.h>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -40,6 +41,7 @@ camera_path_t camera_path_ease(camera_pose_t from, camera_pose_t to,
     path.duration   = duration > 0.0f ? duration : 0.001f;
     path.elapsed    = 0.0f;
     path.arc_height = arc_height;
+    path.ease_fn    = ease_in_out_cubic;
     path.active     = 1;
 
     /* Zero-init spring fields (unused in ease mode) */
@@ -58,10 +60,11 @@ camera_path_t camera_path_spring(camera_pose_t from, camera_pose_t to,
     path.start    = from;
     path.end      = to;
     path.mode     = FLIGHT_SPRING;
-    path.duration = 0.0f;
-    path.elapsed  = 0.0f;
+    path.duration   = 0.0f;
+    path.elapsed    = 0.0f;
     path.arc_height = 0.0f;
-    path.active   = 1;
+    path.ease_fn    = NULL;
+    path.active     = 1;
 
     /* Unwrap azimuth for shortest path */
     float az_target = unwrap_angle(from.azimuth, to.azimuth);
@@ -115,8 +118,9 @@ camera_pose_t camera_path_pose(camera_path_t path)
         float t = path.elapsed / path.duration;
         if (t > 1.0f) { t = 1.0f; }
 
-        /* Cubic ease-in-out for smooth acceleration/deceleration */
-        float eased = (float)ease_in_out_cubic((double)t);
+        /* Apply configured easing curve (default: ease_in_out_cubic) */
+        ease_fn_t fn = path.ease_fn ? path.ease_fn : ease_in_out_cubic;
+        float eased = (float)fn((double)t);
 
         pose.azimuth   = lerp_angle(path.start.azimuth, path.end.azimuth, eased);
         pose.elevation = lerp_f(path.start.elevation, path.end.elevation, eased);

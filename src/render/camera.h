@@ -4,6 +4,10 @@
 #include "../math/vec3.h"
 #include "../math/mat4.h"
 
+/* Zoom range constants */
+#define CAMERA_LOG_ZOOM_MIN -4.605f  /* exp(-4.605) ~ 0.01 */
+#define CAMERA_LOG_ZOOM_MAX  10.820f /* exp(10.82) ~ 50000 */
+
 /* Orbital camera that rotates around a target point.
  * Uses spherical coordinates (azimuth, elevation, distance).
  * Distance is controlled via log_zoom for smooth multi-scale navigation:

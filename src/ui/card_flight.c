@@ -167,3 +167,11 @@ int cf_target_layer(card_flight_t cf)
 {
     return cf.target_layer;
 }
+
+float cf_zoom_offset(card_flight_t cf)
+{
+    if (!cf.active) {
+        return 0.0f;
+    }
+    return cf.zoom_spring.velocity * CF_ZOOM_VELOCITY_SCALE;
+}

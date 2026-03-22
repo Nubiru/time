@@ -1,6 +1,7 @@
 /* src/ui/enter_zoom.c — "Enter Time" zoom-out choreography */
 
 #include "enter_zoom.h"
+#include "../math/easing.h"
 
 static camera_pose_t make_start_pose(void)
 {
@@ -76,6 +77,7 @@ enter_zoom_t ez_tick(enter_zoom_t ez, float dt)
             ez.path = camera_path_ease(ez.start, ez.destination,
                                        EZ_ZOOM_DURATION,
                                        EZ_ZOOM_ARC_HEIGHT);
+            ez.path.ease_fn = ease_out_quart;
             ez.phase         = EZ_ZOOMING;
             ez.phase_elapsed = 0.0f;
             /* Apply overflow time to the zoom */
@@ -132,6 +134,7 @@ enter_zoom_t ez_skip(enter_zoom_t ez)
     /* Snap path to end */
     ez.path = camera_path_ease(ez.start, ez.destination,
                                EZ_ZOOM_DURATION, EZ_ZOOM_ARC_HEIGHT);
+    ez.path.ease_fn = ease_out_quart;
     ez.path.elapsed = ez.path.duration;
     ez.path.active  = 0;
 

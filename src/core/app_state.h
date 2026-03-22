@@ -5,6 +5,7 @@
 #include "../math/mat4.h"
 #include "../render/camera.h"
 #include "../render/camera_scale.h"
+#include "../math/spring.h"
 #include "../render/render_layers.h"
 #include "../render/view_state.h"
 #include "../render/render_lod.h"
@@ -36,6 +37,7 @@ typedef struct {
 
     /* Camera */
     camera_t camera;
+    spring_t zoom_spring;         /* scroll/pinch zoom with momentum */
     scale_transition_t scale_transition;
 
     /* Mouse */
