@@ -243,39 +243,28 @@ def test_enter_time_experience(page):
 
 
 def test_narrative_headline_exists(page):
-    """A daily narrative headline should be present (DOM or canvas text).
+    """A daily narrative headline should be present (rendered on canvas via MSDF).
 
-    Stream: BRAIN + INFRA (wire brain_narrative → display)
+    Stream: BRAIN + INFRA (brain_narrative → render_frame_t → text_pass)
     Feature: Daily narrative "headline" showing what today means
-    If this fails: brain_narrative_compose() output is not wired to any display.
+    If this fails: brain_narrative_compose() not producing output, or text_pass not rendering it.
     """
-    page.wait_for_timeout(3000)  # Let narrative cycle
+    page.wait_for_timeout(3000)  # Let narrative compute
 
-    # Check DOM for headline element
+    # Check via KEEPALIVE: headline is stored in g_state.headline
     headline = page.evaluate("""() => {
-        const el = document.getElementById('headline');
-        if (el && el.textContent && el.textContent.trim().length > 0) {
-            return el.textContent.trim();
-        }
-        // Also check for any toast or narrative text
-        const toast = document.getElementById('toast-area');
-        if (toast && toast.textContent && toast.textContent.trim().length > 0) {
-            return toast.textContent.trim();
+        if (typeof Module !== 'undefined' && Module._ui_get_headline) {
+            try {
+                var ptr = Module._ui_get_headline();
+                if (ptr) return UTF8ToString(ptr);
+            } catch(e) { return null; }
         }
         return null;
     }""")
 
-    # This test will likely FAIL initially — that's the point.
-    # It becomes the work queue item: "INFRA: wire brain_narrative to headline display"
-    if headline:
-        assert len(headline) > 5, f"Headline too short: '{headline}'"
-    else:
-        # Narrative text not in DOM — check if it's rendered on canvas
-        # For now, mark as expected failure with clear message
-        pytest.skip(
-            "No narrative headline found in DOM — "
-            "INFRA needs to wire brain_narrative_compose() → headline display"
-        )
+    assert headline is not None and len(headline) > 5, (
+        f"No narrative headline from brain_narrative — got: '{headline}'"
+    )
 
 
 # ============================================================
@@ -284,34 +273,25 @@ def test_narrative_headline_exists(page):
 
 
 def test_audio_context_created(page):
-    """An AudioContext should be created and ready.
+    """AudioContext should exist and our audio engine should be initialized.
 
-    Stream: AUDIO
+    Stream: AUDIO + INFRA
     Feature: Sound engine initialization
-    If this fails: audio_engine not wired in WASM, or browser autoplay policy blocking.
+    If this fails: audio_engine_init() not called, or browser autoplay policy blocking.
     """
     has_audio = page.evaluate("""() => {
-        // Check if any AudioContext exists
         return typeof AudioContext !== 'undefined' || typeof webkitAudioContext !== 'undefined';
     }""")
-
-    # AudioContext API should be available (it always is in modern browsers)
     assert has_audio, "AudioContext API not available"
 
-    # Check if our app created one
+    # Check our app's audio via window._timeAudio (set by audio_engine_init)
     app_audio = page.evaluate("""() => {
-        // Check for our audio engine's context
-        if (typeof Module !== 'undefined' && Module._audio_is_initialized) {
-            try { return Module._audio_is_initialized() === 1; } catch(e) { return false; }
-        }
-        return false;
+        return !!(window._timeAudio && window._timeAudio.ctx);
     }""")
-
-    if not app_audio:
-        pytest.skip(
-            "Audio engine not initialized in WASM — "
-            "AUDIO stream: wire audio_engine_init() in main_loop"
-        )
+    assert app_audio, (
+        "Audio engine not initialized — window._timeAudio missing. "
+        "Check audio_engine_init() is called in main()"
+    )
 
 
 # ============================================================

@@ -601,4 +601,12 @@ EMSCRIPTEN_KEEPALIVE void ui_on_resize(int width, int height) {
     post_pass_resize(width, height);
 }
 
+EMSCRIPTEN_KEEPALIVE const char *ui_get_headline(void) {
+    return g_state.headline;
+}
+
+EMSCRIPTEN_KEEPALIVE int ui_is_audio_initialized(void) {
+    return !audio_engine_is_muted();
+}
+
 #endif /* __EMSCRIPTEN__ */
