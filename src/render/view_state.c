@@ -9,6 +9,9 @@ view_state_t vs_init(void) {
     s.target_view     = 0;
     s.transition_t    = 1.0f;
     s.focus_mode      = 0;   /* FOCUS_MODE_OVERVIEW */
+    s.target_focus    = 0;
+    s.focus_blend     = 1.0f;
+    s.focus_transitioning = 0;
     s.lod_tier        = 0;   /* LOD_ULTRA */
     s.is_transitioning = 0;
     return s;
@@ -28,7 +31,15 @@ view_state_t vs_set_view(view_state_t state, int view_id) {
 }
 
 view_state_t vs_set_focus(view_state_t state, int focus_mode) {
-    state.focus_mode = focus_mode;
+    if (focus_mode == state.focus_mode && !state.focus_transitioning) {
+        return state;
+    }
+    if (focus_mode == state.target_focus && state.focus_transitioning) {
+        return state;
+    }
+    state.target_focus = focus_mode;
+    state.focus_blend  = 0.0f;
+    state.focus_transitioning = 1;
     return state;
 }
 
@@ -38,19 +49,28 @@ view_state_t vs_set_lod(view_state_t state, int lod_tier) {
 }
 
 view_state_t vs_tick(view_state_t state, float dt) {
-    if (!state.is_transitioning) {
-        return state;
-    }
     if (dt <= 0.0f) {
         return state;
     }
 
-    state.transition_t += dt / VS_TRANSITION_DURATION;
+    /* View transition */
+    if (state.is_transitioning) {
+        state.transition_t += dt / VS_TRANSITION_DURATION;
+        if (state.transition_t >= 1.0f) {
+            state.transition_t    = 1.0f;
+            state.current_view    = state.target_view;
+            state.is_transitioning = 0;
+        }
+    }
 
-    if (state.transition_t >= 1.0f) {
-        state.transition_t    = 1.0f;
-        state.current_view    = state.target_view;
-        state.is_transitioning = 0;
+    /* Focus transition */
+    if (state.focus_transitioning) {
+        state.focus_blend += dt / VS_FOCUS_TRANSITION_DURATION;
+        if (state.focus_blend >= 1.0f) {
+            state.focus_blend  = 1.0f;
+            state.focus_mode   = state.target_focus;
+            state.focus_transitioning = 0;
+        }
     }
 
     return state;
@@ -98,14 +118,25 @@ pass_schedule_t vs_blended_schedule(const view_state_t *state) {
     }
     blended.active_count = active;
 
-    /* Apply focus mode on top of blended result */
-    blended = ps_apply_focus(blended, state->focus_mode);
+    /* Apply focus mode on top of blended result.
+     * During focus transition, use target_focus once blend > 0.5. */
+    int effective_focus = state->focus_transitioning && state->focus_blend >= 0.5f
+                        ? state->target_focus : state->focus_mode;
+    blended = ps_apply_focus(blended, effective_focus);
 
     return blended;
 }
 
 int vs_is_transitioning(const view_state_t *state) {
     return state->is_transitioning;
+}
+
+int vs_is_focus_transitioning(const view_state_t *state) {
+    return state->focus_transitioning;
+}
+
+float vs_focus_blend(const view_state_t *state) {
+    return state->focus_blend;
 }
 
 float vs_transition_progress(const view_state_t *state) {

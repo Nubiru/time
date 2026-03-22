@@ -83,12 +83,17 @@ static void test_vs_tick_idle_noop(void) {
     TEST_ASSERT_EQUAL_INT(0, s.is_transitioning);
 }
 
-/* --- vs_set_focus: updates immediately --- */
+/* --- vs_set_focus: starts transition, completes after tick --- */
 
 static void test_vs_set_focus(void) {
     view_state_t s = vs_init();
     s = vs_set_focus(s, 3);  /* FOCUS_MODE_ICHING */
+    TEST_ASSERT_EQUAL_INT(3, s.target_focus);
+    TEST_ASSERT_TRUE(s.focus_transitioning);
+    /* Complete the transition */
+    s = vs_tick(s, VS_FOCUS_TRANSITION_DURATION + 0.01f);
     TEST_ASSERT_EQUAL_INT(3, s.focus_mode);
+    TEST_ASSERT_FALSE(s.focus_transitioning);
 }
 
 /* --- vs_set_lod: updates immediately --- */
@@ -128,6 +133,7 @@ static void test_vs_schedule_earth(void) {
 static void test_vs_schedule_with_focus(void) {
     view_state_t s = vs_init();
     s = vs_set_focus(s, 1);  /* FOCUS_MODE_ASTROLOGY */
+    s = vs_tick(s, VS_FOCUS_TRANSITION_DURATION + 0.01f); /* complete transition */
     pass_schedule_t sched = vs_schedule(&s);
     /* Zodiac should be full opacity, stars dimmed */
     TEST_ASSERT_FLOAT_WITHIN(0.01f, 1.0f, sched.passes[PASS_ZODIAC].opacity_scale);
@@ -217,6 +223,7 @@ static void test_vs_set_focus_preserves_view(void) {
     s = vs_set_view(s, 1);
     s = vs_tick(s, 2.0f);
     s = vs_set_focus(s, 5);  /* HD */
+    s = vs_tick(s, VS_FOCUS_TRANSITION_DURATION + 0.01f);
     TEST_ASSERT_EQUAL_INT(1, s.current_view);
     TEST_ASSERT_EQUAL_INT(5, s.focus_mode);
 }
@@ -226,6 +233,7 @@ static void test_vs_set_focus_preserves_view(void) {
 static void test_vs_set_lod_preserves_state(void) {
     view_state_t s = vs_init();
     s = vs_set_focus(s, 2);
+    s = vs_tick(s, VS_FOCUS_TRANSITION_DURATION + 0.01f);
     s = vs_set_lod(s, 3);  /* LOD_LOW */
     TEST_ASSERT_EQUAL_INT(2, s.focus_mode);
     TEST_ASSERT_EQUAL_INT(3, s.lod_tier);
