@@ -10,8 +10,8 @@
 ```
 Infrastructure:  █████████████████████  98%   532 tests, E2E 17/17, stardust, heartbeat+pop counters, constellation labels
 Modules/Data:    ████████████████████░  96%   ~108/134 MVPs. S107 SDF glyphs authored. 10 locales.
-Display/Wiring:  █████████████████████  90%   Tier 1+2 DONE + Fresnel + stardust + zoom_fade + focus_blend + constellation labels
-Experience:      ████████████████████░  72%   Focus blend animation + star brightness ramp + camera inertia + 10 locales + 294 wisdom
+Display/Wiring:  ██████████████████░░  82%   PHASE 1 COMPLETE: 17/21 systems show human meaning. 4 remaining. Birth interpret wired.
+Experience:      ████████████████░░░░  62%   Cards show "White Cosmic Wizard" not "Kin 234." Share button. GPS. Audio slider. 12 locales.
 Translation:     ████████████████████░  80%   **10 locales** (EN+ES+PT+AR+HE+ZH+HI+FR+JA+**DE**). German 100%.
 Art Assets:      ██████░░░░░░░░░░░░░░  25%   89 DALL-E + S107 SDF glyphs (22 procedural). Integration pending.
 Audio:           ████████░░░░░░░░░░░░  25%   Focus timbres + zoom layers + convergence + envelope + star brightness ramp

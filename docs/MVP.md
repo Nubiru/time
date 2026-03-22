@@ -19,10 +19,10 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | L7 | **21 Languages** | Every text in 21 languages with poetic voice influenced by humanity's greatest minds | Content: ✅ **7 locales** (EN+ES+PT+AR+HE+ZH+**HI**). Hindi 100% (bd6d135). Locale toggle WIRED. **228 wisdom quotes DISPLAYED** (9a4946b). 3647 EN keys. |
 | L8 | **The "Enter Time" Experience** | Click threshold → cinematic zoom → solar system reveals → first hint → discovery | CSS: ✅ Animation: ✅ Wiring: ✅ (commit ff0b1fd). Camera fly-in active on load. Skip on key/touch. |
 | L9 | **Personal Space (Diamond Room)** | Your identity across all systems. Birth chart + Kin + hexagram + HD. Customizable 3D space. | Data: ✅ Display: ❌ |
-| L10 | **Wave Watch & Earth View** | Tide, surf, weather from astronomical computation. 24h forecast. Surfer's dream. | Data: ✅ Display: ❌ |
-| L11 | **6-8 Named 3D Views** | Space View, Earth View, Galaxy View, Personal View, Deep Time View, City View, Room View + more | Registry: ✅ Wired: 2/7 |
-| L12 | **City View — News Around You** | Local events, restaurants, shows, circus near your location. Social layer. | ❌ NOT STARTED (decision needed: include or focus on TIME?) |
-| L13 | **Meet Someone Like You** | Find people with similar Kin/interests nearby. Privacy-first social matching. | ❌ Concept only |
+| L10 | **Tidal Rhythms & Earth View** | Astronomical tidal forces (lunar/solar gravity). Honest label: "Tidal estimate" not "Surf forecast." Pure computation. | Data: ✅ Display: ❌ |
+| L11 | **Named 3D Views** | Space View, Earth View, Galaxy View, Personal View, Deep Time View, Room View | Registry: ✅ Wired: 2/6 |
+| ~~L12~~ | ~~City View~~ | **REMOVED v1** — Requires external event APIs (restaurants, shows). Violates pure-computation philosophy. Reconsidered for v2 with backend. | ❌ DEFERRED |
+| ~~L13~~ | ~~Meet Someone Like You~~ | **REMOVED v1** — Requires backend user database + matching infrastructure. Reconsidered for v2. | ❌ DEFERRED |
 | L14 | **Voice of Time** | ElevenLabs narration in Gabriel's voice. Toggle: read / voice-on / voice-off. Accessibility. | ❌ NOT STARTED |
 | L15 | **Share a Moment** | Capture any moment as shareable URL + text + screenshot. Social virality. | Data: ✅ Display: ❌ |
 
@@ -104,7 +104,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | S53 | Galaxy View (Milky Way scale, Shift+5-6) | ✅ pass exists |
 | S54 | Personal View (birth chart focus) | ❌ NOT BUILT |
 | S55 | Deep Time View (geological timeline cinematic) | ❌ NOT BUILT |
-| S56 | City View (local horizon + sky + social) | ❌ NOT BUILT |
+| ~~S56~~ | ~~City View~~ | **REMOVED v1** — requires external APIs |
 | S57 | Room View (personal 3D diamond space) | ✅ Data + **GL geometry** (8717fa5). `diamond_room_pack.c` — E7 wireframe icosahedron. Rendering in progress. |
 | S58 | View selector UI (switch between views) | ❌ NOT BUILT |
 | S59 | View transition animations (smooth fly between) | 🔄 Partial — earth_transition wired (E key, commit ff0b1fd), birth_flight wired (B key). Other views need similar choreography. |
@@ -113,7 +113,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 
 | # | MVP | Status |
 |---|-----|--------|
-| S60 | Local events feed (restaurants, shows, circus) | ❌ Decision needed |
+| ~~S60~~ | ~~Local events feed~~ | **REMOVED v1** — requires external APIs |
 | S61 | Kin discovery (find similar profiles nearby) | ❌ Needs backend decision |
 | S62 | "Get to know the Author" profile card | ❌ NOT BUILT |
 | S63 | Share URL with JD + view + systems | ✅ share_moment built |

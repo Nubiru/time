@@ -190,6 +190,7 @@ void precession_pass_destroy(void)
 }
 
 #else
+#include "precession_pass.h"
 void precession_pass_init(void) {}
 void precession_pass_draw(const render_frame_t *frame) { (void)frame; }
 void precession_pass_destroy(void) {}
