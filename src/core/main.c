@@ -885,6 +885,19 @@ EMSCRIPTEN_KEEPALIVE void ui_set_location(double lat, double lon) {
 EMSCRIPTEN_KEEPALIVE double ui_get_lat(void) { return g_state.observer_lat; }
 EMSCRIPTEN_KEEPALIVE double ui_get_lon(void) { return g_state.observer_lon; }
 
+EMSCRIPTEN_KEEPALIVE void ui_set_volume(double vol) {
+    audio_engine_set_volume((float)vol);
+}
+
+EMSCRIPTEN_KEEPALIVE void ui_toggle_mute(void) {
+    if (audio_engine_is_muted()) audio_engine_unmute();
+    else audio_engine_mute();
+}
+
+EMSCRIPTEN_KEEPALIVE int ui_is_muted(void) {
+    return audio_engine_is_muted();
+}
+
 EMSCRIPTEN_KEEPALIVE const char *ui_get_share_text(void) {
     /* Use headline as share text — already computed daily */
     return g_state.headline;
