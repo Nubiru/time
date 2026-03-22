@@ -8,17 +8,17 @@
 ## Progress Bars (updated 2026-03-22 — MEGA cycle)
 
 ```
-Infrastructure:  █████████████████████  98%   528 tests, E2E 17/17, theme audit CLEAN, canvas resize, audio envelope
-Modules/Data:    ████████████████████░  95%   ~101/134 MVPs (528 tests, 505 files). pop_today + daily_greeting.
-Display/Wiring:  █████████████████████  82%   S50 wisdom + S10 pop + S134 GALAXY UPGRADE + 19/19 daily + 5 geometric
-Experience:      █████████████████░░░  62%   228 wisdom VISIBLE + pop on Earth card + galaxy dust lanes + 17/17 E2E
-Translation:     ██████████████████░░  75%   7 locales (EN+ES+PT+AR+HE+ZH+HI). Hindi 100%. 3647 keys.
-Art Assets:      ██████░░░░░░░░░░░░░░  25%   89 optimized DALL-E + 72 layout modules
-Audio:           ████░░░░░░░░░░░░░░░░  15%   S108+S111 LIVE + envelope fix + muted default
-Personalization: █████░░░░░░░░░░░░░░░  22%   Birth form + locale + settings + birth sky fix + canvas resize
-Voice:           ░░░░░░░░░░░░░░░░░░░░   0%   Gabriel → ElevenLabs → multilingual
-Knowledge Depth: ██████████████████░░  80%   153 digests. ALL 15 V2 systems + Tufte + GPU Gems. 3/15 V2 UI/UX re-reads.
-Visual Standards:██████░░░░░░░░░░░░░░  20%   S126 theme scope done. S130+S131 started. Krug+RefUI specs queued.
+Infrastructure:  █████████████████████  98%   532 tests, E2E 17/17, stardust, heartbeat+pop counters, constellation labels
+Modules/Data:    ████████████████████░  96%   ~108/134 MVPs. S107 SDF glyphs authored. 10 locales.
+Display/Wiring:  █████████████████████  90%   Tier 1+2 DONE + Fresnel + stardust + zoom_fade + focus_blend + constellation labels
+Experience:      ████████████████████░  72%   Focus blend animation + star brightness ramp + camera inertia + 10 locales + 294 wisdom
+Translation:     ████████████████████░  80%   **10 locales** (EN+ES+PT+AR+HE+ZH+HI+FR+JA+**DE**). German 100%.
+Art Assets:      ██████░░░░░░░░░░░░░░  25%   89 DALL-E + S107 SDF glyphs (22 procedural). Integration pending.
+Audio:           ████████░░░░░░░░░░░░  25%   Focus timbres + zoom layers + convergence + envelope + star brightness ramp
+Personalization: ██████░░░░░░░░░░░░░░  24%   Birth form + locale + settings + author card + pop/heartbeat counters
+Voice:           ░░░░░░░░░░░░░░░░░░░░   0%   Gabriel → ElevenLabs
+Knowledge Depth: ██████████████████░░  83%   161 digests. ALL V2 done.
+Visual Standards:████████████░░░░░░░░  35%   Fresnel + stardust + zoom_fade + Itten/Albers fixes + focus_blend + constellation labels
 ```
 
 ### How Each Bar Advances

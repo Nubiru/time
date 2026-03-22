@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "app_state.h"
+#include "../math/easing.h"
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
@@ -347,21 +348,29 @@ void main_loop(void) {
     /* --- Advance view state (transitions, focus) --- */
     g_state.view = vs_tick(g_state.view, (float)dt_sec);
 
-    /* --- Camera micro-zoom on focus mode change --- */
+    /* --- Camera micro-zoom + card text reveal on focus mode change --- */
     {
         int cur_focus = g_state.view.target_focus;
         if (cur_focus != g_state.prev_focus_mode) {
             /* Focus changed: nudge zoom spring for "leaning in/out" feel */
             float nudge = (cur_focus != 0) ? -0.15f : 0.15f;
             float new_target = g_state.zoom_spring.target + nudge;
-            /* Clamp */
             if (new_target < CAMERA_LOG_ZOOM_MIN) new_target = CAMERA_LOG_ZOOM_MIN;
             if (new_target > CAMERA_LOG_ZOOM_MAX) new_target = CAMERA_LOG_ZOOM_MAX;
             g_state.zoom_spring = spring_set_target(g_state.zoom_spring,
                                                      new_target);
+            /* Start per-word text reveal for incoming focus card */
+            if (cur_focus != 0) {
+                g_state.focus_text = text_reveal_create(
+                    TEXT_REVEAL_FADE_WORD, 8, 0.6f);
+                g_state.focus_text = text_reveal_start(g_state.focus_text);
+            }
             g_state.prev_focus_mode = cur_focus;
         }
     }
+
+    /* --- Focus card animation: tick text reveal --- */
+    g_state.focus_text = text_reveal_tick(g_state.focus_text, (float)dt_sec);
 
     /* --- Compute layer visibility from current zoom --- */
     g_state.layer_state = layers_compute(g_state.layer_configs,
@@ -380,6 +389,19 @@ void main_loop(void) {
         }
         scene_bright *= focus_bright;
     }
+
+    /* --- Compute card slide (focus card fade in/out) --- */
+    float card_slide_val;
+    if (!g_state.view.focus_transitioning) {
+        card_slide_val = 1.0f; /* stable state: cards fully visible */
+    } else {
+        float fb = vs_focus_blend(&g_state.view);
+        int entering = (g_state.view.target_focus != 0);
+        float eased = (float)ease_out_cubic((double)fb);
+        /* Entering system: fade in. Exiting: fade out. */
+        card_slide_val = entering ? eased : (1.0f - eased);
+    }
+    float card_text_val = text_reveal_progress(g_state.focus_text);
 
     /* --- Build per-frame render data --- */
     mat4_t view, proj;
@@ -409,6 +431,8 @@ void main_loop(void) {
         .theme_id      = 0, /* THEME_COSMOS — always dark, Dawn disabled */
         .focus_mode    = g_state.view.focus_mode,
         .focus_blend   = vs_focus_blend(&g_state.view),
+        .card_slide    = card_slide_val,
+        .card_text_reveal = card_text_val,
         .scene_brightness = scene_bright,
     };
     memcpy(frame.headline, g_state.headline, sizeof(frame.headline));

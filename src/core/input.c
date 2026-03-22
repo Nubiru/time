@@ -297,6 +297,39 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         }
     }
 
+    /* Arrow keys: time navigation.
+     * Left/Right: ±1 day. Up/Down: ±1 month. Shift: ±1 year. */
+    if (e->key[0] == 'A' && e->key[1] == 'r' && e->key[2] == 'r' &&
+        e->key[3] == 'o' && e->key[4] == 'w') {
+        double step = 0.0;
+        const char *label = "";
+        if (e->key[5] == 'R') {          /* ArrowRight */
+            step = e->shiftKey ? 365.25 : 1.0;
+            label = e->shiftKey ? "+1 year" : "+1 day";
+        } else if (e->key[5] == 'L') {   /* ArrowLeft */
+            step = e->shiftKey ? -365.25 : -1.0;
+            label = e->shiftKey ? "-1 year" : "-1 day";
+        } else if (e->key[5] == 'U') {   /* ArrowUp */
+            step = e->shiftKey ? 365.25 : 30.4375;
+            label = e->shiftKey ? "+1 year" : "+1 month";
+        } else if (e->key[5] == 'D') {   /* ArrowDown */
+            step = e->shiftKey ? -365.25 : -30.4375;
+            label = e->shiftKey ? "-1 year" : "-1 month";
+        }
+        if (step != 0.0) {
+            g_input_state->simulation_jd += step;
+            EM_ASM({
+                var t = document.getElementById('toast-area');
+                if (t) {
+                    t.textContent = UTF8ToString($0);
+                    t.classList.add('visible');
+                    setTimeout(function() { t.classList.remove('visible'); }, 800);
+                }
+            }, label);
+            return EM_TRUE;
+        }
+    }
+
     return EM_FALSE;
 }
 

@@ -129,7 +129,7 @@ static void draw_oracle_cross(const render_frame_t *frame, float vw, float vh)
         layout.cards[i].y = cell.y - cell.h * 0.5f;
         layout.cards[i].w = cell.w;
         layout.cards[i].h = cell.h;
-        layout.cards[i].opacity = 1.0f;
+        layout.cards[i].opacity = frame->card_slide;
         layout.cards[i].visible = 1;
         layout.cards[i].type = (card_type_t)i;
     }
@@ -199,7 +199,7 @@ static void draw_oracle_cross(const render_frame_t *frame, float vw, float vh)
                     ws_layout.cards[j].y = ws_y - ws_h * 0.5f;
                     ws_layout.cards[j].w = cell.w;
                     ws_layout.cards[j].h = ws_h;
-                    ws_layout.cards[j].opacity = 1.0f;
+                    ws_layout.cards[j].opacity = frame->card_slide;
                     ws_layout.cards[j].visible = 1;
                     ws_layout.cards[j].type = (card_type_t)j;
                 } else {
@@ -302,7 +302,7 @@ static void draw_iching_overlay(const render_frame_t *frame, float vw, float vh)
     cl.cards[0].y = layout.lines_y;
     cl.cards[0].w = layout.lines_w;
     cl.cards[0].h = layout.lines_h;
-    cl.cards[0].opacity = 1.0f;
+    cl.cards[0].opacity = frame->card_slide;
     cl.cards[0].visible = 1;
     cl.cards[0].type = (card_type_t)0;
 
@@ -311,7 +311,7 @@ static void draw_iching_overlay(const render_frame_t *frame, float vw, float vh)
     cl.cards[1].y = 0.10f;
     cl.cards[1].w = 0.40f;
     cl.cards[1].h = 0.80f;
-    cl.cards[1].opacity = 1.0f;
+    cl.cards[1].opacity = frame->card_slide;
     cl.cards[1].visible = 1;
     cl.cards[1].type = (card_type_t)1;
 
@@ -373,7 +373,7 @@ static void draw_iching_overlay(const render_frame_t *frame, float vw, float vh)
                 line_cl.cards[j].y = hl.y;
                 line_cl.cards[j].w = hl.is_yang ? hl.w : hl.w * 0.42f;
                 line_cl.cards[j].h = hl.h;
-                line_cl.cards[j].opacity = 1.0f;
+                line_cl.cards[j].opacity = frame->card_slide;
                 line_cl.cards[j].visible = 1;
                 line_cl.cards[j].type = (card_type_t)j;
             } else {
@@ -452,12 +452,12 @@ static void draw_hd_overlay(const render_frame_t *frame, float vw, float vh)
     card_layout_t cl;
     cl.cards[0].x = 0.05f; cl.cards[0].y = 0.20f;
     cl.cards[0].w = 0.40f; cl.cards[0].h = 0.60f;
-    cl.cards[0].opacity = 1.0f; cl.cards[0].visible = 1;
+    cl.cards[0].opacity = frame->card_slide; cl.cards[0].visible = 1;
     cl.cards[0].type = (card_type_t)0;
 
     cl.cards[1].x = 0.55f; cl.cards[1].y = 0.20f;
     cl.cards[1].w = 0.40f; cl.cards[1].h = 0.60f;
-    cl.cards[1].opacity = 1.0f; cl.cards[1].visible = 1;
+    cl.cards[1].opacity = frame->card_slide; cl.cards[1].visible = 1;
     cl.cards[1].type = (card_type_t)1;
 
     for (int i = 2; i < CARD_TYPE_COUNT; i++) {
@@ -522,7 +522,7 @@ static void draw_astrology_overlay(const render_frame_t *frame, float vw, float 
     card_layout_t cl;
     cl.cards[0].x = 0.05f; cl.cards[0].y = 0.05f;
     cl.cards[0].w = 0.90f; cl.cards[0].h = 0.85f;
-    cl.cards[0].opacity = 1.0f; cl.cards[0].visible = 1;
+    cl.cards[0].opacity = frame->card_slide; cl.cards[0].visible = 1;
     cl.cards[0].type = (card_type_t)0;
     for (int i = 1; i < CARD_TYPE_COUNT; i++) {
         cl.cards[i].visible = 0; cl.cards[i].opacity = 0.0f;
@@ -575,7 +575,7 @@ static void draw_chinese_overlay(const render_frame_t *frame, float vw, float vh
     card_layout_t cl;
     cl.cards[0].x = 0.05f; cl.cards[0].y = 0.05f;
     cl.cards[0].w = 0.90f; cl.cards[0].h = 0.85f;
-    cl.cards[0].opacity = 1.0f; cl.cards[0].visible = 1;
+    cl.cards[0].opacity = frame->card_slide; cl.cards[0].visible = 1;
     cl.cards[0].type = (card_type_t)0;
     for (int i = 1; i < CARD_TYPE_COUNT; i++) {
         cl.cards[i].visible = 0; cl.cards[i].opacity = 0.0f;
@@ -621,7 +621,8 @@ void card_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
     float zoom_alpha = zf_opacity(ZF_CARD, frame->log_zoom);
-    if (zoom_alpha < 0.01f) return;
+    float card_alpha = zoom_alpha * frame->card_slide;
+    if (card_alpha < 0.01f) return;
 
     /* Query actual viewport dimensions from GL */
     GLint viewport[4];
@@ -661,7 +662,7 @@ void card_pass_draw(const render_frame_t *frame) {
     if (focus_sys >= 0) {
         sel.filled_count = 1;
         sel.slots[0].system_id = focus_sys;
-        sel.slots[0].opacity = 1.0f;
+        sel.slots[0].opacity = frame->card_slide;
     }
     if (sel.filled_count == 0) return;
 
@@ -670,7 +671,7 @@ void card_pass_draw(const render_frame_t *frame) {
     for (int i = 0; i < CARD_TYPE_COUNT; i++) {
         layout.cards[i].visible = (i < sel.filled_count);
         layout.cards[i].opacity = (i < sel.filled_count)
-            ? sel.slots[i].opacity : 0.0f;
+            ? sel.slots[i].opacity * frame->card_slide : 0.0f;
     }
 
     /* Pack card background quads (dummy color — overwritten below) */

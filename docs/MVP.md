@@ -85,7 +85,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | S39 | Privacy framework | ✅ built |
 | S40 | Settings panel UI | ✅ FULLY WIRED (08b3359). ⚙ button or comma key. 4 sections (Appearance/Time/Social/Location). Theme change live. localStorage. 9 tests. |
 | S41 | Birth date entry onboarding | ✅ WIRED (commit 87c364c). P key → HTML form ("When did you arrive?"). JS→C bridge → bp_compute(). localStorage. Shows Kin number. Display: ✅ |
-| S42 | "Author of Time" profile card | ✅ Built (`author_card.h/.c`, 38 tests). Display: ❌ needs card renderer |
+| S42 | "Author of Time" profile card | ✅ **WIRED** (a59f68a). Author attribution displayed. NERVE Tier 2 spec consumed. |
 | S43 | 21 language translations (ES, HE, PT, AR, ZH, FR, DE, JA, HI, KO, RU, TR, ID, BN, VI, TH, FA, MY, SW, AM) | ✅ ALL 21 shipped |
 | S44 | Wisdom voice guide (how great minds communicate) | ✅ Built (`data/content/voice_guide.json`, 10 archetypes, 124 keys, commit 537c80a). Display: ❌ |
 | S45 | Wisdom display module | ✅ built |
@@ -159,10 +159,9 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 ## Score
 
 **Large MVPs**: 5/15 near-delivered (L1 today cards WIRED, L2 birth form WIRED, L3 daily narrative WIRED, L7 locale toggle WIRED, L8 "Enter Time" wired).
-**Small MVPs**: ~101/134 built, ~33 remaining. 528 tests pass. 500+ .c files.
-**Overall**: Infrastructure 98%. Modules 95%. Display 80%. Experience 60%. Translation 75%. Visual Standards 15%. WASM ~700 KB.
-**New MVPs added**: S108-S113 (Audio/Voice), S114-S134 (Kin Maya + Geometric + Visual Polish). Total: 134.
-**Wiring progress**: 19/19 daily. 5 geometric passes. **7 locales** (EN+ES+PT+AR+HE+ZH+HI). **S50 WISDOM WIRED** (9a4946b — 228 quotes visible!). daily_greeting in progress (staged).
+**Small MVPs**: ~107/134 built, ~27 remaining. 531 tests pass. 510+ .c files.
+**Overall**: Infrastructure 98%. Modules 96%. Display 88%. Experience 70%. Translation 78%. Visual Standards 30%. Audio 20%.
+**Wiring progress**: ALL Tier 1+2 WIRED (S50/S10/S85/S86/S91/S92/S96/S98/S99/S100/S101/S42). **9 locales**. Planet Fresnel glow. Stardust shader. Zoom easing polish. Audio focus timbres. **~30/111 NERVE V2 actions consumed.**
 
 **MILESTONES (2026-03-20)**:
 - Cards visible (a0c7676) + polished (aa3e791)
@@ -197,9 +196,9 @@ Every stream session: check which MVPs your work addresses. If none — you're b
 | # | MVP | Status |
 |---|-----|--------|
 | S98 | **Red Thread Finder** — Cross-system invisible connection discovery. "Eclipse + Kin 1 + Rosh Hashanah = unprecedented convergence — here's what each tradition says about it" | ✅ **WIRED** (6761aca). Red thread narrative in render_frame → text display. |
-| S99 | **Grand Cycle LCM** — Compute LCM of all 21 system periods. "This exact configuration won't recur for X million years." Computable, mind-blowing. | ✅ Built (commit f236b1f). `grand_cycle.h/.c` — 9 built-in cycles. Display: ❌ |
-| S100 | **System Correlation Matrix** — 21×21 grid showing which system pairs co-fire most often across decades. Heatmap of resonance. | ✅ Built (commit 04958a2). `system_correlation.h/.c` — `sc_corr_compute()`, `sc_corr_top_pairs()`. Display: ❌ |
-| S101 | **Time Entropy Display** — Shannon entropy of today's alignment pattern. "Today's time-entropy: 0.87 — 87% of maximum information." Most rigorous "wow" metric. | ✅ Built (commit f236b1f). `time_entropy.h/.c` — `te_entropy()`, `te_interpret()`. Display: ❌ |
+| S99 | **Grand Cycle LCM** — Compute LCM of all 21 system periods. "This exact configuration won't recur for X million years." Computable, mind-blowing. | ✅ **WIRED** (76a60e1+8a69418). grand_cycle in app_state + render_frame + text display. |
+| S100 | **System Correlation Matrix** — 21×21 grid showing which system pairs co-fire most often across decades. Heatmap of resonance. | ✅ **WIRED** (39c0592). "Strongest resonance: X ↔ Y" displayed in bottom text stack. |
+| S101 | **Time Entropy Display** — Shannon entropy of today's alignment pattern. "Today's time-entropy: 0.87 — 87% of maximum information." Most rigorous "wow" metric. | ✅ **WIRED** (3c2a638). te_entropy in app_state + render_frame + text display. |
 | S102 | **Time Travel Explorer** — Navigate to any date in history, see all 25+ systems at that moment. Historical exploration mode. | ❌ ts_compute works for any JD |
 | S103 | **Deep Tzolkin Experience** — 260-day interactive board, wavespell journey, Dreamspell game mechanics. Juan's daily Kin energy page. | 🔄 Data modules: kin_board (260 cells), kin_oracle, kin_wavespell_journey, kin_daily_chrono, kin_pulsar, kin_castle, kin_moon_page, heptad_gate. Display: ❌ |
 | S104 | **Calendar Round Flower** — 52-year visualization showing Tzolkin + Haab interlocking cycles. Sacred geometry mandala. | ✅ Built (`kin_round_layout.h/.c`, 24 tests, commit 277dde8). Display: ❌ |
@@ -264,15 +263,15 @@ Every stream session: check which MVPs your work addresses. If none — you're b
 | # | MVP | Status |
 |---|-----|--------|
 | S85 | **Convergence Year Rating** — rate each year by total convergence strength. "2026 scores 203/365 days with alignments" | ✅ **WIRED** (111b0bd). Percentile displayed in bottom text stack. brain_stats integrated into render_frame. |
-| S86 | **"How rare is today?"** — percentile ranking. "Today is in the top 5% of convergent days this decade" | ✅ Built (commit f3d0042). `brain_stats.h/.c` — `br_stats_percentile()`. Display: ❌ |
+| S86 | **"How rare is today?"** — percentile ranking. "Today is in the top 5% of convergent days this decade" | ✅ **WIRED** (111b0bd). `percentile_text` in render_frame → bottom text stack. Was actually wired with S85. |
 | S87 | **The 2012 Analysis** — what ACTUALLY converged on 13.0.0.0.0? How does it compare to other dates? Demystify with data. | ✅ Built (commit f3d0042). Entry in `stored_convergences`. Display: ❌ |
 | S88 | **Decade convergence heatmap** — visual grid showing convergence intensity across years. Find meta-patterns. | ✅ Built (commit 84721d7). `decade_heatmap.h/.c` — 12yr×366day grid. 20 tests. Display: ❌ |
 | S89 | **Sacred number frequency analysis** — how often do 7, 12, 13, 19, 22, 64, 108, 260, 432 appear across systems on the same day? | ✅ Built (commit 84721d7). `sacred_scan.h/.c` — scans 6 calendars for 13 sacred numbers. 27 tests. Display: ❌ |
 | S90 | **Precession clock** — where are we in the 25,772-year cycle? Visual display showing the Great Year position. | ❌ precession_detect.h exists |
 | S91 | **Human existence as fraction of Earth** — "Humans have existed for 0.0065% of Earth's history" with visual scale | ✅ **WIRED** (fa3feba). earth_fraction enriches Earth card. |
 | S92 | **"You are alive during..."** — probability of being alive NOW vs any point in history (7.4% of all humans who ever lived are alive today) | ✅ **WIRED** (fa3feba). earth_fraction in Earth card. |
-| S93 | **Heartbeat of humanity** — collective heartbeats since dawn of humans. Running counter. | ❌ biorhythm.h has data |
+| S93 | **Heartbeat of humanity** — collective heartbeats since dawn of humans. Running counter. | ✅ **WIRED** (af6f483). Heartbeat counter on Earth card. |
 | S94 | **Convergence calendar for the year** — which days this year will be most aligned? Plan your life around cosmic rhythms. | ✅ BRAIN just built 2026 report! |
-| S95 | **Population counter overlay** — live estimate of humans alive, layered on Earth View | ❌ human_population queued |
-| S96 | **"Last time this happened"** — for any convergence, find the PREVIOUS occurrence. "The last time these 6 systems aligned was 847 years ago" | ✅ Built (commit f3d0042). `brain_stats.h/.c` — `br_stats_signature_last()`. Display: ❌ |
+| S95 | **Population counter overlay** — live estimate of humans alive, layered on Earth View | ✅ **WIRED** (af6f483). Population counter on Earth card. |
+| S96 | **"Last time this happened"** — for any convergence, find the PREVIOUS occurrence. "The last time these 6 systems aligned was 847 years ago" | ✅ **WIRED** (c67a16b). Signature search in main.c + text_pass display. FINAL Tier 1 item! |
 | S97 | **Monthly convergence forecast** — upcoming 30 days with convergence predictions. "Next strong alignment: April 8" | ❌ convergence_forecast.h exists |

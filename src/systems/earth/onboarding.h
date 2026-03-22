@@ -24,6 +24,7 @@ typedef enum {
 /* Events that trigger transitions */
 typedef enum {
     OB_EVT_TICK = 0,         /* Time passes (dt seconds) */
+    OB_EVT_INTERACTION,      /* User clicked, scrolled, or pressed a key */
     OB_EVT_PROFILE_TAP,     /* User taps profile icon */
     OB_EVT_INVITATION_TAP,  /* User taps the invitation text */
     OB_EVT_INVITATION_TIMEOUT, /* Invitation faded without interaction */
@@ -54,6 +55,7 @@ typedef struct {
     float state_timer;         /* Time spent in current state */
     int invitation_count;      /* How many times invitation has been shown */
     int is_returning_user;     /* 1 if birth data already in storage */
+    int has_interacted;        /* 1 if user clicked/scrolled/pressed a key */
     int birth_date_entered;    /* 1 if user entered birth date this session */
     int birth_place_entered;   /* 1 if user entered birth location this session */
     int interests_entered;     /* 1 if user selected interests this session */
@@ -89,5 +91,27 @@ const char *ob_state_name(ob_state_t state);
 
 /* Get scene dim amount for current state (0.0=full bright, ~0.618 for modal states). */
 float ob_scene_dim(const ob_flow_t *flow);
+
+/* --- Reward Framing & UX Copy ---
+ * Returns display-ready strings for onboarding UI.
+ * About Face V2: frame birth entry as reward, not task. */
+
+/* Invitation title: "See yourself across every calendar" */
+const char *ob_invitation_title(void);
+
+/* Invitation subtitle: "Enter your birth date to unlock your identity..." */
+const char *ob_invitation_subtitle(void);
+
+/* Keyboard shortcut hint for birth entry: "P" */
+const char *ob_shortcut_hint(void);
+
+/* Reassurance text for skip links: "You can always change this later" */
+const char *ob_reassurance_text(void);
+
+/* Step title for birth date entry (reward-framed). */
+const char *ob_birth_date_title(void);
+
+/* Step title for birth place entry (reward-framed). */
+const char *ob_birth_place_title(void);
 
 #endif /* TIME_ONBOARDING_H */

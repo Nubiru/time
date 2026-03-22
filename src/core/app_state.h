@@ -20,6 +20,7 @@
 #include "../ui/transition_fx.h"
 #include "../ui/card_flight.h"
 #include "../ui/focus_flow.h"
+#include "../ui/text_reveal.h"
 #include "../systems/unified/brain_visual_bridge.h"
 #include "../systems/unified/birth_profile.h"
 
@@ -60,6 +61,7 @@ typedef struct {
     /* View state (view mode, focus, transitions) */
     view_state_t view;
     int prev_focus_mode;          /* previous focus_mode for edge detection */
+    text_reveal_t focus_text;     /* per-word text reveal on focus card appearance */
 
     /* Performance LOD */
     lod_state_t lod;

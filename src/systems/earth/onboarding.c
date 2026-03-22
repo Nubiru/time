@@ -44,6 +44,7 @@ ob_flow_t ob_create(void) {
     flow.state_timer = 0.0f;
     flow.invitation_count = 0;
     flow.is_returning_user = 0;
+    flow.has_interacted = 0;
     flow.birth_date_entered = 0;
     flow.birth_place_entered = 0;
     flow.interests_entered = 0;
@@ -78,6 +79,9 @@ int ob_should_invite(const ob_flow_t *flow, const ob_timing_t *timing) {
         return 0;
     }
     if (flow->onboarding_completed) {
+        return 0;
+    }
+    if (!flow->has_interacted) {
         return 0;
     }
     if (flow->invitation_count >= timing->max_invitations) {
@@ -130,6 +134,9 @@ static ob_flow_t ob_process_exploring(ob_flow_t flow, ob_event_t event,
         if (ob_should_invite(&flow, timing)) {
             flow = ob_transition(flow, OB_INVITATION);
         }
+        break;
+    case OB_EVT_INTERACTION:
+        flow.has_interacted = 1;
         break;
     case OB_EVT_PROFILE_TAP:
         if (!flow.is_returning_user && !flow.onboarding_completed) {
@@ -248,6 +255,32 @@ static ob_flow_t ob_process_complete(ob_flow_t flow, ob_event_t event,
         break;
     }
     return flow;
+}
+
+/* --- Reward Framing & UX Copy --- */
+
+const char *ob_invitation_title(void) {
+    return "See yourself across every calendar";
+}
+
+const char *ob_invitation_subtitle(void) {
+    return "Enter your birth date to unlock your identity in 7 time systems";
+}
+
+const char *ob_shortcut_hint(void) {
+    return "P";
+}
+
+const char *ob_reassurance_text(void) {
+    return "You can always change this later";
+}
+
+const char *ob_birth_date_title(void) {
+    return "When did you arrive on Earth?";
+}
+
+const char *ob_birth_place_title(void) {
+    return "Where did you arrive?";
 }
 
 /* --- Main dispatcher --- */

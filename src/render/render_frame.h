@@ -26,6 +26,8 @@ typedef struct {
     int    theme_id;              /* active theme (0=COSMOS, 1=DAWN) for themed rendering */
     int    focus_mode;            /* focus_mode_e: 0=overview, 1-5=system focus */
     float  focus_blend;           /* 0.0-1.0 focus transition progress (from view_state) */
+    float  card_slide;            /* 0.0=hidden, 1.0=visible (focus card fade) */
+    float  card_text_reveal;      /* 0.0-1.0 per-word text appearance progress */
     float  scene_brightness;      /* 0.0-1.0 multiplier for 3D scene (enter_zoom ramp) */
     char   headline[128];         /* daily narrative headline (from brain_narrative) */
     char   wisdom_text[256];      /* daily wisdom quote */

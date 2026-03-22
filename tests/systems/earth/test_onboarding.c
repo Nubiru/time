@@ -44,6 +44,7 @@ void test_default_timing(void) {
 
 void test_no_invite_before_delay(void) {
     ob_flow_t f = ob_create();
+    f.has_interacted = 1;
     f.engagement_time = 30.0f;
     ob_timing_t t = ob_default_timing();
     TEST_ASSERT_EQUAL_INT(0, ob_should_invite(&f, &t));
@@ -51,6 +52,7 @@ void test_no_invite_before_delay(void) {
 
 void test_invite_after_delay(void) {
     ob_flow_t f = ob_create();
+    f.has_interacted = 1;
     f.engagement_time = 61.0f;
     ob_timing_t t = ob_default_timing();
     TEST_ASSERT_EQUAL_INT(1, ob_should_invite(&f, &t));
@@ -81,6 +83,7 @@ void test_no_invite_max_reached(void) {
 
 void test_invite_cooldown(void) {
     ob_flow_t f = ob_create();
+    f.has_interacted = 1;
     f.invitation_count = 1;
     ob_timing_t t = ob_default_timing();
 
@@ -98,7 +101,8 @@ void test_tick_triggers_invitation(void) {
     ob_flow_t f = ob_create();
     ob_timing_t t = ob_default_timing();
 
-    /* Tick past the 60s delay */
+    /* Must interact first, then tick past the 60s delay */
+    f = ob_process(f, OB_EVT_INTERACTION, 0.0f, &t);
     f = ob_process(f, OB_EVT_TICK, 61.0f, &t);
     TEST_ASSERT_EQUAL_INT(OB_INVITATION, f.state);
 }
@@ -281,6 +285,121 @@ void test_state_name(void) {
     TEST_ASSERT_EQUAL_STRING("Complete", ob_state_name(OB_COMPLETE));
 }
 
+/* ===== Interaction Gate (About Face V2) ===== */
+
+void test_create_has_interacted_zero(void) {
+    ob_flow_t f = ob_create();
+    TEST_ASSERT_EQUAL_INT(0, f.has_interacted);
+}
+
+void test_no_invite_without_interaction(void) {
+    ob_flow_t f = ob_create();
+    f.engagement_time = 120.0f; /* well past delay */
+    ob_timing_t t = ob_default_timing();
+    TEST_ASSERT_EQUAL_INT(0, ob_should_invite(&f, &t));
+}
+
+void test_invite_after_interaction_and_delay(void) {
+    ob_flow_t f = ob_create();
+    ob_timing_t t = ob_default_timing();
+
+    /* Interact first, then accumulate time */
+    f = ob_process(f, OB_EVT_INTERACTION, 0.0f, &t);
+    TEST_ASSERT_EQUAL_INT(1, f.has_interacted);
+
+    f.engagement_time = 61.0f;
+    TEST_ASSERT_EQUAL_INT(1, ob_should_invite(&f, &t));
+}
+
+void test_interaction_event_sets_flag(void) {
+    ob_flow_t f = ob_create();
+    ob_timing_t t = ob_default_timing();
+    TEST_ASSERT_EQUAL_INT(0, f.has_interacted);
+
+    f = ob_process(f, OB_EVT_INTERACTION, 0.0f, &t);
+    TEST_ASSERT_EQUAL_INT(1, f.has_interacted);
+    TEST_ASSERT_EQUAL_INT(OB_EXPLORING, f.state); /* stays in exploring */
+}
+
+void test_interaction_then_tick_triggers_invitation(void) {
+    ob_flow_t f = ob_create();
+    ob_timing_t t = ob_default_timing();
+
+    f = ob_process(f, OB_EVT_INTERACTION, 0.0f, &t);
+    f = ob_process(f, OB_EVT_TICK, 61.0f, &t);
+    TEST_ASSERT_EQUAL_INT(OB_INVITATION, f.state);
+}
+
+void test_tick_without_interaction_stays_exploring(void) {
+    ob_flow_t f = ob_create();
+    ob_timing_t t = ob_default_timing();
+
+    /* Tick past delay but NO interaction */
+    f = ob_process(f, OB_EVT_TICK, 61.0f, &t);
+    TEST_ASSERT_EQUAL_INT(OB_EXPLORING, f.state);
+}
+
+void test_multiple_interactions_idempotent(void) {
+    ob_flow_t f = ob_create();
+    ob_timing_t t = ob_default_timing();
+
+    f = ob_process(f, OB_EVT_INTERACTION, 0.0f, &t);
+    f = ob_process(f, OB_EVT_INTERACTION, 0.0f, &t);
+    f = ob_process(f, OB_EVT_INTERACTION, 0.0f, &t);
+    TEST_ASSERT_EQUAL_INT(1, f.has_interacted);
+    TEST_ASSERT_EQUAL_INT(OB_EXPLORING, f.state);
+}
+
+void test_profile_tap_implies_interaction(void) {
+    /* Profile tap should work even without prior OB_EVT_INTERACTION
+     * because tapping is itself an interaction — it bypasses the gate. */
+    ob_flow_t f = ob_create();
+    ob_timing_t t = ob_default_timing();
+
+    f = ob_process(f, OB_EVT_PROFILE_TAP, 0.0f, &t);
+    TEST_ASSERT_EQUAL_INT(OB_BIRTH_DATE, f.state);
+}
+
+/* ===== Reward Framing Strings ===== */
+
+void test_invitation_title(void) {
+    const char *title = ob_invitation_title();
+    TEST_ASSERT_NOT_NULL(title);
+    TEST_ASSERT_TRUE(strlen(title) > 0);
+    /* Should be reward-framed, not task-framed */
+    TEST_ASSERT_NOT_NULL(strstr(title, "yourself"));
+}
+
+void test_invitation_subtitle(void) {
+    const char *sub = ob_invitation_subtitle();
+    TEST_ASSERT_NOT_NULL(sub);
+    TEST_ASSERT_NOT_NULL(strstr(sub, "unlock"));
+}
+
+void test_shortcut_hint(void) {
+    const char *hint = ob_shortcut_hint();
+    TEST_ASSERT_NOT_NULL(hint);
+    TEST_ASSERT_EQUAL_STRING("P", hint);
+}
+
+void test_reassurance_text(void) {
+    const char *text = ob_reassurance_text();
+    TEST_ASSERT_NOT_NULL(text);
+    TEST_ASSERT_NOT_NULL(strstr(text, "change"));
+}
+
+void test_birth_date_title(void) {
+    const char *title = ob_birth_date_title();
+    TEST_ASSERT_NOT_NULL(title);
+    TEST_ASSERT_NOT_NULL(strstr(title, "arrive"));
+}
+
+void test_birth_place_title(void) {
+    const char *title = ob_birth_place_title();
+    TEST_ASSERT_NOT_NULL(title);
+    TEST_ASSERT_NOT_NULL(strstr(title, "arrive"));
+}
+
 /* ===== Additional Edge Cases ===== */
 
 void test_invitation_dismiss_increments_count(void) {
@@ -369,6 +488,9 @@ void test_scene_dim_interests(void) {
 void test_full_happy_path(void) {
     ob_flow_t f = ob_create();
     ob_timing_t t = ob_default_timing();
+
+    /* Phase 0: User interacts with the scene */
+    f = ob_process(f, OB_EVT_INTERACTION, 0.0f, &t);
 
     /* Phase 1: Explore until invitation triggers */
     f = ob_process(f, OB_EVT_TICK, 61.0f, &t);
@@ -475,6 +597,24 @@ int main(void) {
     RUN_TEST(test_state_timer_resets);
     RUN_TEST(test_engagement_accumulates);
     RUN_TEST(test_state_name);
+
+    /* Interaction Gate — About Face V2 (8) */
+    RUN_TEST(test_create_has_interacted_zero);
+    RUN_TEST(test_no_invite_without_interaction);
+    RUN_TEST(test_invite_after_interaction_and_delay);
+    RUN_TEST(test_interaction_event_sets_flag);
+    RUN_TEST(test_interaction_then_tick_triggers_invitation);
+    RUN_TEST(test_tick_without_interaction_stays_exploring);
+    RUN_TEST(test_multiple_interactions_idempotent);
+    RUN_TEST(test_profile_tap_implies_interaction);
+
+    /* Reward Framing Strings (6) */
+    RUN_TEST(test_invitation_title);
+    RUN_TEST(test_invitation_subtitle);
+    RUN_TEST(test_shortcut_hint);
+    RUN_TEST(test_reassurance_text);
+    RUN_TEST(test_birth_date_title);
+    RUN_TEST(test_birth_place_title);
 
     /* Additional Edge Cases (12) */
     RUN_TEST(test_invitation_dismiss_increments_count);
