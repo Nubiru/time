@@ -98,6 +98,7 @@ void test_all_indices_in_range(void) {
         11,   /* THAI: 0-11 */
         99,   /* GEOLOGICAL: index depends on era count */
         -1,   /* COSMIC: always -1 */
+        6,    /* EARTH: maps to Gregorian ring (0-6) */
     };
 
     for (int i = 0; i < TS_SYS_COUNT; i++) {
