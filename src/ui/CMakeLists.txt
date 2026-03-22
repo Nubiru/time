@@ -281,5 +281,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_daily_thai_layout OBJECT daily_thai_layout.c)
     add_library(time_daily_haab_layout OBJECT daily_haab_layout.c)
     add_library(time_daily_kabbalah_layout OBJECT daily_kabbalah_layout.c)
+    add_library(time_daily_greeting OBJECT daily_greeting.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()

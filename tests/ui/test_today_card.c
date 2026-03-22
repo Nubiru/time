@@ -180,7 +180,8 @@ void test_earth_card_has_season(void)
     card_content_t c = today_card_for_system(TS_SYS_EARTH, TEST_JD,
                                               TEST_SUN_LON, TEST_MOON_LON,
                                               0.0, 0.0);
-    TEST_ASSERT_EQUAL_STRING("Earth", c.title);
+    /* Title starts with "Earth" — may include population data */
+    TEST_ASSERT_TRUE(strncmp(c.title, "Earth", 5) == 0);
     TEST_ASSERT_TRUE(strlen(c.line1) > 0);
 }
 
