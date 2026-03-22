@@ -102,6 +102,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/bagua_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/gates_mandala_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/stardust_pass.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/passes/diamond_room_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/card_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/text_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/post_pass.c
@@ -152,6 +153,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_planet_pack         OBJECT planet_pack.c)
     add_library(time_planet_surface_pack OBJECT planet_surface_pack.c)
     add_library(time_saturn_ring_pack    OBJECT saturn_ring_pack.c)
+    add_library(time_sky_pack           OBJECT sky_pack.c)
     add_library(time_star_field          OBJECT star_field.c)
     add_library(time_text_render         OBJECT text_render.c)
     add_library(time_zodiac_pack         OBJECT zodiac_pack.c)

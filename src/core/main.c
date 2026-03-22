@@ -36,6 +36,7 @@
 #include "../render/passes/bagua_pass.h"
 #include "../render/passes/gates_mandala_pass.h"
 #include "../render/passes/stardust_pass.h"
+#include "../render/passes/diamond_room_pass.h"
 #include "../render/earth_view_frame.h"
 #include "../systems/astronomy/planets.h"
 #include "../ui/ui_bridge.h"
@@ -480,8 +481,10 @@ void main_loop(void) {
     if (ps_is_enabled(&sched, PASS_ZODIAC) &&
         (frame.focus_mode == 0 || frame.focus_mode == 1))
         zodiac_pass_draw(&frame);
-    if (frame.focus_mode == 0)
+    if (frame.focus_mode == 0) {
         ring_pass_draw(&frame);  /* concentric knowledge system rings — overview only */
+        diamond_room_pass_draw(&frame); /* E7 icosahedron wireframe — overview only */
+    }
     convergence_pass_draw(&frame);  /* brain convergence connection lines */
     if (ps_is_enabled(&sched, PASS_EARTH))          earth_pass_draw(&frame);
 
@@ -633,6 +636,7 @@ int main(void) {
     bagua_pass_init();
     gates_mandala_pass_init();
     stardust_pass_init();
+    diamond_room_pass_init();
     if (card_pass_init() != 0) return 1;
     if (text_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
