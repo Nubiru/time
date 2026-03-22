@@ -86,6 +86,7 @@ time_add_test(NAME test_deep_sky        TEST tests/render/test_deep_sky.c       
 time_add_test(NAME test_deep_sky_pack  TEST tests/render/test_deep_sky_pack.c  DEPS deep_sky_pack deep_sky)
 time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack noise_shader shader_builder)
 time_add_test(NAME test_zoom_fade      TEST tests/render/test_zoom_fade.c      DEPS)
+time_add_test(NAME test_depth_visual  TEST tests/render/test_depth_visual.c   DEPS)
 time_add_test(NAME test_stardust_pack TEST tests/render/test_stardust_pack.c DEPS stardust_pack)
 time_add_test(NAME test_sky_pack      TEST tests/render/test_sky_pack.c      DEPS sky_pack)
 time_add_test(NAME test_constellation_label TEST tests/render/test_constellation_label.c DEPS constellation_label constellation_bounds)

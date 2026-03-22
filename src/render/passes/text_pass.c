@@ -37,6 +37,7 @@
 #include "../../ui/earth_timeline_layout.h"
 #include "../constellation_label.h"
 #include "../zoom_fade.h"
+#include "../depth_visual.h"
 #include "../../systems/tzolkin/dreamspell.h"
 #include "../../systems/iching/iching.h"
 #include "../../ui/hexagram_layout.h"
@@ -887,6 +888,20 @@ static void draw_card_text(const render_frame_t *frame)
         msdf_add_text(view_label, 16.0f, 37.0f, 9.0f,
                       wm.brand_secondary.r, wm.brand_secondary.g,
                       wm.brand_secondary.b, 0.30f);
+
+        /* Depth tier label — shows current navigation depth */
+        dv_tier_t tier = dv_tier_from_zoom(frame->log_zoom);
+        float tier_alpha = dv_tier_blend(frame->log_zoom, tier);
+        if (tier_alpha > 0.05f && tier != DV_TIER_CARD) {
+            /* Only show label for non-default tiers (glyph/glance/context/board) */
+            const char *tier_name = dv_tier_name(tier);
+            dv_tint_t tint = dv_tier_tint(tier);
+            float tr = (tint.a > 0.001f) ? tint.r : wm.brand_primary.r;
+            float tg = (tint.a > 0.001f) ? tint.g : wm.brand_primary.g;
+            float tb = (tint.a > 0.001f) ? tint.b : wm.brand_primary.b;
+            msdf_add_text(tier_name, 16.0f, 52.0f, 8.0f,
+                          tr, tg, tb, tier_alpha * 0.25f);
+        }
     }
 
     for (int c = 0; c < CARD_TYPE_COUNT; c++) {
