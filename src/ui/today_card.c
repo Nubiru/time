@@ -81,20 +81,20 @@ static card_content_t empty_card(void)
 
 static card_content_t make_gregorian(double jd)
 {
-    daily_gregorian_layout_t dg = daily_gregorian_compute(jd);
     int year = 0, month = 0;
     double day_frac = jd_to_gregorian(jd, &year, &month);
     int day = (int)floor(day_frac);
     int dow = gregorian_day_of_week(jd);
-    card_content_t c = card_format_gregorian(year, month, day, dow,
-                                              dg.season_name);
-    if (dg.day_planet && dg.day_planet[0])
-        snprintf(c.line3, sizeof(c.line3), "%s day — %s",
-                 dg.day_planet, dg.day_origin ? dg.day_origin : "");
-    if (dg.month_quality && dg.month_quality[0])
-        snprintf(c.detail, sizeof(c.detail), "%s: %s",
-                 dg.month_name ? dg.month_name : "",
-                 dg.month_quality);
+    gregorian_interp_t gi = gi_interpret(month, day, dow);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Gregorian");
+    if (gi.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", gi.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%d-%02d-%02d", year, month, day);
+    if (gi.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", gi.detail);
     return c;
 }
 
@@ -138,13 +138,20 @@ static card_content_t make_haab(double jd)
 static card_content_t make_iching(double jd)
 {
     daily_iching_layout_t dl = daily_iching_compute(jd);
-    card_content_t c = card_format_iching(dl.king_wen, dl.name,
-                                           dl.upper_name, dl.lower_name,
-                                           dl.lines);
-    /* Enrich with judgment and keywords from daily layout */
-    if (dl.keywords && dl.keywords[0])
-        snprintf(c.line3, sizeof(c.line3), "%s", dl.keywords);
-    if (dl.judgment && dl.judgment[0])
+    iching_interp_t ii = ii_interpret(dl.king_wen,
+        dl.upper_name ? dl.upper_name : "",
+        dl.lower_name ? dl.lower_name : "");
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "I Ching");
+    if (ii.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", ii.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "Hexagram %d — %s",
+                 dl.king_wen, dl.name ? dl.name : "");
+    if (ii.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", ii.detail);
+    else if (dl.judgment && dl.judgment[0])
         snprintf(c.detail, sizeof(c.detail), "%s", dl.judgment);
     return c;
 }
@@ -298,18 +305,21 @@ static card_content_t make_kabbalah(double jd)
 
 static card_content_t make_geology(double jd)
 {
-    daily_geology_layout_t dgl = daily_geology_compute(jd);
     double ma = geo_jd_to_ma(jd);
-    geo_unit_t eon    = geo_eon_at(ma);
-    geo_unit_t era    = geo_era_at(ma);
-    geo_unit_t period = geo_period_at(ma);
-    geo_unit_t epoch  = geo_epoch_at(ma);
-    card_content_t c = card_format_geology(eon.name, era.name,
-                                            period.name, epoch.name);
-    if (dgl.fact_name && dgl.fact_name[0])
-        snprintf(c.line3, sizeof(c.line3), "%s", dgl.fact_name);
-    if (dgl.fact_description && dgl.fact_description[0])
-        snprintf(c.detail, sizeof(c.detail), "%s", dgl.fact_description);
+    geo_unit_t eon = geo_eon_at(ma);
+    /* Map eon name to index: Hadean=0, Archean=1, Proterozoic=2, Phanerozoic=3 */
+    int eon_idx = (ma > 4000.0) ? 0 : (ma > 2500.0) ? 1 : (ma > 541.0) ? 2 : 3;
+    geology_interp_t gli = gli_interpret(eon_idx, -1, ma);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Geology");
+    if (gli.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", gli.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%s — %s",
+                 eon.name ? eon.name : "", geo_era_at(ma).name ? geo_era_at(ma).name : "");
+    if (gli.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", gli.detail);
     return c;
 }
 
