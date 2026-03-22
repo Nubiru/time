@@ -29,6 +29,7 @@
 #include "../../ui/card_selector.h"
 #include "../../ui/card_style.h"
 #include "../../ui/today_card.h"
+#include "../../systems/unified/today_summary.h"
 #include "../../ui/kin_oracle_layout.h"
 #include "../../ui/kin_wavespell_layout.h"
 #include "../../ui/kin_cell.h"
@@ -856,14 +857,30 @@ static void draw_card_text(const render_frame_t *frame)
         layout.cards[i].opacity = (i < sel.filled_count) ? sel.slots[i].opacity : 0.0f;
     }
 
-    /* MSDF text rendering */
-    float title_fs = 24.0f;
-    float body_fs  = 18.0f;
-    float margin_x = 8.0f;
-    float margin_y = 10.0f;
-    float line_h   = 22.0f;
+    /* MSDF text rendering — Krug/Refactoring UI tuned sizes */
+    float title_fs  = 21.0f;
+    float body_fs   = 14.0f;
+    float detail_fs = 11.0f;
+    float margin_x  = 13.0f;
+    float margin_y  = 13.0f;
+    float line_h    = 21.0f;
+    float title_gap = 8.0f;  /* fibonacci sp-3 between title and body */
 
     msdf_begin();
+
+    /* "Time" wordmark — top-left, subtle brand presence */
+    {
+        theme_cosmos_t wm = theme_cosmos_constant();
+        msdf_add_text("Time", 16.0f, 20.0f, 11.0f,
+                      wm.brand_primary.r, wm.brand_primary.g,
+                      wm.brand_primary.b, 0.38f);
+        /* View mode indicator below wordmark */
+        const char *view_label = (frame->focus_mode == 0)
+            ? "Space View" : "Focus View";
+        msdf_add_text(view_label, 16.0f, 37.0f, 9.0f,
+                      wm.brand_secondary.r, wm.brand_secondary.g,
+                      wm.brand_secondary.b, 0.30f);
+    }
 
     for (int c = 0; c < CARD_TYPE_COUNT; c++) {
         const card_rect_t *r = &layout.cards[c];
@@ -882,8 +899,24 @@ static void draw_card_text(const render_frame_t *frame)
         msdf_add_text(content->title, px, py, title_fs,
                       style.title.r, style.title.g, style.title.b, style.title.a);
 
+        /* Focus key hint — top-right of card, subtle */
+        {
+            const char *key = NULL;
+            if (sys_id == TS_SYS_ASTROLOGY)     key = "A";
+            else if (sys_id == TS_SYS_TZOLKIN)   key = "K";
+            else if (sys_id == TS_SYS_ICHING)    key = "I";
+            else if (sys_id == TS_SYS_CHINESE)   key = "C";
+            else if (sys_id == TS_SYS_HUMAN_DESIGN) key = "D";
+            else if (sys_id == TS_SYS_KABBALAH)  key = "T";
+            if (key) {
+                float kx = (r->x + r->w * 0.5f) * (float)vw - margin_x - 8.0f;
+                msdf_add_text(key, kx, py, 11.0f,
+                              style.muted.r, style.muted.g, style.muted.b, 0.30f);
+            }
+        }
+
         /* Line 1 */
-        py += line_h + 4.0f;
+        py += title_gap + title_fs;
         msdf_add_text(content->line1, px, py, body_fs,
                       style.body.r, style.body.g, style.body.b, style.body.a);
 
@@ -892,10 +925,10 @@ static void draw_card_text(const render_frame_t *frame)
         msdf_add_text(content->line2, px, py, body_fs,
                       style.body.r, style.body.g, style.body.b, style.body.a);
 
-        /* Line 3 */
+        /* Line 3 (detail — smaller, muted) */
         if (content->line3[0] != '\0') {
             py += line_h;
-            msdf_add_text(content->line3, px, py, body_fs,
+            msdf_add_text(content->line3, px, py, detail_fs,
                           style.muted.r, style.muted.g, style.muted.b, style.muted.a);
         }
     }
