@@ -939,6 +939,15 @@ static void draw_card_text(const render_frame_t *frame)
             msdf_add_text(content->line3, px, py, detail_fs,
                           style.muted.r, style.muted.g, style.muted.b, style.muted.a * ta);
         }
+
+        /* Detail line (interpret glance text — even smaller, very muted).
+         * Shows richer interpret content when available (NERVE gap fix). */
+        if (content->detail[0] != '\0') {
+            py += line_h * 0.8f; /* tighter spacing for caption */
+            msdf_add_text(content->detail, px, py, detail_fs * 0.9f,
+                          style.muted.r, style.muted.g, style.muted.b,
+                          style.muted.a * ta * 0.7f);
+        }
     }
 
     /* Earth timeline — geological era labels when in Earth View */
