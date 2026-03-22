@@ -28,6 +28,9 @@ static float s_prev_touch_y;
 static float s_prev_pinch_dist;
 static int s_touch_drag_active;
 
+/* Drag velocity tracking (for rotation inertia) */
+static double s_last_drag_time;
+
 /* Time speed presets (days per real second) */
 static const double TIME_SPEEDS[] = {
     0.0,         /* 0: paused */
@@ -53,6 +56,10 @@ static EM_BOOL on_mouse_down(int type, const EmscriptenMouseEvent *e, void *data
     g_input_state->mouse_down = 1;
     g_input_state->mouse_x = e->clientX;
     g_input_state->mouse_y = e->clientY;
+    /* Stop any inertial coast and start velocity tracking */
+    g_input_state->orbit_vel_az = 0.0f;
+    g_input_state->orbit_vel_el = 0.0f;
+    s_last_drag_time = emscripten_get_now();
     return EM_TRUE;
 }
 
@@ -71,7 +78,22 @@ static EM_BOOL on_mouse_move(int type, const EmscriptenMouseEvent *e, void *data
     g_input_state->mouse_x = e->clientX;
     g_input_state->mouse_y = e->clientY;
 
-    camera_rotate(&g_input_state->camera, (float)(-dx * 0.005), (float)(-dy * 0.005));
+    float daz = (float)(-dx * 0.005);
+    float del = (float)(-dy * 0.005);
+    camera_rotate(&g_input_state->camera, daz, del);
+
+    /* Track smoothed velocity for inertia on release */
+    double now = emscripten_get_now();
+    double dt_ms = now - s_last_drag_time;
+    s_last_drag_time = now;
+    if (dt_ms > 1.0) { /* avoid division by zero */
+        float dt = (float)(dt_ms / 1000.0);
+        float vel_az = daz / dt;
+        float vel_el = del / dt;
+        g_input_state->orbit_vel_az = 0.8f * g_input_state->orbit_vel_az + 0.2f * vel_az;
+        g_input_state->orbit_vel_el = 0.8f * g_input_state->orbit_vel_el + 0.2f * vel_el;
+    }
+
     return EM_TRUE;
 }
 
@@ -325,6 +347,10 @@ static EM_BOOL on_touchstart(int type, const EmscriptenTouchEvent *e, void *data
                 s_prev_touch_x = s_touch.points[i].current_x;
                 s_prev_touch_y = s_touch.points[i].current_y;
                 s_touch_drag_active = 1;
+                /* Reset inertia for single-finger drag */
+                g_input_state->orbit_vel_az = 0.0f;
+                g_input_state->orbit_vel_el = 0.0f;
+                s_last_drag_time = now;
                 break;
             }
         }
@@ -360,8 +386,17 @@ static EM_BOOL on_touchmove(int type, const EmscriptenTouchEvent *e, void *data)
                 float dy = s_touch.points[i].current_y - s_prev_touch_y;
                 s_prev_touch_x = s_touch.points[i].current_x;
                 s_prev_touch_y = s_touch.points[i].current_y;
-                /* Scale: touch coords are pixels, similar sensitivity to mouse */
-                camera_rotate(&g_input_state->camera, -dx * 0.005f, -dy * 0.005f);
+                float daz = -dx * 0.005f;
+                float del = -dy * 0.005f;
+                camera_rotate(&g_input_state->camera, daz, del);
+                /* Track velocity for touch inertia */
+                double dt_ms = now - s_last_drag_time;
+                s_last_drag_time = now;
+                if (dt_ms > 1.0) {
+                    float dt = (float)(dt_ms / 1000.0);
+                    g_input_state->orbit_vel_az = 0.8f * g_input_state->orbit_vel_az + 0.2f * (daz / dt);
+                    g_input_state->orbit_vel_el = 0.8f * g_input_state->orbit_vel_el + 0.2f * (del / dt);
+                }
                 break;
             }
         }

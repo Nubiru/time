@@ -81,4 +81,9 @@ float ez_reveal_blend(enter_zoom_t ez);
 /* 1 if just completed this frame (EZ_DONE phase) */
 int ez_just_done(enter_zoom_t ez);
 
+/* Scene brightness: dim stars during HOLD, ramp during ZOOM, full after.
+ * Multiplier for 3D scene elements (stars, milkyway, constellations).
+ * Returns 1.0 when enter_zoom is inactive. */
+float ez_scene_brightness(enter_zoom_t ez);
+
 #endif /* TIME_ENTER_ZOOM_H */

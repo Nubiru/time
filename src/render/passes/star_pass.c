@@ -110,6 +110,7 @@ void star_pass_draw(const render_frame_t *frame) {
     float zoom_alpha = zf_opacity(ZF_STARS, frame->log_zoom);
     if (zoom_alpha < 0.01f) return;
     star_opacity *= zoom_alpha;
+    star_opacity *= frame->scene_brightness; /* dim during enter_zoom */
 
     /* Stars: point sprites with additive blending */
     glUseProgram(s_star_program);

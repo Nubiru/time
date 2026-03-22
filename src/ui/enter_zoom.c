@@ -203,3 +203,29 @@ int ez_just_done(enter_zoom_t ez)
 {
     return ez.phase == EZ_DONE ? 1 : 0;
 }
+
+float ez_scene_brightness(enter_zoom_t ez)
+{
+    /* Dim scene during hold, ramp during zoom, full after */
+    static const float DIM = 0.05f; /* nearly dark — just a hint of stars */
+
+    switch (ez.phase) {
+    case EZ_IDLE:
+        return 1.0f;
+
+    case EZ_HOLDING:
+        return DIM;
+
+    case EZ_ZOOMING: {
+        /* Ramp from DIM → 1.0 tracking zoom flight progress */
+        float t = camera_path_progress(ez.path);
+        return DIM + (1.0f - DIM) * t;
+    }
+
+    case EZ_REVEALING:
+    case EZ_DONE:
+        return 1.0f;
+    }
+
+    return 1.0f;
+}

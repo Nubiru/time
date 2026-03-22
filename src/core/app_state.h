@@ -40,6 +40,10 @@ typedef struct {
     spring_t zoom_spring;         /* scroll/pinch zoom with momentum */
     scale_transition_t scale_transition;
 
+    /* Camera orbit inertia — velocity-decay on drag release */
+    float orbit_vel_az;           /* azimuth angular velocity (rad/s) */
+    float orbit_vel_el;           /* elevation angular velocity (rad/s) */
+
     /* Mouse */
     int mouse_down;
     double mouse_x;

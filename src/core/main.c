@@ -253,6 +253,27 @@ void main_loop(void) {
         }
     }
 
+    /* --- Orbit inertia: coast rotation on drag release --- */
+    if (!g_state.mouse_down && !motion_active) {
+        float dt_f = (float)dt_sec;
+        float decay = expf(-6.0f * dt_f); /* ~0.9 per frame at 60fps */
+        g_state.orbit_vel_az *= decay;
+        g_state.orbit_vel_el *= decay;
+        if (fabsf(g_state.orbit_vel_az) > 0.01f
+            || fabsf(g_state.orbit_vel_el) > 0.01f) {
+            camera_rotate(&g_state.camera,
+                          g_state.orbit_vel_az * dt_f,
+                          g_state.orbit_vel_el * dt_f);
+        } else {
+            g_state.orbit_vel_az = 0.0f;
+            g_state.orbit_vel_el = 0.0f;
+        }
+    } else if (motion_active) {
+        /* Choreography driving camera — kill any residual velocity */
+        g_state.orbit_vel_az = 0.0f;
+        g_state.orbit_vel_el = 0.0f;
+    }
+
     /* --- Zoom-depth: track camera zoom → depth tier mapping --- */
     g_state.zoom_depth = zoom_depth_update(g_state.zoom_depth,
                                             g_state.camera.log_zoom,

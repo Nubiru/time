@@ -315,6 +315,48 @@ void test_ez_just_done_flag(void)
     TEST_ASSERT_EQUAL_INT(0, ez_just_done(ez));
 }
 
+/* --- scene brightness tests --- */
+
+void test_ez_brightness_idle_is_one(void)
+{
+    enter_zoom_t ez = ez_create();
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, ez_scene_brightness(ez));
+}
+
+void test_ez_brightness_hold_is_dim(void)
+{
+    enter_zoom_t ez = ez_create();
+    ez = ez_start(ez);
+    float b = ez_scene_brightness(ez);
+    TEST_ASSERT_TRUE(b < 0.1f); /* nearly dark */
+    TEST_ASSERT_TRUE(b > 0.0f); /* not completely black */
+}
+
+void test_ez_brightness_ramps_during_zoom(void)
+{
+    enter_zoom_t ez = ez_create();
+    ez = ez_start(ez);
+    /* Advance past hold */
+    ez = ez_tick(ez, EZ_HOLD_DURATION + 0.01f);
+    float b1 = ez_scene_brightness(ez);
+
+    /* Advance through zoom */
+    ez = ez_tick(ez, 1.0f);
+    float b2 = ez_scene_brightness(ez);
+
+    TEST_ASSERT_TRUE(b2 > b1); /* brightness increases */
+}
+
+void test_ez_brightness_full_after_zoom(void)
+{
+    enter_zoom_t ez = ez_create();
+    ez = ez_start(ez);
+    ez = ez_tick(ez, EZ_HOLD_DURATION + 0.01f);
+    ez = ez_tick(ez, EZ_ZOOM_DURATION + 0.1f);
+    /* Now in REVEALING phase */
+    TEST_ASSERT_FLOAT_WITHIN(TOL, 1.0f, ez_scene_brightness(ez));
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -339,5 +381,9 @@ int main(void)
     RUN_TEST(test_ez_reveal_blend_one_at_done);
     RUN_TEST(test_ez_skip_snaps_to_end);
     RUN_TEST(test_ez_just_done_flag);
+    RUN_TEST(test_ez_brightness_idle_is_one);
+    RUN_TEST(test_ez_brightness_hold_is_dim);
+    RUN_TEST(test_ez_brightness_ramps_during_zoom);
+    RUN_TEST(test_ez_brightness_full_after_zoom);
     return UNITY_END();
 }
