@@ -959,6 +959,16 @@ static void draw_card_text(const render_frame_t *frame)
                           btc.brand_primary.b, 0.5f);
         }
 
+        /* Time entropy — "Time entropy: 0.87 — complex (12/21 active)" */
+        if (frame->entropy_text[0] != '\0') {
+            bot_y -= 14.0f;
+            float ew = msdf_text_width(MSDF_FONT_MONO, frame->entropy_text, 10.0f);
+            msdf_add_text(frame->entropy_text,
+                          ((float)vw - ew) * 0.5f, bot_y, 10.0f,
+                          btc.brand_secondary.r, btc.brand_secondary.g,
+                          btc.brand_secondary.b, 0.30f);
+        }
+
         /* Percentile ranking — "Day #47 of 365 — top 12.9%" */
         if (frame->percentile_text[0] != '\0') {
             bot_y -= 16.0f;

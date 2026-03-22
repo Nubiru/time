@@ -51,6 +51,7 @@
 #include "../systems/unified/brain_stats.h"
 #include "../systems/unified/red_thread.h"
 #include "../systems/unified/grand_cycle.h"
+#include "../systems/unified/time_entropy.h"
 #include <string.h>
 #endif
 
@@ -170,6 +171,17 @@ void main_loop(void) {
                                      days_ago);
                     }
                 }
+            }
+
+            /* S101: Time entropy — how structured is today's pattern? */
+            {
+                te_result_t te;
+                te_entropy(g_state.simulation_jd, &te);
+                const char *label = te_interpret(te.normalized);
+                snprintf(g_state.entropy_text, sizeof(g_state.entropy_text),
+                         "Time entropy: %.2f — %s (%d/%d active)",
+                         te.normalized, label,
+                         te.significant_count, te.total_systems);
             }
         }
     }
@@ -318,6 +330,7 @@ void main_loop(void) {
     memcpy(frame.red_thread, g_state.red_thread, sizeof(frame.red_thread));
     memcpy(frame.grand_cycle, g_state.grand_cycle, sizeof(frame.grand_cycle));
     memcpy(frame.last_similar, g_state.last_similar, sizeof(frame.last_similar));
+    memcpy(frame.entropy_text, g_state.entropy_text, sizeof(frame.entropy_text));
     frame.brain_visual = g_state.brain_visual;
 
     /* Planet data for natal chart pass */

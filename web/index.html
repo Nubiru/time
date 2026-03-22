@@ -62,7 +62,7 @@
                 <span class="panel-close" role="button" aria-label="Close" tabindex="0">&times;</span>
             </div>
             <div class="panel-body">
-                <div class="text-muted" style="font-size:var(--font-size-compact);margin-bottom:var(--sp-3)">Enter your birth date to unlock your identity in 7 time systems</div>
+                <div class="text-muted" style="font-size:var(--font-size-compact);margin-bottom:var(--sp-3)">Enter your birth date to unlock your identity in 7 time systems <kbd>P</kbd></div>
                 <form id="birth-form" autocomplete="off">
                     <label class="text-secondary">Day
                         <input type="number" id="birth-day" min="1" max="31" placeholder="DD" class="cmd-input" style="width:4em;min-height:44px">
@@ -240,15 +240,22 @@
             if (Module && Module._ui_jump_to_now) Module._ui_jump_to_now();
         });
 
-        /* Birth date panel — P key */
+        /* Birth date panel — P key (gated on interaction, About Face ACTION 4) */
         var birthPanel = document.getElementById('birth-panel');
         var birthForm = document.getElementById('birth-form');
+        var hasInteracted = false;
+        document.addEventListener('wheel', function() { hasInteracted = true; }, {once: true});
+        document.addEventListener('mousedown', function() { hasInteracted = true; }, {once: true});
+        document.addEventListener('touchstart', function() { hasInteracted = true; }, {once: true});
         function toggleBirth() {
             if (birthPanel) birthPanel.classList.toggle('hidden');
         }
         document.addEventListener('keydown', function(e) {
             if (e.target.tagName === 'INPUT') return;
-            if (e.key === 'p' || e.key === 'P') toggleBirth();
+            if (e.key === 'p' || e.key === 'P') {
+                if (!hasInteracted && !localStorage.getItem('time_birth')) return;
+                toggleBirth();
+            }
         });
         if (birthForm) {
             birthForm.addEventListener('submit', function(e) {
