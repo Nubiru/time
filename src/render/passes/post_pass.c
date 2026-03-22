@@ -35,6 +35,10 @@ static GLuint s_pp_ping_tex;
 static GLuint s_pp_pong_fbo;
 static GLuint s_pp_pong_tex;
 
+/* God ray FBO (half resolution) */
+static GLuint s_pp_godrays_fbo;
+static GLuint s_pp_godrays_tex;
+
 /* Shader programs */
 static GLuint s_pp_bright_program;
 static GLint  s_pp_bright_loc_scene;
@@ -54,6 +58,14 @@ static GLint  s_pp_comp_loc_vignette_strength;
 static GLint  s_pp_comp_loc_vignette_radius;
 static GLint  s_pp_comp_loc_grain_intensity;
 static GLint  s_pp_comp_loc_time;
+
+static GLuint s_pp_godrays_program;
+static GLint  s_pp_gr_loc_frame;
+static GLint  s_pp_gr_loc_sun_pos;
+static GLint  s_pp_gr_loc_density;
+static GLint  s_pp_gr_loc_weight;
+static GLint  s_pp_gr_loc_decay;
+static GLint  s_pp_gr_loc_exposure;
 
 /* Current config */
 static pp_config_t s_pp_config;
@@ -152,6 +164,7 @@ int post_pass_init(int width, int height) {
     create_fbo(&s_pp_bright_fbo, &s_pp_bright_tex, bw, bh);
     create_fbo(&s_pp_ping_fbo, &s_pp_ping_tex, bw, bh);
     create_fbo(&s_pp_pong_fbo, &s_pp_pong_tex, bw, bh);
+    create_fbo(&s_pp_godrays_fbo, &s_pp_godrays_tex, bw, bh);
 
     /* Compile shaders */
     const char *quad_vert = pp_quad_vert_source();
@@ -190,8 +203,23 @@ int post_pass_init(int width, int height) {
     s_pp_comp_loc_grain_intensity = glGetUniformLocation(s_pp_composite_program, "u_grain_intensity");
     s_pp_comp_loc_time = glGetUniformLocation(s_pp_composite_program, "u_time");
 
-    s_pp_active = 1; /* everything succeeded — full pipeline */
-    printf("Post-process: bloom + tonemap + vignette, %dx%d, shaders compiled\n",
+    /* God ray radial blur shader (GPU Gems 3, Ch 13) */
+    s_pp_godrays_program = shader_create_program(
+        quad_vert, pp_godrays_frag_source());
+    if (s_pp_godrays_program == 0) {
+        printf("God rays shader failed — disabling god rays\n");
+        s_pp_config.godrays_enabled = 0;
+    } else {
+        s_pp_gr_loc_frame    = glGetUniformLocation(s_pp_godrays_program, "u_frame");
+        s_pp_gr_loc_sun_pos  = glGetUniformLocation(s_pp_godrays_program, "u_sun_screen_pos");
+        s_pp_gr_loc_density  = glGetUniformLocation(s_pp_godrays_program, "u_density");
+        s_pp_gr_loc_weight   = glGetUniformLocation(s_pp_godrays_program, "u_weight");
+        s_pp_gr_loc_decay    = glGetUniformLocation(s_pp_godrays_program, "u_decay");
+        s_pp_gr_loc_exposure = glGetUniformLocation(s_pp_godrays_program, "u_exposure");
+    }
+
+    s_pp_active = 1;
+    printf("Post-process: bloom + tonemap + vignette + godrays, %dx%d\n",
            width, height);
     return 0;
 }
@@ -254,7 +282,32 @@ void post_pass_end(const render_frame_t *frame) {
         }
     }
 
-    /* Step 3: Composite to default framebuffer */
+    /* Step 3: God rays — radial blur from Sun screen position */
+    if (s_pp_config.godrays_enabled && s_pp_godrays_program != 0) {
+        glBindFramebuffer(GL_FRAMEBUFFER, s_pp_godrays_fbo);
+        glViewport(0, 0, bw, bh);
+
+        glUseProgram(s_pp_godrays_program);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, s_pp_bright_tex);
+        glUniform1i(s_pp_gr_loc_frame, 0);
+
+        /* Sun at world origin (0,0,0). Project: clip = VP * (0,0,0,1) = col 3. */
+        float sun_w = frame->view_proj.m[15];
+        float sun_uv_x = 0.5f, sun_uv_y = 0.5f;
+        if (sun_w > 0.001f) {
+            sun_uv_x = (frame->view_proj.m[12] / sun_w) * 0.5f + 0.5f;
+            sun_uv_y = (frame->view_proj.m[13] / sun_w) * 0.5f + 0.5f;
+        }
+        glUniform2f(s_pp_gr_loc_sun_pos, sun_uv_x, sun_uv_y);
+        glUniform1f(s_pp_gr_loc_density, s_pp_config.godrays_density);
+        glUniform1f(s_pp_gr_loc_weight, s_pp_config.godrays_weight);
+        glUniform1f(s_pp_gr_loc_decay, s_pp_config.godrays_decay);
+        glUniform1f(s_pp_gr_loc_exposure, s_pp_config.godrays_exposure);
+        draw_quad();
+    }
+
+    /* Step 4: Composite to default framebuffer */
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, s_pp_width, s_pp_height);
 
@@ -281,6 +334,26 @@ void post_pass_end(const render_frame_t *frame) {
 
     draw_quad();
 
+    /* Step 5: Additive god ray overlay */
+    if (s_pp_config.godrays_enabled && s_pp_godrays_program != 0) {
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_ONE, GL_ONE); /* additive */
+
+        glUseProgram(s_pp_godrays_program);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, s_pp_godrays_tex);
+        glUniform1i(s_pp_gr_loc_frame, 0);
+        glUniform2f(s_pp_gr_loc_sun_pos, 0.5f, 0.5f);
+        glUniform1f(s_pp_gr_loc_density, 0.0f);
+        glUniform1f(s_pp_gr_loc_weight, 0.0f);
+        glUniform1f(s_pp_gr_loc_decay, 1.0f);
+        glUniform1f(s_pp_gr_loc_exposure, 1.0f);
+        draw_quad();
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glDisable(GL_BLEND);
+    }
+
     glEnable(GL_DEPTH_TEST);
 }
 
@@ -300,8 +373,8 @@ void post_pass_resize(int width, int height) {
     if (bw < 1) bw = 1;
     if (bh < 1) bh = 1;
 
-    GLuint textures[] = { s_pp_bright_tex, s_pp_ping_tex, s_pp_pong_tex };
-    for (int i = 0; i < 3; i++) {
+    GLuint textures[] = { s_pp_bright_tex, s_pp_ping_tex, s_pp_pong_tex, s_pp_godrays_tex };
+    for (int i = 0; i < 4; i++) {
         glBindTexture(GL_TEXTURE_2D, textures[i]);
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bw, bh, 0,
                      GL_RGBA, GL_HALF_FLOAT, NULL);
@@ -312,6 +385,7 @@ void post_pass_destroy(void) {
     glDeleteProgram(s_pp_bright_program);
     glDeleteProgram(s_pp_blur_program);
     glDeleteProgram(s_pp_composite_program);
+    if (s_pp_godrays_program) glDeleteProgram(s_pp_godrays_program);
 
     glDeleteFramebuffers(1, &s_pp_scene_fbo);
     glDeleteTextures(1, &s_pp_scene_tex);
@@ -324,6 +398,9 @@ void post_pass_destroy(void) {
     glDeleteTextures(1, &s_pp_ping_tex);
     glDeleteFramebuffers(1, &s_pp_pong_fbo);
     glDeleteTextures(1, &s_pp_pong_tex);
+
+    glDeleteFramebuffers(1, &s_pp_godrays_fbo);
+    glDeleteTextures(1, &s_pp_godrays_tex);
 
     glDeleteBuffers(1, &s_pp_quad_vbo);
     glDeleteVertexArrays(1, &s_pp_quad_vao);

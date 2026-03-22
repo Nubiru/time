@@ -41,6 +41,13 @@ typedef struct {
     int grain_enabled;        /* 1 = subtle film grain */
     float grain_intensity;    /* 0.0-1.0 (default: 0.03) */
 
+    /* God rays (volumetric light scattering, GPU Gems 3 Ch 13) */
+    int godrays_enabled;      /* 1 = radial blur from Sun position */
+    float godrays_density;    /* sample spacing (default: 1.0) */
+    float godrays_weight;     /* per-sample intensity (default: 0.01) */
+    float godrays_decay;      /* exponential falloff (default: 0.97) */
+    float godrays_exposure;   /* final intensity scale (default: 0.3) */
+
     /* Screen dimensions (set before each frame) */
     int screen_width;
     int screen_height;
@@ -95,5 +102,11 @@ const char *pp_blur_frag_source(void);
  *           u_grain_intensity, u_time (float).
  * Includes noise_shader_source() for film grain. */
 const char *pp_composite_frag_source(void);
+
+/* God rays radial blur fragment shader (GPU Gems 3, Ch 13).
+ * 64-sample screen-space radial blur from Sun position.
+ * Uniforms: u_frame (sampler2D), u_sun_screen_pos (vec2),
+ *           u_density, u_weight, u_decay, u_exposure (float). */
+const char *pp_godrays_frag_source(void);
 
 #endif /* TIME_POST_PROCESS_H */

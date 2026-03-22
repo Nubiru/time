@@ -49,6 +49,13 @@ pp_config_t pp_default_config(void)
     cfg.grain_enabled   = 0;
     cfg.grain_intensity = 0.03f;
 
+    /* God rays — GPU Gems 3, Ch 13 (Kenny Mitchell, EA) */
+    cfg.godrays_enabled  = 1;
+    cfg.godrays_density  = 1.0f;
+    cfg.godrays_weight   = 0.01f;
+    cfg.godrays_decay    = 0.97f;
+    cfg.godrays_exposure = 0.3f;
+
     /* User must set screen dimensions */
     cfg.screen_width  = 0;
     cfg.screen_height = 0;
@@ -80,6 +87,10 @@ pp_info_t pp_info(pp_config_t config)
         fbos += 3;
         textures += 3;
     }
+    if (config.godrays_enabled) {
+        fbos += 1;
+        textures += 1;
+    }
 
     info.fbo_count = fbos;
     info.texture_count = textures;
@@ -105,6 +116,9 @@ int pp_estimate_vram(int width, int height, pp_config_t config)
     if (config.bloom_enabled) {
         /* Bright extract + 2 ping-pong blur */
         textures += 3;
+    }
+    if (config.godrays_enabled) {
+        textures += 1;
     }
 
     /* RGBA16F = 4 channels * 2 bytes = 8 bytes per pixel */
@@ -245,6 +259,34 @@ static const char *s_composite_frag =
     "    frag_color = vec4(color, 1.0);\n"
     "}\n";
 
+/* --- God rays radial blur fragment shader (GPU Gems 3, Ch 13) --- */
+static const char s_godrays_frag[] =
+    "#version 300 es\n"
+    "precision highp float;\n"
+    "in vec2 v_uv;\n"
+    "uniform sampler2D u_frame;\n"
+    "uniform vec2 u_sun_screen_pos;\n"
+    "uniform float u_density;\n"
+    "uniform float u_weight;\n"
+    "uniform float u_decay;\n"
+    "uniform float u_exposure;\n"
+    "out vec4 frag_color;\n"
+    "#define NUM_SAMPLES 64\n"
+    "void main() {\n"
+    "    vec2 delta = (v_uv - u_sun_screen_pos) / float(NUM_SAMPLES) * u_density;\n"
+    "    vec2 tc = v_uv;\n"
+    "    vec3 color = texture(u_frame, tc).rgb;\n"
+    "    float illumination_decay = 1.0;\n"
+    "    for (int i = 0; i < NUM_SAMPLES; i++) {\n"
+    "        tc -= delta;\n"
+    "        vec3 s = texture(u_frame, tc).rgb;\n"
+    "        s *= illumination_decay * u_weight;\n"
+    "        color += s;\n"
+    "        illumination_decay *= u_decay;\n"
+    "    }\n"
+    "    frag_color = vec4(color * u_exposure, 1.0);\n"
+    "}\n";
+
 /* -----------------------------------------------------------------------
  * Public shader source accessors
  * ----------------------------------------------------------------------- */
@@ -267,4 +309,9 @@ const char *pp_blur_frag_source(void)
 const char *pp_composite_frag_source(void)
 {
     return s_composite_frag;
+}
+
+const char *pp_godrays_frag_source(void)
+{
+    return s_godrays_frag;
 }
