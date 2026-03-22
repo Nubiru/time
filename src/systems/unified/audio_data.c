@@ -104,6 +104,56 @@ static const char *const WAVEFORM_NAMES[AUDIO_WAVE_COUNT] = {
     "sine", "triangle", "sawtooth"
 };
 
+/* --- Kepler voice assignments (Harmonices Mundi, Book V, 1619) ---
+ * Mercury: soprano — widest range (octave + minor third)
+ * Earth, Venus: alto — narrowest ranges (semitone, barely a comma)
+ * Mars: tenor — range of a perfect fifth
+ * Jupiter, Saturn: bass — deepest, slowest
+ * Non-classical planets (Uranus, Neptune) and Moon: unassigned. */
+static const kepler_voice_t KEPLER_VOICES[AUDIO_MAX_PLANETS] = {
+    KEPLER_VOICE_COUNT,    /* 0: Earth day — not a planet voice */
+    KEPLER_VOICE_SOPRANO,  /* 1: Mercury */
+    KEPLER_VOICE_ALTO,     /* 2: Venus */
+    KEPLER_VOICE_ALTO,     /* 3: Earth year */
+    KEPLER_VOICE_TENOR,    /* 4: Mars */
+    KEPLER_VOICE_BASS,     /* 5: Jupiter */
+    KEPLER_VOICE_BASS,     /* 6: Saturn */
+    KEPLER_VOICE_COUNT,    /* 7: Uranus — post-Kepler */
+    KEPLER_VOICE_COUNT,    /* 8: Neptune — post-Kepler */
+    KEPLER_VOICE_COUNT     /* 9: Moon — not in voice assignment */
+};
+
+static const char *const KEPLER_VOICE_NAMES[KEPLER_VOICE_COUNT] = {
+    "bass", "tenor", "alto", "soprano"
+};
+
+/* --- Just intonation ratios (Pythagorean / Keplerian) ---
+ * These are frequency ratios from natural harmonic relationships,
+ * NOT the equal temperament ratios (2^(n/12)) used in modern tuning.
+ * Pythagoras: 1:2, 2:3, 3:4. Kepler added: 4:5, 5:6, 9:10. */
+static const double JUST_RATIOS[AUDIO_JI_COUNT] = {
+    1.0,            /* unison */
+    16.0 / 15.0,    /* minor second (semitone) */
+    9.0 / 8.0,      /* major second (whole tone) */
+    6.0 / 5.0,      /* minor third */
+    5.0 / 4.0,      /* major third */
+    4.0 / 3.0,      /* perfect fourth */
+    45.0 / 32.0,    /* tritone (augmented fourth) */
+    3.0 / 2.0,      /* perfect fifth */
+    8.0 / 5.0,      /* minor sixth */
+    5.0 / 3.0,      /* major sixth */
+    9.0 / 5.0,      /* minor seventh */
+    15.0 / 8.0,     /* major seventh */
+    2.0 / 1.0       /* octave */
+};
+
+static const char *const JUST_INTERVAL_NAMES[AUDIO_JI_COUNT] = {
+    "unison", "minor second", "major second", "minor third",
+    "major third", "perfect fourth", "tritone", "perfect fifth",
+    "minor sixth", "major sixth", "minor seventh", "major seventh",
+    "octave"
+};
+
 /* --- Helper: compute harmonic amplitude using eccentricity formula --- */
 
 static double harmonic_raw(int n, double eccentricity)
@@ -293,4 +343,41 @@ const char *audio_waveform_name(audio_waveform_t waveform)
         return "unknown";
     }
     return WAVEFORM_NAMES[waveform];
+}
+
+kepler_voice_t audio_kepler_voice(int planet_index)
+{
+    if (planet_index < 0 || planet_index >= AUDIO_MAX_PLANETS) {
+        return KEPLER_VOICE_COUNT;
+    }
+    return KEPLER_VOICES[planet_index];
+}
+
+const char *audio_kepler_voice_name(kepler_voice_t voice)
+{
+    if (voice < 0 || voice >= KEPLER_VOICE_COUNT) {
+        return "unassigned";
+    }
+    return KEPLER_VOICE_NAMES[voice];
+}
+
+double audio_just_ratio(audio_just_interval_t interval)
+{
+    if (interval < 0 || interval >= AUDIO_JI_COUNT) {
+        return 0.0;
+    }
+    return JUST_RATIOS[interval];
+}
+
+const char *audio_just_interval_name(audio_just_interval_t interval)
+{
+    if (interval < 0 || interval >= AUDIO_JI_COUNT) {
+        return "unknown";
+    }
+    return JUST_INTERVAL_NAMES[interval];
+}
+
+int audio_just_interval_count(void)
+{
+    return AUDIO_JI_COUNT;
 }

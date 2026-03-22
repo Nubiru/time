@@ -784,6 +784,186 @@ void test_waveform_name_invalid(void)
     TEST_ASSERT_EQUAL_STRING("unknown", audio_waveform_name(AUDIO_WAVE_COUNT));
 }
 
+/* ===== Kepler voice assignments ===== */
+
+void test_kepler_voice_mercury_soprano(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_SOPRANO, audio_kepler_voice(1));
+}
+
+void test_kepler_voice_venus_alto(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_ALTO, audio_kepler_voice(2));
+}
+
+void test_kepler_voice_earth_alto(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_ALTO, audio_kepler_voice(3));
+}
+
+void test_kepler_voice_mars_tenor(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_TENOR, audio_kepler_voice(4));
+}
+
+void test_kepler_voice_jupiter_bass(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_BASS, audio_kepler_voice(5));
+}
+
+void test_kepler_voice_saturn_bass(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_BASS, audio_kepler_voice(6));
+}
+
+void test_kepler_voice_uranus_unassigned(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_COUNT, audio_kepler_voice(7));
+}
+
+void test_kepler_voice_neptune_unassigned(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_COUNT, audio_kepler_voice(8));
+}
+
+void test_kepler_voice_earth_day_unassigned(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_COUNT, audio_kepler_voice(0));
+}
+
+void test_kepler_voice_moon_unassigned(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_COUNT, audio_kepler_voice(9));
+}
+
+void test_kepler_voice_invalid_negative(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_COUNT, audio_kepler_voice(-1));
+}
+
+void test_kepler_voice_invalid_high(void)
+{
+    TEST_ASSERT_EQUAL_INT(KEPLER_VOICE_COUNT, audio_kepler_voice(99));
+}
+
+void test_kepler_voice_name_bass(void)
+{
+    TEST_ASSERT_EQUAL_STRING("bass", audio_kepler_voice_name(KEPLER_VOICE_BASS));
+}
+
+void test_kepler_voice_name_tenor(void)
+{
+    TEST_ASSERT_EQUAL_STRING("tenor", audio_kepler_voice_name(KEPLER_VOICE_TENOR));
+}
+
+void test_kepler_voice_name_alto(void)
+{
+    TEST_ASSERT_EQUAL_STRING("alto", audio_kepler_voice_name(KEPLER_VOICE_ALTO));
+}
+
+void test_kepler_voice_name_soprano(void)
+{
+    TEST_ASSERT_EQUAL_STRING("soprano", audio_kepler_voice_name(KEPLER_VOICE_SOPRANO));
+}
+
+void test_kepler_voice_name_invalid(void)
+{
+    TEST_ASSERT_EQUAL_STRING("unassigned", audio_kepler_voice_name(KEPLER_VOICE_COUNT));
+}
+
+/* ===== Just intonation ratios ===== */
+
+void test_just_ratio_unison(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, 1.0f, (float)audio_just_ratio(AUDIO_JI_UNISON));
+}
+
+void test_just_ratio_octave(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, 2.0f, (float)audio_just_ratio(AUDIO_JI_OCTAVE));
+}
+
+void test_just_ratio_perfect_fifth(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, 1.5f, (float)audio_just_ratio(AUDIO_JI_PERFECT_FIFTH));
+}
+
+void test_just_ratio_perfect_fourth(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, (float)(4.0 / 3.0),
+                             (float)audio_just_ratio(AUDIO_JI_PERFECT_FOURTH));
+}
+
+void test_just_ratio_major_third(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, 1.25f, (float)audio_just_ratio(AUDIO_JI_MAJOR_THIRD));
+}
+
+void test_just_ratio_minor_third(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, 1.2f, (float)audio_just_ratio(AUDIO_JI_MINOR_THIRD));
+}
+
+void test_just_ratio_tritone(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, (float)(45.0 / 32.0),
+                             (float)audio_just_ratio(AUDIO_JI_TRITONE));
+}
+
+void test_just_ratio_minor_second(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, (float)(16.0 / 15.0),
+                             (float)audio_just_ratio(AUDIO_JI_MINOR_SECOND));
+}
+
+void test_just_ratio_major_second(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, 1.125f, (float)audio_just_ratio(AUDIO_JI_MAJOR_SECOND));
+}
+
+void test_just_ratio_invalid(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, 0.0f, (float)audio_just_ratio(AUDIO_JI_COUNT));
+}
+
+void test_just_ratio_invalid_negative(void)
+{
+    TEST_ASSERT_FLOAT_WITHIN(0.0001f, 0.0f, (float)audio_just_ratio(-1));
+}
+
+void test_just_ratio_ascending_order(void)
+{
+    /* Each interval ratio should be >= the previous one */
+    for (int i = 1; i < AUDIO_JI_COUNT; i++) {
+        TEST_ASSERT_TRUE(audio_just_ratio(i) >= audio_just_ratio(i - 1));
+    }
+}
+
+void test_just_interval_name_unison(void)
+{
+    TEST_ASSERT_EQUAL_STRING("unison", audio_just_interval_name(AUDIO_JI_UNISON));
+}
+
+void test_just_interval_name_fifth(void)
+{
+    TEST_ASSERT_EQUAL_STRING("perfect fifth", audio_just_interval_name(AUDIO_JI_PERFECT_FIFTH));
+}
+
+void test_just_interval_name_octave(void)
+{
+    TEST_ASSERT_EQUAL_STRING("octave", audio_just_interval_name(AUDIO_JI_OCTAVE));
+}
+
+void test_just_interval_name_invalid(void)
+{
+    TEST_ASSERT_EQUAL_STRING("unknown", audio_just_interval_name(AUDIO_JI_COUNT));
+}
+
+void test_just_interval_count(void)
+{
+    TEST_ASSERT_EQUAL_INT(13, audio_just_interval_count());
+}
+
 /* ===== main ===== */
 
 int main(void)
@@ -929,6 +1109,44 @@ int main(void)
     RUN_TEST(test_waveform_name_triangle);
     RUN_TEST(test_waveform_name_sawtooth);
     RUN_TEST(test_waveform_name_invalid);
+
+    /* Kepler voice assignments */
+    RUN_TEST(test_kepler_voice_mercury_soprano);
+    RUN_TEST(test_kepler_voice_venus_alto);
+    RUN_TEST(test_kepler_voice_earth_alto);
+    RUN_TEST(test_kepler_voice_mars_tenor);
+    RUN_TEST(test_kepler_voice_jupiter_bass);
+    RUN_TEST(test_kepler_voice_saturn_bass);
+    RUN_TEST(test_kepler_voice_uranus_unassigned);
+    RUN_TEST(test_kepler_voice_neptune_unassigned);
+    RUN_TEST(test_kepler_voice_earth_day_unassigned);
+    RUN_TEST(test_kepler_voice_moon_unassigned);
+    RUN_TEST(test_kepler_voice_invalid_negative);
+    RUN_TEST(test_kepler_voice_invalid_high);
+    RUN_TEST(test_kepler_voice_name_bass);
+    RUN_TEST(test_kepler_voice_name_tenor);
+    RUN_TEST(test_kepler_voice_name_alto);
+    RUN_TEST(test_kepler_voice_name_soprano);
+    RUN_TEST(test_kepler_voice_name_invalid);
+
+    /* Just intonation ratios */
+    RUN_TEST(test_just_ratio_unison);
+    RUN_TEST(test_just_ratio_octave);
+    RUN_TEST(test_just_ratio_perfect_fifth);
+    RUN_TEST(test_just_ratio_perfect_fourth);
+    RUN_TEST(test_just_ratio_major_third);
+    RUN_TEST(test_just_ratio_minor_third);
+    RUN_TEST(test_just_ratio_tritone);
+    RUN_TEST(test_just_ratio_minor_second);
+    RUN_TEST(test_just_ratio_major_second);
+    RUN_TEST(test_just_ratio_invalid);
+    RUN_TEST(test_just_ratio_invalid_negative);
+    RUN_TEST(test_just_ratio_ascending_order);
+    RUN_TEST(test_just_interval_name_unison);
+    RUN_TEST(test_just_interval_name_fifth);
+    RUN_TEST(test_just_interval_name_octave);
+    RUN_TEST(test_just_interval_name_invalid);
+    RUN_TEST(test_just_interval_count);
 
     return UNITY_END();
 }

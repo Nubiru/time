@@ -39,6 +39,37 @@ typedef enum {
     AUDIO_WAVE_COUNT
 } audio_waveform_t;
 
+/* Kepler voice part assignments (Harmonices Mundi, 1619).
+ * Each classical planet sings in a voice part based on its orbital
+ * characteristics: Saturn/Jupiter are bass, Mars tenor, Earth/Venus
+ * alto, Mercury soprano. */
+typedef enum {
+    KEPLER_VOICE_BASS = 0,     /* Saturn, Jupiter — deepest, slowest */
+    KEPLER_VOICE_TENOR,        /* Mars — range of a perfect fifth */
+    KEPLER_VOICE_ALTO,         /* Earth, Venus — narrowest range */
+    KEPLER_VOICE_SOPRANO,      /* Mercury — widest range (octave+third) */
+    KEPLER_VOICE_COUNT
+} kepler_voice_t;
+
+/* Musical interval in just intonation (Pythagorean/Keplerian ratios,
+ * NOT equal temperament). */
+typedef enum {
+    AUDIO_JI_UNISON = 0,
+    AUDIO_JI_MINOR_SECOND,
+    AUDIO_JI_MAJOR_SECOND,
+    AUDIO_JI_MINOR_THIRD,
+    AUDIO_JI_MAJOR_THIRD,
+    AUDIO_JI_PERFECT_FOURTH,
+    AUDIO_JI_TRITONE,
+    AUDIO_JI_PERFECT_FIFTH,
+    AUDIO_JI_MINOR_SIXTH,
+    AUDIO_JI_MAJOR_SIXTH,
+    AUDIO_JI_MINOR_SEVENTH,
+    AUDIO_JI_MAJOR_SEVENTH,
+    AUDIO_JI_OCTAVE,
+    AUDIO_JI_COUNT
+} audio_just_interval_t;
+
 /* Harmonic overtone */
 typedef struct {
     int harmonic_number;    /* 1 = fundamental, 2 = first overtone, etc. */
@@ -107,5 +138,23 @@ int audio_aspect_count(void);
 
 /* Waveform name string. */
 const char *audio_waveform_name(audio_waveform_t waveform);
+
+/* Get Kepler's voice part for a planet (Harmonices Mundi, 1619).
+ * Only classical planets (Mercury-Saturn, indices 1-6) have assignments.
+ * Returns KEPLER_VOICE_COUNT for non-classical planets. */
+kepler_voice_t audio_kepler_voice(int planet_index);
+
+/* Get Kepler voice part name string. */
+const char *audio_kepler_voice_name(kepler_voice_t voice);
+
+/* Get just intonation frequency ratio for a musical interval.
+ * E.g., perfect fifth = 3/2 = 1.5. Returns 0.0 for invalid. */
+double audio_just_ratio(audio_just_interval_t interval);
+
+/* Get the name of a just intonation interval. */
+const char *audio_just_interval_name(audio_just_interval_t interval);
+
+/* Number of just intonation intervals. */
+int audio_just_interval_count(void);
 
 #endif /* TIME_AUDIO_DATA_H */
