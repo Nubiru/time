@@ -85,6 +85,7 @@ time_add_test(NAME test_star_colors     TEST tests/render/test_star_colors.c    
 time_add_test(NAME test_deep_sky        TEST tests/render/test_deep_sky.c        DEPS deep_sky)
 time_add_test(NAME test_deep_sky_pack  TEST tests/render/test_deep_sky_pack.c  DEPS deep_sky_pack deep_sky)
 time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack noise_shader shader_builder)
+time_add_test(NAME test_zoom_fade      TEST tests/render/test_zoom_fade.c      DEPS)
 time_add_test(NAME test_bodygraph_pack TEST tests/render/test_bodygraph_pack.c DEPS bodygraph_pack bodygraph)
 time_add_test(NAME test_earth_pack    TEST tests/render/test_earth_pack.c    DEPS earth_pack earth_globe earth_atmosphere)
 time_add_test(NAME test_tree_pack    TEST tests/render/test_tree_pack.c    DEPS tree_pack tree_geometry sefirot)
