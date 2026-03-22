@@ -104,15 +104,15 @@ static theme_t theme_build_dawn(void)
 
     /* bg_space: SAME as Cosmos — space is always dark (Principle 1) */
     t.bg_space = color_rgba(0.024f, 0.027f, 0.036f, 1.0f);
-    /* Surface: pale warm white — UI panels only */
-    t.bg_surface = color_rgba(0.98f, 0.97f, 0.95f, 1.0f);
-    /* Elevated: pure white — floating UI elements only */
-    t.bg_elevated = color_rgba(1.0f, 1.0f, 0.99f, 1.0f);
+    /* Surface: warm parchment — UI panels only (DAWN_THEME_DESIGN.md) */
+    t.bg_surface = color_rgba(0.96f, 0.94f, 0.91f, 1.0f);
+    /* Elevated: warm white — floating cards/panels */
+    t.bg_elevated = color_rgba(0.98f, 0.97f, 0.95f, 1.0f);
 
-    /* Text: opaque stepped darkness — no alpha blending (RefUI) */
-    t.text_primary   = color_rgba(0.12f, 0.12f, 0.14f, 1.0f);
-    t.text_secondary = color_rgba(0.38f, 0.38f, 0.40f, 1.0f);
-    t.text_muted     = color_rgba(0.58f, 0.58f, 0.60f, 1.0f);
+    /* Text: warm near-black → dark grey → medium grey (DAWN_THEME_DESIGN.md) */
+    t.text_primary   = color_rgba(0.12f, 0.11f, 0.10f, 1.0f);
+    t.text_secondary = color_rgba(0.35f, 0.33f, 0.30f, 1.0f);
+    t.text_muted     = color_rgba(0.55f, 0.52f, 0.48f, 1.0f);
 
     /* Brand: same solar gold + celestial teal */
     t.brand_primary = color_rgba(1.0f, 0.85f, 0.55f, 1.0f);
