@@ -24,6 +24,7 @@ typedef struct {
     double observer_lat;
     double observer_lon;
     int    theme_id;              /* active theme (0=COSMOS, 1=DAWN) for themed rendering */
+    int    view_id;               /* 0=space, 1=earth */
     int    focus_mode;            /* focus_mode_e: 0=overview, 1-5=system focus */
     float  focus_blend;           /* 0.0-1.0 focus transition progress (from view_state) */
     float  card_slide;            /* 0.0=hidden, 1.0=visible (focus card fade) */

@@ -430,6 +430,7 @@ void main_loop(void) {
         .observer_lat  = g_state.observer_lat,
         .observer_lon  = g_state.observer_lon,
         .theme_id      = 0, /* THEME_COSMOS — always dark, Dawn disabled */
+        .view_id       = effective_view,
         .focus_mode    = g_state.view.focus_mode,
         .focus_blend   = vs_focus_blend(&g_state.view),
         .card_slide    = card_slide_val,

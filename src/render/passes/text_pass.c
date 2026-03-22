@@ -34,6 +34,7 @@
 #include "../../ui/kin_wavespell_layout.h"
 #include "../../ui/kin_cell.h"
 #include "../../ui/focus_mode.h"
+#include "../../ui/earth_timeline_layout.h"
 #include "../../systems/tzolkin/dreamspell.h"
 #include "../../systems/iching/iching.h"
 #include "../../ui/hexagram_layout.h"
@@ -935,6 +936,22 @@ static void draw_card_text(const render_frame_t *frame)
             py += line_h;
             msdf_add_text(content->line3, px, py, detail_fs,
                           style.muted.r, style.muted.g, style.muted.b, style.muted.a * ta);
+        }
+    }
+
+    /* Earth timeline — geological era labels when in Earth View */
+    if (frame->view_id == 1) {
+        etl_layout_t tl = etl_compute(0.0f, 500.0f);
+        theme_cosmos_t tc = theme_cosmos_constant();
+        for (int t = 0; t < tl.count; t++) {
+            const etl_card_t *ec = &tl.cards[t];
+            if (!ec->title || ec->opacity < 0.05f) continue;
+            float tx = ec->x * (float)vw;
+            float ty = tl.timeline_y * (float)vh;
+            float fs = 10.0f + ec->drama * 2.0f;
+            msdf_add_text(ec->title, tx, ty, fs,
+                          tc.brand_primary.r, tc.brand_primary.g,
+                          tc.brand_primary.b, ec->opacity * 0.6f);
         }
     }
 
