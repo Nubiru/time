@@ -279,29 +279,9 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
         result.brain_system_count = brain_evt.system_count;
     }
 
-    /* Convergence modulation (L2.1+L2.4):
-     * High event_intensity boosts amplitudes and reverb, making
-     * convergence moments aurally richer and more present.
-     * Surprise factor adds a brief brightness spike. */
-    {
-        float intensity = result.event_intensity;
-        float surprise = result.surprise_factor;
-
-        /* Volume boost during convergence: up to +40% at full intensity */
-        float convergence_boost = 1.0f + 0.4f * intensity;
-
-        /* Surprise adds a sharper spike: up to +25% */
-        convergence_boost += 0.25f * surprise;
-
-        result.master_volume *= convergence_boost;
-        if (result.master_volume > 1.0f)
-            result.master_volume = 1.0f;
-
-        /* More reverb during convergence (spacious, resonant) */
-        result.reverb_wet += 0.15f * intensity;
-    }
-
-    /* Populate timbre data from audio_data profiles */
+    /* Populate timbre data from audio_data profiles (base layer).
+     * Must happen BEFORE convergence modulation so convergence can
+     * add richness on top of the base harmonic profile. */
     for (int i = 0; i < result.planet_count; i++) {
         int planet_idx = i + 1; /* audio_score_chord uses planets 1-8, mapping to slots 0-7 */
         audio_planet_profile_t prof = audio_planet_profile(planet_idx);
@@ -309,6 +289,94 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
         result.harmonic_counts[i] = prof.harmonic_count;
         for (int h = 0; h < prof.harmonic_count && h < AS_MAX_HARMONICS; h++) {
             result.harmonic_amps[i][h] = (float)prof.harmonics[h].amplitude;
+        }
+    }
+
+    /* Convergence modulation (L2.1+L2.4 + sound design quality):
+     * Inspired by ITPRA (digest 079 Sweet Anticipation):
+     *   Tension builds as convergence approaches, then resolves.
+     *   More converging systems = richer harmonic content.
+     *
+     * 1. Volume: gentle boost (up to +30%), surprise spike (+20%)
+     * 2. Tension detuning: slight frequency sharpening that relaxes
+     *    at peak convergence (appoggiatura → resolution pattern)
+     * 3. Harmonic richness: more partials activated during convergence
+     * 4. Reverb: spacious during convergence (resonant moment) */
+    {
+        float intensity = result.event_intensity;
+        float surprise = result.surprise_factor;
+        float consonance = result.consonance;
+        int sys_count = result.brain_system_count;
+
+        /* Volume boost: gentler than before (+30% max, not +40%)
+         * to leave headroom for harmonic richness to do the work */
+        float convergence_boost = 1.0f + 0.3f * intensity;
+        convergence_boost += 0.20f * surprise;
+        result.master_volume *= convergence_boost;
+        if (result.master_volume > 1.0f)
+            result.master_volume = 1.0f;
+
+        /* Tension detuning: when intensity is building (< 0.7),
+         * slightly sharpen frequencies (up to +1.5% = ~25 cents).
+         * At peak (>0.7), resolve back to natural pitch.
+         * Creates the "almost there... NOW" feeling. */
+        {
+            float detune;
+            if (intensity < 0.7f) {
+                /* Building: sharpen proportional to intensity */
+                detune = intensity * 0.015f / 0.7f; /* 0 → 1.5% */
+            } else {
+                /* Resolving: relax back toward natural pitch */
+                float resolve_t = (intensity - 0.7f) / 0.3f; /* 0→1 */
+                detune = 0.015f * (1.0f - resolve_t * resolve_t);
+            }
+            /* Apply detuning: add frequency offset to create tension */
+            if (detune > 0.001f) {
+                for (int i = 0; i < result.planet_count; i++) {
+                    result.frequencies[i] *= (1.0f + detune);
+                }
+            }
+        }
+
+        /* Reverb: spacious during convergence (resonant moment) */
+        result.reverb_wet += 0.15f * intensity;
+
+        /* Harmonic richness: convergence activates more partials.
+         * Quiet = sparse (base harmonics). Convergence = full series.
+         * More systems converging = richer, more complex spectrum. */
+        if (intensity > 0.2f) {
+            float richness = (intensity - 0.2f) / 0.8f; /* 0→1 */
+            /* System count bonus: more systems = more partials added */
+            int extra_partials = (int)(richness * 2.0f);
+            if (sys_count > 3) extra_partials++;
+            if (sys_count > 5) extra_partials++;
+            if (extra_partials > 0) {
+                for (int i = 0; i < result.planet_count; i++) {
+                    int new_count = result.harmonic_counts[i] + extra_partials;
+                    if (new_count > AS_MAX_HARMONICS)
+                        new_count = AS_MAX_HARMONICS;
+                    /* Fill newly activated partials with decaying amplitudes */
+                    for (int h = result.harmonic_counts[i]; h < new_count; h++) {
+                        result.harmonic_amps[i][h] = richness * 0.3f
+                            / (float)(h + 1);
+                    }
+                    result.harmonic_counts[i] = new_count;
+                }
+            }
+        }
+
+        /* Consonance-driven brightness at resolution:
+         * High consonance (aspects aligning) → existing partials get
+         * a slight amplitude boost, making the chord "glow" */
+        if (consonance > 0.5f) {
+            float glow = (consonance - 0.5f) * 0.3f; /* up to +0.15 */
+            for (int i = 0; i < result.planet_count; i++) {
+                for (int h = 1; h < result.harmonic_counts[i]; h++) {
+                    result.harmonic_amps[i][h] += glow / (float)(h + 1);
+                    if (result.harmonic_amps[i][h] > 1.0f)
+                        result.harmonic_amps[i][h] = 1.0f;
+                }
+            }
         }
     }
 
@@ -342,13 +410,58 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
         }
     }
 
-    /* Zoom proximity: zoomed in = louder, zoomed out = softer (L1.1) */
+    /* Zoom-level audio modulation (sound design quality):
+     * Maps camera zoom to three audio dimensions:
+     *   Far (log_zoom < -2): cosmic drone — frequencies down, vast reverb
+     *   Mid  (-2 to 5):      planetary chord — standard frequencies
+     *   Close (log_zoom > 5): intimate — focus timbre prominent
+     *
+     * Inspired by digest 080 (Brain on Music): spatial audio changes
+     * must match visual scale shifts for coherent experience. */
     {
+        /* 1. Zoom proximity: zoomed in = louder overall */
         float zoom_factor = 1.0f + log_zoom * 0.02f;
         if (zoom_factor < 0.6f) zoom_factor = 0.6f;
         if (zoom_factor > 1.4f) zoom_factor = 1.4f;
         for (int i = 0; i < result.planet_count; i++) {
             result.amplitudes[i] *= zoom_factor;
+        }
+
+        /* 2. Octave shifting at extreme zoom-out:
+         * log_zoom < -2 → start shifting down (cosmic drone effect)
+         * log_zoom < -4 → full octave down (frequencies × 0.5)
+         * Creates the "deep cosmic drone" from far away without
+         * needing extra oscillators. */
+        if (log_zoom < -2.0f) {
+            /* Ramp: -2 → 1.0 (no shift), -4.6 → 0.5 (one octave down) */
+            float shift_t = (log_zoom + 2.0f) / -2.6f; /* 0 at -2, 1 at -4.6 */
+            if (shift_t > 1.0f) shift_t = 1.0f;
+            float oct_factor = 1.0f - 0.5f * shift_t; /* 1.0 → 0.5 */
+            for (int i = 0; i < result.planet_count; i++) {
+                result.frequencies[i] *= oct_factor;
+            }
+        }
+
+        /* 3. Zoom-dependent amplitude morphing:
+         * Far zoom-out: outer planets (Jupiter, Saturn, Uranus, Neptune)
+         * become dominant — they ARE the cosmos at that scale.
+         * Close zoom-in: inner planets become louder — personal scale. */
+        if (log_zoom < -1.0f) {
+            /* Fade inner planets (slots 0-3) as we zoom out */
+            float inner_fade = 1.0f + (log_zoom + 1.0f) * 0.15f;
+            if (inner_fade < 0.15f) inner_fade = 0.15f;
+            if (inner_fade > 1.0f) inner_fade = 1.0f;
+            for (int i = 0; i < 4 && i < result.planet_count; i++) {
+                result.amplitudes[i] *= inner_fade;
+            }
+        } else if (log_zoom > 6.0f) {
+            /* Fade outer planets (slots 4-7) as we zoom in close */
+            float outer_fade = 1.0f - (log_zoom - 6.0f) * 0.12f;
+            if (outer_fade < 0.2f) outer_fade = 0.2f;
+            if (outer_fade > 1.0f) outer_fade = 1.0f;
+            for (int i = 4; i < 8 && i < result.planet_count; i++) {
+                result.amplitudes[i] *= outer_fade;
+            }
         }
     }
 
@@ -447,14 +560,39 @@ audio_params_t audio_score_compute(double jd, int view_id, float log_zoom,
         }
     }
 
-    /* Reverb: cold views get more reverb (vast/spacious), warm views less (intimate) */
+    /* Reverb: combines warmth (view) and zoom level for spatial depth.
+     * Cold views + far zoom = vast cathedral reverb (you're in the void).
+     * Warm views + close zoom = intimate, dry (you're in the room).
+     * Zoom dominates: even warm views get reverb when zoomed way out. */
     {
         float w = result.warmth;
         if (w < -1.0f) w = -1.0f;
         if (w > 1.0f) w = 1.0f;
         float cold_factor = (-w + 1.0f) * 0.5f; /* 0.0 at warmth=+1, 1.0 at warmth=-1 */
-        result.reverb_wet = 0.15f + 0.45f * cold_factor;   /* range: 0.15 to 0.60 */
-        result.reverb_decay_s = 1.0f + 1.0f * cold_factor; /* range: 1.0 to 2.0 */
+
+        /* Zoom reverb: far zoom adds reverb on top of warmth-based reverb */
+        float zoom_reverb = 0.0f;
+        if (log_zoom < 0.0f) {
+            zoom_reverb = -log_zoom * 0.06f; /* up to +0.27 at log_zoom=-4.6 */
+            if (zoom_reverb > 0.30f) zoom_reverb = 0.30f;
+        } else if (log_zoom > 7.0f) {
+            /* Close zoom: reduce reverb for intimacy */
+            zoom_reverb = -(log_zoom - 7.0f) * 0.04f; /* up to -0.15 */
+            if (zoom_reverb < -0.15f) zoom_reverb = -0.15f;
+        }
+
+        result.reverb_wet = 0.15f + 0.45f * cold_factor + zoom_reverb;
+        if (result.reverb_wet < 0.05f) result.reverb_wet = 0.05f;
+        if (result.reverb_wet > 0.75f) result.reverb_wet = 0.75f;
+
+        /* Decay time: far = longer tail (up to 3.5s), close = shorter (0.8s) */
+        float zoom_decay = 0.0f;
+        if (log_zoom < -1.0f) {
+            zoom_decay = -(log_zoom + 1.0f) * 0.4f;
+            if (zoom_decay > 1.5f) zoom_decay = 1.5f;
+        }
+        result.reverb_decay_s = 1.0f + 1.0f * cold_factor + zoom_decay;
+        if (result.reverb_decay_s > 3.5f) result.reverb_decay_s = 3.5f;
     }
 
     return result;

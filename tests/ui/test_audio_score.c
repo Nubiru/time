@@ -371,13 +371,17 @@ void test_compute_waveform_mars_triangle(void)
 void test_compute_harmonics_mercury_count(void)
 {
     audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
-    TEST_ASSERT_EQUAL_INT(6, p.harmonic_counts[0]); /* Mercury has 6 */
+    /* Mercury base is 6; convergence may add more partials */
+    TEST_ASSERT_TRUE(p.harmonic_counts[0] >= 6);
+    TEST_ASSERT_TRUE(p.harmonic_counts[0] <= AS_MAX_HARMONICS);
 }
 
 void test_compute_harmonics_venus_count(void)
 {
     audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
-    TEST_ASSERT_EQUAL_INT(2, p.harmonic_counts[1]); /* Venus has 2 */
+    /* Venus base is 2; convergence may add more partials */
+    TEST_ASSERT_TRUE(p.harmonic_counts[1] >= 2);
+    TEST_ASSERT_TRUE(p.harmonic_counts[1] <= AS_MAX_HARMONICS);
 }
 
 void test_compute_harmonics_fundamental_is_one(void)
@@ -454,11 +458,12 @@ void test_compute_unused_slots_zeroed(void)
 void test_compute_timbre_consistent_with_audio_data(void)
 {
     audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
-    /* Check all planets match their audio_data profile */
+    /* Check all planets match their audio_data profile.
+     * Waveform must match exactly. Harmonic count >= base (convergence adds). */
     for (int i = 0; i < p.planet_count; i++) {
         audio_planet_profile_t prof = audio_planet_profile(i + 1);
         TEST_ASSERT_EQUAL_INT((int)prof.waveform, p.waveform_types[i]);
-        TEST_ASSERT_EQUAL_INT(prof.harmonic_count, p.harmonic_counts[i]);
+        TEST_ASSERT_TRUE(p.harmonic_counts[i] >= prof.harmonic_count);
     }
 }
 
@@ -790,6 +795,159 @@ void test_compute_planet_count_max_nine(void)
     }
 }
 
+/* ---- Convergence audio quality ---- */
+
+void test_convergence_harmonic_counts_valid(void)
+{
+    /* Harmonic counts should always be within bounds, even during convergence */
+    for (int i = 0; i < 20; i++) {
+        double jd = JD_J2000 + i * 17.3;
+        audio_params_t p = audio_score_compute(jd, VIEW_SPACE, 0.0f, 1.0);
+        for (int j = 0; j < p.planet_count; j++) {
+            TEST_ASSERT_TRUE(p.harmonic_counts[j] >= 0);
+            TEST_ASSERT_TRUE(p.harmonic_counts[j] <= AS_MAX_HARMONICS);
+        }
+    }
+}
+
+void test_convergence_harmonic_amps_clamped(void)
+{
+    /* Harmonic amplitudes should never exceed 1.0 */
+    for (int i = 0; i < 20; i++) {
+        double jd = JD_J2000 + i * 13.7;
+        audio_params_t p = audio_score_compute(jd, VIEW_SPACE, 0.0f, 1.0);
+        for (int j = 0; j < p.planet_count; j++) {
+            for (int h = 0; h < p.harmonic_counts[j]; h++) {
+                TEST_ASSERT_TRUE(p.harmonic_amps[j][h] >= 0.0f);
+                TEST_ASSERT_TRUE(p.harmonic_amps[j][h] <= 1.0f);
+            }
+        }
+    }
+}
+
+void test_convergence_frequencies_positive(void)
+{
+    /* Even with detuning, frequencies should remain positive */
+    for (int i = 0; i < 20; i++) {
+        double jd = JD_J2000 + i * 23.0;
+        audio_params_t p = audio_score_compute(jd, VIEW_SPACE, 0.0f, 1.0);
+        for (int j = 0; j < p.planet_count; j++) {
+            TEST_ASSERT_TRUE(p.frequencies[j] > 0.0f);
+        }
+    }
+}
+
+void test_convergence_volume_clamped(void)
+{
+    /* Master volume should never exceed 1.0 even with convergence boost */
+    for (int i = 0; i < 30; i++) {
+        double jd = JD_J2000 + i * 7.0;
+        audio_params_t p = audio_score_compute(jd, VIEW_SPACE, 0.0f, 1.0);
+        TEST_ASSERT_TRUE(p.master_volume >= 0.0f);
+        TEST_ASSERT_TRUE(p.master_volume <= 1.0f);
+    }
+}
+
+void test_convergence_base_harmonics_preserved(void)
+{
+    /* Base planet harmonic counts should be at least as large as
+     * what audio_data provides — convergence only adds, never removes */
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    /* Mercury (slot 0, planet index 1) should have at least its base count */
+    audio_planet_profile_t mercury = audio_planet_profile(1);
+    TEST_ASSERT_TRUE(p.harmonic_counts[0] >= mercury.harmonic_count);
+}
+
+/* ---- Zoom-level audio modulation ---- */
+
+void test_zoom_far_out_lowers_frequencies(void)
+{
+    /* Far zoom-out (log_zoom < -2) should shift frequencies lower */
+    audio_params_t p_mid = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    audio_params_t p_far = audio_score_compute(JD_J2000, VIEW_SPACE, -4.5f, 1.0);
+    /* At least one planet's frequency should be lower when zoomed far out */
+    int any_lower = 0;
+    for (int i = 0; i < p_mid.planet_count && i < p_far.planet_count; i++) {
+        if (p_far.frequencies[i] < p_mid.frequencies[i] * 0.99f) {
+            any_lower = 1;
+            break;
+        }
+    }
+    TEST_ASSERT_TRUE_MESSAGE(any_lower,
+        "Far zoom-out should lower at least one frequency");
+}
+
+void test_zoom_mid_no_frequency_shift(void)
+{
+    /* Mid zoom (log_zoom 0 to 3) should not shift frequencies */
+    audio_params_t p0 = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    audio_params_t p3 = audio_score_compute(JD_J2000, VIEW_SPACE, 3.0f, 1.0);
+    for (int i = 0; i < p0.planet_count && i < p3.planet_count; i++) {
+        TEST_ASSERT_FLOAT_WITHIN(0.01f, p0.frequencies[i], p3.frequencies[i]);
+    }
+}
+
+void test_zoom_far_out_more_reverb(void)
+{
+    /* Far zoom should have more reverb than mid zoom */
+    audio_params_t p_mid = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    audio_params_t p_far = audio_score_compute(JD_J2000, VIEW_SPACE, -4.0f, 1.0);
+    TEST_ASSERT_TRUE(p_far.reverb_wet > p_mid.reverb_wet);
+    TEST_ASSERT_TRUE(p_far.reverb_decay_s > p_mid.reverb_decay_s);
+}
+
+void test_zoom_close_less_reverb(void)
+{
+    /* Close zoom should have less reverb than mid zoom */
+    audio_params_t p_mid = audio_score_compute(JD_J2000, VIEW_SPACE, 3.0f, 1.0);
+    audio_params_t p_close = audio_score_compute(JD_J2000, VIEW_SPACE, 9.0f, 1.0);
+    TEST_ASSERT_TRUE(p_close.reverb_wet < p_mid.reverb_wet);
+}
+
+void test_zoom_far_fades_inner_planets(void)
+{
+    /* Far zoom should reduce inner planet amplitudes relative to outer */
+    audio_params_t p_mid = audio_score_compute(JD_J2000, VIEW_SPACE, 0.0f, 1.0);
+    audio_params_t p_far = audio_score_compute(JD_J2000, VIEW_SPACE, -4.0f, 1.0);
+    /* Inner planet (Mercury, slot 0) should be quieter at far zoom */
+    if (p_mid.planet_count > 0 && p_far.planet_count > 0) {
+        TEST_ASSERT_TRUE(p_far.amplitudes[0] < p_mid.amplitudes[0]);
+    }
+}
+
+void test_zoom_close_fades_outer_planets(void)
+{
+    /* Close zoom should reduce outer planet amplitudes */
+    audio_params_t p_mid = audio_score_compute(JD_J2000, VIEW_SPACE, 3.0f, 1.0);
+    audio_params_t p_close = audio_score_compute(JD_J2000, VIEW_SPACE, 9.0f, 1.0);
+    /* Outer planet (Saturn=5 → slot 4) should be quieter at close zoom */
+    if (p_mid.planet_count > 4 && p_close.planet_count > 4) {
+        TEST_ASSERT_TRUE(p_close.amplitudes[4] < p_mid.amplitudes[4]);
+    }
+}
+
+void test_zoom_reverb_clamped(void)
+{
+    /* Reverb should never exceed limits even at extreme zooms */
+    audio_params_t p = audio_score_compute(JD_J2000, VIEW_GALAXY, -4.6f, 1.0);
+    TEST_ASSERT_TRUE(p.reverb_wet >= 0.05f);
+    TEST_ASSERT_TRUE(p.reverb_wet <= 0.75f);
+    TEST_ASSERT_TRUE(p.reverb_decay_s <= 3.5f);
+}
+
+void test_zoom_octave_shift_gradual(void)
+{
+    /* Octave shift should ramp gradually, not jump */
+    audio_params_t p_1 = audio_score_compute(JD_J2000, VIEW_SPACE, -2.0f, 1.0);
+    audio_params_t p_2 = audio_score_compute(JD_J2000, VIEW_SPACE, -3.0f, 1.0);
+    audio_params_t p_3 = audio_score_compute(JD_J2000, VIEW_SPACE, -4.0f, 1.0);
+    /* Frequencies should decrease monotonically as zoom goes further */
+    if (p_1.planet_count > 0 && p_2.planet_count > 0 && p_3.planet_count > 0) {
+        TEST_ASSERT_TRUE(p_2.frequencies[0] <= p_1.frequencies[0]);
+        TEST_ASSERT_TRUE(p_3.frequencies[0] <= p_2.frequencies[0]);
+    }
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -913,6 +1071,21 @@ int main(void)
     RUN_TEST(test_compute_cultural_timbre_frequency_matches_culture);
     RUN_TEST(test_compute_cultural_timbre_amplitude_subtle);
     RUN_TEST(test_compute_planet_count_max_nine);
+    /* Convergence audio quality */
+    RUN_TEST(test_convergence_harmonic_counts_valid);
+    RUN_TEST(test_convergence_harmonic_amps_clamped);
+    RUN_TEST(test_convergence_frequencies_positive);
+    RUN_TEST(test_convergence_volume_clamped);
+    RUN_TEST(test_convergence_base_harmonics_preserved);
+    /* Zoom-level audio modulation */
+    RUN_TEST(test_zoom_far_out_lowers_frequencies);
+    RUN_TEST(test_zoom_mid_no_frequency_shift);
+    RUN_TEST(test_zoom_far_out_more_reverb);
+    RUN_TEST(test_zoom_close_less_reverb);
+    RUN_TEST(test_zoom_far_fades_inner_planets);
+    RUN_TEST(test_zoom_close_fades_outer_planets);
+    RUN_TEST(test_zoom_reverb_clamped);
+    RUN_TEST(test_zoom_octave_shift_gradual);
 
     return UNITY_END();
 }
