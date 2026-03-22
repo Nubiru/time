@@ -139,6 +139,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_korean_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_thai_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_haab_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_kabbalah_layout.c
     PARENT_SCOPE
 )
 
@@ -279,5 +280,6 @@ if(NOT EMSCRIPTEN)
     add_library(time_daily_korean_layout OBJECT daily_korean_layout.c)
     add_library(time_daily_thai_layout OBJECT daily_thai_layout.c)
     add_library(time_daily_haab_layout OBJECT daily_haab_layout.c)
+    add_library(time_daily_kabbalah_layout OBJECT daily_kabbalah_layout.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
