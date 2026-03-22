@@ -48,6 +48,7 @@
         </div>
 
         <div id="time-bar" class="toolbar edge-bottom">
+            <div id="timeline-track" class="timeline-track"></div>
             <div id="time-bar-inner">
                 <button id="tb-pause" class="tb-btn" title="Pause/Resume (Space)">&#9654;</button>
                 <span id="tb-speed" class="text-secondary">1x</span>
@@ -244,6 +245,62 @@
         if (tbNow) tbNow.addEventListener('click', function() {
             if (Module && Module._ui_jump_to_now) Module._ui_jump_to_now();
         });
+
+        /* Timeline scrubber — drag to navigate time */
+        var tlTrack = document.getElementById('timeline-track');
+        if (tlTrack) {
+            var tlSpanDays = 30; /* visible range: 30 days default */
+            var tlDragging = false;
+            var tlStartX = 0;
+            var tlStartJD = 0;
+
+            tlTrack.addEventListener('mousedown', function(e) {
+                if (!Module || !Module._ui_get_jd) return;
+                tlDragging = true;
+                tlStartX = e.clientX;
+                tlStartJD = Module._ui_get_jd();
+                e.preventDefault();
+            });
+            document.addEventListener('mousemove', function(e) {
+                if (!tlDragging || !Module || !Module._ui_set_jd) return;
+                var dx = e.clientX - tlStartX;
+                var frac = dx / window.innerWidth;
+                Module._ui_set_jd(tlStartJD - frac * tlSpanDays);
+            });
+            document.addEventListener('mouseup', function() {
+                tlDragging = false;
+            });
+
+            /* Zoom timeline with Shift+scroll */
+            tlTrack.addEventListener('wheel', function(e) {
+                e.preventDefault();
+                if (e.deltaY > 0) tlSpanDays *= 1.5;
+                else tlSpanDays /= 1.5;
+                if (tlSpanDays < 1) tlSpanDays = 1;
+                if (tlSpanDays > 365000) tlSpanDays = 365000;
+            }, {passive: false});
+
+            /* Render timeline ticks (simple date labels) */
+            setInterval(function() {
+                if (!Module || !Module._ui_get_jd) return;
+                var jd = Module._ui_get_jd();
+                var html = '<div class="tl-cursor"></div>';
+                var ticks = 7;
+                for (var i = -ticks; i <= ticks; i++) {
+                    var tickJD = jd + i * (tlSpanDays / (ticks * 2));
+                    var pos = 50 + (i / ticks) * 45;
+                    var d = new Date((tickJD - 2440587.5) * 86400000);
+                    var label = (tlSpanDays < 3)
+                        ? d.getUTCHours() + ':' + String(d.getUTCMinutes()).padStart(2,'0')
+                        : (tlSpanDays < 90)
+                            ? (d.getUTCMonth()+1) + '/' + d.getUTCDate()
+                            : d.getUTCFullYear();
+                    var cls = (i === 0) ? 'tl-tick anchor' : (i % 2 === 0) ? 'tl-tick major' : 'tl-tick';
+                    html += '<span class="' + cls + '" style="left:' + pos + '%">' + label + '</span>';
+                }
+                tlTrack.innerHTML = html;
+            }, 500);
+        }
 
         /* Birth date panel — P key (gated on interaction, About Face ACTION 4) */
         var birthPanel = document.getElementById('birth-panel');

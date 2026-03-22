@@ -768,6 +768,10 @@ EMSCRIPTEN_KEEPALIVE double ui_get_jd(void) {
     return g_state.simulation_jd;
 }
 
+EMSCRIPTEN_KEEPALIVE void ui_set_jd(double jd) {
+    g_state.simulation_jd = jd;
+}
+
 EMSCRIPTEN_KEEPALIVE void ui_toggle_trails(void) {
     g_state.show_trails = !g_state.show_trails;
 }
