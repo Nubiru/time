@@ -510,6 +510,8 @@ EMSCRIPTEN_KEEPALIVE void ui_set_birth_date(int year, int month, int day) {
     g_state.birth_day = day;
     g_state.birth_entered = 1;
     g_state.birth_profile = bp_compute(year, month, day);
+    g_state.birth_sky = birth_sky_from_profile(&g_state.birth_profile);
+    g_state.birth_sky.active = false;
 }
 
 EMSCRIPTEN_KEEPALIVE int ui_get_birth_entered(void) {
