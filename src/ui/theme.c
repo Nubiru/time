@@ -63,9 +63,9 @@ static theme_t theme_build_cosmos(void)
     t.bg_elevated = color_rgba(0.09f, 0.09f, 0.12f, 1.0f);
 
     /* Text: opaque stepped lightness — no alpha blending (RefUI).
-     * Alpha-blended white over colored cards looks washed out. */
+     * +0.02 blue on secondary: compensate simultaneous contrast on blue-black bg (Albers). */
     t.text_primary   = color_rgba(0.93f, 0.93f, 0.95f, 1.0f);
-    t.text_secondary = color_rgba(0.68f, 0.68f, 0.72f, 1.0f);
+    t.text_secondary = color_rgba(0.68f, 0.68f, 0.74f, 1.0f);
     t.text_muted     = color_rgba(0.48f, 0.48f, 0.52f, 1.0f);
 
     /* Brand: solar gold + celestial teal */

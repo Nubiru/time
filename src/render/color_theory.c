@@ -230,15 +230,15 @@ const char *ct_role_name(ct_role_t role)
 
 static const color_rgb_t SYSTEM_PRIMARY[CT_SYSTEM_COUNT] = {
     {0.25f, 0.50f, 0.85f},  /* ASTRONOMY: celestial blue */
-    {0.70f, 0.45f, 0.20f},  /* ASTROLOGY: amber */
+    {0.75f, 0.40f, 0.18f},  /* ASTROLOGY: burnt amber (~18° hue, separated from cluster) */
     {0.85f, 0.20f, 0.20f},  /* TZOLKIN: east red */
-    {0.15f, 0.15f, 0.35f},  /* ICHING: deep indigo */
+    {0.30f, 0.28f, 0.55f},  /* ICHING: visible indigo (was 0.15,0.15,0.35 — invisible on dark) */
     {0.20f, 0.65f, 0.30f},  /* CHINESE: wood green */
-    {0.80f, 0.55f, 0.15f},  /* HUMAN_DESIGN: amber */
+    {0.82f, 0.50f, 0.22f},  /* HUMAN_DESIGN: warm copper (~35° hue, separated from amber) */
     {0.70f, 0.72f, 0.75f},  /* GREGORIAN: silver */
-    {0.85f, 0.70f, 0.20f},  /* KABBALAH: Atziluth gold */
-    {0.90f, 0.55f, 0.10f},  /* HINDU: saffron */
-    {0.75f, 0.55f, 0.15f},  /* BUDDHIST: ochre */
+    {0.88f, 0.72f, 0.28f},  /* KABBALAH: bright gold (~52° hue, separated from ochre) */
+    {0.92f, 0.52f, 0.12f},  /* HINDU: deep saffron (~28° hue, separated from astrology) */
+    {0.78f, 0.60f, 0.18f},  /* BUDDHIST: warm ochre (~40° hue, separated from HD) */
     {0.15f, 0.25f, 0.65f},  /* HEBREW: tekhelet blue */
     {0.10f, 0.55f, 0.35f},  /* ISLAMIC: emerald */
     {0.55f, 0.35f, 0.20f},  /* GEOLOGY: sienna */
@@ -260,12 +260,12 @@ static const color_rgb_t SYSTEM_SECONDARY[CT_SYSTEM_COUNT] = {
     {0.92f, 0.92f, 0.94f},  /* GREGORIAN: clean white */
     {0.72f, 0.75f, 0.80f},  /* KABBALAH: Briah silver */
     {0.80f, 0.15f, 0.15f},  /* HINDU: vermillion */
-    {0.90f, 0.78f, 0.20f},  /* BUDDHIST: gold */
-    {0.85f, 0.75f, 0.25f},  /* HEBREW: gold */
-    {0.85f, 0.72f, 0.18f},  /* ISLAMIC: gold */
+    {0.92f, 0.80f, 0.22f},  /* BUDDHIST: bright gold (~45° hue, warmest) */
+    {0.88f, 0.72f, 0.20f},  /* HEBREW: antique gold (~40° hue) */
+    {0.82f, 0.70f, 0.25f},  /* ISLAMIC: warm gold (~52° hue, toward amber) */
     {0.75f, 0.60f, 0.25f},  /* GEOLOGY: amber */
     {0.20f, 0.55f, 0.50f},  /* COPTIC: Nile teal */
-    {0.85f, 0.75f, 0.20f},  /* ETHIOPIAN: imperial gold */
+    {0.80f, 0.68f, 0.18f},  /* ETHIOPIAN: dark gold (~56° hue, coolest gold) */
     {0.30f, 0.65f, 0.60f},  /* PERSIAN: turquoise */
     {0.45f, 0.60f, 0.35f},  /* JAPANESE: matcha green */
     {0.55f, 0.70f, 0.55f},  /* KOREAN: celadon green */

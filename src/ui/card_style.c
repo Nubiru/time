@@ -79,11 +79,13 @@ card_style_t card_style_for_system(int system_id, float opacity,
     style.border   = theme_system_accent(&theme, (ct_system_t)ct);
     style.border.a = CS_BORDER_ALPHA * opacity;
 
-    /* System accent mixed toward white — guarantees readability (RefUI) */
+    /* System accent mixed toward white — guarantees readability (RefUI).
+     * 0.62/0.38 mix: desaturated 8% + luminance boosted 8% (Itten/Albers:
+     * small bright area on dark bg looks hyper-intense without desaturation). */
     color_rgba_t accent = theme_system_accent(&theme, (ct_system_t)ct);
-    style.title.r = accent.r * 0.7f + 0.3f;
-    style.title.g = accent.g * 0.7f + 0.3f;
-    style.title.b = accent.b * 0.7f + 0.3f;
+    style.title.r = accent.r * 0.62f + 0.38f;
+    style.title.g = accent.g * 0.62f + 0.38f;
+    style.title.b = accent.b * 0.62f + 0.38f;
     style.title.a = 1.0f;
 
     /* Theme text colors for body content */
