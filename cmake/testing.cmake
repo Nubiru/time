@@ -813,6 +813,26 @@ time_add_test(NAME test_daily_haab_layout TEST tests/ui/test_daily_haab_layout.c
     DEPS daily_haab_layout haab haab_vinal tzolkin julian LABELS unit)
 time_add_test(NAME test_daily_kabbalah_layout TEST tests/ui/test_daily_kabbalah_layout.c
     DEPS daily_kabbalah_layout sefirot tree_geometry kabbalah_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_zoroastrian_layout TEST tests/ui/test_daily_zoroastrian_layout.c
+    DEPS daily_zoroastrian_layout zoroastrian zoroastrian_interpret calendar_fixed i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_balinese_layout TEST tests/ui/test_daily_balinese_layout.c
+    DEPS daily_balinese_layout pawukon pawukon_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_french_republican_layout TEST tests/ui/test_daily_french_republican_layout.c
+    DEPS daily_french_republican_layout french_republican french_republican_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_aztec_layout TEST tests/ui/test_daily_aztec_layout.c
+    DEPS daily_aztec_layout aztec aztec_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_egyptian_layout TEST tests/ui/test_daily_egyptian_layout.c
+    DEPS daily_egyptian_layout egyptian egyptian_interpret calendar_fixed i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_celtic_layout TEST tests/ui/test_daily_celtic_layout.c
+    DEPS daily_celtic_layout celtic_tree celtic_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_lao_layout TEST tests/ui/test_daily_lao_layout.c
+    DEPS daily_lao_layout lao_calendar lao_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_myanmar_layout TEST tests/ui/test_daily_myanmar_layout.c
+    DEPS daily_myanmar_layout myanmar myanmar_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_bahai_layout TEST tests/ui/test_daily_bahai_layout.c
+    DEPS daily_bahai_layout bahai bahai_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_tamil_layout TEST tests/ui/test_daily_tamil_layout.c
+    DEPS daily_tamil_layout tamil_calendar tamil_interpret i18n content_i18n LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)

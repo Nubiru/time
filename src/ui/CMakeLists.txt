@@ -142,6 +142,16 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_thai_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_haab_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_kabbalah_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_zoroastrian_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_balinese_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_french_republican_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_aztec_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_egyptian_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_celtic_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_lao_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_myanmar_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_bahai_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_tamil_layout.c
     PARENT_SCOPE
 )
 
@@ -285,6 +295,16 @@ if(NOT EMSCRIPTEN)
     add_library(time_daily_thai_layout OBJECT daily_thai_layout.c)
     add_library(time_daily_haab_layout OBJECT daily_haab_layout.c)
     add_library(time_daily_kabbalah_layout OBJECT daily_kabbalah_layout.c)
+    add_library(time_daily_zoroastrian_layout OBJECT daily_zoroastrian_layout.c)
+    add_library(time_daily_balinese_layout OBJECT daily_balinese_layout.c)
+    add_library(time_daily_french_republican_layout OBJECT daily_french_republican_layout.c)
+    add_library(time_daily_aztec_layout OBJECT daily_aztec_layout.c)
+    add_library(time_daily_egyptian_layout OBJECT daily_egyptian_layout.c)
+    add_library(time_daily_celtic_layout OBJECT daily_celtic_layout.c)
+    add_library(time_daily_lao_layout OBJECT daily_lao_layout.c)
+    add_library(time_daily_myanmar_layout OBJECT daily_myanmar_layout.c)
+    add_library(time_daily_bahai_layout OBJECT daily_bahai_layout.c)
+    add_library(time_daily_tamil_layout OBJECT daily_tamil_layout.c)
     add_library(time_daily_greeting OBJECT daily_greeting.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()

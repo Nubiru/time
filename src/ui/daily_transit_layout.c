@@ -104,7 +104,7 @@ daily_transit_layout_t daily_transit_compute(const double lons[10],
     astrology_interp_t interp = ai_interpret(layout.sun.sign,
                                              layout.moon.sign, -1);
     snprintf(layout.glance, sizeof(layout.glance), "%s", interp.glance);
-    snprintf(layout.detail, sizeof(layout.detail), "%s", interp.detail);
+    snprintf(layout.detail, sizeof(layout.detail), "%.511s", interp.detail);
 
     return layout;
 }

@@ -63,7 +63,7 @@ daily_buddhist_layout_t daily_buddhist_compute(double jd)
                                             (uposatha_type_t)layout.uposatha_type,
                                             KALPA_PHASE_EXISTENCE);
     snprintf(layout.glance, sizeof(layout.glance), "%s", interp.glance);
-    snprintf(layout.detail, sizeof(layout.detail), "%s", interp.detail);
+    snprintf(layout.detail, sizeof(layout.detail), "%.511s", interp.detail);
 
     /* Title slot */
     layout.title_slot.x = SLOT_X;

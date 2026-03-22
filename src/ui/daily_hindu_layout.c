@@ -66,7 +66,7 @@ daily_hindu_layout_t daily_hindu_compute(double jd, double sun_lon,
     hindu_interp_t interp = hndi_interpret(layout.tithi_number,
                                            nak_name, layout.yoga_name);
     snprintf(layout.glance, sizeof(layout.glance), "%s", interp.glance);
-    snprintf(layout.detail, sizeof(layout.detail), "%s", interp.detail);
+    snprintf(layout.detail, sizeof(layout.detail), "%.511s", interp.detail);
 
     /* Title slot */
     layout.title_slot.x = SLOT_X;

@@ -55,7 +55,7 @@ daily_chinese_layout_t daily_chinese_compute(double jd)
     chinese_interp_t interp = ci_interpret(cy.animal, cy.element,
                                            cy.polarity, cy.cycle_year);
     snprintf(layout.glance, sizeof(layout.glance), "%s", interp.glance);
-    snprintf(layout.detail, sizeof(layout.detail), "%s", interp.detail);
+    snprintf(layout.detail, sizeof(layout.detail), "%.511s", interp.detail);
 
     /* Title slot */
     layout.title_slot.x = SLOT_X;
