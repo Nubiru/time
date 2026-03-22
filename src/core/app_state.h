@@ -95,6 +95,8 @@ typedef struct {
     /* Brain scan cache (refreshed once per simulated day) */
     double headline_jd;          /* floor(jd) of last brain scan */
     char   headline[128];        /* cached daily narrative headline */
+    char   wisdom_text[256];     /* cached daily wisdom quote */
+    char   wisdom_author[64];    /* cached wisdom quote author */
     float  convergence_strength; /* 0.0-1.0 from brain scan */
     br_visual_frame_t brain_visual; /* cached visual encoding for convergence_pass + ring glow */
 

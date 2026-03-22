@@ -26,6 +26,8 @@ typedef struct {
     int    theme_id;              /* active theme (0=COSMOS, 1=DAWN) for themed rendering */
     int    focus_mode;            /* focus_mode_e: 0=overview, 1-5=system focus */
     char   headline[128];         /* daily narrative headline (from brain_narrative) */
+    char   wisdom_text[256];      /* daily wisdom quote */
+    char   wisdom_author[64];     /* wisdom quote author */
     br_visual_frame_t brain_visual; /* visual encoding of brain scan (convergence lines, glow) */
     double sun_lon;               /* Sun ecliptic longitude (degrees, 0-360) */
     double planet_lon[8];         /* Mercury..Neptune ecliptic longitudes (degrees) */

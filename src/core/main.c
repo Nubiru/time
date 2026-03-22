@@ -47,6 +47,7 @@
 #include "../systems/unified/audio_data.h"
 #include "../systems/unified/brain_scan.h"
 #include "../systems/unified/brain_narrative.h"
+#include "../systems/unified/wisdom.h"
 #include <string.h>
 #endif
 
@@ -91,6 +92,25 @@ void main_loop(void) {
                        sizeof(g_state.headline));
             } else {
                 g_state.headline[0] = '\0';
+            }
+
+            /* Daily wisdom quote — deterministic from JD */
+            {
+                int qcount = wisdom_quote_count();
+                if (qcount > 0) {
+                    int idx = (int)(day_now) % qcount;
+                    if (idx < 0) idx = -idx;
+                    wisdom_t w = wisdom_quote_get(idx);
+                    if (w.id >= 0 && w.text) {
+                        snprintf(g_state.wisdom_text, sizeof(g_state.wisdom_text),
+                                 "%s", w.text);
+                        snprintf(g_state.wisdom_author, sizeof(g_state.wisdom_author),
+                                 "— %s", w.author ? w.author : "Unknown");
+                    } else {
+                        g_state.wisdom_text[0] = '\0';
+                        g_state.wisdom_author[0] = '\0';
+                    }
+                }
             }
         }
     }
@@ -223,6 +243,8 @@ void main_loop(void) {
         .focus_mode    = g_state.view.focus_mode,
     };
     memcpy(frame.headline, g_state.headline, sizeof(frame.headline));
+    memcpy(frame.wisdom_text, g_state.wisdom_text, sizeof(frame.wisdom_text));
+    memcpy(frame.wisdom_author, g_state.wisdom_author, sizeof(frame.wisdom_author));
     frame.brain_visual = g_state.brain_visual;
 
     /* Planet data for natal chart pass */
@@ -603,6 +625,14 @@ EMSCRIPTEN_KEEPALIVE void ui_on_resize(int width, int height) {
 
 EMSCRIPTEN_KEEPALIVE const char *ui_get_headline(void) {
     return g_state.headline;
+}
+
+EMSCRIPTEN_KEEPALIVE const char *ui_get_wisdom_text(void) {
+    return g_state.wisdom_text;
+}
+
+EMSCRIPTEN_KEEPALIVE const char *ui_get_wisdom_author(void) {
+    return g_state.wisdom_author;
 }
 
 EMSCRIPTEN_KEEPALIVE int ui_is_audio_initialized(void) {

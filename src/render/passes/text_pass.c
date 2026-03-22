@@ -912,6 +912,29 @@ static void draw_card_text(const render_frame_t *frame)
                       hl_cosmos.brand_secondary.b, 0.85f);
     }
 
+    /* Daily wisdom quote — below headline, warm gold, gentle */
+    if (frame->wisdom_text[0] != '\0') {
+        theme_cosmos_t wc = theme_cosmos_constant();
+        float wfs = 13.0f;
+        float ww = msdf_text_width(MSDF_FONT_MONO, frame->wisdom_text, wfs);
+        float wx = ((float)vw - ww) * 0.5f;
+        float wy = (float)vh - 18.0f;
+        msdf_add_text(frame->wisdom_text, wx, wy, wfs,
+                      wc.brand_primary.r, wc.brand_primary.g,
+                      wc.brand_primary.b, 0.5f);
+        /* Author attribution — dimmer, right-aligned under quote */
+        if (frame->wisdom_author[0] != '\0') {
+            float aw = msdf_text_width(MSDF_FONT_MONO, frame->wisdom_author, 11.0f);
+            float ax = ((float)vw - aw) * 0.5f;
+            float ay = wy + wfs + 2.0f;
+            if (ay < (float)vh - 2.0f) {
+                msdf_add_text(frame->wisdom_author, ax, ay, 11.0f,
+                              wc.brand_primary.r, wc.brand_primary.g,
+                              wc.brand_primary.b, 0.35f);
+            }
+        }
+    }
+
     msdf_flush(vw, vh);
 }
 
