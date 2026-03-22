@@ -950,6 +950,48 @@ static void draw_card_text(const render_frame_t *frame)
         }
     }
 
+    /* Constellation labels — 88 IAU names at centroid positions.
+     * Projected from 3D celestial sphere to 2D screen via view_proj.
+     * Visible at stellar/local zoom via ZF_CONSTELLATION fade. */
+    {
+        float const_alpha = zf_opacity(ZF_CONSTELLATION, frame->log_zoom);
+        if (const_alpha > 0.01f) {
+            cl_label_t cl_labels[CL_COUNT];
+            int cl_count = cl_compute(100.0f, cl_labels); /* sphere radius 100 */
+            theme_cosmos_t cc = theme_cosmos_constant();
+
+            for (int ci = 0; ci < cl_count; ci++) {
+                if (!cl_labels[ci].name) continue;
+
+                /* Project 3D position to clip space */
+                float wx = cl_labels[ci].x;
+                float wy = cl_labels[ci].y;
+                float wz = cl_labels[ci].z;
+                const float *m = frame->view_proj.m;
+                float cx = m[0]*wx + m[4]*wy + m[8]*wz + m[12];
+                float cy = m[1]*wx + m[5]*wy + m[9]*wz + m[13];
+                float cw = m[3]*wx + m[7]*wy + m[11]*wz + m[15];
+
+                /* Skip behind camera or at edges */
+                if (cw < 0.1f) continue;
+                float nx = cx / cw;
+                float ny = cy / cw;
+                if (nx < -0.9f || nx > 0.9f || ny < -0.9f || ny > 0.9f) continue;
+
+                /* NDC to screen pixels */
+                float sx = (nx * 0.5f + 0.5f) * (float)vw;
+                float sy = (1.0f - (ny * 0.5f + 0.5f)) * (float)vh;
+
+                /* Zodiac constellations slightly brighter */
+                float ca = const_alpha * (cl_labels[ci].is_zodiac ? 0.5f : 0.3f);
+                float fs = cl_labels[ci].is_zodiac ? 10.0f : 8.0f;
+
+                msdf_add_text(cl_labels[ci].abbr, sx, sy, fs,
+                              cc.star_glow.r, cc.star_glow.g, cc.star_glow.b, ca);
+            }
+        }
+    }
+
     /* Earth timeline — geological era labels when in Earth View */
     if (frame->view_id == 1) {
         etl_layout_t tl = etl_compute(0.0f, 500.0f);
