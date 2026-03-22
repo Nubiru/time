@@ -36,6 +36,10 @@ typedef struct {
     calendar_round_t cal_round;   /* Combined Tzolkin-Haab date */
     char round_fmt[64];           /* Formatted: "4 Sun 8 Kumk'u" */
 
+    /* Interpretation (composed from Haab + vinal data) */
+    char glance[128];             /* "3 Pop · Day 64 of 365" */
+    char detail[512];             /* Month meaning + vinal wisdom + round */
+
     /* Layout slots */
     haab_slot_t title_slot;       /* "Haab Calendar" header */
     haab_slot_t date_slot;        /* full date display */

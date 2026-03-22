@@ -60,6 +60,10 @@ typedef struct {
     transit_aspect_info_t aspects[TRANSIT_MAX_ASPECTS];
     int aspect_count;
 
+    /* Interpretation (from astrology_interpret) */
+    char glance[128];          /* Sun/Moon sign one-liner */
+    char detail[1024];         /* Full narrative */
+
     /* Card frame */
     float card_x, card_y, card_w, card_h;
 } daily_transit_layout_t;

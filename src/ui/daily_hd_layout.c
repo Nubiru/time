@@ -4,6 +4,7 @@
 #include "daily_hd_layout.h"
 #include "../systems/human_design/human_design.h"
 #include <string.h>
+#include <stdio.h>
 
 /* Card frame. */
 #define CARD_X 0.05f
@@ -80,6 +81,22 @@ daily_hd_layout_t daily_hd_compute(double sun_longitude)
     layout.earth_gate.slot.y = 0.48f;
     layout.earth_gate.slot.w = GATE_W;
     layout.earth_gate.slot.h = GATE_H;
+
+    /* Interpretation (composed from gate data — transit view has no
+     * natal type/authority, so we compose from available gate info) */
+    snprintf(layout.glance, sizeof(layout.glance),
+             "Gate %d: %s — %s",
+             ic.sun.gate,
+             layout.sun_gate.gate_name ? layout.sun_gate.gate_name : "?",
+             layout.sun_gate.keyword ? layout.sun_gate.keyword : "?");
+    snprintf(layout.detail, sizeof(layout.detail),
+             "Sun: Gate %d.%d %s (%s) · Earth: Gate %d.%d %s (%s)",
+             ic.sun.gate, ic.sun.line,
+             layout.sun_gate.gate_name ? layout.sun_gate.gate_name : "?",
+             layout.sun_gate.keyword ? layout.sun_gate.keyword : "?",
+             ic.earth.gate, ic.earth.line,
+             layout.earth_gate.gate_name ? layout.earth_gate.gate_name : "?",
+             layout.earth_gate.keyword ? layout.earth_gate.keyword : "?");
 
     return layout;
 }

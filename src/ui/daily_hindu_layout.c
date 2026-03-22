@@ -8,7 +8,9 @@
 #include "daily_hindu_layout.h"
 #include "../systems/hindu/panchanga.h"
 #include "../systems/hindu/nakshatra.h"
+#include "../systems/hindu/hindu_interpret.h"
 #include <string.h>
+#include <stdio.h>
 
 /* Slot layout constants */
 #define SLOT_X       0.10f
@@ -58,6 +60,13 @@ daily_hindu_layout_t daily_hindu_compute(double jd, double sun_lon,
     /* Karana */
     layout.karana_number = p.karana.number;
     layout.karana_name   = p.karana.name;
+
+    /* Interpretation */
+    const char *nak_name = nakshatra_name(layout.nakshatra_index);
+    hindu_interp_t interp = hndi_interpret(layout.tithi_number,
+                                           nak_name, layout.yoga_name);
+    snprintf(layout.glance, sizeof(layout.glance), "%s", interp.glance);
+    snprintf(layout.detail, sizeof(layout.detail), "%s", interp.detail);
 
     /* Title slot */
     layout.title_slot.x = SLOT_X;

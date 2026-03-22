@@ -179,6 +179,20 @@ void test_is_day_accessor_null(void)
     TEST_ASSERT_EQUAL_INT(0, daily_earth_is_day(NULL));
 }
 
+/* --- Interpretation --- */
+
+void test_glance_not_empty(void)
+{
+    daily_earth_layout_t layout = daily_earth_compute(TEST_JD, TEST_LAT, TEST_LON);
+    TEST_ASSERT_TRUE(layout.glance[0] != '\0');
+}
+
+void test_detail_not_empty(void)
+{
+    daily_earth_layout_t layout = daily_earth_compute(TEST_JD, TEST_LAT, TEST_LON);
+    TEST_ASSERT_TRUE(layout.detail[0] != '\0');
+}
+
 /* --- Purity --- */
 
 void test_purity_same_input_same_output(void)
@@ -232,6 +246,9 @@ int main(void)
     /* Accessor */
     RUN_TEST(test_is_day_accessor);
     RUN_TEST(test_is_day_accessor_null);
+    /* Interpretation */
+    RUN_TEST(test_glance_not_empty);
+    RUN_TEST(test_detail_not_empty);
     /* Purity */
     RUN_TEST(test_purity_same_input_same_output);
     RUN_TEST(test_purity_different_locations);

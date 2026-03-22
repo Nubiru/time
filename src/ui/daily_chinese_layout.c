@@ -7,7 +7,9 @@
 
 #include "daily_chinese_layout.h"
 #include "../systems/chinese/chinese.h"
+#include "../systems/chinese/chinese_interpret.h"
 #include <string.h>
+#include <stdio.h>
 
 /* Slot layout constants */
 #define SLOT_X       0.10f
@@ -48,6 +50,12 @@ daily_chinese_layout_t daily_chinese_compute(double jd)
     layout.stem_name     = chinese_stem_name(cy.stem);
     layout.branch_name   = chinese_branch_name(cy.branch);
     layout.animal_symbol = chinese_animal_symbol(cy.animal);
+
+    /* Interpretation */
+    chinese_interp_t interp = ci_interpret(cy.animal, cy.element,
+                                           cy.polarity, cy.cycle_year);
+    snprintf(layout.glance, sizeof(layout.glance), "%s", interp.glance);
+    snprintf(layout.detail, sizeof(layout.detail), "%s", interp.detail);
 
     /* Title slot */
     layout.title_slot.x = SLOT_X;

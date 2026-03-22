@@ -208,6 +208,20 @@ void test_purity_different_dates(void)
     TEST_ASSERT_TRUE(a.stem != b.stem || a.branch != b.branch);
 }
 
+/* --- Interpretation --- */
+
+void test_glance_not_empty(void)
+{
+    daily_chinese_layout_t layout = daily_chinese_compute(TEST_JD);
+    TEST_ASSERT_TRUE(layout.glance[0] != '\0');
+}
+
+void test_detail_not_empty(void)
+{
+    daily_chinese_layout_t layout = daily_chinese_compute(TEST_JD);
+    TEST_ASSERT_TRUE(layout.detail[0] != '\0');
+}
+
 /* --- Different date test --- */
 
 void test_different_year(void)
@@ -252,6 +266,9 @@ int main(void)
     /* Purity */
     RUN_TEST(test_purity_same_input_same_output);
     RUN_TEST(test_purity_different_dates);
+    /* Interpretation */
+    RUN_TEST(test_glance_not_empty);
+    RUN_TEST(test_detail_not_empty);
     /* Different date */
     RUN_TEST(test_different_year);
     return UNITY_END();

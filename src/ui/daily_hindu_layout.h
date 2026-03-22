@@ -37,6 +37,10 @@ typedef struct {
     int karana_number;              /* 0-10 */
     const char *karana_name;        /* karana name */
 
+    /* Interpretation (from hindu_interpret) */
+    char glance[128];               /* Tithi + deity + quality */
+    char detail[512];               /* Full narrative */
+
     /* Layout slots */
     hin_slot_t title_slot;          /* "Hindu Panchanga" */
     hin_slot_t tithi_slot;          /* tithi + paksha */

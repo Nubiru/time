@@ -205,6 +205,20 @@ void test_longitude_large(void)
     TEST_ASSERT_EQUAL_INT(a.sun_gate.gate, b.sun_gate.gate);
 }
 
+/* --- Interpretation --- */
+
+void test_glance_not_empty(void)
+{
+    daily_hd_layout_t layout = daily_hd_compute(0.0);
+    TEST_ASSERT_TRUE(layout.glance[0] != '\0');
+}
+
+void test_detail_not_empty(void)
+{
+    daily_hd_layout_t layout = daily_hd_compute(0.0);
+    TEST_ASSERT_TRUE(layout.detail[0] != '\0');
+}
+
 /* --- Purity --- */
 
 void test_purity_same_input_same_output(void)
@@ -266,6 +280,9 @@ int main(void)
     RUN_TEST(test_longitude_360);
     RUN_TEST(test_longitude_negative);
     RUN_TEST(test_longitude_large);
+    /* Interpretation */
+    RUN_TEST(test_glance_not_empty);
+    RUN_TEST(test_detail_not_empty);
     /* Purity */
     RUN_TEST(test_purity_same_input_same_output);
     RUN_TEST(test_purity_different_input_different_output);

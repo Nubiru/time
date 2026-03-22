@@ -32,6 +32,10 @@ typedef struct {
     const char *branch_name;    /* "Zi", "Chou", etc. */
     const char *animal_symbol;  /* Unicode emoji */
 
+    /* Interpretation (from chinese_interpret) */
+    char glance[128];           /* "Water Tiger (Yang) — ..." */
+    char detail[512];           /* Full narrative */
+
     /* Layout slots */
     cn_slot_t title_slot;       /* "Chinese Calendar" */
     cn_slot_t animal_slot;      /* animal emoji + name */

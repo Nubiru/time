@@ -235,6 +235,20 @@ void test_aspect_count_null_layout(void)
     TEST_ASSERT_EQUAL_INT(0, daily_transit_aspect_count(NULL));
 }
 
+/* --- Interpretation --- */
+
+void test_glance_not_empty(void)
+{
+    daily_transit_layout_t layout = daily_transit_compute(TEST_LONS, 8.0);
+    TEST_ASSERT_TRUE(layout.glance[0] != '\0');
+}
+
+void test_detail_not_empty(void)
+{
+    daily_transit_layout_t layout = daily_transit_compute(TEST_LONS, 8.0);
+    TEST_ASSERT_TRUE(layout.detail[0] != '\0');
+}
+
 /* --- Invalid input --- */
 
 void test_null_lons(void)
@@ -316,6 +330,9 @@ int main(void)
     /* Aspect count accessor */
     RUN_TEST(test_aspect_count_accessor);
     RUN_TEST(test_aspect_count_null_layout);
+    /* Interpretation */
+    RUN_TEST(test_glance_not_empty);
+    RUN_TEST(test_detail_not_empty);
     /* Invalid input */
     RUN_TEST(test_null_lons);
     /* Purity */

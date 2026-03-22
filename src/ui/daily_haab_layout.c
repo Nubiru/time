@@ -9,6 +9,7 @@
 #include "../systems/tzolkin/haab.h"
 #include "../systems/tzolkin/haab_vinal.h"
 #include <string.h>
+#include <stdio.h>
 
 /* Slot layout constants */
 #define SLOT_X       0.10f
@@ -63,6 +64,22 @@ daily_haab_layout_t daily_haab_compute(double jd)
     layout.cal_round = calendar_round_from_jd(jd);
     calendar_round_fmt(layout.cal_round, layout.round_fmt,
                        sizeof(layout.round_fmt));
+
+    /* Interpretation (composed — no separate interpret module) */
+    snprintf(layout.glance, sizeof(layout.glance), "%d %s · Day %d of 365",
+             layout.date.day,
+             layout.month_name ? layout.month_name : "?",
+             layout.day_of_year + 1);
+    if (layout.is_wayeb) {
+        snprintf(layout.detail, sizeof(layout.detail),
+                 "Wayeb — 5 nameless days of reflection · %s",
+                 layout.round_fmt);
+    } else {
+        snprintf(layout.detail, sizeof(layout.detail), "%s · %s · %s",
+                 layout.month_meaning ? layout.month_meaning : "",
+                 layout.vinal_wisdom ? layout.vinal_wisdom : "",
+                 layout.round_fmt);
+    }
 
     /* Layout slots */
     layout.title_slot    = make_slot(TITLE_Y);

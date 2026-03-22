@@ -2,6 +2,7 @@
 #include "../systems/astrology/zodiac.h"
 #include "../systems/astrology/aspects.h"
 #include "../systems/astrology/dignity.h"
+#include "../systems/astrology/astrology_interpret.h"
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
@@ -98,6 +99,12 @@ daily_transit_layout_t daily_transit_compute(const double lons[10],
         layout.aspects[i].aspect_name = aspect_name(alist.aspects[i].type);
         layout.aspects[i].aspect_symbol = aspect_symbol(alist.aspects[i].type);
     }
+
+    /* Interpretation */
+    astrology_interp_t interp = ai_interpret(layout.sun.sign,
+                                             layout.moon.sign, -1);
+    snprintf(layout.glance, sizeof(layout.glance), "%s", interp.glance);
+    snprintf(layout.detail, sizeof(layout.detail), "%s", interp.detail);
 
     return layout;
 }

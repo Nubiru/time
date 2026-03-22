@@ -10,6 +10,7 @@
 #include "../systems/earth/seasons.h"
 #include "../math/julian.h"
 #include <string.h>
+#include <stdio.h>
 #include <math.h>
 
 /* Slot layout constants */
@@ -69,6 +70,28 @@ daily_earth_layout_t daily_earth_compute(double jd, double lat, double lon)
     layout.season = (int)si.season;
     layout.season_name = si.name;
     layout.season_progress = si.progress;
+
+    /* Interpretation (composed — no separate interpret module) */
+    snprintf(layout.glance, sizeof(layout.glance), "%s · %.1f hours daylight",
+             si.name ? si.name : "?", dl.day_length_hours);
+    if (dl.polar_day) {
+        snprintf(layout.detail, sizeof(layout.detail),
+                 "Polar day · Sun %.1f° above horizon · %s %.0f%% through",
+                 dl.sun_elevation_deg, si.name ? si.name : "?",
+                 si.progress * 100.0);
+    } else if (dl.polar_night) {
+        snprintf(layout.detail, sizeof(layout.detail),
+                 "Polar night · Sun %.1f° below horizon · %s %.0f%% through",
+                 fabs(dl.sun_elevation_deg), si.name ? si.name : "?",
+                 si.progress * 100.0);
+    } else {
+        snprintf(layout.detail, sizeof(layout.detail),
+                 "Sun %.1f° %s horizon · %s %.0f%% through · %.1fh daylight",
+                 fabs(dl.sun_elevation_deg),
+                 dl.sun_elevation_deg >= 0.0 ? "above" : "below",
+                 si.name ? si.name : "?", si.progress * 100.0,
+                 dl.day_length_hours);
+    }
 
     /* Title slot */
     layout.title_slot.x = SLOT_X;

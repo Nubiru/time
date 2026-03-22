@@ -32,6 +32,10 @@ typedef struct {
     /* Gate count (currently 2: sun + earth) */
     int gate_count;
 
+    /* Interpretation (composed from gate data) */
+    char glance[128];        /* "Gate 1: The Creative — Self-Expression" */
+    char detail[1024];       /* Sun + Earth gate narrative */
+
     /* Text positions */
     hd_slot_t title_slot;    /* "Human Design" header */
     hd_slot_t cross_slot;    /* incarnation cross label */

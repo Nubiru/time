@@ -29,6 +29,10 @@ typedef struct {
     const char *season_name;
     double season_progress;     /* 0.0-1.0 */
 
+    /* Interpretation (composed from daylight + season data) */
+    char glance[128];           /* "Spring · 12.3 hours daylight" */
+    char detail[512];           /* Full narrative */
+
     /* Layout slots */
     earth_slot_t title_slot;
     earth_slot_t daylight_slot;  /* "Daylight: 12.3 hours" */

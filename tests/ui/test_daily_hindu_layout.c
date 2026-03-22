@@ -219,6 +219,20 @@ void test_purity_different_longitudes(void)
                      a.tithi_number != b.tithi_number);
 }
 
+/* --- Interpretation --- */
+
+void test_glance_not_empty(void)
+{
+    daily_hindu_layout_t layout = daily_hindu_compute(TEST_JD, TEST_SUN_LON, TEST_MOON_LON);
+    TEST_ASSERT_TRUE(layout.glance[0] != '\0');
+}
+
+void test_detail_not_empty(void)
+{
+    daily_hindu_layout_t layout = daily_hindu_compute(TEST_JD, TEST_SUN_LON, TEST_MOON_LON);
+    TEST_ASSERT_TRUE(layout.detail[0] != '\0');
+}
+
 /* --- Different date test --- */
 
 void test_different_date(void)
@@ -266,6 +280,9 @@ int main(void)
     /* Purity */
     RUN_TEST(test_purity_same_input_same_output);
     RUN_TEST(test_purity_different_longitudes);
+    /* Interpretation */
+    RUN_TEST(test_glance_not_empty);
+    RUN_TEST(test_detail_not_empty);
     /* Different date */
     RUN_TEST(test_different_date);
     return UNITY_END();

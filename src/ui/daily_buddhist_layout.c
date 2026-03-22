@@ -7,7 +7,9 @@
 
 #include "daily_buddhist_layout.h"
 #include "../systems/buddhist/buddhist.h"
+#include "../systems/buddhist/buddhist_interpret.h"
 #include <string.h>
+#include <stdio.h>
 #include <math.h>
 
 /* Slot layout constants */
@@ -54,6 +56,14 @@ daily_buddhist_layout_t daily_buddhist_compute(double jd)
 
     /* Vassa */
     layout.is_vassa = buddhist_is_vassa(jd) ? 1 : 0;
+
+    /* Interpretation */
+    buddhist_interp_t interp = bi_interpret(layout.be_year,
+                                            layout.month_number,
+                                            (uposatha_type_t)layout.uposatha_type,
+                                            KALPA_PHASE_EXISTENCE);
+    snprintf(layout.glance, sizeof(layout.glance), "%s", interp.glance);
+    snprintf(layout.detail, sizeof(layout.detail), "%s", interp.detail);
 
     /* Title slot */
     layout.title_slot.x = SLOT_X;

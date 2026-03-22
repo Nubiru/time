@@ -32,6 +32,10 @@ typedef struct {
     const char *month_name;         /* Pali month name */
     int is_vassa;                   /* 1 if within Rains Retreat */
 
+    /* Interpretation (from buddhist_interpret) */
+    char glance[128];               /* "BE 2569 · Vesakha · Full Moon Uposatha" */
+    char detail[512];               /* Full narrative */
+
     /* Layout slots */
     bud_slot_t title_slot;          /* "Buddhist Calendar" */
     bud_slot_t era_slot;            /* "BE 2568" */

@@ -539,6 +539,7 @@ time_add_test(NAME test_today_card     TEST tests/ui/test_today_card.c
     kabbalah_interpret tree_geometry
     gregorian_interpret geology_interpret earth_fraction daylight seasons solar_events
     astrology_interpret tzolkin_interpret dreamspell chinese_interpret human_design_interpret
+    buddhist_interpret kalpa hindu_interpret
     pop_today human_population earth_fraction heartbeat_counter pop_counter)
 time_add_test(NAME test_daily_greeting  TEST tests/ui/test_daily_greeting.c  DEPS daily_greeting content_i18n i18n)
 time_add_test(NAME test_zodiac_glyphs   TEST tests/ui/test_zodiac_glyphs.c   DEPS zodiac_glyphs)
@@ -742,7 +743,7 @@ time_add_test(NAME test_kin_cube_layout TEST tests/ui/test_kin_cube_layout.c
 time_add_test(NAME test_natal_chart_layout TEST tests/ui/test_natal_chart_layout.c
     DEPS natal_chart_layout zodiac houses aspects dignity LABELS unit)
 time_add_test(NAME test_daily_transit_layout TEST tests/ui/test_daily_transit_layout.c
-    DEPS daily_transit_layout zodiac aspects dignity LABELS unit)
+    DEPS daily_transit_layout zodiac aspects dignity astrology_interpret i18n content_i18n LABELS unit)
 time_add_test(NAME test_hexagram_layout TEST tests/ui/test_hexagram_layout.c
     DEPS hexagram_layout iching iching_interpret i18n content_i18n LABELS unit)
 time_add_test(NAME test_bagua_layout TEST tests/ui/test_bagua_layout.c
@@ -776,13 +777,13 @@ time_add_test(NAME test_dignity_table_layout TEST tests/ui/test_dignity_table_la
 time_add_test(NAME test_daily_iching_layout TEST tests/ui/test_daily_iching_layout.c
     DEPS daily_iching_layout iching iching_interpret i18n content_i18n LABELS unit)
 time_add_test(NAME test_daily_chinese_layout TEST tests/ui/test_daily_chinese_layout.c
-    DEPS daily_chinese_layout chinese julian LABELS unit)
+    DEPS daily_chinese_layout chinese chinese_interpret i18n content_i18n julian LABELS unit)
 time_add_test(NAME test_daily_islamic_layout TEST tests/ui/test_daily_islamic_layout.c
     DEPS daily_islamic_layout hijri islamic_interpret i18n content_i18n LABELS unit)
 time_add_test(NAME test_daily_buddhist_layout TEST tests/ui/test_daily_buddhist_layout.c
-    DEPS daily_buddhist_layout buddhist lunar LABELS unit)
+    DEPS daily_buddhist_layout buddhist buddhist_interpret kalpa i18n content_i18n lunar LABELS unit)
 time_add_test(NAME test_daily_hindu_layout TEST tests/ui/test_daily_hindu_layout.c
-    DEPS daily_hindu_layout panchanga nakshatra LABELS unit)
+    DEPS daily_hindu_layout panchanga nakshatra hindu_interpret i18n content_i18n LABELS unit)
 time_add_test(NAME test_zodiac_animals_layout TEST tests/ui/test_zodiac_animals_layout.c
     DEPS zodiac_animals_layout chinese julian LABELS unit)
 time_add_test(NAME test_prayer_times_layout TEST tests/ui/test_prayer_times_layout.c

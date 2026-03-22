@@ -191,6 +191,20 @@ void test_wayeb_accessor_null(void)
     TEST_ASSERT_EQUAL_INT(0, daily_haab_is_wayeb(NULL));
 }
 
+/* --- Interpretation --- */
+
+void test_glance_not_empty(void)
+{
+    daily_haab_layout_t layout = daily_haab_compute(TEST_JD);
+    TEST_ASSERT_TRUE(layout.glance[0] != '\0');
+}
+
+void test_detail_not_empty(void)
+{
+    daily_haab_layout_t layout = daily_haab_compute(TEST_JD);
+    TEST_ASSERT_TRUE(layout.detail[0] != '\0');
+}
+
 /* --- Purity --- */
 
 void test_purity_same_input_same_output(void)
@@ -246,6 +260,9 @@ int main(void)
     RUN_TEST(test_wisdom_accessor);
     RUN_TEST(test_wisdom_accessor_null);
     RUN_TEST(test_wayeb_accessor_null);
+    /* Interpretation */
+    RUN_TEST(test_glance_not_empty);
+    RUN_TEST(test_detail_not_empty);
     /* Purity */
     RUN_TEST(test_purity_same_input_same_output);
     RUN_TEST(test_purity_different_dates);
