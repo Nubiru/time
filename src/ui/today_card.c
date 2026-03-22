@@ -152,12 +152,20 @@ static card_content_t make_iching(double jd)
 static card_content_t make_chinese(double jd)
 {
     daily_chinese_layout_t dl = daily_chinese_compute(jd);
-    card_content_t c = card_format_chinese(
-        dl.animal_symbol, dl.element_name, dl.animal_name,
-        dl.polarity_name, dl.stem, dl.branch);
-    /* Enrich with stem/branch names and cycle position */
-    if (dl.stem_name && dl.branch_name)
-        snprintf(c.line3, sizeof(c.line3), "%s-%s (Year %d of 60)",
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Chinese");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%s %s %s",
+                 dl.element_name ? dl.element_name : "",
+                 dl.animal_name ? dl.animal_name : "",
+                 dl.polarity_name ? dl.polarity_name : "");
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    else if (dl.stem_name && dl.branch_name)
+        snprintf(c.detail, sizeof(c.detail), "%s-%s (Year %d of 60)",
                  dl.stem_name, dl.branch_name, dl.cycle_year);
     return c;
 }
@@ -191,37 +199,33 @@ static card_content_t make_islamic(double jd)
 static card_content_t make_buddhist(double jd)
 {
     daily_buddhist_layout_t dl = daily_buddhist_compute(jd);
-    card_content_t c = card_format_buddhist(dl.be_year, dl.uposatha_type,
-                                             dl.uposatha_name,
-                                             dl.illumination);
-    if (dl.uposatha_desc && dl.uposatha_desc[0])
-        snprintf(c.line3, sizeof(c.line3), "%s", dl.uposatha_desc);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Buddhist");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "BE %d", dl.be_year);
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
+    else if (dl.uposatha_desc && dl.uposatha_desc[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dl.uposatha_desc);
     return c;
 }
 
 static card_content_t make_hindu(double jd, double sun_lon, double moon_lon)
 {
     daily_hindu_layout_t dl = daily_hindu_compute(jd, sun_lon, moon_lon);
-    card_content_t c = card_format_hindu(dl.nakshatra_index, dl.tithi_name,
-                                          dl.tithi_number, dl.vara_number,
-                                          dl.yoga_name);
-    if (dl.vara_deity && dl.vara_deity[0])
-        snprintf(c.line3, sizeof(c.line3), "%s — %s",
-                 dl.vara_name ? dl.vara_name : "", dl.vara_deity);
-
-    /* Enrich with nakshatra deity from wheel layout */
-    nakshatra_wheel_layout_t nw = nakshatra_wheel_compute(moon_lon, jd);
-    int ni = dl.nakshatra_index;
-    if (ni >= 0 && ni < 27) {
-        nw_nakshatra_t nak = nakshatra_wheel_at(&nw, ni);
-        if (nak.deity && nak.deity[0] && dl.yoga_quality && dl.yoga_quality[0])
-            snprintf(c.detail, sizeof(c.detail), "%s (deity: %s) | Yoga: %s (%s)",
-                     nak.name ? nak.name : "", nak.deity,
-                     dl.yoga_name ? dl.yoga_name : "", dl.yoga_quality);
-        else if (dl.yoga_quality && dl.yoga_quality[0])
-            snprintf(c.detail, sizeof(c.detail), "Yoga: %s (%s)",
-                     dl.yoga_name ? dl.yoga_name : "", dl.yoga_quality);
-    }
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Hindu / Vedic");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%s — %s",
+                 dl.tithi_name ? dl.tithi_name : "", dl.yoga_name ? dl.yoga_name : "");
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
     return c;
 }
 
@@ -246,14 +250,17 @@ static card_content_t make_astrology(double sun_lon, double moon_lon)
 static card_content_t make_human_design(double sun_lon)
 {
     daily_hd_layout_t dl = daily_hd_compute(sun_lon);
-    card_content_t c = card_format_human_design(
-        dl.sun_gate.gate, dl.sun_gate.line,
-        dl.earth_gate.gate, dl.earth_gate.line,
-        dl.sun_gate.gate_name, dl.sun_gate.keyword);
-    /* Enrich with Earth gate info */
-    if (dl.earth_gate.gate_name && dl.earth_gate.keyword)
-        snprintf(c.line3, sizeof(c.line3), "Earth: Gate %d — %s",
-                 dl.earth_gate.gate, dl.earth_gate.keyword);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Human Design");
+    if (dl.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", dl.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "Gate %d.%d — %s",
+                 dl.sun_gate.gate, dl.sun_gate.line,
+                 dl.sun_gate.keyword ? dl.sun_gate.keyword : "");
+    if (dl.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", dl.detail);
     return c;
 }
 

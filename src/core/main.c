@@ -519,6 +519,7 @@ void main_loop(void) {
         gates_mandala_pass_draw(&frame);
     }
     if (frame.focus_mode == 1) natal_chart_pass_draw(&frame); /* Astrology */
+    /* S88 heatmap_pass deferred — dh_score() not yet implemented */
     if (ps_is_enabled(&sched, PASS_CARD))           card_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_TEXT))           text_pass_draw(&frame);
 
@@ -656,6 +657,7 @@ int main(void) {
     stardust_pass_init();
     diamond_room_pass_init();
     sky_pass_init();
+    /* S88 heatmap_pass + S90 precession_pass deferred — incomplete MEGA shaders */
     if (card_pass_init() != 0) return 1;
     if (text_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
