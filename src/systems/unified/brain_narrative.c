@@ -2,12 +2,17 @@
  *
  * Selects narrative template based on the top insight type, then
  * fills headline, summary, and thread type. Extracts featured systems
- * from the top insights.
+ * from the top insights. Enriches headlines with real astronomical
+ * and calendar events (retrograde, moon phase, festivals).
  *
  * Pure functions: no GL, no malloc, no globals, no side effects. */
 
 #include "brain_narrative.h"
 #include "convergence_detect.h"
+#include "../../systems/astronomy/retrograde.h"
+#include "../../systems/astronomy/lunar.h"
+#include "../../systems/astronomy/planets.h"
+#include "../../systems/astrology/zodiac.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -83,6 +88,87 @@ static int headline_astronomical(const br_insight_t *insight,
                                  char *buf, int buf_size) {
     return snprintf(buf, (size_t)buf_size,
                     "Celestial event: %s", insight->headline);
+}
+
+/* ===================================================================
+ * Internal: astronomical/calendar event enrichment
+ * =================================================================== */
+
+/* Build an event context string from real astronomical + calendar data.
+ * e.g. "Mercury retrograde. Full Moon in Pisces. Spring Equinox."
+ * Returns chars written. Pure: all data computed from jd. */
+static int enrich_with_events(double jd, char *buf, int buf_size)
+{
+    int pos = 0;
+    int remaining = buf_size;
+
+    if (buf_size <= 0) return 0;
+    buf[0] = '\0';
+
+    /* 1. Check retrograde planets (Mercury is most notable) */
+    for (int p = PLANET_MERCURY; p <= PLANET_SATURN; p++) {
+        if (p == PLANET_EARTH) continue;
+        retrograde_info_t info = retrograde_check(p, jd);
+        if (info.motion == MOTION_RETROGRADE) {
+            int n = snprintf(buf + pos, (size_t)remaining,
+                             "%s%s retrograde",
+                             pos > 0 ? ". " : "",
+                             planet_name(p));
+            if (n > 0) {
+                int used = n < remaining ? n : remaining - 1;
+                pos += used;
+                remaining -= used;
+            }
+        } else if (info.motion == MOTION_STATIONARY && remaining > 1) {
+            int n = snprintf(buf + pos, (size_t)remaining,
+                             "%s%s stationary",
+                             pos > 0 ? ". " : "",
+                             planet_name(p));
+            if (n > 0) {
+                int used = n < remaining ? n : remaining - 1;
+                pos += used;
+                remaining -= used;
+            }
+        }
+    }
+
+    /* 2. Moon phase (only report significant phases) */
+    lunar_info_t moon = lunar_phase(jd);
+    if (moon.phase == MOON_FULL || moon.phase == MOON_NEW) {
+        int moon_sign = lunar_zodiac_sign(jd);
+        const char *sign_name = zodiac_sign_name(moon_sign);
+        int n = snprintf(buf + pos, (size_t)remaining,
+                         "%s%s in %s",
+                         pos > 0 ? ". " : "",
+                         lunar_phase_name(moon.phase),
+                         sign_name);
+        if (n > 0) {
+            int used = n < remaining ? n : remaining - 1;
+            pos += used;
+            remaining -= used;
+        }
+    }
+
+    /* 3. Moon phase detail for quarters */
+    if (moon.phase == MOON_FIRST_QUARTER || moon.phase == MOON_LAST_QUARTER) {
+        int n = snprintf(buf + pos, (size_t)remaining,
+                         "%s%s",
+                         pos > 0 ? ". " : "",
+                         lunar_phase_name(moon.phase));
+        if (n > 0) {
+            int used = n < remaining ? n : remaining - 1;
+            pos += used;
+            remaining -= used;
+        }
+    }
+
+    if (pos > 0 && remaining > 1) {
+        buf[pos] = '.';
+        pos++;
+        if (pos < buf_size) buf[pos] = '\0';
+    }
+
+    return pos;
 }
 
 /* ===================================================================
@@ -228,8 +314,22 @@ int br_narrative_compose(const br_result_t *result, br_narrative_t *out) {
         headline_quiet(out->headline, BR_HEADLINE_MAX);
     }
 
-    /* Summary */
-    br_narrative_summary(result, out->summary, BR_SUMMARY_MAX);
+    /* Summary: prepend real astronomical/calendar events */
+    {
+        char events[192];
+        int elen = enrich_with_events(result->jd, events, sizeof(events));
+        if (elen > 0) {
+            /* Write events first, then append narrative summary */
+            int pos = snprintf(out->summary, BR_SUMMARY_MAX, "%s ", events);
+            if (pos > 0 && pos < BR_SUMMARY_MAX - 1) {
+                br_narrative_summary(result,
+                                     out->summary + pos,
+                                     BR_SUMMARY_MAX - pos);
+            }
+        } else {
+            br_narrative_summary(result, out->summary, BR_SUMMARY_MAX);
+        }
+    }
 
     /* Thread type */
     if (top) {

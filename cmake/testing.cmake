@@ -453,7 +453,7 @@ time_add_test(NAME test_depth_integration TEST tests/systems/unified/test_depth_
     japanese korean_calendar thai_calendar geo_time cosmic_time calendar_fixed
     LABELS integration)
 time_add_test(NAME test_brain_narrative TEST tests/systems/unified/test_brain_narrative.c
-    DEPS brain_narrative brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
+    DEPS brain_narrative brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed retrograde planets orbit kepler zodiac)
 time_add_test(NAME test_brain_temporal TEST tests/systems/unified/test_brain_temporal.c
     DEPS brain_temporal brain_types convergence_detect julian tzolkin tzolkin_board iching chinese hebrew hijri buddhist lunar persian coptic wheel_of_year bahai japanese egyptian french_republican korean_calendar thai_calendar tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_brain_personal TEST tests/systems/unified/test_brain_personal.c
