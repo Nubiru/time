@@ -987,7 +987,7 @@ static void draw_card_text(const render_frame_t *frame)
                 float fs = cl_labels[ci].is_zodiac ? 10.0f : 8.0f;
 
                 msdf_add_text(cl_labels[ci].abbr, sx, sy, fs,
-                              cc.star_glow.r, cc.star_glow.g, cc.star_glow.b, ca);
+                              cc.brand_secondary.r, cc.brand_secondary.g, cc.brand_secondary.b, ca);
             }
         }
     }
