@@ -1,31 +1,31 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-21 (INFRA session 54)
+**Last refreshed**: 2026-03-21 (INFRA session 60)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 500 |
-| Header files (.h) | 503 |
-| Lines of code (src/) | 115,903 |
-| Lines of tests | 211,307 |
-| Test suites (CTest) | 524 |
-| Render pass files | 22 |
-| Knowledge systems | 21 |
-| Pure modules | 430+ |
+| Source files (.c) | 503 |
+| Header files (.h) | 506 |
+| Lines of code (src/) | 116,688 |
+| Lines of tests | 211,983 |
+| Test suites (CTest) | 526 |
+| Render pass files | 23 |
+| Knowledge systems | 34 |
+| Pure modules | 440+ |
 | Stateful modules | 32 |
-| Contributors | 244 |
+| Contributors | 265 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 524 |
-| Test functions (RUN_TEST) | 19,851 |
-| Test assertions (TEST_ASSERT) | 34,060 |
+| Test suites (CTest) | 526 |
+| Test functions (RUN_TEST) | 19,912 |
+| Test assertions (TEST_ASSERT) | 34,197 |
 | Failures | 0 |
-| CTest time | ~0.7s (with -j12) |
+| CTest time | ~0.9s (with -j12) |
 | E2E tests (Playwright) | 17 (5 basic + 12 visual) |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -88,14 +88,14 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (524/524, 0.73s) |
+| CTest -j12 | PASS (526/526, 0.9s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
-| WASM build | PASS (701 KB dev — 21 systems, 22 passes) |
+| WASM build | PASS (663 KB dev — 34 systems, 23 passes) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
 
-## Render Pipeline (19 passes)
+## Render Pipeline (23 passes)
 
 | # | Pass | Layer | Type |
 |---|------|-------|------|
@@ -110,14 +110,18 @@
 | 9 | moon_pass | PLANETS | 9 major moons + trails |
 | 10 | zodiac_pass | ZODIAC_RING | Ring + markers + aspects + cusps + glyphs |
 | 11 | earth_pass | PLANETS | Globe + coastlines + terminator + atmo |
-| 12 | bodygraph_pass | CARDS | HD centers + channels + gates |
-| 13 | hexagram_pass | CARDS | I Ching hexagram lines |
-| 14 | tree_pass | CARDS | Kabbalah Sefirot + paths + pillars |
-| 15 | card_pass | CARDS | Info card backgrounds + borders |
-| 16 | text_pass | TEXT | Text rendering pass |
-| 17 | ring_pass | RINGS | Concentric knowledge system rings |
-| 18 | convergence_pass | CONVERGENCE | Cross-system convergence visuals |
-| 19 | post_pass | (wraps all) | FBO bloom + tonemap + vignette |
+| 12 | bodygraph_pass | FOCUS_HD | HD 9 centers + channels + gates |
+| 13 | hexagram_pass | FOCUS_ICHING | I Ching hexagram lines |
+| 14 | tree_pass | FOCUS_KABBALAH | Kabbalah Sefirot + paths + pillars |
+| 15 | natal_chart_pass | FOCUS_ASTRO | Zodiac arcs + house cusps + planet positions + aspects |
+| 16 | tree_of_life_pass | FOCUS_KABBALAH | 10 Sefirot circles + 22 colored paths |
+| 17 | bagua_pass | FOCUS_ICHING | 8 trigrams circle |
+| 18 | gates_mandala_pass | FOCUS_KABBALAH | 22 Hebrew letters + 231 golden lines |
+| 19 | card_pass | CARDS | Info card backgrounds + borders |
+| 20 | text_pass | TEXT | Text rendering (3D labels + 2D MSDF cards) |
+| 21 | ring_pass | RINGS | Concentric knowledge system rings |
+| 22 | convergence_pass | CONVERGENCE | Cross-system convergence visuals |
+| 23 | post_pass | (wraps all) | FBO bloom + tonemap + vignette |
 
 ## Purity
 
@@ -157,29 +161,29 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 717,903 bytes (701 KB) |
-| Build mode | Development (-Os, ASSERTIONS=2) |
+| Raw .wasm | 678,544 bytes (663 KB) |
+| Build mode | Release (-Os) |
 | MSDF font atlas | JetBrains Mono 512×512 RGB (~250 KB in binary) |
 | Sans atlas | Excluded (MSDF_SANS_ENABLED not set) |
-| Gzipped | ~266 KB |
-| Growth since session 37 | +83 KB (3 geometric passes, Hebrew locale, Earth system) |
+| Gzipped | ~272 KB |
+| Delta since session 54 | -38 KB (Release build optimization) |
 
 ## God Functions (>100 lines)
 
 | Lines | File | Function | Notes |
 |-------|------|----------|-------|
-| 304 | main.c | main_loop | Central render loop — well-sectioned |
-| 252 | audio_score.c | audio_score_compute | Complex scoring logic |
-| 240 | convergence_detect.c | cd_is_significant | 18-case switch — domain logic |
-| 183 | calendar_convert.c | cal_convert | Calendar conversion switch |
-| 173 | input.c | on_key_down | Key handler switch |
-| 169 | card_pass.c | draw_oracle_cross | Oracle cross + wavespell quads |
-| 167 | annual_summary.c | as_compute | Annual summary computation |
-| 167 | tree_geometry.c | Tree | Tree of Life geometry |
-| 153 | seasonal_lighting.c | slp_sky_gradient | Sky color gradient |
-| 153 | card_pass.c | draw_iching_overlay | I Ching visual overlay |
+| 306 | main.c | main_loop | Central render loop — well-sectioned |
+| 254 | audio_score.c | audio_score_compute | Complex scoring logic |
+| 170 | card_pass.c | draw_oracle_cross | Oracle cross + wavespell quads |
+| 168 | input.c | on_key_down | Key handler switch |
+| 154 | card_pass.c | draw_iching_overlay | I Ching visual overlay |
+| 145 | text_pass.c | text_pass_draw | Planet labels + card text dispatch |
+| 126 | card_pass.c | card_pass_draw | Card layout + border rendering |
+| 125 | text_pass.c | draw_iching_text | I Ching text overlay |
+| 122 | text_pass.c | draw_card_text | System card text layout |
+| 101 | text_pass.c | text_pass_init | Shader + atlas initialization |
 
-*10 functions >100L. main_loop + input handler grew from wiring work. GL passes and switch-heavy code are naturally large. No refactoring urgency.*
+*10 functions >100L. text_pass.c grew from wiring 19 daily systems + focus modes. GL passes are naturally large. No refactoring urgency.*
 
 ## Large Files (>800 lines, non-data)
 
@@ -188,25 +192,28 @@
 | 1073 | text_pass.c | Candidate: split cards/labels/overlays |
 | 756 | card_pass.c | Render pass with multiple overlays |
 
-## Health (INFRA sweep — 2026-03-21, session 54)
+## Health (INFRA sweep — 2026-03-21, session 60)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (500 .c files, 0 orphans) |
-| Purity audit | CLEAN (P1-P5 all zones, session 23) |
-| Native build | PASS (524/524 tests, 0.7s) — use -j12 |
-| WASM build | PASS (701 KB dev) |
+| Build system sync | OK (503 .c files, 0 orphans) |
+| Purity audit | CLEAN (P1-P5 all zones) |
+| Native build | PASS (526/526 tests, 0.9s) — use -j12 |
+| WASM build | PASS (663 KB Release) |
 | E2E tests | PASS (5/5 basic + 12 visual) |
-| Coverage | 96.0% lines (35,581/37,053), 99.98% functions (4,233/4,234) |
+| Coverage | 96.0% lines, 99.98% functions |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
-| Render pipeline | 19/19 passes |
-| Brain pipeline | WIRED — headline + convergence_strength + brain_visual per-day cache (session 24+26) |
+| Render pipeline | 23/23 passes (4 new geometric: natal_chart, tree_of_life, bagua, gates_mandala) |
+| Theme audit | CLEAN — 23/23 passes audited. Cosmos-scope uses theme_cosmos_constant(). UI-scope uses theme_get(). Zero leakage. |
+| Canvas resize | WIRED — ui_on_resize KEEPALIVE, debounced JS listener (session 59) |
+| Audio envelope | WIRED — setTargetAtTime, attack/release envelope, volume 0.12 (session 59) |
+| Brain pipeline | WIRED — headline + convergence_strength + brain_visual per-day cache |
 | Motion wiring | ALL 9 motion modules in core — MOTION fully wired |
 | Interpret locale | 32 systems have interpret_locale — LANGUAGE i18n fully deployed |
-| Content encoding | CLEAN — encoding fix (session 22→23, commit 67079b7) |
-| Header deps | CLEAN — 941 files, 0 cycles, 0 purity violations, 0 missing, max depth 7 |
-| ASan/UBSan | PASS (461/461, zero findings, session 28) |
-| Shader budget | All 19 passes under 8KB (largest: sun_shader 4.5KB) |
+| Daily cards | 19/19 wired (11 original + Earth + Coptic/Ethiopian/Japanese/Korean/Persian/Thai + Haab + Kabbalah) |
+| Content encoding | CLEAN |
+| ASan/UBSan | PASS (benchmarks excluded, zero findings) |
+| Shader budget | All 23 passes under 8KB |
