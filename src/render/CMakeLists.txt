@@ -56,6 +56,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/constellation_bounds.c
     ${CMAKE_CURRENT_SOURCE_DIR}/constellation_label.c
     ${CMAKE_CURRENT_SOURCE_DIR}/diamond_room_pack.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/glyph_card_pack.c
     ${CMAKE_CURRENT_SOURCE_DIR}/horizon_geometry.c
     ${CMAKE_CURRENT_SOURCE_DIR}/horizon_camera.c
     ${CMAKE_CURRENT_SOURCE_DIR}/sky_dome.c
@@ -160,6 +161,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_constellation_bounds OBJECT constellation_bounds.c)
     add_library(time_constellation_label OBJECT constellation_label.c)
     add_library(time_diamond_room_pack  OBJECT diamond_room_pack.c)
+    add_library(time_glyph_card_pack   OBJECT glyph_card_pack.c)
     add_library(time_horizon_geometry    OBJECT horizon_geometry.c)
     add_library(time_horizon_camera     OBJECT horizon_camera.c)
     add_library(time_sky_dome            OBJECT sky_dome.c)

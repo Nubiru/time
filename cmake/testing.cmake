@@ -89,6 +89,7 @@ time_add_test(NAME test_zoom_fade      TEST tests/render/test_zoom_fade.c      D
 time_add_test(NAME test_stardust_pack TEST tests/render/test_stardust_pack.c DEPS stardust_pack)
 time_add_test(NAME test_constellation_label TEST tests/render/test_constellation_label.c DEPS constellation_label constellation_bounds)
 time_add_test(NAME test_diamond_room_pack TEST tests/render/test_diamond_room_pack.c DEPS diamond_room_pack diamond_room)
+time_add_test(NAME test_glyph_card_pack TEST tests/render/test_glyph_card_pack.c DEPS glyph_card_pack sdf_glyph)
 time_add_test(NAME test_bodygraph_pack TEST tests/render/test_bodygraph_pack.c DEPS bodygraph_pack bodygraph)
 time_add_test(NAME test_earth_pack    TEST tests/render/test_earth_pack.c    DEPS earth_pack earth_globe earth_atmosphere)
 time_add_test(NAME test_tree_pack    TEST tests/render/test_tree_pack.c    DEPS tree_pack tree_geometry sefirot)
