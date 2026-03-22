@@ -42,6 +42,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/deep_sky_pack.c
     ${CMAKE_CURRENT_SOURCE_DIR}/milkyway_pack.c
     ${CMAKE_CURRENT_SOURCE_DIR}/stardust_pack.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/sky_pack.c
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_globe.c
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_atmosphere.c
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_pack.c
