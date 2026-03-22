@@ -39,7 +39,7 @@
             <div class="panel-body" id="layer-content"></div>
         </div>
 
-        <div id="settings-panel" class="panel frosted edge-right hidden" role="dialog" aria-label="Settings">
+        <div id="settings-panel" class="panel frosted centered hidden" role="dialog" aria-label="Settings">
             <div class="panel-header">
                 <span class="text-accent">Settings</span>
                 <span class="panel-close" role="button" aria-label="Close" tabindex="0">&times;</span>
@@ -77,6 +77,15 @@
                 </form>
                 <div id="birth-result" class="text-primary" style="margin-top:0.8em"></div>
             </div>
+        </div>
+
+        <div id="focus-badges" class="focus-badges">
+            <div class="focus-badge" data-focus="1" title="Astrology">A</div>
+            <div class="focus-badge" data-focus="2" title="Kin Maya">K</div>
+            <div class="focus-badge" data-focus="3" title="I Ching">I</div>
+            <div class="focus-badge" data-focus="4" title="Chinese">C</div>
+            <div class="focus-badge" data-focus="5" title="Human Design">D</div>
+            <div class="focus-badge" data-focus="6" title="Kabbalah">T</div>
         </div>
 
         <div id="toast-area"></div>
@@ -153,6 +162,22 @@
         if (settingsBtn) settingsBtn.addEventListener('click', function() {
             if (Module && Module._ui_toggle_settings) Module._ui_toggle_settings();
         });
+
+        /* Focus badges — click to activate focus mode (About Face ACTION 3) */
+        document.querySelectorAll('.focus-badge').forEach(function(badge) {
+            badge.addEventListener('click', function() {
+                var focus = parseInt(badge.dataset.focus, 10);
+                if (Module && Module._ui_set_focus) Module._ui_set_focus(focus);
+            });
+        });
+
+        /* Three-finger tap → help on touch devices (About Face ACTION 12) */
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length === 3) {
+                e.preventDefault();
+                if (Module && Module._ui_toggle_help) Module._ui_toggle_help();
+            }
+        }, {passive: false});
 
         /* Settings panel: event delegation for toggles, choices, sliders */
         var settingsContent = document.getElementById('settings-content');

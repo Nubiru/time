@@ -198,6 +198,25 @@ kbd, .kbd {
     line-height: 1.4; min-width: var(--sp-5); text-align: center;
 }
 
+.focus-badges {
+    position: fixed; bottom: var(--sp-7); right: var(--sp-4);
+    display: flex; gap: var(--sp-2); z-index: 150;
+}
+.focus-badge {
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--corner-radius);
+    font-family: var(--font-mono); font-size: var(--font-size-sm);
+    color: rgb(var(--brand-secondary)); opacity: 0.236;
+    cursor: pointer; transition: opacity var(--t-fast) ease;
+}
+.focus-badge:hover { opacity: 0.8; }
+.focus-badge.active { opacity: 1; border-color: rgba(var(--brand-secondary), 0.6); }
+
 #toast-area {
     position: fixed; top: var(--sp-7); right: var(--sp-4);
     display: flex; flex-direction: column; gap: var(--sp-2);
