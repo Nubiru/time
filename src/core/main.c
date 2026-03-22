@@ -52,6 +52,7 @@
 #include "../systems/unified/red_thread.h"
 #include "../systems/unified/grand_cycle.h"
 #include "../systems/unified/time_entropy.h"
+#include "../systems/unified/system_correlation.h"
 #include <string.h>
 #endif
 
@@ -331,6 +332,7 @@ void main_loop(void) {
     memcpy(frame.grand_cycle, g_state.grand_cycle, sizeof(frame.grand_cycle));
     memcpy(frame.last_similar, g_state.last_similar, sizeof(frame.last_similar));
     memcpy(frame.entropy_text, g_state.entropy_text, sizeof(frame.entropy_text));
+    memcpy(frame.top_resonance, g_state.top_resonance, sizeof(frame.top_resonance));
     frame.brain_visual = g_state.brain_visual;
 
     /* Planet data for natal chart pass */
@@ -551,6 +553,23 @@ int main(void) {
                 snprintf(g_state.grand_cycle, sizeof(g_state.grand_cycle),
                          "Grand Cycle: %.0f years until this exact configuration recurs",
                          gc.lcm_years);
+        }
+    }
+
+    /* System correlation — compute once, extract top resonance */
+    {
+        sc_corr_result_t sc;
+        int scanned = sc_corr_compute(2025, 1, &sc);
+        if (scanned > 0) {
+            sc_corr_pair_t top;
+            if (sc_corr_top_pairs(&sc, &top, 1) > 0) {
+                const char *na = cd_system_name((cd_system_t)top.system_a);
+                const char *nb = cd_system_name((cd_system_t)top.system_b);
+                snprintf(g_state.top_resonance, sizeof(g_state.top_resonance),
+                         "Strongest resonance: %s \xe2\x86\x94 %s (%.0f%%)",
+                         na ? na : "?", nb ? nb : "?",
+                         top.frequency * 100.0);
+            }
         }
     }
 

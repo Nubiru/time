@@ -969,6 +969,16 @@ static void draw_card_text(const render_frame_t *frame)
                           btc.brand_secondary.b, 0.30f);
         }
 
+        /* Top resonance — "Strongest resonance: Hebrew ↔ Islamic (42%)" */
+        if (frame->top_resonance[0] != '\0') {
+            bot_y -= 14.0f;
+            float rw = msdf_text_width(MSDF_FONT_MONO, frame->top_resonance, 10.0f);
+            msdf_add_text(frame->top_resonance,
+                          ((float)vw - rw) * 0.5f, bot_y, 10.0f,
+                          btc.brand_primary.r, btc.brand_primary.g,
+                          btc.brand_primary.b, 0.30f);
+        }
+
         /* Percentile ranking — "Day #47 of 365 — top 12.9%" */
         if (frame->percentile_text[0] != '\0') {
             bot_y -= 16.0f;

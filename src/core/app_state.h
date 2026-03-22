@@ -102,6 +102,7 @@ typedef struct {
     char   grand_cycle[128];     /* "This configuration won't recur for X years" */
     char   last_similar[96];     /* "Last similar convergence: X days ago" */
     char   entropy_text[64];     /* "Time entropy: 0.87 — complex" */
+    char   top_resonance[96];    /* "Strongest resonance: Hebrew ↔ Islamic" */
     float  convergence_strength; /* 0.0-1.0 from brain scan */
     br_visual_frame_t brain_visual; /* cached visual encoding for convergence_pass + ring glow */
 
