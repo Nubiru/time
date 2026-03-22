@@ -101,11 +101,11 @@ static void test_locale_es_december(void)
 
 static void test_locale_fallback_to_en(void)
 {
-    /* Thai has no content translations — should fall back to EN */
-    gregorian_interp_t th = gi_interpret_locale(3, 20, 3, I18N_LOCALE_TH);
+    /* Myanmar has no content translations — should fall back to EN */
+    gregorian_interp_t my_mm = gi_interpret_locale(3, 20, 3, I18N_LOCALE_MY);
     gregorian_interp_t en = gi_interpret_locale(3, 20, 3, I18N_LOCALE_EN);
-    TEST_ASSERT_EQUAL_STRING(en.glyph, th.glyph);
-    TEST_ASSERT_EQUAL_STRING(en.glance, th.glance);
+    TEST_ASSERT_EQUAL_STRING(en.glyph, my_mm.glyph);
+    TEST_ASSERT_EQUAL_STRING(en.glance, my_mm.glance);
 }
 
 /* ---- Invalid input ---- */

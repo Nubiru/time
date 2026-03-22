@@ -51,9 +51,9 @@ static void test_locale_es_with_decan(void)
 
 static void test_locale_unsupported_fallback(void)
 {
-    tarot_interp_t th = trt_interpret_locale(0, -1, -1, I18N_LOCALE_TH);
-    TEST_ASSERT_TRUE(strlen(th.glyph) > 0);
-    TEST_ASSERT_NOT_NULL(strstr(th.glance, "Fool"));
+    tarot_interp_t my_mm = trt_interpret_locale(0, -1, -1, I18N_LOCALE_MY);
+    TEST_ASSERT_TRUE(strlen(my_mm.glyph) > 0);
+    TEST_ASSERT_NOT_NULL(strstr(my_mm.glance, "Fool"));
 }
 
 /* ---- Invalid input ---- */

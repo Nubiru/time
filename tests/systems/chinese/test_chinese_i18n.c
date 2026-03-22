@@ -101,12 +101,12 @@ static void test_locale_es_detail_strengths(void)
 
 static void test_locale_fallback_to_en(void)
 {
-    chinese_interp_t th = ci_interpret_locale(0, 4, 0, 1,
-                                              I18N_LOCALE_TH);
-    /* TH has no content table — falls back to EN */
-    TEST_ASSERT_EQUAL_STRING("Rat", th.glyph);
-    TEST_ASSERT_NOT_NULL(strstr(th.glance, "Rat"));
-    TEST_ASSERT_NOT_NULL(strstr(th.glance, "Water"));
+    chinese_interp_t my_mm = ci_interpret_locale(0, 4, 0, 1,
+                                                 I18N_LOCALE_MY);
+    /* MY has no content table — falls back to EN */
+    TEST_ASSERT_EQUAL_STRING("Rat", my_mm.glyph);
+    TEST_ASSERT_NOT_NULL(strstr(my_mm.glance, "Rat"));
+    TEST_ASSERT_NOT_NULL(strstr(my_mm.glance, "Water"));
 }
 
 static void test_locale_invalid_animal(void)

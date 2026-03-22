@@ -52,9 +52,9 @@ static void test_locale_es_epagomenal(void)
 
 static void test_locale_unsupported_fallback(void)
 {
-    egyptian_interp_t th = ei_interpret_locale(1, 14, 500, I18N_LOCALE_TH);
-    TEST_ASSERT_TRUE(strlen(th.glyph) > 0);
-    TEST_ASSERT_NOT_NULL(strstr(th.glance, "Thoth"));
+    egyptian_interp_t my_mm = ei_interpret_locale(1, 14, 500, I18N_LOCALE_MY);
+    TEST_ASSERT_TRUE(strlen(my_mm.glyph) > 0);
+    TEST_ASSERT_NOT_NULL(strstr(my_mm.glance, "Thoth"));
 }
 
 /* ---- Invalid input ---- */

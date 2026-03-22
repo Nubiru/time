@@ -175,8 +175,8 @@ static void test_hebrew_month_names_preserved(void)
 
 static void test_fallback_unknown_locale(void)
 {
-    /* Thai has no content translations — should fall back to EN */
-    const char *val = content_get("gregorian.month.1.name", I18N_LOCALE_TH);
+    /* Myanmar has no content translations — should fall back to EN */
+    const char *val = content_get("gregorian.month.1.name", I18N_LOCALE_MY);
     TEST_ASSERT_EQUAL_STRING("January", val);
 }
 

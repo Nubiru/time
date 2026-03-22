@@ -51,9 +51,9 @@ static void test_locale_es_festival(void)
 
 static void test_locale_unsupported_fallback(void)
 {
-    celtic_interp_t th = cti_interpret_locale(1, 1, -1, I18N_LOCALE_TH);
-    TEST_ASSERT_TRUE(strlen(th.glyph) > 0);
-    TEST_ASSERT_NOT_NULL(strstr(th.glance, "Birch"));
+    celtic_interp_t my_mm = cti_interpret_locale(1, 1, -1, I18N_LOCALE_MY);
+    TEST_ASSERT_TRUE(strlen(my_mm.glyph) > 0);
+    TEST_ASSERT_NOT_NULL(strstr(my_mm.glance, "Birch"));
 }
 
 /* ---- Invalid input ---- */

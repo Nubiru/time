@@ -130,11 +130,11 @@ static void test_locale_es_shadow_translated(void)
 
 static void test_locale_fallback_to_en(void)
 {
-    astrology_interp_t th = ai_interpret_locale(0, 1, -1, I18N_LOCALE_TH);
-    /* TH has no content table — falls back to EN */
-    TEST_ASSERT_EQUAL_STRING("Ari", th.glyph);
-    TEST_ASSERT_NOT_NULL(strstr(th.glance, "Aries"));
-    TEST_ASSERT_NOT_NULL(strstr(th.glance, "Taurus"));
+    astrology_interp_t my_mm = ai_interpret_locale(0, 1, -1, I18N_LOCALE_MY);
+    /* MY has no content table — falls back to EN */
+    TEST_ASSERT_EQUAL_STRING("Ari", my_mm.glyph);
+    TEST_ASSERT_NOT_NULL(strstr(my_mm.glance, "Aries"));
+    TEST_ASSERT_NOT_NULL(strstr(my_mm.glance, "Taurus"));
 }
 
 static void test_locale_invalid_signs(void)

@@ -38,9 +38,9 @@ static void test_locale_es_receptive(void)
 
 static void test_locale_fallback_to_en(void)
 {
-    iching_interp_t r = ii_interpret_locale(1, "Heaven", "Heaven", I18N_LOCALE_TH);
-    TEST_ASSERT_EQUAL_STRING("1", r.glyph);
-    TEST_ASSERT_NOT_NULL(strstr(r.glance, "The Creative"));
+    iching_interp_t my_mm = ii_interpret_locale(1, "Heaven", "Heaven", I18N_LOCALE_MY);
+    TEST_ASSERT_EQUAL_STRING("1", my_mm.glyph);
+    TEST_ASSERT_NOT_NULL(strstr(my_mm.glance, "The Creative"));
 }
 
 static void test_locale_invalid_king_wen(void)
