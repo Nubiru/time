@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-21",
-    "total_contributors": 226
+    "total_contributors": 265
   },
   "contributors": [
     {
@@ -5092,6 +5092,260 @@
       "contribution": "Song Dynasty commentator on the Tao Te Ching. His yin-yang cosmogony interpretation provides the clearest explanation of Verse 42's creation sequence.",
       "source": "Lao-tzu's Taoteching (Red Pine translation)",
       "added_by": "LANGUAGE stream S35"
+    },
+    {
+      "name": "Dennis Tedlock",
+      "role": "Translator, Anthropologist",
+      "born": 1939,
+      "died": 2016,
+      "contribution": "Definitive English translation of the Popol Vuh (1985, rev. 1996). Spent years with Quiché daykeeper Andrés Xiloj learning to read the text through the 260-day calendar. Revealed astronomical encodings (Venus cycle, Orion hearthstones, Pleiades). Coined the ilb'al (seeing instrument) concept.",
+      "source": "Popol Vuh: The Definitive Edition (Tedlock, 1996)",
+      "added_by": "DEPTH stream S41"
+    },
+    {
+      "name": "Andrés Xiloj Peruch",
+      "role": "Daykeeper, Diviner",
+      "contribution": "Modern Quiché Maya daykeeper of Momostenango who guided Dennis Tedlock through the Popol Vuh. Provided living knowledge of the 260-day calendar, corn seed divination, and the continuity of ancient practice. 'If one only knew how to read it perfectly, it should reveal everything under the sky.'",
+      "source": "Popol Vuh (Tedlock, 1996), Preface",
+      "added_by": "DEPTH stream S41"
+    },
+    {
+      "name": "Francisco Ximénez",
+      "role": "Friar, Transcriber",
+      "born": 1666,
+      "died": 1729,
+      "contribution": "Dominican friar who transcribed the Quiché text of the Popol Vuh (c.1701-1703) from the original hieroglyphic predecessor at Chichicastenango. His manuscript preserved the only known version of this foundational Mesoamerican text.",
+      "source": "Popol Vuh (Tedlock, 1996), Introduction",
+      "added_by": "DEPTH stream S41"
+    },
+    {
+      "name": "Malcolm X",
+      "role": "Civil rights leader, orator, philosopher of time-consciousness",
+      "contribution": "Transformation narrative — the Awakener archetype. Time-consciousness philosophy, Mecca pilgrimage as convergence moment, urgency of temporal awareness",
+      "source": "The Autobiography of Malcolm X (1965)",
+      "added_by": "NERVE stream S33"
+    },
+    {
+      "name": "Alex Haley",
+      "role": "Author, journalist, oral historian",
+      "contribution": "Co-authored Malcolm X's autobiography, capturing the voice of the Awakener. Documented Malcolm's 'fanatical obsession about time' — directly relevant to Time's mission",
+      "source": "The Autobiography of Malcolm X (1965), Epilogue",
+      "added_by": "NERVE stream S33"
+    },
+    {
+      "name": "Seyyed Hossein Nasr",
+      "role": "Islamic philosopher, University Professor at George Washington University",
+      "contribution": "Tawhīd as axis of Islam, 99 Beautiful Names taxonomy (Kamāl/Jalāl/Jamāl), Islamic art hierarchy (calligraphy→architecture→dress→arts), beauty as Divine Name (al-Jamīl), haqīqah (truth=reality=beauty), ihsān (beauty+goodness+virtue), nafas al-Rahmān (Breath of the Compassionate as substance of existence), sakīnah=shekinah cross-system connection, al-mīzān (cosmic balance), Islamic music traditions for AUDIO",
+      "source": "The Heart of Islam: Enduring Values for Humanity (2002)",
+      "added_by": "DEPTH stream S42"
+    },
+    {
+      "name": "Rābi'ah al-'Adawiyyah",
+      "role": "8th century Sufi mystic and poet (Basra), first great Islamic love poet",
+      "contribution": "Foundational Sufi love poetry — 'Two ways I love Thee' poem for Wisdom Engine. Established the tradition of Divine Love in Islam, influencing all subsequent Sufi literature",
+      "source": "Quoted in Nasr, The Heart of Islam (2002)",
+      "added_by": "DEPTH stream S42"
+    },
+    {
+      "name": "Jalāl al-Dīn Rūmī",
+      "role": "13th century Persian Sufi poet (Konya), supreme troubadour of Divine Love",
+      "contribution": "Sufi poetry on peace, love, and the spiritual homeland — 'There is no peace except in the spiritual retreat of God.' Most widely read poet in America. Wisdom Engine content for Islamic and cross-system display",
+      "source": "Quoted in Nasr, The Heart of Islam (2002)",
+      "added_by": "DEPTH stream S42"
+    },
+    {
+      "name": "Abraham ibn Ezra",
+      "role": "12th century Jewish sage, poet, astronomer, and Torah commentator",
+      "contribution": "Comparative observation of religious traditions — 'The Muslims sing of love and passion / The Christians of war and revenge / The Greeks of wisdom and devices.' Cross-system perspective for Unified Sacred Cycles",
+      "source": "Quoted in Nasr, The Heart of Islam (2002)",
+      "added_by": "DEPTH stream S42"
+    },
+    {
+      "name": "Abū Hāmid al-Ghazzālī",
+      "role": "11th century theologian, philosopher, and Sufi master",
+      "contribution": "Theory of sacred music — 'Music intensifies the passions within the soul. If the passion is directed toward God, it increases the fire of love for God.' Foundation for Islamic AUDIO module's spiritual purpose",
+      "source": "Quoted in Nasr, The Heart of Islam (2002)",
+      "added_by": "DEPTH stream S42"
+    },
+    {
+      "name": "Titus Burckhardt",
+      "role": "20th century Swiss art scholar, foremost Western interpreter of Islamic sacred art",
+      "contribution": "Revealed the spiritual significance of Islamic art — 'Go and see the Ibn Tūlūn Mosque in Cairo.' Islamic art as the inner truth (haqīqah) made visible. Design philosophy for Time's Islamic visual identity",
+      "source": "Referenced in Nasr, The Heart of Islam (2002)",
+      "added_by": "DEPTH stream S42"
+    },
+    {
+      "name": "Amy Jen Su",
+      "role": "Executive coach, author, leadership presence expert",
+      "contribution": "Signature Voice framework: ACE model (Assumptions, Communication, Energy) for building authentic leadership presence. Four presence quadrants. Framing/advocacy/listening communication triad. Composure-expression dimmer switch for calibrating energy. Informs how Time speaks to users — frame before data, point-of-view narratives, context-dependent tone modulation.",
+      "source": "Own the Room: Discover Your Signature Voice (2013)",
+      "added_by": "NERVE stream digest-108"
+    },
+    {
+      "name": "Muriel Maignan Wilkins",
+      "role": "Executive coach, author, leadership presence expert",
+      "contribution": "Co-created Signature Voice framework with Amy Jen Su. Voice for self / voice for others balance model. ACE conditioning system for integrated presence. Manager-as-coach methodology. Informs Time's voice system — authentic presence over polished surface, integrated mind-skill-body approach to UI communication.",
+      "source": "Own the Room: Discover Your Signature Voice (2013)",
+      "added_by": "NERVE stream digest-108"
+    },
+    {
+      "name": "Deepak Chopra",
+      "role": "Physician, author, leading figure in emerging spirituality",
+      "contribution": "Science-spirituality Bridge archetype for Time's voice system. Consciousness-time thesis: samadhi as the zero-state of timelessness, time springs from eternity, multiple speeds of subjective time. Spiritual hypothesis: unseen reality as source, knowable through awareness, intelligence embedded in cosmos. Vedantic parallels to quantum mechanics for Unified Sacred Cycles. 6 wisdom voice passages for Wisdom Engine.",
+      "source": "War of the Worldviews: Science vs. Spirituality (2011)",
+      "added_by": "NERVE stream digest-109"
+    },
+    {
+      "name": "Leonard Mlodinow",
+      "role": "Theoretical physicist (Caltech), author, co-author with Stephen Hawking",
+      "contribution": "Scientific perspective on time's nature for Time's physics layer. Relativity of simultaneity, cesium clock precision (9,192,631,770 Hz), gravitational time dilation, twin paradox, biological clocks (circadian, perception, memory). Observer-dependent physics validating Time's multi-system display. 6 wisdom voice passages for Wisdom Engine. Feynman love letter as Bridge archetype emotional core.",
+      "source": "War of the Worldviews: Science vs. Spirituality (2011)",
+      "added_by": "NERVE stream digest-109"
+    },
+    {
+      "name": "Dr. Giridhar Boray",
+      "role": "Computer scientist, Vedic scholar, translator of Bhagavad Gita into English",
+      "contribution": "Modern English translation of Gita based on Raghavendra Teertha's Gita Vivruti. Made the Dvaita Vedanta commentary accessible. Source for Krishna-as-Kala identity, 'I am' divine manifestation taxonomy, Vishvarupa visual specification, cosmic time cycles.",
+      "source": "The Bhagavad Gita (TTD, 2023)",
+      "added_by": "DEPTH stream S43"
+    },
+    {
+      "name": "Sri Raghavendra Teertha",
+      "role": "17th century Dvaita philosopher, 16th pontiff of Madhva lineage",
+      "contribution": "Author of Gita Vivruti — unified commentary consolidating Sri Madhwacharya's Gita Bhashya and Gita Tatparya Nirnaya. Word derivation (shabda nishpatti) revealing divine attributes behind entity names in the 'I am' verses. The interpretive framework for all 701 verses.",
+      "source": "Gita Vivruti [GV], referenced in Boray (2023)",
+      "added_by": "DEPTH stream S43"
+    },
+    {
+      "name": "Sri Madhwacharya",
+      "role": "12th century ascetic philosopher, founder of Dvaita Vedanta school",
+      "contribution": "Foundational commentary on the Bhagavad Gita — Gita Bhashya (first work) and Gita Tatparya Nirnaya (detailed arguments). Established the philosophy of dualistic theism: individual souls are eternally different from the Lord Almighty. Three-interpretation framework (historical, psychological, spiritual) for the Gita.",
+      "source": "Gita Bhashya [GB], Gita Tatparya Nirnaya [GTN], referenced in Boray (2023)",
+      "added_by": "DEPTH stream S43"
+    },
+    {
+      "name": "Sage Vedavyasa",
+      "role": "Traditional author of the Mahabharata, arranger of the Vedas",
+      "contribution": "Author of the Mahabharata (18 volumes) which contains the Bhagavad Gita as chapters 25-42 of Bheeshma Parva. Identified as a direct form (avatar) of the Lord in verse 10.37. Granted Sanjaya divine vision to witness and narrate the war. The original voice through which all of Hindu sacred literature flows.",
+      "source": "The Mahabharata, Bhagavad Gita",
+      "added_by": "DEPTH stream S43"
+    },
+    {
+      "name": "David M. Russinoff",
+      "role": "Mathematician, formal verification specialist (AMD)",
+      "contribution": "Rigorous mathematical analysis of the Hebrew calendar. Historical narrative: fire signals, Molad Adam, Hillel II, Babylonian-Palestinian controversy. ACL2 formal proof — the Hebrew calendar is the only calendar system machine-verified. Drift prophecy: 'the redemption will have occurred.' 14 keviyot table. Chalakim time unit (1080 parts/hour).",
+      "source": "Understanding the Hebrew Calendar (paper)",
+      "added_by": "DEPTH stream S44"
+    },
+    {
+      "name": "Rabbi Adin Steinsaltz",
+      "role": "Talmudic scholar, translator of the complete Babylonian Talmud into modern Hebrew",
+      "contribution": "Prayer as time-architecture: 4 cycles (day/week/month/year), 3 daily services (Shaharit/Minhah/Ma'ariv linked to Abraham/Isaac/Jacob), Shaharit as ascent through 4 Kabbalistic worlds (Action→Formation→Creation→Emanation), Amidah as the Holy of Holies whispered encounter. Month-by-month festival data. Prayer rite diversity (Ashkenazi, Sephardic, Yemenite, Italian).",
+      "source": "A Guide to Jewish Prayer (Schocken Books, 2000)",
+      "added_by": "DEPTH stream S44"
+    },
+    {
+      "name": "Hillel ben Yehudah (Hillel II)",
+      "role": "Head of the Sanhedrin, 4th century CE (358-359 CE)",
+      "contribution": "Fixed the Hebrew calendar from observational to calculated. Motivated by Emperor Constantius II's prohibition of Rosh Chodesh announcement. The person who made the calendar permanent, transforming a living observational practice into eternal arithmetic.",
+      "source": "Referenced by Russinoff and Steinsaltz",
+      "added_by": "DEPTH stream S44"
+    },
+    {
+      "name": "Moses Maimonides (Rambam)",
+      "role": "12th century philosopher, physician, codifier of Jewish law",
+      "contribution": "Sanctification of the New Month (Mishneh Torah, Book 3, Treatise 8) — primary historical source for the Hebrew calendar's transition from observation to calculation. Noted that only 14 of 24 keviyot are realizable. Source for fire signal history and Rosh Chodesh proclamation.",
+      "source": "Mishneh Torah: Sanctification of the New Month (1178 CE)",
+      "added_by": "DEPTH stream S44"
+    },
+    {
+      "name": "Helmer Aslaksen",
+      "role": "Mathematician (National University of Singapore), Chinese calendar specialist",
+      "contribution": "Definitive English-language analysis of the Chinese calendar: suì/nián dual structure, 5 rules clarified, Y2033 problem (fake leap months), complete 24 jié qì with Chinese characters, cross-cultural seasonal holiday table (Chinese↔Western↔Celtic), calendar classification theory (arithmetical vs astronomical), Chinese-Hebrew structural parallel, Jesuit calendar history.",
+      "source": "The Mathematics of the Chinese Calendar (2003)",
+      "added_by": "DEPTH stream S45"
+    },
+    {
+      "name": "Johann Adam Schall von Bell",
+      "role": "German Jesuit missionary, astronomer, director of Chinese Bureau of Astronomy (1645-1664)",
+      "contribution": "Formulated the current rules of the Chinese calendar (1645). Predicted eclipses in competition with Chinese and Muslim astronomers. Became mandarin of the first grade. Arrested, sentenced to death (1664), saved by earthquake (1665). The current Chinese calendar is his work.",
+      "source": "Referenced in Aslaksen (2003)",
+      "added_by": "DEPTH stream S45"
+    },
+    {
+      "name": "Ferdinand Verbiest",
+      "role": "Belgian Jesuit, director of Bureau of Astronomy (1668-1688), personal tutor to Kāng Xī emperor",
+      "contribution": "Vindicated the Jesuit calendar after the 1664-1668 crisis. Won eclipse prediction contest against Chinese and Muslim astronomers. Learned Manchu. Jesuits directed the Bureau until 1746 based on his work.",
+      "source": "Referenced in Aslaksen (2003)",
+      "added_by": "DEPTH stream S45"
+    },
+    {
+      "name": "Guō Shǒu Jìng (郭守敬)",
+      "role": "Chinese mathematician and astronomer (1231-1316), Yuán dynasty",
+      "contribution": "Built a 13-meter gnomon (1276). Designed the Shòu Shí calendar — the most accurate calendar in the world at the time. Inspired by Muslim astronomical methods introduced during the Yuán dynasty. His reform preceded the Jesuit reform by 365 years.",
+      "source": "Referenced in Aslaksen (2003)",
+      "added_by": "DEPTH stream S45"
+    },
+    {
+      "name": "Niall Ferguson",
+      "role": "Historian, author, professor (Harvard, Stanford)",
+      "contribution": "The Ascent of Money: A Financial History of the World (2008) — four millennia of financial evolution from Mesopotamian clay tablets to 2008 subprime crisis. Documents money-calendar connections (Babylonian debt-harvest cycles, Islamic riba prohibition, Chinese paper money as state control), Fibonacci's dual role in finance and golden ratio, five-stage bubble cycle, financial evolution as Darwinian process, Chimerica thesis. 30+ timeline milestones, 8 wisdom passages for Earth View.",
+      "source": "The Ascent of Money: A Financial History of the World (Penguin, 2008)",
+      "added_by": "NERVE stream digest 112"
+    },
+    {
+      "name": "Carol S. Dweck",
+      "role": "Psychologist, professor (Stanford University), researcher in motivation and personality",
+      "contribution": "Mindset: The New Psychology of Success (2006) — fixed vs growth mindset framework. Two belief systems about human abilities: fixed (carved in stone, proving yourself) vs growth (cultivated through effort, stretching yourself). Brain-wave research showing growth-mindset people attend to learning information while fixed-mindset people only attend to ability-confirming feedback. Process praise vs trait praise. 'Not yet' reframe. Brainology workshop for adolescents. 8 wisdom passages and 8 exploration encouragement patterns for Time's PERSONA stream (diamond_room growth model, usage_interest tracking, onboarding voice).",
+      "source": "Mindset: The New Psychology of Success (Random House, 2006)",
+      "added_by": "NERVE stream digest 113"
+    },
+    {
+      "name": "Walpola Sri Rahula",
+      "role": "Sri Lankan Theravada Buddhist monk, first bhikkhu to hold a university chair in the West (Sorbonne)",
+      "contribution": "Definitive modern introduction to Buddhism from the Pali Canon. Four Noble Truths with dukkha ≠ 'suffering'. Five Aggregates as Buddhist analysis of self. Ehipassika ('come and see'). Kalama Sutta as charter of free inquiry. Nirvana as Absolute Truth. Noble Eightfold Path. Buddhism's unique relationship to time: time is empty, impermanent, constructed by mind. The present moment IS the only reality.",
+      "source": "What the Buddha Taught (Grove Press, 1959/1974)",
+      "added_by": "DEPTH stream S46"
+    },
+    {
+      "name": "Emperor Asoka",
+      "role": "3rd century BCE Mauryan emperor, first Buddhist ruler",
+      "contribution": "Rock Edict XII: 'One should honour others' religions.' Earliest surviving expression of religious tolerance in world history. Philosophical justification for Time's multi-system display.",
+      "source": "Rock Edict XII, quoted by Rahula",
+      "added_by": "DEPTH stream S46"
+    },
+    {
+      "name": "Carl Gustav Jung",
+      "role": "Founder of analytical psychology, originator of synchronicity concept",
+      "contribution": "Synchronicity as an acausal connecting principle — the FOURTH factor alongside space, time, and causality (the Quaternio). Archetypes as structural patterns bridging psyche and matter. I Ching's modus operandi as synchronistic, not causal. Einstein-inspired 'psychic relativity of space and time.' Historical chain: Hippocrates→Kepler→Leibniz→Schopenhauer→Einstein→Jung. The theoretical foundation for WHY separate calendar systems show the same patterns.",
+      "source": "Synchronicity: An Acausal Connecting Principle (1952, Collected Works Vol. 8)",
+      "added_by": "DEPTH stream S47"
+    },
+    {
+      "name": "Wolfgang Pauli",
+      "role": "Nobel Prize physicist (1945, exclusion principle), co-creator of the Jung-Pauli Quaternio",
+      "contribution": "Co-created the quaternio diagram (Energy/Space-Time/Causality/Synchronicity) with Jung. Published 'The Influence of Archetypal Ideas on the Scientific Theories of Kepler' alongside Jung's synchronicity monograph. Proposed 'neutral language' for the unity of observer and observed. The physicist who validated Jung's principle.",
+      "source": "The Interpretation of Nature and the Psyche (1952, with Jung)",
+      "added_by": "DEPTH stream S47"
+    },
+    {
+      "name": "Anthony Aveni",
+      "role": "Archaeoastronomer (Colgate University), founder of the field of archaeoastronomy",
+      "contribution": "Cross-cultural planetary mythology: Venus duality (love/war) across 9 cultures from observed behavior, not cultural borrowing. Mars=red=war universal. Inanna/Ishtar descent = Venus conjunction cycle encoded as myth (7 gates = 7 spheres, 3 days = disappearance). Palenque triple conjunction (July 20, 690 CE) = verified historical synchronicity. Polychronic image concept = what Time does. Kepler's music of the spheres → Third Law. 'The common sense of one era becomes the superstition of another.'",
+      "source": "Conversing with the Planets: How Science and Myth Invented the Cosmos (1992)",
+      "added_by": "DEPTH stream S48"
+    },
+    {
+      "name": "Richard Bach",
+      "role": "Author",
+      "contribution": "Jonathan Livingston Seagull — transcendence parable, consciousness as flight",
+      "source": "Jonathan Livingston Seagull (1970)"
+    },
+    {
+      "name": "Helen Schucman",
+      "role": "Author/Channel",
+      "contribution": "A Course in Miracles — time-specific wisdom, holy instant, illusion of time",
+      "source": "A Course in Miracles (1976)"
     }
   ]
 }
