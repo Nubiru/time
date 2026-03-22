@@ -660,6 +660,11 @@ EMSCRIPTEN_KEEPALIVE int ui_get_view(void) {
     return g_state.view.current_view;
 }
 
+EMSCRIPTEN_KEEPALIVE void ui_skip_enter_zoom(void) {
+    g_state.enter_zoom = ez_skip(g_state.enter_zoom);
+    g_state.enter_zoom_active = 0;
+}
+
 EMSCRIPTEN_KEEPALIVE void ui_on_resize(int width, int height) {
     if (width < 1) width = 1;
     if (height < 1) height = 1;

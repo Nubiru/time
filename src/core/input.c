@@ -156,8 +156,26 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         if (focus >= 0) {
             /* Toggle: if already in this focus, return to overview */
             int cur_focus = g_input_state->view.focus_mode;
-            g_input_state->view = vs_set_focus(g_input_state->view,
-                                                cur_focus == focus ? 0 : focus);
+            int new_focus = (cur_focus == focus) ? 0 : focus;
+            g_input_state->view = vs_set_focus(g_input_state->view, new_focus);
+            /* Toast: tell user which mode they entered */
+            {
+                static const char *names[] = {
+                    "Overview", "Astrology [A]", "Kin Maya [K]",
+                    "I Ching [I]", "Chinese [C]", "Human Design [D]",
+                    "Kabbalah [T]"
+                };
+                const char *label = (new_focus >= 0 && new_focus <= 6)
+                    ? names[new_focus] : "Overview";
+                EM_ASM({
+                    var t = document.getElementById('toast-area');
+                    if (t) {
+                        t.textContent = UTF8ToString($0);
+                        t.classList.add('visible');
+                        setTimeout(function() { t.classList.remove('visible'); }, 1500);
+                    }
+                }, label);
+            }
             return EM_TRUE;
         }
     }

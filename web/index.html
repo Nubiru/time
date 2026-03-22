@@ -325,13 +325,48 @@
             }, 100);
         });
 
+        /* 3-step progressive coach (About Face ACTION 2) */
         var hint = document.getElementById('first-hint');
-        if (hint && !localStorage.getItem('time_hint_shown')) {
-            hint.classList.add('visible');
-            setTimeout(function() {
-                hint.classList.remove('visible');
-                localStorage.setItem('time_hint_shown', '1');
-            }, 5000);
+        if (hint && !localStorage.getItem('time_coach_done')) {
+            var steps = [
+                { delay: 3000,  text: 'Scroll to zoom \u2022 Drag to orbit', dur: 6000 },
+                { delay: 12000, text: 'Press A for Astrology \u2022 K for Kin Maya \u2022 I for I Ching', dur: 8000 },
+                { delay: 25000, text: 'Press P to enter your birth date', dur: 6000 }
+            ];
+            var shown = 0;
+            steps.forEach(function(step) {
+                setTimeout(function() {
+                    hint.textContent = step.text;
+                    hint.classList.add('visible');
+                    setTimeout(function() {
+                        hint.classList.remove('visible');
+                        shown++;
+                        if (shown >= steps.length)
+                            localStorage.setItem('time_coach_done', '1');
+                    }, step.dur);
+                }, step.delay);
+            });
+        }
+
+        /* Click-to-skip enter_zoom (About Face ACTION 10) */
+        var canvas = document.getElementById('canvas');
+        if (canvas) {
+            var skipHandler = function() {
+                if (Module && Module._ui_skip_enter_zoom)
+                    Module._ui_skip_enter_zoom();
+                canvas.removeEventListener('click', skipHandler);
+            };
+            canvas.addEventListener('click', skipHandler);
+        }
+
+        /* Time bar always-visible first session (About Face ACTION 7) */
+        if (!localStorage.getItem('time_session_count')) {
+            var tb = document.getElementById('time-bar');
+            if (tb) tb.classList.add('visible');
+            localStorage.setItem('time_session_count', '1');
+        } else {
+            var count = parseInt(localStorage.getItem('time_session_count'), 10) || 0;
+            localStorage.setItem('time_session_count', String(count + 1));
         }
     })();
     </script>
