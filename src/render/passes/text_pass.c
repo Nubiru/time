@@ -944,18 +944,28 @@ void text_pass_draw(const render_frame_t *frame) {
     vec3_t cam_right, cam_up;
     billboard_camera_vectors(&frame->view, &cam_right, &cam_up);
 
+    /* Zoom-adaptive label sizing — labels maintain readable screen size
+     * across all zoom levels. Camera distance = exp(log_zoom).
+     * At default zoom (log_zoom~3.2, dist~25): scale factor = 1.0.
+     * Close-up: labels shrink. Galaxy view: labels grow proportionally. */
+    float cam_dist = expf(frame->log_zoom);
+    float zoom_scale = cam_dist / 25.0f;
+    if (zoom_scale < 0.15f) zoom_scale = 0.15f;
+    if (zoom_scale > 4.0f) zoom_scale = 4.0f;
+
     /* Sun label at origin — place chars along cam_right so text always faces camera */
     {
         static const char *sun_name = "Sun";
         int slen = (int)strlen(sun_name);
-        float spacing = 0.3f;
+        float spacing = 0.2f * zoom_scale;
         float sx = -spacing * (float)(slen - 1) * 0.5f;
-        vec3_t base = vec3_create(0.0f, 1.0f, 0.0f);
+        float label_y = 0.6f * zoom_scale;
+        vec3_t base = vec3_create(0.0f, label_y, 0.0f);
         for (int i = 0; i < slen && len < GLYPH_BATCH_MAX; i++) {
             vec3_t offset = vec3_scale(cam_right, sx + (float)i * spacing);
             instances[len].glyph_id = (int)sun_name[i];
             instances[len].position = vec3_add(base, offset);
-            instances[len].scale    = 0.6f;
+            instances[len].scale    = 0.35f * zoom_scale;
             instances[len].color    = sun_label_color;
             len++;
         }
@@ -988,17 +998,17 @@ void text_pass_draw(const render_frame_t *frame) {
         }
 
         /* Offset label slightly above ecliptic plane */
-        ly += 0.5f;
+        ly += 0.3f * zoom_scale;
 
         /* Place chars along cam_right so text reads correctly from any angle */
         vec3_t base = vec3_create(lx, ly, lz);
-        float spacing = 0.15f;
+        float spacing = 0.1f * zoom_scale;
         float sx = -spacing * (float)(nlen - 1) * 0.5f;
         for (int i = 0; i < nlen && len < GLYPH_BATCH_MAX; i++) {
             vec3_t offset = vec3_scale(cam_right, sx + (float)i * spacing);
             instances[len].glyph_id = (int)name[i];
             instances[len].position = vec3_add(base, offset);
-            instances[len].scale    = 0.5f;
+            instances[len].scale    = 0.3f * zoom_scale;
             instances[len].color    = planet_label_color;
             len++;
         }
