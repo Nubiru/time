@@ -16,8 +16,8 @@
 
     <div id="ui-overlay">
         <div id="time-hud"></div>
-        <div id="settings-btn" class="corner-btn corner-btn-settings" title="Settings (,)">&#9881;</div>
-        <div id="help-btn" class="corner-btn" title="Keyboard shortcuts (?)">?</div>
+        <div id="settings-btn" class="corner-btn corner-btn-settings" title="Settings (,)">&#9881;<span class="keybadge">,</span></div>
+        <div id="help-btn" class="corner-btn" title="Keyboard shortcuts (?)">?<span class="keybadge">?</span></div>
 
         <div id="help-panel" class="panel frosted centered hidden" role="dialog" aria-label="Keyboard shortcuts">
             <div class="panel-header">
@@ -58,21 +58,22 @@
 
         <div id="birth-panel" class="panel frosted centered hidden" role="dialog" aria-label="Birth date">
             <div class="panel-header">
-                <span class="text-accent">When did you arrive?</span>
+                <span class="text-accent">See yourself across every calendar</span>
                 <span class="panel-close" role="button" aria-label="Close" tabindex="0">&times;</span>
             </div>
             <div class="panel-body">
+                <div class="text-muted" style="font-size:var(--font-size-compact);margin-bottom:var(--sp-3)">Enter your birth date to unlock your identity in 7 time systems</div>
                 <form id="birth-form" autocomplete="off">
                     <label class="text-secondary">Day
-                        <input type="number" id="birth-day" min="1" max="31" placeholder="DD" class="cmd-input" style="width:4em">
+                        <input type="number" id="birth-day" min="1" max="31" placeholder="DD" class="cmd-input" style="width:4em;min-height:44px">
                     </label>
                     <label class="text-secondary">Month
-                        <input type="number" id="birth-month" min="1" max="12" placeholder="MM" class="cmd-input" style="width:4em">
+                        <input type="number" id="birth-month" min="1" max="12" placeholder="MM" class="cmd-input" style="width:4em;min-height:44px">
                     </label>
                     <label class="text-secondary">Year
-                        <input type="number" id="birth-year" min="1" max="2100" placeholder="YYYY" class="cmd-input" style="width:5em">
+                        <input type="number" id="birth-year" min="1" max="2100" placeholder="YYYY" class="cmd-input" style="width:5em;min-height:44px">
                     </label>
-                    <button type="submit" class="tb-btn text-accent" style="margin-left:1em">Reveal</button>
+                    <button type="submit" class="tb-btn text-accent" style="margin-left:1em;min-height:44px">Reveal</button>
                 </form>
                 <div id="birth-result" class="text-primary" style="margin-top:0.8em"></div>
             </div>

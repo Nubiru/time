@@ -82,6 +82,13 @@ canvas { width: 100vw; height: 100vh; display: block; }
 .corner-btn:active { transform: scale(0.95); }
 .corner-btn:focus-visible { outline: 2px solid rgba(var(--brand-primary), 0.6); outline-offset: 2px; }
 
+.keybadge {
+    position: absolute; bottom: 1px; right: 1px;
+    font-size: 8px; line-height: 1;
+    color: rgba(var(--text-muted), 0.5);
+    pointer-events: none;
+}
+
 .frosted {
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
