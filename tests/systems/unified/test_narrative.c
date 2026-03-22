@@ -706,6 +706,75 @@ static void test_narr_compose_hebrew_uses_translated_template(void)
 }
 
 /* ================================================================
+ * Deep templates: CYCLE depth uses longer multi-sentence text
+ * ================================================================ */
+
+static void test_narr_compose_cycle_depth_uses_deep_template(void)
+{
+    narr_state_t state;
+    narr_init(&state);
+
+    br_lang_context_t ctx = make_context(
+        "4 systems converge",
+        "convergence",
+        "significant",
+        "4 systems",
+        0.7
+    );
+
+    /* CONTEXT depth */
+    narr_input_t input_ctx = {
+        .brain_ctx = &ctx,
+        .wisdom_text = NULL, .wisdom_author = NULL,
+        .wisdom_work = NULL, .wisdom_year = 0,
+        .depth = NARR_DEPTH_CONTEXT,
+        .system_name = "Astronomy"
+    };
+
+    narr_output_t out_ctx;
+    narr_compose(&state, &input_ctx, &out_ctx);
+
+    /* CYCLE depth — should use deep template (longer) */
+    narr_input_t input_cyc = input_ctx;
+    input_cyc.depth = NARR_DEPTH_CYCLE;
+
+    narr_output_t out_cyc;
+    narr_compose(&state, &input_cyc, &out_cyc);
+
+    /* Deep template text should be longer than context template */
+    TEST_ASSERT_TRUE(strlen(out_cyc.body) > strlen(out_ctx.body));
+}
+
+static void test_narr_compose_full_depth_uses_deep_template(void)
+{
+    narr_state_t state;
+    narr_init(&state);
+
+    br_lang_context_t ctx = make_context(
+        "A quiet moment",
+        "quiet",
+        "ordinary",
+        "0 systems",
+        0.1
+    );
+
+    narr_input_t input = {
+        .brain_ctx = &ctx,
+        .wisdom_text = NULL, .wisdom_author = NULL,
+        .wisdom_work = NULL, .wisdom_year = 0,
+        .depth = NARR_DEPTH_FULL,
+        .system_name = NULL
+    };
+
+    narr_output_t out;
+    int result = narr_compose(&state, &input, &out);
+
+    TEST_ASSERT_EQUAL_INT(1, result);
+    /* Deep template should produce multi-sentence text */
+    TEST_ASSERT_TRUE(strlen(out.body) > 40);
+}
+
+/* ================================================================
  * Runner
  * ================================================================ */
 
@@ -740,6 +809,10 @@ int main(void)
     /* Locale */
     RUN_TEST(test_narr_compose_default_locale_is_en);
     RUN_TEST(test_narr_compose_hebrew_uses_translated_template);
+
+    /* Deep templates */
+    RUN_TEST(test_narr_compose_cycle_depth_uses_deep_template);
+    RUN_TEST(test_narr_compose_full_depth_uses_deep_template);
 
     return UNITY_END();
 }

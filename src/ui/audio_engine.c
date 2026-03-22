@@ -34,9 +34,26 @@ EM_JS(void, js_update_oscillator, (int idx, double freq, double amp,
     if (!ta) return;
     var now = ta.ctx.currentTime;
 
-    ta.oscs[idx].frequency.linearRampToValueAtTime(freq, now + 0.1);
-    ta.gains[idx].gain.linearRampToValueAtTime(amp, now + 0.3);
-    ta.panners[idx].pan.linearRampToValueAtTime(pan, now + 0.1);
+    /* Clamp amplitude to gentle range */
+    if (amp > 0.3) amp = 0.3;
+
+    /* Smooth exponential transitions — gentle, not abrupt */
+    ta.oscs[idx].frequency.setTargetAtTime(freq, now, 0.15);
+
+    /* Envelope-aware gain: detect big amplitude changes for attack/release */
+    var prev = ta.gains[idx].gain.value;
+    var delta = Math.abs(amp - prev);
+    if (delta > 0.05) {
+        /* Large change: use attack (0.2s) or release (0.8s) curve */
+        var tc = (amp > prev) ? 0.2 : 0.8;
+        ta.gains[idx].gain.cancelScheduledValues(now);
+        ta.gains[idx].gain.setTargetAtTime(amp, now, tc);
+    } else {
+        /* Small change: gentle drift */
+        ta.gains[idx].gain.setTargetAtTime(amp, now, 0.5);
+    }
+
+    ta.panners[idx].pan.setTargetAtTime(pan, now, 0.15);
 
     if (hcount > 2) {
         var real = new Float32Array(hcount + 1);
@@ -70,9 +87,9 @@ void audio_engine_init(void) {
         if (window._timeAudio) return;
         var ctx = new (window.AudioContext || window.webkitAudioContext)();
 
-        /* Master gain */
+        /* Master gain — gentle baseline (0.12), user adjusts with slider */
         var master = ctx.createGain();
-        master.gain.value = 0.3;
+        master.gain.value = 0.12;
         master.connect(ctx.destination);
 
         /* Dry/wet routing for reverb */
@@ -135,7 +152,7 @@ void audio_engine_init(void) {
         ta.gains = gains;
         ta.panners = panners;
         ta.waveTypes = waveTypes;
-        ta.prevVol = 0.3;
+        ta.prevVol = 0.12;
         window._timeAudio = ta;
     });
     s_initialized = 1;
@@ -200,8 +217,8 @@ void audio_engine_update(const audio_params_t *params) {
             var ta = window._timeAudio;
             if (!ta) return;
             var now = ta.ctx.currentTime;
-            ta.dryGain.gain.linearRampToValueAtTime($0, now + 1.5);
-            ta.wetGain.gain.linearRampToValueAtTime($1, now + 1.5);
+            ta.dryGain.gain.setTargetAtTime($0, now, 0.5);
+            ta.wetGain.gain.setTargetAtTime($1, now, 0.5);
         }, (double)dry, (double)wet);
     }
 }
@@ -234,7 +251,9 @@ void audio_engine_mute(void) {
         var ta = window._timeAudio;
         if (!ta) return;
         var now = ta.ctx.currentTime;
-        ta.master.gain.linearRampToValueAtTime(0, now + 0.05);
+        /* Gentle 0.5s fade-out */
+        ta.master.gain.cancelScheduledValues(now);
+        ta.master.gain.setTargetAtTime(0, now, 0.15);
     });
 }
 
@@ -251,7 +270,9 @@ void audio_engine_unmute(void) {
         var now = ta.ctx.currentTime;
         /* Resume audio context in case browser suspended it */
         if (ta.ctx.state === 'suspended') ta.ctx.resume();
-        ta.master.gain.linearRampToValueAtTime(ta.prevVol, now + 0.05);
+        /* Gentle 1.5s fade-in — emerge from silence, don't slam */
+        ta.master.gain.cancelScheduledValues(now);
+        ta.master.gain.setTargetAtTime(ta.prevVol, now, 0.5);
     });
 }
 

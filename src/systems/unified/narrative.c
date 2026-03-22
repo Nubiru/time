@@ -297,8 +297,30 @@ int narr_compose(narr_state_t *state,
     if (input->depth == NARR_DEPTH_SURFACE) {
         /* Surface: headline only, no template expansion */
         snprintf(out->body, NARR_BODY_MAX, "%s", out->headline);
+    } else if (input->depth >= NARR_DEPTH_CYCLE) {
+        /* Cycle and Full: use deep templates (longer, multi-sentence) */
+        const char *deep_tmpl = NULL;
+        if (tidx >= 0 && tidx < NARR_THREAD_COUNT) {
+            char deep_key[64];
+            snprintf(deep_key, sizeof(deep_key), "narr.tmpl.%s.deep.%d",
+                     THREAD_NAMES[tidx], variant);
+            const char *localized = content_get(deep_key,
+                                                (i18n_locale_t)input->locale);
+            if (localized && localized[0] &&
+                strcmp(localized, deep_key) != 0) {
+                deep_tmpl = localized;
+            }
+        }
+        if (deep_tmpl) {
+            fill_template(deep_tmpl, ctx, input->system_name,
+                          out->body, NARR_BODY_MAX);
+        } else {
+            /* Fallback to regular template */
+            fill_template(tmpl_text, ctx, input->system_name,
+                          out->body, NARR_BODY_MAX);
+        }
     } else {
-        /* Context and deeper: use template */
+        /* Context: use regular template */
         fill_template(tmpl_text, ctx, input->system_name,
                       out->body, NARR_BODY_MAX);
     }

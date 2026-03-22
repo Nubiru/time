@@ -312,6 +312,19 @@
             }
         });
 
+        /* Canvas resize — keep WebGL drawing buffer matched to CSS layout */
+        var resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                var w = window.innerWidth;
+                var h = window.innerHeight;
+                if (Module && Module._ui_on_resize) {
+                    Module._ui_on_resize(w, h);
+                }
+            }, 100);
+        });
+
         var hint = document.getElementById('first-hint');
         if (hint && !localStorage.getItem('time_hint_shown')) {
             hint.classList.add('visible');

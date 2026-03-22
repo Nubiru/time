@@ -590,4 +590,13 @@ EMSCRIPTEN_KEEPALIVE int ui_get_view(void) {
     return g_state.view.current_view;
 }
 
+EMSCRIPTEN_KEEPALIVE void ui_on_resize(int width, int height) {
+    if (width < 1) width = 1;
+    if (height < 1) height = 1;
+    emscripten_set_canvas_element_size("#canvas", width, height);
+    glViewport(0, 0, width, height);
+    g_state.camera.aspect = (float)width / (float)height;
+    post_pass_resize(width, height);
+}
+
 #endif /* __EMSCRIPTEN__ */
