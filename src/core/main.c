@@ -34,6 +34,7 @@
 #include "../render/passes/tree_of_life_pass.h"
 #include "../render/passes/bagua_pass.h"
 #include "../render/passes/gates_mandala_pass.h"
+#include "../render/passes/stardust_pass.h"
 #include "../render/earth_view_frame.h"
 #include "../systems/astronomy/planets.h"
 #include "../ui/ui_bridge.h"
@@ -356,6 +357,8 @@ void main_loop(void) {
         .observer_lon  = g_state.observer_lon,
         .theme_id      = 0, /* THEME_COSMOS — always dark, Dawn disabled */
         .focus_mode    = g_state.view.focus_mode,
+        .scene_brightness = (g_state.enter_zoom_active && ez_active(g_state.enter_zoom))
+                            ? ez_scene_brightness(g_state.enter_zoom) : 1.0f,
     };
     memcpy(frame.headline, g_state.headline, sizeof(frame.headline));
     memcpy(frame.wisdom_text, g_state.wisdom_text, sizeof(frame.wisdom_text));
@@ -392,6 +395,7 @@ void main_loop(void) {
     if (ps_is_enabled(&sched, PASS_CONSTELLATION)) constellation_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_DEEP_SKY))      deep_sky_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_MILKYWAY))       milkyway_pass_draw(&frame);
+    stardust_pass_draw(&frame); /* procedural background stars — zoom-faded */
     if (ps_is_enabled(&sched, PASS_DIFFRACTION))    diffraction_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_ORBIT_TRAIL))    orbit_trail_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_PLANET))         planet_pass_draw(&frame);
@@ -553,6 +557,7 @@ int main(void) {
     tree_of_life_pass_init();
     bagua_pass_init();
     gates_mandala_pass_init();
+    stardust_pass_init();
     if (card_pass_init() != 0) return 1;
     if (text_pass_init() != 0) return 1;
     if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
