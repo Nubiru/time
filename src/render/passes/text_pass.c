@@ -933,38 +933,50 @@ static void draw_card_text(const render_frame_t *frame)
         }
     }
 
-    /* Headline at bottom center — cosmos-scope brand color (always teal) */
-    if (frame->headline[0] != '\0') {
-        theme_cosmos_t hl_cosmos = theme_cosmos_constant();
-        float hl_fs = 20.0f;
-        float hl_w = msdf_text_width(MSDF_FONT_MONO, frame->headline, hl_fs);
-        float hl_x = ((float)vw - hl_w) * 0.5f;
-        float hl_y = (float)vh - 40.0f;
-        msdf_add_text(frame->headline, hl_x, hl_y, hl_fs,
-                      hl_cosmos.brand_secondary.r, hl_cosmos.brand_secondary.g,
-                      hl_cosmos.brand_secondary.b, 0.85f);
-    }
+    /* Bottom text stack: headline → percentile → wisdom → author
+     * Build from bottom up to avoid overlap. */
+    {
+        theme_cosmos_t btc = theme_cosmos_constant();
+        float bot_y = (float)vh;  /* current bottom cursor */
 
-    /* Daily wisdom quote — below headline, warm gold, gentle */
-    if (frame->wisdom_text[0] != '\0') {
-        theme_cosmos_t wc = theme_cosmos_constant();
-        float wfs = 13.0f;
-        float ww = msdf_text_width(MSDF_FONT_MONO, frame->wisdom_text, wfs);
-        float wx = ((float)vw - ww) * 0.5f;
-        float wy = (float)vh - 18.0f;
-        msdf_add_text(frame->wisdom_text, wx, wy, wfs,
-                      wc.brand_primary.r, wc.brand_primary.g,
-                      wc.brand_primary.b, 0.5f);
-        /* Author attribution — dimmer, right-aligned under quote */
-        if (frame->wisdom_author[0] != '\0') {
+        /* Wisdom author — very bottom */
+        if (frame->wisdom_text[0] != '\0' && frame->wisdom_author[0] != '\0') {
+            bot_y -= 14.0f;
             float aw = msdf_text_width(MSDF_FONT_MONO, frame->wisdom_author, 11.0f);
-            float ax = ((float)vw - aw) * 0.5f;
-            float ay = wy + wfs + 2.0f;
-            if (ay < (float)vh - 2.0f) {
-                msdf_add_text(frame->wisdom_author, ax, ay, 11.0f,
-                              wc.brand_primary.r, wc.brand_primary.g,
-                              wc.brand_primary.b, 0.35f);
-            }
+            msdf_add_text(frame->wisdom_author,
+                          ((float)vw - aw) * 0.5f, bot_y, 11.0f,
+                          btc.brand_primary.r, btc.brand_primary.g,
+                          btc.brand_primary.b, 0.35f);
+        }
+
+        /* Wisdom quote */
+        if (frame->wisdom_text[0] != '\0') {
+            bot_y -= 16.0f;
+            float ww = msdf_text_width(MSDF_FONT_MONO, frame->wisdom_text, 13.0f);
+            msdf_add_text(frame->wisdom_text,
+                          ((float)vw - ww) * 0.5f, bot_y, 13.0f,
+                          btc.brand_primary.r, btc.brand_primary.g,
+                          btc.brand_primary.b, 0.5f);
+        }
+
+        /* Percentile ranking — "Day #47 of 365 — top 12.9%" */
+        if (frame->percentile_text[0] != '\0') {
+            bot_y -= 16.0f;
+            float pw = msdf_text_width(MSDF_FONT_MONO, frame->percentile_text, 11.0f);
+            msdf_add_text(frame->percentile_text,
+                          ((float)vw - pw) * 0.5f, bot_y, 11.0f,
+                          btc.brand_secondary.r, btc.brand_secondary.g,
+                          btc.brand_secondary.b, 0.45f);
+        }
+
+        /* Headline — top of bottom stack */
+        if (frame->headline[0] != '\0') {
+            bot_y -= 24.0f;
+            float hl_w = msdf_text_width(MSDF_FONT_MONO, frame->headline, 20.0f);
+            msdf_add_text(frame->headline,
+                          ((float)vw - hl_w) * 0.5f, bot_y, 20.0f,
+                          btc.brand_secondary.r, btc.brand_secondary.g,
+                          btc.brand_secondary.b, 0.85f);
         }
     }
 

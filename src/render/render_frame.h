@@ -28,6 +28,7 @@ typedef struct {
     char   headline[128];         /* daily narrative headline (from brain_narrative) */
     char   wisdom_text[256];      /* daily wisdom quote */
     char   wisdom_author[64];     /* wisdom quote author */
+    char   percentile_text[64];   /* "Day #47 of 365 — top 12.9%" */
     br_visual_frame_t brain_visual; /* visual encoding of brain scan (convergence lines, glow) */
     double sun_lon;               /* Sun ecliptic longitude (degrees, 0-360) */
     double planet_lon[8];         /* Mercury..Neptune ecliptic longitudes (degrees) */

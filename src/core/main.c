@@ -48,6 +48,7 @@
 #include "../systems/unified/brain_scan.h"
 #include "../systems/unified/brain_narrative.h"
 #include "../systems/unified/wisdom.h"
+#include "../systems/unified/brain_stats.h"
 #include <string.h>
 #endif
 
@@ -110,6 +111,20 @@ void main_loop(void) {
                         g_state.wisdom_text[0] = '\0';
                         g_state.wisdom_author[0] = '\0';
                     }
+                }
+            }
+
+            /* Daily percentile — "How rare is today?" */
+            {
+                br_stats_percentile_t pct;
+                if (br_stats_percentile(g_state.simulation_jd, &pct) &&
+                    pct.total_days > 0) {
+                    snprintf(g_state.percentile_text,
+                             sizeof(g_state.percentile_text),
+                             "Day #%d of %d — top %.1f%%",
+                             pct.rank, pct.total_days, pct.percentile);
+                } else {
+                    g_state.percentile_text[0] = '\0';
                 }
             }
         }
@@ -245,6 +260,7 @@ void main_loop(void) {
     memcpy(frame.headline, g_state.headline, sizeof(frame.headline));
     memcpy(frame.wisdom_text, g_state.wisdom_text, sizeof(frame.wisdom_text));
     memcpy(frame.wisdom_author, g_state.wisdom_author, sizeof(frame.wisdom_author));
+    memcpy(frame.percentile_text, g_state.percentile_text, sizeof(frame.percentile_text));
     frame.brain_visual = g_state.brain_visual;
 
     /* Planet data for natal chart pass */

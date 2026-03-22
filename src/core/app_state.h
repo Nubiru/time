@@ -97,6 +97,7 @@ typedef struct {
     char   headline[128];        /* cached daily narrative headline */
     char   wisdom_text[256];     /* cached daily wisdom quote */
     char   wisdom_author[64];    /* cached wisdom quote author */
+    char   percentile_text[64];  /* "Day #47 of 365 — top 12.9%" */
     float  convergence_strength; /* 0.0-1.0 from brain scan */
     br_visual_frame_t brain_visual; /* cached visual encoding for convergence_pass + ring glow */
 
