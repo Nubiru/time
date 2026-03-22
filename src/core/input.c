@@ -317,7 +317,11 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
             label = e->shiftKey ? "-1 year" : "-1 month";
         }
         if (step != 0.0) {
-            g_input_state->simulation_jd += step;
+            /* Set target for smooth interpolation in main_loop */
+            double base = (g_input_state->time_target_jd != 0.0)
+                ? g_input_state->time_target_jd
+                : g_input_state->simulation_jd;
+            g_input_state->time_target_jd = base + step;
             EM_ASM({
                 var t = document.getElementById('toast-area');
                 if (t) {

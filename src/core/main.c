@@ -79,6 +79,17 @@ void main_loop(void) {
     if (!g_state.birth_sky.active)
         g_state.simulation_jd += g_state.time_speed * dt_sec;
 
+    /* Smooth time navigation: exponential approach to target JD */
+    if (g_state.time_target_jd != 0.0) {
+        double diff = g_state.time_target_jd - g_state.simulation_jd;
+        double approach = diff * (1.0 - exp(-8.0 * dt_sec)); /* ~0.87 per frame at 60fps */
+        g_state.simulation_jd += approach;
+        if (fabs(diff) < 0.001) { /* close enough — snap */
+            g_state.simulation_jd = g_state.time_target_jd;
+            g_state.time_target_jd = 0.0;
+        }
+    }
+
     /* Advance scale transition (smooth camera zoom between levels) */
     if (g_state.scale_transition.active) {
         g_state.scale_transition = scale_transition_tick(

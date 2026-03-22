@@ -29,12 +29,16 @@
 #include "../../systems/astronomy/lunar.h"
 #include "../zoom_fade.h"
 
+/* Per-frame slide offset (pixels). Set in card_pass_draw, used via shader uniform. */
+static float s_slide_offset;
+
 /* --- Module-static GL handles --- */
 
 /* Card background quads */
 static GLuint s_quad_program;
 static GLint  s_quad_loc_resolution;
 static GLint  s_quad_loc_corner_radius;
+static GLint  s_quad_loc_slide;
 static GLuint s_quad_vao;
 static GLuint s_quad_vbo;
 static GLuint s_quad_ebo;
@@ -42,6 +46,7 @@ static GLuint s_quad_ebo;
 /* Card border lines */
 static GLuint s_line_program;
 static GLint  s_line_loc_resolution;
+static GLint  s_line_loc_slide;
 static GLuint s_line_vao;
 static GLuint s_line_vbo;
 
@@ -55,6 +60,7 @@ int card_pass_init(void) {
     }
     s_quad_loc_resolution    = glGetUniformLocation(s_quad_program, "u_resolution");
     s_quad_loc_corner_radius = glGetUniformLocation(s_quad_program, "u_corner_radius");
+    s_quad_loc_slide         = glGetUniformLocation(s_quad_program, "u_slide_offset");
 
     /* Pre-allocate quad VBO + EBO */
     glGenVertexArrays(1, &s_quad_vao);
@@ -90,6 +96,7 @@ int card_pass_init(void) {
         return 1;
     }
     s_line_loc_resolution = glGetUniformLocation(s_line_program, "u_resolution");
+    s_line_loc_slide      = glGetUniformLocation(s_line_program, "u_slide_offset");
 
     /* Pre-allocate line VBO */
     glGenVertexArrays(1, &s_line_vao);
@@ -158,6 +165,7 @@ static void draw_oracle_cross(const render_frame_t *frame, float vw, float vh)
     if (qdata.vertex_count > 0) {
         glUseProgram(s_quad_program);
         glUniform2f(s_quad_loc_resolution, vw, vh);
+        glUniform1f(s_quad_loc_slide, s_slide_offset);
         theme_t t = theme_get((theme_id_t)frame->theme_id);
         glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
 
@@ -272,6 +280,7 @@ static void draw_oracle_cross(const render_frame_t *frame, float vw, float vh)
     if (ldata.vertex_count > 0) {
         glUseProgram(s_line_program);
         glUniform2f(s_line_loc_resolution, vw, vh);
+        glUniform1f(s_line_loc_slide, s_slide_offset);
 
         glBindVertexArray(s_line_vao);
         glBindBuffer(GL_ARRAY_BUFFER, s_line_vbo);
@@ -342,6 +351,7 @@ static void draw_iching_overlay(const render_frame_t *frame, float vw, float vh)
     if (qdata.vertex_count > 0) {
         glUseProgram(s_quad_program);
         glUniform2f(s_quad_loc_resolution, vw, vh);
+        glUniform1f(s_quad_loc_slide, s_slide_offset);
         theme_t t = theme_get((theme_id_t)frame->theme_id);
         glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
         glEnable(GL_BLEND);
@@ -485,6 +495,7 @@ static void draw_hd_overlay(const render_frame_t *frame, float vw, float vh)
     if (qdata.vertex_count > 0) {
         glUseProgram(s_quad_program);
         glUniform2f(s_quad_loc_resolution, vw, vh);
+        glUniform1f(s_quad_loc_slide, s_slide_offset);
         theme_t t = theme_get((theme_id_t)frame->theme_id);
         glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
         glEnable(GL_BLEND);
@@ -544,6 +555,7 @@ static void draw_astrology_overlay(const render_frame_t *frame, float vw, float 
     if (qdata.vertex_count > 0) {
         glUseProgram(s_quad_program);
         glUniform2f(s_quad_loc_resolution, vw, vh);
+        glUniform1f(s_quad_loc_slide, s_slide_offset);
         theme_t t = theme_get((theme_id_t)frame->theme_id);
         glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
         glEnable(GL_BLEND);
@@ -597,6 +609,7 @@ static void draw_chinese_overlay(const render_frame_t *frame, float vw, float vh
     if (qdata.vertex_count > 0) {
         glUseProgram(s_quad_program);
         glUniform2f(s_quad_loc_resolution, vw, vh);
+        glUniform1f(s_quad_loc_slide, s_slide_offset);
         theme_t t = theme_get((theme_id_t)frame->theme_id);
         glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
         glEnable(GL_BLEND);
@@ -631,6 +644,9 @@ void card_pass_draw(const render_frame_t *frame) {
     float vh = (float)viewport[3];
     if (vw < 1.0f) vw = 1920.0f;  /* fallback */
     if (vh < 1.0f) vh = 1080.0f;
+
+    /* Card slide-in: offset from right edge, pixels */
+    s_slide_offset = (1.0f - frame->card_slide) * vw * 0.3f;
 
     /* System-specific overlays for focus modes */
     if (frame->focus_mode == FOCUS_MODE_KIN) {
@@ -705,6 +721,7 @@ void card_pass_draw(const render_frame_t *frame) {
     if (qdata.vertex_count > 0) {
         glUseProgram(s_quad_program);
         glUniform2f(s_quad_loc_resolution, vw, vh);
+        glUniform1f(s_quad_loc_slide, s_slide_offset);
         theme_t t = theme_get((theme_id_t)frame->theme_id);
         glUniform1f(s_quad_loc_corner_radius, t.corner_radius);
 
@@ -738,6 +755,7 @@ void card_pass_draw(const render_frame_t *frame) {
     if (ldata.vertex_count > 0) {
         glUseProgram(s_line_program);
         glUniform2f(s_line_loc_resolution, vw, vh);
+        glUniform1f(s_line_loc_slide, s_slide_offset);
 
         glBindVertexArray(s_line_vao);
         glBindBuffer(GL_ARRAY_BUFFER, s_line_vbo);

@@ -33,6 +33,7 @@
 typedef struct {
     /* Time */
     double simulation_jd;    /* current Julian Day in simulation */
+    double time_target_jd;   /* target JD for arrow key smooth navigation (0=disabled) */
     double time_speed;       /* days per real second */
     double prev_speed;       /* speed before last pause (for resume) */
 
