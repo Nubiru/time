@@ -53,6 +53,7 @@
 #include "../systems/unified/grand_cycle.h"
 #include "../systems/unified/time_entropy.h"
 #include "../systems/unified/system_correlation.h"
+#include "../systems/earth/author_card.h"
 #include <string.h>
 #endif
 
@@ -333,6 +334,7 @@ void main_loop(void) {
     memcpy(frame.last_similar, g_state.last_similar, sizeof(frame.last_similar));
     memcpy(frame.entropy_text, g_state.entropy_text, sizeof(frame.entropy_text));
     memcpy(frame.top_resonance, g_state.top_resonance, sizeof(frame.top_resonance));
+    memcpy(frame.author_line, g_state.author_line, sizeof(frame.author_line));
     frame.brain_visual = g_state.brain_visual;
 
     /* Planet data for natal chart pass */
@@ -571,6 +573,14 @@ int main(void) {
                          top.frequency * 100.0);
             }
         }
+    }
+
+    /* Author card — compute once, format one-liner */
+    {
+        ac_card_t ac = ac_build(283);
+        snprintf(g_state.author_line, sizeof(g_state.author_line),
+                 "%s \xe2\x80\x94 %s \xe2\x80\x94 C \xc2\xb7 WebGL2 \xc2\xb7 WASM \xc2\xb7 %d contributors",
+                 ac.name, ac.title, ac.contributor_count);
     }
 
     printf("Controls: Space=pause, 1-5=speed, -=reverse, T=trails, H=hud, Shift+T=theme, Shift+M=meditate, Shift+0-6=scale\n");

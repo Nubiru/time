@@ -939,7 +939,17 @@ static void draw_card_text(const render_frame_t *frame)
         theme_cosmos_t btc = theme_cosmos_constant();
         float bot_y = (float)vh;  /* current bottom cursor */
 
-        /* Wisdom author — very bottom */
+        /* Author attribution — absolute bottom */
+        if (frame->author_line[0] != '\0') {
+            bot_y -= 12.0f;
+            float al = msdf_text_width(MSDF_FONT_MONO, frame->author_line, 8.0f);
+            msdf_add_text(frame->author_line,
+                          ((float)vw - al) * 0.5f, bot_y, 8.0f,
+                          btc.brand_primary.r, btc.brand_primary.g,
+                          btc.brand_primary.b, 0.20f);
+        }
+
+        /* Wisdom author */
         if (frame->wisdom_text[0] != '\0' && frame->wisdom_author[0] != '\0') {
             bot_y -= 14.0f;
             float aw = msdf_text_width(MSDF_FONT_MONO, frame->wisdom_author, 11.0f);

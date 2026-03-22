@@ -103,6 +103,7 @@ typedef struct {
     char   last_similar[96];     /* "Last similar convergence: X days ago" */
     char   entropy_text[64];     /* "Time entropy: 0.87 — complex" */
     char   top_resonance[96];    /* "Strongest resonance: Hebrew ↔ Islamic" */
+    char   author_line[128];     /* "Gabriel — Creator of Time — 283 contributors" */
     float  convergence_strength; /* 0.0-1.0 from brain scan */
     br_visual_frame_t brain_visual; /* cached visual encoding for convergence_pass + ring glow */
 

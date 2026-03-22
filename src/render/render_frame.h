@@ -34,6 +34,7 @@ typedef struct {
     char   last_similar[96];      /* last time this convergence happened */
     char   entropy_text[64];     /* time entropy + interpretation */
     char   top_resonance[96];    /* strongest system correlation */
+    char   author_line[128];    /* author attribution line */
     br_visual_frame_t brain_visual; /* visual encoding of brain scan (convergence lines, glow) */
     double sun_lon;               /* Sun ecliptic longitude (degrees, 0-360) */
     double planet_lon[8];         /* Mercury..Neptune ecliptic longitudes (degrees) */
