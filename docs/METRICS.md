@@ -1,19 +1,19 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-22 (INFRA session 91)
+**Last refreshed**: 2026-03-22 (INFRA session 102 — Phase 1 COMPLETE)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 519 |
-| Header files (.h) | 523 |
-| Lines of code (src/) | 120,975 |
-| Lines of tests | 215,000+ |
-| Test suites (CTest) | 537 |
+| Source files (.c) | 535 |
+| Header files (.h) | 540 |
+| Lines of code (src/) | 123,127 |
+| Lines of tests | 220,000+ |
+| Test suites (CTest) | 552 |
 | Render pass files | 28 |
 | Knowledge systems | 34 |
-| Pure modules | 475+ |
+| Pure modules | 490+ |
 | Stateful modules | 37 |
 | Contributors | 283 |
 
@@ -21,9 +21,9 @@
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 537 |
-| Test functions (RUN_TEST) | 20,200+ |
-| Test assertions (TEST_ASSERT) | 34,700+ |
+| Test suites (CTest) | 552 |
+| Test functions (RUN_TEST) | 20,500+ |
+| Test assertions (TEST_ASSERT) | 35,000+ |
 | Failures | 0 |
 | CTest time | ~0.9s (with -j12) |
 | E2E tests (Playwright) | 17 (5 basic + 12 visual) |
@@ -88,7 +88,7 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (537/537, ~1s) |
+| CTest -j12 | PASS (552/552, ~1s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
 | WASM build | PASS (737 KB Release — 34 systems, 23 passes, god rays + DOF) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
@@ -166,12 +166,12 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 800,850 bytes (782 KB) |
+| Raw .wasm | 832,126 bytes (813 KB) |
 | Build mode | Release (-Os) |
 | MSDF font atlas | JetBrains Mono 512×512 RGB (~250 KB in binary) |
 | Sans atlas | Excluded (MSDF_SANS_ENABLED not set) |
 | Gzipped | ~300 KB |
-| Delta since session 84 | +29 KB (sky, constellation labels, diamond room, aspect lines, calendar round) |
+| Delta since session 91 | +31 KB (interpret wiring, share, audio slider, 14 new daily layouts) |
 
 ## God Functions (>100 lines)
 
@@ -197,15 +197,15 @@
 | 1073 | text_pass.c | Candidate: split cards/labels/overlays |
 | 756 | card_pass.c | Render pass with multiple overlays |
 
-## Health (INFRA sweep — 2026-03-22, session 91)
+## Health (INFRA sweep — 2026-03-22, session 102 — Phase 1 COMPLETE)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (519 .c files, 0 orphans — sdf_glyph registered) |
+| Build system sync | OK (535 .c files) |
 | Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (537/537 tests, ~1s) — use -j12 |
-| WASM build | PASS (782 KB Release — 28 passes, god rays, DOF, sky dome, diamond room) |
+| Native build | PASS (552/552 tests, ~1s) — use -j12 |
+| WASM build | PASS (813 KB Release — 28 passes, interpret→cards, share, GPS, audio) |
 | E2E tests | PASS (5/5 basic + 12 visual) |
 | Coverage | 96.0% lines, 99.98% functions |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
