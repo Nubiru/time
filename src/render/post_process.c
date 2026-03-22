@@ -49,6 +49,11 @@ pp_config_t pp_default_config(void)
     cfg.grain_enabled   = 0;
     cfg.grain_intensity = 0.03f;
 
+    /* Depth of Field — GPU Gems 3, Ch 28 (Earl Hammon Jr., Infinity Ward) */
+    cfg.dof_enabled     = 1;
+    cfg.dof_focus_depth = 0.1f;
+    cfg.dof_strength    = 0.5f;
+
     /* God rays — GPU Gems 3, Ch 13 (Kenny Mitchell, EA) */
     cfg.godrays_enabled  = 1;
     cfg.godrays_density  = 1.0f;
@@ -221,6 +226,7 @@ static const char *s_composite_frag =
     "in vec2 v_uv;\n"
     "uniform sampler2D u_scene;\n"
     "uniform sampler2D u_bloom;\n"
+    "uniform sampler2D u_depth;\n"
     "uniform float u_bloom_intensity;\n"
     "uniform float u_exposure;\n"
     "uniform float u_gamma;\n"
@@ -228,6 +234,8 @@ static const char *s_composite_frag =
     "uniform float u_vignette_radius;\n"
     "uniform float u_grain_intensity;\n"
     "uniform float u_time;\n"
+    "uniform float u_dof_focus;\n"
+    "uniform float u_dof_strength;\n"
     "out vec4 frag_color;\n"
     "\n"
     "float grain_hash(vec2 p) {\n"
@@ -236,6 +244,32 @@ static const char *s_composite_frag =
     "\n"
     "void main() {\n"
     "    vec3 scene = texture(u_scene, v_uv).rgb;\n"
+    "\n"
+    "    /* Depth of Field — 12-tap Poisson disc blur before tone mapping.\n"
+    "     * GPU Gems 3, Ch 28 (Hammon/Infinity Ward) simplified. */\n"
+    "    if (u_dof_strength > 0.001) {\n"
+    "        float depth = texture(u_depth, v_uv).r;\n"
+    "        float coc = clamp(abs(depth - u_dof_focus) * 8.0, 0.0, 1.0) * u_dof_strength;\n"
+    "        if (coc > 0.01) {\n"
+    "            vec2 texel = 1.0 / vec2(textureSize(u_scene, 0));\n"
+    "            float r = coc * 6.0;\n"
+    "            vec3 s = scene;\n"
+    "            s += texture(u_scene, v_uv + vec2(-0.942,-0.399) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2( 0.946,-0.769) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2(-0.094,-0.929) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2( 0.345, 0.294) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2(-0.916, 0.458) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2(-0.815,-0.879) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2(-0.383, 0.277) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2( 0.975, 0.756) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2( 0.443,-0.975) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2( 0.537,-0.474) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2(-0.265,-0.419) * texel * r).rgb;\n"
+    "            s += texture(u_scene, v_uv + vec2( 0.792, 0.191) * texel * r).rgb;\n"
+    "            scene = mix(scene, s / 13.0, coc);\n"
+    "        }\n"
+    "    }\n"
+    "\n"
     "    vec3 bloom = texture(u_bloom, v_uv).rgb;\n"
     "    vec3 color = scene + bloom * u_bloom_intensity;\n"
     "\n"

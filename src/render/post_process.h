@@ -41,6 +41,11 @@ typedef struct {
     int grain_enabled;        /* 1 = subtle film grain */
     float grain_intensity;    /* 0.0-1.0 (default: 0.03) */
 
+    /* Depth of Field (GPU Gems 3, Ch 28 — simplified Poisson disc) */
+    int dof_enabled;          /* 1 = depth-based blur on */
+    float dof_focus_depth;    /* depth buffer value at focal plane (default: 0.1) */
+    float dof_strength;       /* blur intensity multiplier (default: 0.5) */
+
     /* God rays (volumetric light scattering, GPU Gems 3 Ch 13) */
     int godrays_enabled;      /* 1 = radial blur from Sun position */
     float godrays_density;    /* sample spacing (default: 1.0) */

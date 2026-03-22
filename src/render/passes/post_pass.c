@@ -58,6 +58,9 @@ static GLint  s_pp_comp_loc_vignette_strength;
 static GLint  s_pp_comp_loc_vignette_radius;
 static GLint  s_pp_comp_loc_grain_intensity;
 static GLint  s_pp_comp_loc_time;
+static GLint  s_pp_comp_loc_depth;
+static GLint  s_pp_comp_loc_dof_focus;
+static GLint  s_pp_comp_loc_dof_strength;
 
 static GLuint s_pp_godrays_program;
 static GLint  s_pp_gr_loc_frame;
@@ -135,18 +138,25 @@ int post_pass_init(int width, int height) {
 
     glBindVertexArray(0);
 
-    /* Scene FBO (with depth buffer) */
+    /* Scene FBO (with depth texture — sampleable for DOF) */
     s_pp_scene_tex = create_color_texture(width, height);
-    glGenRenderbuffers(1, &s_pp_scene_depth);
-    glBindRenderbuffer(GL_RENDERBUFFER, s_pp_scene_depth);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+
+    /* Depth as texture (not renderbuffer) so composite shader can sample it */
+    glGenTextures(1, &s_pp_scene_depth);
+    glBindTexture(GL_TEXTURE_2D, s_pp_scene_depth);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0,
+                 GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     glGenFramebuffers(1, &s_pp_scene_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, s_pp_scene_fbo);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
                            GL_TEXTURE_2D, s_pp_scene_tex, 0);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                              GL_RENDERBUFFER, s_pp_scene_depth);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                           GL_TEXTURE_2D, s_pp_scene_depth, 0);
 
     GLenum fbo_status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -202,6 +212,9 @@ int post_pass_init(int width, int height) {
     s_pp_comp_loc_vignette_radius = glGetUniformLocation(s_pp_composite_program, "u_vignette_radius");
     s_pp_comp_loc_grain_intensity = glGetUniformLocation(s_pp_composite_program, "u_grain_intensity");
     s_pp_comp_loc_time = glGetUniformLocation(s_pp_composite_program, "u_time");
+    s_pp_comp_loc_depth = glGetUniformLocation(s_pp_composite_program, "u_depth");
+    s_pp_comp_loc_dof_focus = glGetUniformLocation(s_pp_composite_program, "u_dof_focus");
+    s_pp_comp_loc_dof_strength = glGetUniformLocation(s_pp_composite_program, "u_dof_strength");
 
     /* God ray radial blur shader (GPU Gems 3, Ch 13) */
     s_pp_godrays_program = shader_create_program(
@@ -321,6 +334,15 @@ void post_pass_end(const render_frame_t *frame) {
     glBindTexture(GL_TEXTURE_2D, s_pp_pong_tex);
     glUniform1i(s_pp_comp_loc_bloom, 1);
 
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, s_pp_scene_depth);
+    glUniform1i(s_pp_comp_loc_depth, 2);
+
+    glUniform1f(s_pp_comp_loc_dof_focus,
+                s_pp_config.dof_enabled ? s_pp_config.dof_focus_depth : 0.0f);
+    glUniform1f(s_pp_comp_loc_dof_strength,
+                s_pp_config.dof_enabled ? s_pp_config.dof_strength : 0.0f);
+
     glUniform1f(s_pp_comp_loc_bloom_intensity,
                 s_pp_config.bloom_enabled ? s_pp_config.bloom_intensity : 0.0f);
     glUniform1f(s_pp_comp_loc_exposure, s_pp_config.exposure);
@@ -361,12 +383,13 @@ void post_pass_resize(int width, int height) {
     s_pp_width = width;
     s_pp_height = height;
 
-    /* Resize scene FBO */
+    /* Resize scene FBO (color + depth textures) */
     glBindTexture(GL_TEXTURE_2D, s_pp_scene_tex);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, width, height, 0,
                  GL_RGBA, GL_HALF_FLOAT, NULL);
-    glBindRenderbuffer(GL_RENDERBUFFER, s_pp_scene_depth);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+    glBindTexture(GL_TEXTURE_2D, s_pp_scene_depth);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0,
+                 GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
 
     /* Resize bloom FBOs (half res) */
     int bw = width / 2, bh = height / 2;
@@ -389,7 +412,7 @@ void post_pass_destroy(void) {
 
     glDeleteFramebuffers(1, &s_pp_scene_fbo);
     glDeleteTextures(1, &s_pp_scene_tex);
-    glDeleteRenderbuffers(1, &s_pp_scene_depth);
+    glDeleteTextures(1, &s_pp_scene_depth);
 
     glDeleteFramebuffers(1, &s_pp_bright_fbo);
     glDeleteTextures(1, &s_pp_bright_tex);
