@@ -83,11 +83,11 @@ static void test_locale_es_kislev(void)
 static void test_locale_fallback_to_en(void)
 {
     hebrew_date_t d = { 5786, 1, 15 };
-    hebrew_interp_t fr = hi_interpret_locale(d, 0, 0, I18N_LOCALE_FR);
-    /* FR falls back to EN content — same content, same output */
-    TEST_ASSERT_EQUAL_STRING("Hei", fr.glyph);
-    TEST_ASSERT_NOT_NULL(strstr(fr.glance, "Nisan"));
-    TEST_ASSERT_NOT_NULL(strstr(fr.glance, "Redemption"));
+    hebrew_interp_t de = hi_interpret_locale(d, 0, 0, I18N_LOCALE_DE);
+    /* DE has no content table — falls back to EN */
+    TEST_ASSERT_EQUAL_STRING("Hei", de.glyph);
+    TEST_ASSERT_NOT_NULL(strstr(de.glance, "Nisan"));
+    TEST_ASSERT_NOT_NULL(strstr(de.glance, "Redemption"));
 }
 
 /* ---- All months produce output ---- */

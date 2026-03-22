@@ -48,13 +48,13 @@ static void test_locale_es_epagomenal(void)
     TEST_ASSERT_NOT_NULL(strstr(r.detail, "Osiris"));
 }
 
-/* ---- French fallback ---- */
+/* ---- Unsupported locale fallback ---- */
 
-static void test_locale_fr_fallback(void)
+static void test_locale_unsupported_fallback(void)
 {
-    egyptian_interp_t fr = ei_interpret_locale(1, 14, 500, I18N_LOCALE_FR);
-    TEST_ASSERT_TRUE(strlen(fr.glyph) > 0);
-    TEST_ASSERT_NOT_NULL(strstr(fr.glance, "Thoth"));
+    egyptian_interp_t de = ei_interpret_locale(1, 14, 500, I18N_LOCALE_DE);
+    TEST_ASSERT_TRUE(strlen(de.glyph) > 0);
+    TEST_ASSERT_NOT_NULL(strstr(de.glance, "Thoth"));
 }
 
 /* ---- Invalid input ---- */
@@ -93,7 +93,7 @@ int main(void)
     RUN_TEST(test_locale_en_matches_base);
     RUN_TEST(test_locale_es_produces_output);
     RUN_TEST(test_locale_es_epagomenal);
-    RUN_TEST(test_locale_fr_fallback);
+    RUN_TEST(test_locale_unsupported_fallback);
     RUN_TEST(test_locale_invalid);
     RUN_TEST(test_locale_all_entries);
 

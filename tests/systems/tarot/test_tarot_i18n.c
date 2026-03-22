@@ -47,13 +47,13 @@ static void test_locale_es_with_decan(void)
     TEST_ASSERT_NOT_NULL(strstr(r.detail, "Bastos"));
 }
 
-/* ---- French fallback ---- */
+/* ---- Unsupported locale fallback ---- */
 
-static void test_locale_fr_fallback(void)
+static void test_locale_unsupported_fallback(void)
 {
-    tarot_interp_t fr = trt_interpret_locale(0, -1, -1, I18N_LOCALE_FR);
-    TEST_ASSERT_TRUE(strlen(fr.glyph) > 0);
-    TEST_ASSERT_NOT_NULL(strstr(fr.glance, "Fool"));
+    tarot_interp_t de = trt_interpret_locale(0, -1, -1, I18N_LOCALE_DE);
+    TEST_ASSERT_TRUE(strlen(de.glyph) > 0);
+    TEST_ASSERT_NOT_NULL(strstr(de.glance, "Fool"));
 }
 
 /* ---- Invalid input ---- */
@@ -85,7 +85,7 @@ int main(void)
     RUN_TEST(test_locale_en_matches_base);
     RUN_TEST(test_locale_es_produces_output);
     RUN_TEST(test_locale_es_with_decan);
-    RUN_TEST(test_locale_fr_fallback);
+    RUN_TEST(test_locale_unsupported_fallback);
     RUN_TEST(test_locale_invalid);
     RUN_TEST(test_locale_all_entries);
 

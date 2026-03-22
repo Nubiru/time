@@ -29,6 +29,15 @@ static const content_table_t content_tables[I18N_LOCALE_COUNT] = {
 #ifdef GEN_CONTENT_HE_COUNT
     [I18N_LOCALE_HE] = { gen_content_he, GEN_CONTENT_HE_COUNT },
 #endif
+#ifdef GEN_CONTENT_ZH_COUNT
+    [I18N_LOCALE_ZH] = { gen_content_zh, GEN_CONTENT_ZH_COUNT },
+#endif
+#ifdef GEN_CONTENT_HI_COUNT
+    [I18N_LOCALE_HI] = { gen_content_hi, GEN_CONTENT_HI_COUNT },
+#endif
+#ifdef GEN_CONTENT_FR_COUNT
+    [I18N_LOCALE_FR] = { gen_content_fr, GEN_CONTENT_FR_COUNT },
+#endif
 #ifdef GEN_CONTENT_PT_COUNT
     [I18N_LOCALE_PT] = { gen_content_pt, GEN_CONTENT_PT_COUNT },
 #endif
