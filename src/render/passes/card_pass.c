@@ -27,6 +27,7 @@
 #include "../../systems/tzolkin/tzolkin.h"
 #include "../../systems/iching/iching.h"
 #include "../../systems/astronomy/lunar.h"
+#include "../zoom_fade.h"
 
 /* --- Module-static GL handles --- */
 
@@ -619,6 +620,8 @@ static void draw_chinese_overlay(const render_frame_t *frame, float vw, float vh
 void card_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_CARDS))
         return;
+    float zoom_alpha = zf_opacity(ZF_CARD, frame->log_zoom);
+    if (zoom_alpha < 0.01f) return;
 
     /* Query actual viewport dimensions from GL */
     GLint viewport[4];

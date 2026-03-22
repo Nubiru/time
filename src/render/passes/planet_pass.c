@@ -14,6 +14,7 @@
 #include "../shader.h"
 #include "../sun_shader.h"
 #include "../planet_pack.h"
+#include "../zoom_fade.h"
 
 /* sqrt scale: compresses outer planets while keeping inner planets visible.
  * Mercury ~1.9, Earth ~3.0, Jupiter ~6.8, Neptune ~16.4 scene units. */
@@ -185,6 +186,9 @@ int planet_pass_init(void) {
 }
 
 void planet_pass_draw(const render_frame_t *frame) {
+    float zoom_alpha = zf_opacity(ZF_PLANET, frame->log_zoom);
+    if (zoom_alpha < 0.01f) return;
+
     /* --- Sun (procedural plasma billboard) --- */
     if (layer_is_visible(frame->layers, LAYER_PLANETS)) {
         glUseProgram(s_sun_program);

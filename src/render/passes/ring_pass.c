@@ -19,6 +19,7 @@
 #include "../../systems/astronomy/planets.h"
 #include "../../systems/astronomy/lunar.h"
 #include "../../systems/unified/depth_ring.h"
+#include "../zoom_fade.h"
 
 /* Ring placement: outside the zodiac ring (which is at ~4.2-4.8).
  * Concentric rings start at radius 5.5, extending outward. */
@@ -95,6 +96,8 @@ int ring_pass_init(void) {
 void ring_pass_draw(const render_frame_t *frame) {
     if (!s_initialized) return;
     if (!layer_is_visible(frame->layers, LAYER_ZODIAC_RING)) return;
+    float zoom_alpha = zf_opacity(ZF_RING, frame->log_zoom);
+    if (zoom_alpha < 0.01f) return;
 
     /* Compute today's active segment for each knowledge system */
     solar_system_t ss = planets_at(frame->simulation_jd);

@@ -13,6 +13,7 @@
 #include <GLES3/gl3.h>
 #include "../shader.h"
 #include "../constellation_bounds.h"
+#include "../zoom_fade.h"
 
 /* Sphere radius must match star_pass (100.0 scene units) */
 #define SPHERE_RADIUS 100.0f
@@ -79,6 +80,8 @@ void constellation_pass_draw(const render_frame_t *frame) {
         return;
     if (s_cb_vertex_count == 0)
         return;
+    float zoom_alpha = zf_opacity(ZF_CONSTELLATION, frame->log_zoom);
+    if (zoom_alpha < 0.01f) return;
 
     glUseProgram(s_cb_program);
     glUniformMatrix4fv(s_cb_loc_mvp, 1, GL_FALSE, frame->view_proj.m);

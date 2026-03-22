@@ -13,6 +13,7 @@
 #include <GLES3/gl3.h>
 #include "../shader.h"
 #include "../milkyway_pack.h"
+#include "../zoom_fade.h"
 
 /* --- Module-static GL handles --- */
 static GLuint s_mw_program;
@@ -91,6 +92,8 @@ void milkyway_pass_draw(const render_frame_t *frame) {
         return;
     if (s_mw_index_count == 0)
         return;
+    float zoom_alpha = zf_opacity(ZF_MILKYWAY, frame->log_zoom);
+    if (zoom_alpha < 0.01f) return;
 
     glUseProgram(s_mw_program);
     glUniformMatrix4fv(s_mw_loc_mvp, 1, GL_FALSE, frame->view_proj.m);

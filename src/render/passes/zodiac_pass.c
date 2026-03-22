@@ -26,6 +26,7 @@
 #include "../../systems/astrology/houses.h"
 #include "../../math/sidereal.h"
 #include "../../math/ecliptic.h"
+#include "../zoom_fade.h"
 
 #define PI 3.14159265358979323846
 #define DEG_TO_RAD (PI / 180.0)
@@ -602,6 +603,9 @@ void zodiac_pass_draw(const render_frame_t *frame) {
         return;
 
     float ring_opacity = frame->layers.opacity[LAYER_ZODIAC_RING];
+    float zoom_alpha = zf_opacity(ZF_ZODIAC, frame->log_zoom);
+    if (zoom_alpha < 0.01f) return;
+    ring_opacity *= zoom_alpha;
 
     draw_zodiac_ring(frame, ring_opacity);
 

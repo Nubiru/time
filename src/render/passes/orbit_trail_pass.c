@@ -14,6 +14,7 @@
 #include <GLES3/gl3.h>
 #include "../shader.h"
 #include "../orbit_trail_pack.h"
+#include "../zoom_fade.h"
 
 /* --- Module-static GL handles --- */
 static GLuint s_otp_program;
@@ -65,6 +66,8 @@ int orbit_trail_pass_init(void) {
 void orbit_trail_pass_draw(const render_frame_t *frame) {
     if (!layer_is_visible(frame->layers, LAYER_ORBITS))
         return;
+    float zoom_alpha = zf_opacity(ZF_ORBIT_TRAIL, frame->log_zoom);
+    if (zoom_alpha < 0.01f) return;
 
     /* Only recompute when time has changed beyond threshold */
     otp_config_t config = otp_default_config();
