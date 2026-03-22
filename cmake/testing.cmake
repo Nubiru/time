@@ -681,6 +681,8 @@ time_add_test(NAME test_card_selector TEST tests/ui/test_card_selector.c
     DEPS card_selector card_depth LABELS unit)
 time_add_test(NAME test_card_style TEST tests/ui/test_card_style.c
     DEPS card_style theme golden_layout color_theory color LABELS unit)
+time_add_test(NAME test_earth_timeline_layout TEST tests/ui/test_earth_timeline_layout.c
+    DEPS earth_timeline_layout earth_story LABELS unit)
 time_add_test(NAME test_kin_cell TEST tests/ui/test_kin_cell.c
     DEPS kin_cell LABELS unit)
 time_add_test(NAME test_kin_oracle_layout TEST tests/ui/test_kin_oracle_layout.c

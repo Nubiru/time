@@ -86,6 +86,7 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/transition_fx.c
     ${CMAKE_CURRENT_SOURCE_DIR}/card_flight.c
     ${CMAKE_CURRENT_SOURCE_DIR}/card_style.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/earth_timeline_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_cell.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_oracle_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/kin_wavespell_layout.c
@@ -228,6 +229,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_transition_fx OBJECT transition_fx.c)
     add_library(time_card_flight OBJECT card_flight.c)
     add_library(time_card_style OBJECT card_style.c)
+    add_library(time_earth_timeline_layout OBJECT earth_timeline_layout.c)
     add_library(time_kin_cell OBJECT kin_cell.c)
     add_library(time_kin_oracle_layout OBJECT kin_oracle_layout.c)
     add_library(time_kin_wavespell_layout OBJECT kin_wavespell_layout.c)
