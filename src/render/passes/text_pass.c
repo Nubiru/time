@@ -900,16 +900,16 @@ static void draw_card_text(const render_frame_t *frame)
         }
     }
 
-    /* Headline at bottom center */
+    /* Headline at bottom center — cosmos-scope brand color (always teal) */
     if (frame->headline[0] != '\0') {
-        theme_t hl_theme = theme_get((theme_id_t)frame->theme_id);
+        theme_cosmos_t hl_cosmos = theme_cosmos_constant();
         float hl_fs = 20.0f;
         float hl_w = msdf_text_width(MSDF_FONT_MONO, frame->headline, hl_fs);
         float hl_x = ((float)vw - hl_w) * 0.5f;
         float hl_y = (float)vh - 40.0f;
         msdf_add_text(frame->headline, hl_x, hl_y, hl_fs,
-                      hl_theme.brand_secondary.r, hl_theme.brand_secondary.g,
-                      hl_theme.brand_secondary.b, 0.85f);
+                      hl_cosmos.brand_secondary.r, hl_cosmos.brand_secondary.g,
+                      hl_cosmos.brand_secondary.b, 0.85f);
     }
 
     msdf_flush(vw, vh);
@@ -929,15 +929,16 @@ void text_pass_draw(const render_frame_t *frame) {
     glyph_instance_t instances[GLYPH_BATCH_MAX];
     int len = 0;
 
-    /* Theme-derived label colors */
-    theme_t label_theme = theme_get((theme_id_t)frame->theme_id);
-    glyph_color_t sun_label_color = {label_theme.brand_primary.r,
-                                     label_theme.brand_primary.g,
-                                     label_theme.brand_primary.b, 1.0f};
-    glyph_color_t planet_label_color = {label_theme.text_secondary.r,
-                                        label_theme.text_secondary.g,
-                                        label_theme.text_secondary.b,
-                                        label_theme.text_secondary.a};
+    /* Cosmos-scope label colors — astronomical labels never change with theme.
+     * Sun = solar gold (brand_primary), planets = warm off-white. */
+    theme_cosmos_t cosmos = theme_cosmos_constant();
+    glyph_color_t sun_label_color = {cosmos.brand_primary.r,
+                                     cosmos.brand_primary.g,
+                                     cosmos.brand_primary.b, 1.0f};
+    glyph_color_t planet_label_color = {cosmos.planet_label.r,
+                                        cosmos.planet_label.g,
+                                        cosmos.planet_label.b,
+                                        cosmos.planet_label.a};
 
     /* Get camera basis vectors FIRST — needed for text placement */
     vec3_t cam_right, cam_up;
