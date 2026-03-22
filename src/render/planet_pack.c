@@ -236,6 +236,14 @@ static const char PP_PLANET_FRAG[] =
     "    float glow = (1.0 - smoothstep(0.75, glow_edge, dist)) * 0.4;\n"
     "    float alpha = max(body, glow);\n"
     "    vec3 col = mix(v_color * 0.6, v_color, body);\n"
+    "\n"
+    "    /* Fresnel rim glow — atmospheric scattering at grazing angles.\n"
+    "     * v_atmo (thickness_ratio 0.02-0.08) scaled to visible range.\n"
+    "     * Color: body color mixed toward blue (Rayleigh bias). */\n"
+    "    float rim = pow(smoothstep(0.3, 0.7, dist), 2.0) * v_atmo * 25.0 * body;\n"
+    "    vec3 rim_color = mix(v_color, vec3(0.4, 0.6, 1.0), 0.5);\n"
+    "    col += rim_color * rim;\n"
+    "\n"
     "    frag_color = vec4(col, alpha);\n"
     "}\n";
 
