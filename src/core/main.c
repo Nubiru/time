@@ -49,6 +49,7 @@
 #include "../systems/unified/brain_narrative.h"
 #include "../systems/unified/wisdom.h"
 #include "../systems/unified/brain_stats.h"
+#include "../systems/unified/red_thread.h"
 #include <string.h>
 #endif
 
@@ -125,6 +126,17 @@ void main_loop(void) {
                              pct.rank, pct.total_days, pct.percentile);
                 } else {
                     g_state.percentile_text[0] = '\0';
+                }
+            }
+
+            /* Red thread — convergence narrative ("why these systems align") */
+            {
+                rt_result_t rt;
+                if (rt_compose(&br, &rt) > 0 && rt.pairs_explained > 0) {
+                    snprintf(g_state.red_thread, sizeof(g_state.red_thread),
+                             "%.255s", rt.narrative);
+                } else {
+                    g_state.red_thread[0] = '\0';
                 }
             }
         }
@@ -261,6 +273,7 @@ void main_loop(void) {
     memcpy(frame.wisdom_text, g_state.wisdom_text, sizeof(frame.wisdom_text));
     memcpy(frame.wisdom_author, g_state.wisdom_author, sizeof(frame.wisdom_author));
     memcpy(frame.percentile_text, g_state.percentile_text, sizeof(frame.percentile_text));
+    memcpy(frame.red_thread, g_state.red_thread, sizeof(frame.red_thread));
     frame.brain_visual = g_state.brain_visual;
 
     /* Planet data for natal chart pass */

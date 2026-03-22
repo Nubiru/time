@@ -969,6 +969,18 @@ static void draw_card_text(const render_frame_t *frame)
                           btc.brand_secondary.b, 0.45f);
         }
 
+        /* Red thread — convergence narrative (only when systems align) */
+        if (frame->red_thread[0] != '\0') {
+            bot_y -= 16.0f;
+            float rw = msdf_text_width(MSDF_FONT_MONO, frame->red_thread, 11.0f);
+            float rx = ((float)vw - rw) * 0.5f;
+            if (rx < 13.0f) rx = 13.0f;  /* left margin if too wide */
+            msdf_add_text(frame->red_thread,
+                          rx, bot_y, 11.0f,
+                          btc.brand_primary.r, btc.brand_primary.g,
+                          btc.brand_primary.b, 0.40f);
+        }
+
         /* Headline — top of bottom stack */
         if (frame->headline[0] != '\0') {
             bot_y -= 24.0f;
