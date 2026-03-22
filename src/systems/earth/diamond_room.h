@@ -137,4 +137,24 @@ double dr_system_hue(int system_id);
 /* Number of crystal systems. */
 int dr_crystal_system_count(void);
 
+/* --- Convenience Accessors (E7) --- */
+
+/* Get facet brightness for a system in a computed room.
+ * Returns 0.0 for invalid system_id or unexplored system. */
+double dr_facet_brightness(const dr_room_t *room, int system_id);
+
+/* Get total luminosity (overall exploration glow) from a computed room. */
+double dr_total_luminosity(const dr_room_t *room);
+
+/* Get birth color as RGBA [0.0-1.0] from the crystal seed.
+ * Converts hue_base to a saturated color. Fills rgba[4]. */
+void dr_birth_color(const dr_seed_t *seed, float rgba[4]);
+
+/* --- Usage Bridge --- */
+
+/* Fill engagement array in dr_input_t from an array of interest scores.
+ * scores: array of count doubles, each 0.0-1.0.
+ * Clamps to DR_MAX_FACETS. Sets explored flag for any score > 0. */
+void dr_fill_engagement(dr_input_t *input, const double *scores, int count);
+
 #endif /* TIME_DIAMOND_ROOM_H */

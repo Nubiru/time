@@ -514,6 +514,86 @@ void test_has_viewed_null_returns_0(void) {
     TEST_ASSERT_EQUAL_INT(0, ui_has_viewed(NULL, 0));
 }
 
+/* --- ui_reorder_by_interest --- */
+
+void test_reorder_sorts_by_score(void) {
+    ui_tracker_t t = ui_create();
+    t = ui_record_view(t, 5, 100.0, 300.0);  /* heavy use */
+    t = ui_record_view(t, 5, 101.0, 200.0);
+    t = ui_record_view(t, 3, 100.0, 50.0);   /* light use */
+    t = ui_record_view(t, 8, 100.0, 150.0);  /* medium use */
+    t = ui_record_view(t, 8, 101.0, 100.0);
+
+    int in_ids[] = {3, 5, 8};
+    int out_ids[3];
+    int n = ui_reorder_by_interest(&t, 102.0, in_ids, out_ids, 3);
+    TEST_ASSERT_EQUAL_INT(3, n);
+    TEST_ASSERT_EQUAL_INT(5, out_ids[0]); /* most viewed first */
+}
+
+void test_reorder_unviewed_last(void) {
+    ui_tracker_t t = ui_create();
+    t = ui_record_view(t, 2, 100.0, 100.0);
+
+    int in_ids[] = {0, 2, 4};
+    int out_ids[3];
+    ui_reorder_by_interest(&t, 101.0, in_ids, out_ids, 3);
+    TEST_ASSERT_EQUAL_INT(2, out_ids[0]); /* only viewed system first */
+}
+
+void test_reorder_preserves_count(void) {
+    ui_tracker_t t = ui_create();
+    int in_ids[] = {0, 1, 2, 3, 4};
+    int out_ids[5];
+    int n = ui_reorder_by_interest(&t, 100.0, in_ids, out_ids, 5);
+    TEST_ASSERT_EQUAL_INT(5, n);
+}
+
+void test_reorder_single_element(void) {
+    ui_tracker_t t = ui_create();
+    t = ui_record_view(t, 7, 100.0, 50.0);
+    int in_ids[] = {7};
+    int out_ids[1];
+    int n = ui_reorder_by_interest(&t, 101.0, in_ids, out_ids, 1);
+    TEST_ASSERT_EQUAL_INT(1, n);
+    TEST_ASSERT_EQUAL_INT(7, out_ids[0]);
+}
+
+void test_reorder_null_tracker(void) {
+    int in_ids[] = {0, 1};
+    int out_ids[2];
+    TEST_ASSERT_EQUAL_INT(0, ui_reorder_by_interest(NULL, 100.0, in_ids, out_ids, 2));
+}
+
+void test_reorder_null_ids(void) {
+    ui_tracker_t t = ui_create();
+    int out_ids[2];
+    TEST_ASSERT_EQUAL_INT(0, ui_reorder_by_interest(&t, 100.0, NULL, out_ids, 2));
+}
+
+void test_reorder_zero_count(void) {
+    ui_tracker_t t = ui_create();
+    int in_ids[] = {0};
+    int out_ids[1];
+    TEST_ASSERT_EQUAL_INT(0, ui_reorder_by_interest(&t, 100.0, in_ids, out_ids, 0));
+}
+
+void test_reorder_respects_recency(void) {
+    ui_tracker_t t = ui_create();
+    /* System 1: viewed long ago, high count */
+    t = ui_record_view(t, 1, 50.0, 100.0);
+    t = ui_record_view(t, 1, 51.0, 100.0);
+    t = ui_record_view(t, 1, 52.0, 100.0);
+    /* System 2: viewed recently, lower count */
+    t = ui_record_view(t, 2, 99.0, 100.0);
+
+    int in_ids[] = {1, 2};
+    int out_ids[2];
+    ui_reorder_by_interest(&t, 100.0, in_ids, out_ids, 2);
+    /* System 1 has higher frequency (3 vs 1) which dominates */
+    TEST_ASSERT_EQUAL_INT(1, out_ids[0]);
+}
+
 /* --- Runner --- */
 
 int main(void) {
@@ -602,6 +682,16 @@ int main(void) {
     RUN_TEST(test_has_viewed_returns_0_for_not_viewed);
     RUN_TEST(test_has_viewed_invalid_id_returns_0);
     RUN_TEST(test_has_viewed_null_returns_0);
+
+    /* ui_reorder_by_interest (8) */
+    RUN_TEST(test_reorder_sorts_by_score);
+    RUN_TEST(test_reorder_unviewed_last);
+    RUN_TEST(test_reorder_preserves_count);
+    RUN_TEST(test_reorder_single_element);
+    RUN_TEST(test_reorder_null_tracker);
+    RUN_TEST(test_reorder_null_ids);
+    RUN_TEST(test_reorder_zero_count);
+    RUN_TEST(test_reorder_respects_recency);
 
     return UNITY_END();
 }

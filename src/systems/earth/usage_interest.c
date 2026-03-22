@@ -224,3 +224,44 @@ int ui_has_viewed(const ui_tracker_t *t, int system_id)
 
     return t->systems[system_id].view_count > 0 ? 1 : 0;
 }
+
+int ui_reorder_by_interest(const ui_tracker_t *t, double current_jd,
+                           const int *in_ids, int *out_ids, int count)
+{
+    if (!t || !in_ids || !out_ids || count <= 0) {
+        return 0;
+    }
+
+    /* Copy input IDs and compute scores */
+    int n = count;
+    if (n > UI_MAX_SYSTEMS) n = UI_MAX_SYSTEMS;
+
+    /* Parallel arrays: ids + scores */
+    int ids[UI_MAX_SYSTEMS];
+    double scores[UI_MAX_SYSTEMS];
+    for (int i = 0; i < n; i++) {
+        ids[i] = in_ids[i];
+        ui_score_t s = ui_score(t, in_ids[i], current_jd);
+        scores[i] = s.score;
+    }
+
+    /* Insertion sort descending by score */
+    for (int i = 1; i < n; i++) {
+        int key_id = ids[i];
+        double key_score = scores[i];
+        int j = i - 1;
+        while (j >= 0 && scores[j] < key_score) {
+            ids[j + 1] = ids[j];
+            scores[j + 1] = scores[j];
+            j--;
+        }
+        ids[j + 1] = key_id;
+        scores[j + 1] = key_score;
+    }
+
+    for (int i = 0; i < n; i++) {
+        out_ids[i] = ids[i];
+    }
+
+    return n;
+}

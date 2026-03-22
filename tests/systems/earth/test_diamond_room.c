@@ -5,6 +5,7 @@
 #include "../../../src/systems/earth/diamond_room.h"
 
 #include <math.h>
+#include <string.h>
 
 void setUp(void) { }
 void tearDown(void) { }
@@ -677,6 +678,164 @@ void test_rich_profile_produces_unique_room(void) {
     TEST_ASSERT_TRUE(r.ambience.bg_brightness >= 0.0 && r.ambience.bg_brightness <= 1.0);
 }
 
+/* ===== Facet Brightness API (E7) ===== */
+
+void test_facet_brightness_active(void) {
+    dr_input_t in = dr_default_input();
+    in.explored[3] = 1;
+    in.engagement[3] = 0.8;
+    dr_room_t r = dr_compute(&in);
+    double b = dr_facet_brightness(&r, 3);
+    TEST_ASSERT_TRUE(b > 0.5); /* Active + high engagement = bright */
+}
+
+void test_facet_brightness_inactive(void) {
+    dr_input_t in = dr_default_input();
+    dr_room_t r = dr_compute(&in);
+    double b = dr_facet_brightness(&r, 0);
+    TEST_ASSERT_TRUE(b < 0.2); /* Inactive = dim */
+}
+
+void test_facet_brightness_null_room(void) {
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 0.0, dr_facet_brightness(NULL, 0));
+}
+
+void test_facet_brightness_invalid_id(void) {
+    dr_input_t in = dr_default_input();
+    dr_room_t r = dr_compute(&in);
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 0.0, dr_facet_brightness(&r, -1));
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 0.0, dr_facet_brightness(&r, 99));
+}
+
+void test_total_luminosity_no_exploration(void) {
+    dr_input_t in = dr_default_input();
+    dr_room_t r = dr_compute(&in);
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 0.0, dr_total_luminosity(&r));
+}
+
+void test_total_luminosity_with_time(void) {
+    dr_input_t in = dr_default_input();
+    in.total_time_sec = 300000.0; /* ~3.5 days */
+    dr_room_t r = dr_compute(&in);
+    double lum = dr_total_luminosity(&r);
+    TEST_ASSERT_TRUE(lum > 0.0);
+    TEST_ASSERT_TRUE(lum <= 1.0);
+}
+
+void test_total_luminosity_null(void) {
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 0.0, dr_total_luminosity(NULL));
+}
+
+void test_birth_color_basic(void) {
+    dr_seed_t seed;
+    memset(&seed, 0, sizeof(seed));
+    seed.hue_base = 0.0;   /* Red-ish */
+    seed.base_scale = 0.7;
+    float rgba[4] = {0};
+    dr_birth_color(&seed, rgba);
+    /* Should produce non-zero color with full alpha */
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 1.0f, rgba[3]);
+    /* At hue=0 (red), red channel should be dominant */
+    TEST_ASSERT_TRUE(rgba[0] > rgba[2]); /* R > B */
+}
+
+void test_birth_color_null_seed(void) {
+    float rgba[4] = {0};
+    dr_birth_color(NULL, rgba);
+    /* Should get default gray */
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 0.5f, rgba[0]);
+    TEST_ASSERT_FLOAT_WITHIN(0.001f, 1.0f, rgba[3]);
+}
+
+void test_birth_color_null_rgba(void) {
+    dr_seed_t seed;
+    memset(&seed, 0, sizeof(seed));
+    /* Should not crash */
+    dr_birth_color(&seed, NULL);
+}
+
+void test_birth_color_varies_with_hue(void) {
+    float rgba1[4], rgba2[4];
+    dr_seed_t s1 = {0}, s2 = {0};
+    s1.hue_base = 0.0;
+    s1.base_scale = 0.5;
+    s2.hue_base = 0.5;
+    s2.base_scale = 0.5;
+    dr_birth_color(&s1, rgba1);
+    dr_birth_color(&s2, rgba2);
+    /* Different hues should produce different colors */
+    int different = (fabs(rgba1[0] - rgba2[0]) > 0.01) ||
+                    (fabs(rgba1[1] - rgba2[1]) > 0.01) ||
+                    (fabs(rgba1[2] - rgba2[2]) > 0.01);
+    TEST_ASSERT_TRUE(different);
+}
+
+/* ===== Usage Bridge ===== */
+
+void test_fill_engagement_basic(void) {
+    dr_input_t in = dr_default_input();
+    double scores[] = {0.8, 0.0, 0.5, 0.0, 1.0};
+    dr_fill_engagement(&in, scores, 5);
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 0.8, in.engagement[0]);
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 0.0, in.engagement[1]);
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 0.5, in.engagement[2]);
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 1.0, in.engagement[4]);
+}
+
+void test_fill_engagement_sets_explored(void) {
+    dr_input_t in = dr_default_input();
+    double scores[] = {0.5, 0.0, 0.3};
+    dr_fill_engagement(&in, scores, 3);
+    TEST_ASSERT_EQUAL_INT(1, in.explored[0]);
+    TEST_ASSERT_EQUAL_INT(0, in.explored[1]);
+    TEST_ASSERT_EQUAL_INT(1, in.explored[2]);
+    TEST_ASSERT_EQUAL_INT(2, in.systems_explored);
+}
+
+void test_fill_engagement_clamps(void) {
+    dr_input_t in = dr_default_input();
+    double scores[] = {-0.5, 1.5};
+    dr_fill_engagement(&in, scores, 2);
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 0.0, in.engagement[0]);
+    TEST_ASSERT_FLOAT_WITHIN(0.001, 1.0, in.engagement[1]);
+}
+
+void test_fill_engagement_null_input(void) {
+    double scores[] = {0.5};
+    dr_fill_engagement(NULL, scores, 1); /* should not crash */
+}
+
+void test_fill_engagement_null_scores(void) {
+    dr_input_t in = dr_default_input();
+    dr_fill_engagement(&in, NULL, 5); /* should not crash */
+}
+
+void test_fill_engagement_excess_count(void) {
+    dr_input_t in = dr_default_input();
+    double scores[20];
+    for (int i = 0; i < 20; i++) scores[i] = 0.5;
+    dr_fill_engagement(&in, scores, 20);
+    /* Should cap at DR_MAX_FACETS=16, not overflow */
+    TEST_ASSERT_EQUAL_INT(16, in.systems_explored);
+}
+
+void test_fill_engagement_integration(void) {
+    /* Bridge scores into input, compute room, verify brightness reflects scores */
+    dr_input_t in = dr_default_input();
+    double scores[16] = {0};
+    scores[5] = 0.9;  /* system 5 heavily explored */
+    scores[10] = 0.1; /* system 10 barely touched */
+    dr_fill_engagement(&in, scores, 16);
+
+    dr_room_t r = dr_compute(&in);
+    double b5 = dr_facet_brightness(&r, 5);
+    double b10 = dr_facet_brightness(&r, 10);
+    double b0 = dr_facet_brightness(&r, 0); /* unexplored */
+
+    TEST_ASSERT_TRUE(b5 > b10);   /* more engaged = brighter */
+    TEST_ASSERT_TRUE(b10 > b0);   /* explored > unexplored */
+}
+
 /* ===== main ===== */
 
 int main(void) {
@@ -794,6 +953,32 @@ int main(void) {
 
     /* Integration */
     RUN_TEST(test_rich_profile_produces_unique_room);
+
+    /* Facet Brightness API — E7 (7) */
+    RUN_TEST(test_facet_brightness_active);
+    RUN_TEST(test_facet_brightness_inactive);
+    RUN_TEST(test_facet_brightness_null_room);
+    RUN_TEST(test_facet_brightness_invalid_id);
+    RUN_TEST(test_total_luminosity_no_exploration);
+    RUN_TEST(test_total_luminosity_with_time);
+    RUN_TEST(test_total_luminosity_null);
+
+    /* Birth Color (4) */
+    RUN_TEST(test_birth_color_basic);
+    RUN_TEST(test_birth_color_null_seed);
+    RUN_TEST(test_birth_color_null_rgba);
+    RUN_TEST(test_birth_color_varies_with_hue);
+
+    /* Usage Bridge (6) */
+    RUN_TEST(test_fill_engagement_basic);
+    RUN_TEST(test_fill_engagement_sets_explored);
+    RUN_TEST(test_fill_engagement_clamps);
+    RUN_TEST(test_fill_engagement_null_input);
+    RUN_TEST(test_fill_engagement_null_scores);
+    RUN_TEST(test_fill_engagement_excess_count);
+
+    /* Integration: bridge → room (1) */
+    RUN_TEST(test_fill_engagement_integration);
 
     return UNITY_END();
 }

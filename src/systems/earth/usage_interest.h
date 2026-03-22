@@ -76,4 +76,11 @@ int ui_viewed_count(const ui_tracker_t *t);
 /* Whether a specific system has been viewed. Returns 1 or 0. */
 int ui_has_viewed(const ui_tracker_t *t, int system_id);
 
+/* Reorder system IDs by interest score (descending).
+ * Takes an array of system IDs (in_ids) and writes them sorted by
+ * score to out_ids. Returns count written (same as count).
+ * Unviewed systems sort to the end. */
+int ui_reorder_by_interest(const ui_tracker_t *t, double current_jd,
+                           const int *in_ids, int *out_ids, int count);
+
 #endif /* TIME_USAGE_INTEREST_H */

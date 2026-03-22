@@ -297,3 +297,75 @@ int dr_crystal_system_count(void)
 {
     return DR_CRYSTAL_COUNT;
 }
+
+/* --- Convenience Accessors (E7) --- */
+
+double dr_facet_brightness(const dr_room_t *room, int system_id)
+{
+    if (!room || system_id < 0 || system_id >= room->facet_count) {
+        return 0.0;
+    }
+    return room->facets[system_id].brightness;
+}
+
+double dr_total_luminosity(const dr_room_t *room)
+{
+    if (!room) return 0.0;
+    return room->growth.luminosity;
+}
+
+void dr_birth_color(const dr_seed_t *seed, float rgba[4])
+{
+    if (!seed || !rgba) {
+        if (rgba) {
+            rgba[0] = rgba[1] = rgba[2] = 0.5f;
+            rgba[3] = 1.0f;
+        }
+        return;
+    }
+
+    /* HSL to RGB: hue from seed, full saturation, phi-scaled lightness */
+    double h = seed->hue_base * 6.0; /* 0-6 for HSL conversion */
+    double s = (float)PHI_INV;       /* saturation = phi^-1 for richness */
+    double l = 0.5 + seed->base_scale * 0.3; /* lightness 0.5-0.8 */
+
+    /* HSL → RGB (simplified) */
+    double c = (1.0 - fabs(2.0 * l - 1.0)) * s;
+    double x = c * (1.0 - fabs(fmod(h, 2.0) - 1.0));
+    double m = l - c / 2.0;
+
+    double r = 0.0, g = 0.0, b = 0.0;
+    if (h < 1.0)      { r = c; g = x; b = 0.0; }
+    else if (h < 2.0) { r = x; g = c; b = 0.0; }
+    else if (h < 3.0) { r = 0.0; g = c; b = x; }
+    else if (h < 4.0) { r = 0.0; g = x; b = c; }
+    else if (h < 5.0) { r = x; g = 0.0; b = c; }
+    else               { r = c; g = 0.0; b = x; }
+
+    rgba[0] = (float)clamp01(r + m);
+    rgba[1] = (float)clamp01(g + m);
+    rgba[2] = (float)clamp01(b + m);
+    rgba[3] = 1.0f;
+}
+
+/* --- Usage Bridge --- */
+
+void dr_fill_engagement(dr_input_t *input, const double *scores, int count)
+{
+    if (!input || !scores) return;
+    int n = count;
+    if (n > DR_MAX_FACETS) n = DR_MAX_FACETS;
+
+    int explored_count = 0;
+    for (int i = 0; i < n; i++) {
+        double s = scores[i];
+        if (s < 0.0) s = 0.0;
+        if (s > 1.0) s = 1.0;
+        input->engagement[i] = s;
+        if (s > 0.0) {
+            input->explored[i] = 1;
+            explored_count++;
+        }
+    }
+    input->systems_explored = explored_count;
+}
