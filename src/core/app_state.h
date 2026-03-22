@@ -59,6 +59,7 @@ typedef struct {
 
     /* View state (view mode, focus, transitions) */
     view_state_t view;
+    int prev_focus_mode;          /* previous focus_mode for edge detection */
 
     /* Performance LOD */
     lod_state_t lod;

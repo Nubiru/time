@@ -347,9 +347,39 @@ void main_loop(void) {
     /* --- Advance view state (transitions, focus) --- */
     g_state.view = vs_tick(g_state.view, (float)dt_sec);
 
+    /* --- Camera micro-zoom on focus mode change --- */
+    {
+        int cur_focus = g_state.view.target_focus;
+        if (cur_focus != g_state.prev_focus_mode) {
+            /* Focus changed: nudge zoom spring for "leaning in/out" feel */
+            float nudge = (cur_focus != 0) ? -0.15f : 0.15f;
+            float new_target = g_state.zoom_spring.target + nudge;
+            /* Clamp */
+            if (new_target < CAMERA_LOG_ZOOM_MIN) new_target = CAMERA_LOG_ZOOM_MIN;
+            if (new_target > CAMERA_LOG_ZOOM_MAX) new_target = CAMERA_LOG_ZOOM_MAX;
+            g_state.zoom_spring = spring_set_target(g_state.zoom_spring,
+                                                     new_target);
+            g_state.prev_focus_mode = cur_focus;
+        }
+    }
+
     /* --- Compute layer visibility from current zoom --- */
     g_state.layer_state = layers_compute(g_state.layer_configs,
                                          g_state.camera.log_zoom);
+
+    /* --- Compute scene brightness (enter_zoom ramp × focus dimming) --- */
+    float scene_bright = (g_state.enter_zoom_active && ez_active(g_state.enter_zoom))
+                         ? ez_scene_brightness(g_state.enter_zoom) : 1.0f;
+    {
+        /* Dim stars slightly during system focus (stars recede, system highlighted) */
+        float focus_bright = (g_state.view.focus_mode != 0) ? 0.7f : 1.0f;
+        if (g_state.view.focus_transitioning) {
+            float target_bright = (g_state.view.target_focus != 0) ? 0.7f : 1.0f;
+            float blend = vs_focus_blend(&g_state.view);
+            focus_bright = focus_bright + (target_bright - focus_bright) * blend;
+        }
+        scene_bright *= focus_bright;
+    }
 
     /* --- Build per-frame render data --- */
     mat4_t view, proj;
@@ -378,8 +408,8 @@ void main_loop(void) {
         .observer_lon  = g_state.observer_lon,
         .theme_id      = 0, /* THEME_COSMOS — always dark, Dawn disabled */
         .focus_mode    = g_state.view.focus_mode,
-        .scene_brightness = (g_state.enter_zoom_active && ez_active(g_state.enter_zoom))
-                            ? ez_scene_brightness(g_state.enter_zoom) : 1.0f,
+        .focus_blend   = vs_focus_blend(&g_state.view),
+        .scene_brightness = scene_bright,
     };
     memcpy(frame.headline, g_state.headline, sizeof(frame.headline));
     memcpy(frame.wisdom_text, g_state.wisdom_text, sizeof(frame.wisdom_text));
