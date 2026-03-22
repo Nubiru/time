@@ -990,6 +990,16 @@ static void draw_card_text(const render_frame_t *frame)
                           btc.brand_secondary.r, btc.brand_secondary.g,
                           btc.brand_secondary.b, 0.85f);
         }
+
+        /* Grand cycle — cosmic perspective, very subtle */
+        if (frame->grand_cycle[0] != '\0') {
+            bot_y -= 14.0f;
+            float gw = msdf_text_width(MSDF_FONT_MONO, frame->grand_cycle, 9.0f);
+            msdf_add_text(frame->grand_cycle,
+                          ((float)vw - gw) * 0.5f, bot_y, 9.0f,
+                          btc.brand_secondary.r, btc.brand_secondary.g,
+                          btc.brand_secondary.b, 0.25f);
+        }
     }
 
     msdf_flush(vw, vh);
