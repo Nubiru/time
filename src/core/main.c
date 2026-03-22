@@ -489,35 +489,56 @@ void main_loop(void) {
     /* --- Clear + draw (post-process wraps all passes) --- */
     post_pass_begin(&frame);
 
-    /* === P0 SIMPLIFY: Only 5 core passes until visual quality verified ===
-     * Re-enable one at a time after confirming each looks good in browser. */
+    /* === P0 SIMPLIFY: Core passes + safe sky elements ===
+     * Tier 1 (always): stars, planets, cards, text
+     * Tier 2 (re-enabled S88): constellation lines, moon, orbit trails, stardust
+     * Tier 3 (view-gated): sky dome, earth globe — only in Earth View
+     * Tier 4 (focus-gated): geometric system passes — only when focused
+     * DISABLED: milkyway, deep_sky, diffraction, ring, zodiac, diamond_room,
+     *           convergence, saturn — need visual QA in browser first */
+
+    /* Tier 1: Core visual foundation */
     if (ps_is_enabled(&sched, PASS_STARS))         star_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_CONSTELLATION)) constellation_pass_draw(&frame);
+    stardust_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_ORBIT_TRAIL))    orbit_trail_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_PLANET))         planet_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_MOON))           moon_pass_draw(&frame);
+
+    /* Tier 3: View-gated passes */
+    if (effective_view == 1) { /* Earth View only */
+        sky_pass_draw(&frame);
+        if (ps_is_enabled(&sched, PASS_EARTH))      earth_pass_draw(&frame);
+    }
+
+    /* Tier 4: Focus-gated geometric passes */
+    if (frame.focus_mode == 5) { /* FOCUS_MODE_HD */
+        if (ps_is_enabled(&sched, PASS_BODYGRAPH))  bodygraph_pass_draw(&frame);
+    }
+    if (frame.focus_mode == 3) { /* FOCUS_MODE_ICHING */
+        if (ps_is_enabled(&sched, PASS_HEXAGRAM))   hexagram_pass_draw(&frame);
+        bagua_pass_draw(&frame);
+    }
+    if (frame.focus_mode == 6) { /* FOCUS_MODE_KABBALAH */
+        tree_of_life_pass_draw(&frame);
+        gates_mandala_pass_draw(&frame);
+    }
+    if (frame.focus_mode == 1) natal_chart_pass_draw(&frame); /* Astrology */
+
+    /* Overlay passes — always last before post */
     if (ps_is_enabled(&sched, PASS_CARD))           card_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_TEXT))           text_pass_draw(&frame);
 
-    /* --- DISABLED passes (re-enable after visual verification) ---
-    sky_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_CONSTELLATION)) constellation_pass_draw(&frame);
+    /* --- DISABLED (need browser visual QA) ---
     if (ps_is_enabled(&sched, PASS_DEEP_SKY))      deep_sky_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_MILKYWAY))       milkyway_pass_draw(&frame);
-    stardust_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_DIFFRACTION))    diffraction_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_ORBIT_TRAIL))    orbit_trail_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_SATURN))         saturn_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_MOON))           moon_pass_draw(&frame);
     zodiac_pass_draw(&frame);
     ring_pass_draw(&frame);
     diamond_room_pass_draw(&frame);
     convergence_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_EARTH))          earth_pass_draw(&frame);
-    bodygraph_pass_draw(&frame);
-    hexagram_pass_draw(&frame);
-    bagua_pass_draw(&frame);
-    tree_of_life_pass_draw(&frame);
-    gates_mandala_pass_draw(&frame);
-    natal_chart_pass_draw(&frame);
-    --- end disabled passes */
+    --- end disabled */
 
     post_pass_end(&frame);
 

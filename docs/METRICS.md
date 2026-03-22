@@ -1,6 +1,6 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-22 (INFRA session 102 — Phase 1 COMPLETE)
+**Last refreshed**: 2026-03-22 (INFRA session 88)
 
 ## Codebase
 
@@ -8,11 +8,12 @@
 |--------|-------|
 | Source files (.c) | 535 |
 | Header files (.h) | 540 |
-| Lines of code (src/) | 123,127 |
+| Lines of code (src/) | 124,045 |
 | Lines of tests | 220,000+ |
 | Test suites (CTest) | 552 |
-| Render pass files | 28 |
-| Knowledge systems | 34 |
+| OBJECT libraries | 495 |
+| Render pass files | 30 |
+| Knowledge systems | 35 (was 21; +14 S87) |
 | Pure modules | 490+ |
 | Stateful modules | 37 |
 | Contributors | 283 |
@@ -22,10 +23,10 @@
 | Metric | Count |
 |--------|-------|
 | Test suites (CTest) | 552 |
-| Test functions (RUN_TEST) | 20,500+ |
-| Test assertions (TEST_ASSERT) | 35,000+ |
+| Test functions (RUN_TEST) | 20,587 |
+| Test assertions (TEST_ASSERT) | 36,112 |
 | Failures | 0 |
-| CTest time | ~0.9s (with -j12) |
+| CTest time | ~0.76s (with -j12) |
 | E2E tests (Playwright) | 17 (5 basic + 12 visual) |
 | ASan/UBSan | PASS (benchmarks excluded via `-LE benchmark`, ASan inflates VmPeak) |
 
@@ -90,12 +91,12 @@
 | CMake native | PASS (zero warnings) |
 | CTest -j12 | PASS (552/552, ~1s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
-| WASM build | PASS (737 KB Release — 34 systems, 23 passes, god rays + DOF) |
+| WASM build | PASS (866 KB Release — 35 systems, 30 passes, god rays + DOF) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
 
-## Render Pipeline (28 passes)
+## Render Pipeline (30 passes)
 
 | # | Pass | Layer | Type |
 |---|------|-------|------|
