@@ -79,9 +79,41 @@ typedef struct {
     float icon_size;               /* phi-derived from typography */
 } theme_t;
 
+/* --- Cosmos-Scope Constants (NEVER change with theme) ---
+ *
+ * Space is always dark. Stars are always warm. Planet surfaces
+ * are always physically-based. These values are identical
+ * regardless of active theme — they describe the UNIVERSE,
+ * not the UI.
+ *
+ * Render passes for astronomical objects (star_pass, planet_pass,
+ * ring_pass, zodiac_pass, earth_pass) should read from
+ * theme_cosmos_constant() instead of the active theme.
+ *
+ * Only UI elements (cards, panels, text, controls) should be
+ * theme-responsive via theme_get(). */
+
+typedef struct {
+    color_rgba_t bg_space;         /* #060709 — deep space blue-black */
+    color_rgba_t star_color;       /* warm white-gold (magnitude varies brightness) */
+    color_rgba_t orbit_line;       /* dim grey structural line */
+    color_rgba_t planet_label;     /* warm off-white for labels */
+    color_rgba_t ring_structure;   /* dim structural ring base */
+    color_rgba_t zodiac_arc;       /* subtle zodiac wheel arcs */
+    color_rgba_t brand_primary;    /* solar gold — always the same */
+    color_rgba_t brand_secondary;  /* celestial teal — always the same */
+} theme_cosmos_t;
+
+/* Get cosmos-scope constants. Returns identical values regardless
+ * of active theme. Use this for render passes that draw astronomical
+ * objects (stars, planets, orbits, rings, zodiac). */
+theme_cosmos_t theme_cosmos_constant(void);
+
 /* --- Theme Construction --- */
 
-/* Get a built-in theme by ID. Pure function. */
+/* Get a built-in theme by ID. Pure function.
+ * NOTE: bg_space in the returned theme is ALWAYS #060709 (cosmos constant).
+ * Only bg_surface, bg_elevated, text_*, and border change between themes. */
 theme_t theme_get(theme_id_t id);
 
 /* Get the default theme (THEME_COSMOS). */

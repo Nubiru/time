@@ -109,12 +109,13 @@ void test_cosmos_all_alpha_valid(void) {
  * DAWN THEME COLORS
  * ================================================================ */
 
-void test_dawn_bg_space_is_light(void) {
+void test_dawn_bg_space_is_dark(void) {
     theme_t t = theme_get(THEME_DAWN);
-    /* Dawn background should be bright */
-    TEST_ASSERT_TRUE(t.bg_space.r > 0.8f);
-    TEST_ASSERT_TRUE(t.bg_space.g > 0.8f);
-    TEST_ASSERT_TRUE(t.bg_space.b > 0.7f);
+    /* Principle 1: bg_space is ALWAYS dark — cosmos scope constant.
+     * Dawn changes UI surfaces, not the sky. */
+    TEST_ASSERT_TRUE(t.bg_space.r < 0.1f);
+    TEST_ASSERT_TRUE(t.bg_space.g < 0.1f);
+    TEST_ASSERT_TRUE(t.bg_space.b < 0.1f);
 }
 
 void test_dawn_text_primary_is_dark(void) {
@@ -399,6 +400,51 @@ void test_css_export_contains_brand(void) {
 }
 
 /* ================================================================
+ * COSMOS-SCOPE CONSTANTS
+ * ================================================================ */
+
+void test_cosmos_constant_bg_always_dark(void) {
+    theme_cosmos_t c = theme_cosmos_constant();
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, 0.024f, c.bg_space.r);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, 0.027f, c.bg_space.g);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, 0.036f, c.bg_space.b);
+}
+
+void test_cosmos_constant_star_warm(void) {
+    theme_cosmos_t c = theme_cosmos_constant();
+    TEST_ASSERT_TRUE(c.star_color.r > 0.9f);
+    TEST_ASSERT_TRUE(c.star_color.g > 0.9f);
+    TEST_ASSERT_TRUE(c.star_color.b > 0.7f);
+}
+
+void test_cosmos_constant_brand_matches_theme(void) {
+    theme_cosmos_t c = theme_cosmos_constant();
+    theme_t t = theme_get(THEME_COSMOS);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, t.brand_primary.r, c.brand_primary.r);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, t.brand_primary.g, c.brand_primary.g);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, t.brand_secondary.r, c.brand_secondary.r);
+}
+
+void test_cosmos_constant_matches_both_themes_bg(void) {
+    theme_cosmos_t c = theme_cosmos_constant();
+    theme_t cosmos = theme_get(THEME_COSMOS);
+    theme_t dawn = theme_get(THEME_DAWN);
+    /* bg_space must be identical across cosmos constant AND both themes */
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, c.bg_space.r, cosmos.bg_space.r);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, c.bg_space.r, dawn.bg_space.r);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, c.bg_space.g, cosmos.bg_space.g);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, c.bg_space.g, dawn.bg_space.g);
+}
+
+void test_cosmos_constant_purity(void) {
+    theme_cosmos_t a = theme_cosmos_constant();
+    theme_cosmos_t b = theme_cosmos_constant();
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, a.bg_space.r, b.bg_space.r);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, a.star_color.r, b.star_color.r);
+    TEST_ASSERT_FLOAT_WITHIN(EPSILON, a.orbit_line.r, b.orbit_line.r);
+}
+
+/* ================================================================
  * PURITY
  * ================================================================ */
 
@@ -443,7 +489,7 @@ int main(void) {
     RUN_TEST(test_cosmos_all_alpha_valid);
 
     /* Dawn theme colors */
-    RUN_TEST(test_dawn_bg_space_is_light);
+    RUN_TEST(test_dawn_bg_space_is_dark);
     RUN_TEST(test_dawn_text_primary_is_dark);
     RUN_TEST(test_dawn_brand_primary_matches_cosmos);
 
@@ -484,6 +530,13 @@ int main(void) {
     RUN_TEST(test_css_export_contains_text_primary);
     RUN_TEST(test_css_export_small_buffer_truncates);
     RUN_TEST(test_css_export_contains_brand);
+
+    /* Cosmos-scope constants */
+    RUN_TEST(test_cosmos_constant_bg_always_dark);
+    RUN_TEST(test_cosmos_constant_star_warm);
+    RUN_TEST(test_cosmos_constant_brand_matches_theme);
+    RUN_TEST(test_cosmos_constant_matches_both_themes_bg);
+    RUN_TEST(test_cosmos_constant_purity);
 
     /* Purity */
     RUN_TEST(test_purity_get_same_result);

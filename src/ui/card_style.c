@@ -5,8 +5,15 @@
 #include "card_style.h"
 #include "golden_layout.h"
 
-/* Card background base alpha — semi-transparent over 3D scene */
-#define CS_BG_BASE_ALPHA 0.85f
+/* Card background alpha — translucent wash over cosmos (Tufte: maximize data-ink).
+ * System color at 15% opacity: enough to identify the system, not enough to
+ * obscure the astronomical data behind the card. */
+#define CS_BG_BASE_ALPHA 0.15f
+
+/* Border alpha — structural only, not data-encoding.
+ * Tufte: borders are redundant when background color already identifies
+ * the system. Use minimal structural line. */
+#define CS_BORDER_ALPHA  0.12f
 
 int card_style_to_ct_system(int ts_system_id)
 {
@@ -43,8 +50,9 @@ card_style_t card_style_default(float opacity, theme_id_t theme_id)
     style.background   = theme.bg_surface;
     style.background.a = CS_BG_BASE_ALPHA * opacity;
 
+    /* Border: structural only — dim grey, not data-encoding (Tufte) */
     style.border   = theme.border;
-    style.border.a = (float)PHI_INV2 * opacity;
+    style.border.a = CS_BORDER_ALPHA * opacity;
 
     style.title = theme.brand_primary;
     style.body  = theme.text_primary;
@@ -64,13 +72,15 @@ card_style_t card_style_for_system(int system_id, float opacity,
     theme_t theme = theme_get(theme_id);
     card_style_t style;
 
-    /* System-tinted surface */
-    style.background   = theme_system_surface(&theme, (ct_system_t)ct);
+    /* System-colored translucent wash (Tufte: color IS the data) */
+    style.background   = theme_system_accent(&theme, (ct_system_t)ct);
     style.background.a = CS_BG_BASE_ALPHA * opacity;
 
-    /* System accent for border (subtle via phi^-2 alpha) */
-    style.border   = theme_system_accent(&theme, (ct_system_t)ct);
-    style.border.a = (float)PHI_INV2 * opacity;
+    /* Border: structural only — theme border, not system accent.
+     * Tufte: border would be redundant data-ink (system already encoded
+     * by background color). */
+    style.border   = theme.border;
+    style.border.a = CS_BORDER_ALPHA * opacity;
 
     /* System accent for title text */
     style.title = theme_system_accent(&theme, (ct_system_t)ct);

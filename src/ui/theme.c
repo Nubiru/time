@@ -93,7 +93,9 @@ static theme_t theme_build_cosmos(void)
     return t;
 }
 
-/* --- Dawn Theme (Light) --- */
+/* --- Dawn Theme (Light) ---
+ * Dawn changes UI elements only (panels, text, cards).
+ * bg_space is ALWAYS cosmos-dark — space doesn't change with theme. */
 
 static theme_t theme_build_dawn(void)
 {
@@ -101,11 +103,11 @@ static theme_t theme_build_dawn(void)
     t.id = THEME_DAWN;
     t.name = "Dawn";
 
-    /* Background: pale warm white */
-    t.bg_space = color_rgba(0.96f, 0.94f, 0.91f, 1.0f);
-    /* Surface: slightly cooler white */
+    /* bg_space: SAME as Cosmos — space is always dark (Principle 1) */
+    t.bg_space = color_rgba(0.024f, 0.027f, 0.036f, 1.0f);
+    /* Surface: pale warm white — UI panels only */
     t.bg_surface = color_rgba(0.98f, 0.97f, 0.95f, 1.0f);
-    /* Elevated: pure white */
+    /* Elevated: pure white — floating UI elements only */
     t.bg_elevated = color_rgba(1.0f, 1.0f, 0.99f, 1.0f);
 
     /* Text: dark charcoal, cascading alpha */
@@ -130,13 +132,44 @@ static theme_t theme_build_dawn(void)
     /* Border: light gray */
     t.border = color_rgba(0.80f, 0.80f, 0.82f, 1.0f);
 
-    /* Star glow: warm gold on light background */
-    t.star_glow = color_rgba(0.95f, 0.85f, 0.55f, 1.0f);
+    /* Star glow: same as Cosmos — cosmos-scope constant */
+    t.star_glow = color_rgba(1.00f, 0.95f, 0.85f, 1.0f);
 
     /* Layout */
     theme_fill_layout(&t, THEME_BASE_FONT);
 
     return t;
+}
+
+/* --- Cosmos-Scope Constants --- */
+
+theme_cosmos_t theme_cosmos_constant(void)
+{
+    theme_cosmos_t c;
+
+    /* Space is always dark — #060709 blue-tinted alive black */
+    c.bg_space = color_rgba(0.024f, 0.027f, 0.036f, 1.0f);
+
+    /* Stars: warm white-gold (brightness varies by magnitude) */
+    c.star_color = color_rgba(1.00f, 0.95f, 0.85f, 1.0f);
+
+    /* Orbit lines: dim grey structural */
+    c.orbit_line = color_rgba(0.25f, 0.25f, 0.30f, 0.4f);
+
+    /* Planet labels: warm off-white */
+    c.planet_label = color_rgba(0.90f, 0.90f, 0.92f, 0.618f);
+
+    /* Ring structure: dim base for concentric rings */
+    c.ring_structure = color_rgba(0.20f, 0.20f, 0.25f, 0.3f);
+
+    /* Zodiac arcs: subtle structural */
+    c.zodiac_arc = color_rgba(0.30f, 0.30f, 0.35f, 0.3f);
+
+    /* Brand colors are cosmos-scope — identical in every theme */
+    c.brand_primary = color_rgba(1.0f, 0.85f, 0.55f, 1.0f);
+    c.brand_secondary = color_rgba(0.2f, 0.75f, 0.8f, 1.0f);
+
+    return c;
 }
 
 /* --- Theme Construction --- */

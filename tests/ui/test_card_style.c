@@ -69,14 +69,16 @@ void test_cosmos_bg_dark(void) {
     TEST_ASSERT_LESS_THAN_FLOAT(0.3f, lum);
 }
 
-void test_dawn_bg_lighter_than_cosmos(void) {
+void test_dawn_bg_same_system_color_as_cosmos(void) {
+    /* Principle 1: card backgrounds use system accent color (cosmos-scope),
+     * not theme surface. Both themes produce the same card background
+     * for the same system — the system identity IS the data. */
     card_style_t dawn   = card_style_for_system(TS_SYS_TZOLKIN, 1.0f, THEME_DAWN);
     card_style_t cosmos = card_style_for_system(TS_SYS_TZOLKIN, 1.0f, THEME_COSMOS);
-    float lum_d = 0.2126f * dawn.background.r   + 0.7152f * dawn.background.g
-                + 0.0722f * dawn.background.b;
-    float lum_c = 0.2126f * cosmos.background.r  + 0.7152f * cosmos.background.g
-                + 0.0722f * cosmos.background.b;
-    TEST_ASSERT_GREATER_THAN_FLOAT(lum_c, lum_d);
+    /* Same system = same background color (system accent) */
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, cosmos.background.r, dawn.background.r);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, cosmos.background.g, dawn.background.g);
+    TEST_ASSERT_FLOAT_WITHIN(0.01f, cosmos.background.b, dawn.background.b);
 }
 
 /* --- Style: opacity --- */
@@ -214,7 +216,7 @@ int main(void) {
 
     /* Theme variation */
     RUN_TEST(test_cosmos_bg_dark);
-    RUN_TEST(test_dawn_bg_lighter_than_cosmos);
+    RUN_TEST(test_dawn_bg_same_system_color_as_cosmos);
 
     /* Opacity */
     RUN_TEST(test_opacity_scales_background);
