@@ -9,26 +9,6 @@
 #include <math.h>
 #include <string.h>
 
-/* --- Helper: create primitives --- */
-
-static sdf_prim_t circle(float cx, float cy, float r, sdf_op_type_t op)
-{
-    return (sdf_prim_t){ SDF_CIRCLE, cx, cy, r, 0, 0, 0, op };
-}
-
-static sdf_prim_t line_seg(float x1, float y1, float x2, float y2,
-                            float thick, sdf_op_type_t op)
-{
-    return (sdf_prim_t){ SDF_LINE, x1, y1, x2, y2, thick, 0, op };
-}
-
-static sdf_prim_t arc(float cx, float cy, float r,
-                       float start_deg, float end_deg,
-                       float thick, sdf_op_type_t op)
-{
-    return (sdf_prim_t){ SDF_ARC, cx, cy, r, start_deg, end_deg, thick, op };
-}
-
 /* --- Zodiac sign definitions (12) --- */
 
 static const sdf_glyph_t ZODIAC_GLYPHS[12] = {

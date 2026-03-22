@@ -105,7 +105,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | S54 | Personal View (birth chart focus) | ❌ NOT BUILT |
 | S55 | Deep Time View (geological timeline cinematic) | ❌ NOT BUILT |
 | S56 | City View (local horizon + sky + social) | ❌ NOT BUILT |
-| S57 | Room View (personal 3D diamond space) | ✅ Data built (`diamond_room.h/.c`, 79 tests, commit 046bfbf). Crystal from birth profile. Display: ❌ |
+| S57 | Room View (personal 3D diamond space) | ✅ Data + **GL geometry** (8717fa5). `diamond_room_pack.c` — E7 wireframe icosahedron. Rendering in progress. |
 | S58 | View selector UI (switch between views) | ❌ NOT BUILT |
 | S59 | View transition animations (smooth fly between) | 🔄 Partial — earth_transition wired (E key, commit ff0b1fd), birth_flight wired (B key). Other views need similar choreography. |
 
@@ -150,7 +150,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | S79 | E2E browser test | ✅ 5 Playwright tests (commit 2562b6a). Not in CI yet. |
 | S80 | Performance benchmarks | ✅ native benchmarks |
 | S81 | Service worker (offline) | ✅ built |
-| S82 | Deployment to Cloudflare Pages | ❌ NOT DEPLOYED |
+| S82 | Deployment to Cloudflare Pages | ✅ **GitHub Pages workflow** (ecd391f). `.github/workflows/deploy.yml` — CI/CD for static hosting. |
 | S83 | Domain name | ❌ NOT CHOSEN |
 | S84 | Error monitoring (Sentry or similar) | ❌ NOT STARTED |
 
@@ -209,7 +209,7 @@ Every stream session: check which MVPs your work addresses. If none — you're b
 |---|-----|--------|
 | S105 | **Usage-Based Personalization** — Automatic interest profile from behavior. "Visited Kin Maya 4/7 days" → surface Kin content. No forms, no questions. Privacy-first. | ✅ Built (`usage_interest.h/.c`, 62 tests). Display: ❌ |
 | S106 | **Aspect Lines at Birth** — Visible planet connection lines rendered in birth moment view. Geometric beauty of your natal sky. | ✅ Built (commit 96e0168). Natal aspects + geo_longitudes in `birth_sky_t`. 25 tests. Display: ❌ |
-| S107 | **Procedural Glyph Generation** — Code-generated seals, zodiac, planet icons. "Every pixel earned" alternative/fallback to AI/human art. | ❌ NOT BUILT (design decision needed) |
+| S107 | **Procedural Glyph Generation** — Code-generated seals, zodiac, planet icons. "Every pixel earned" alternative/fallback to AI/human art. | ✅ **BUILT** (537f324+3ea62bf). sdf_glyph.c + glyph_card_pack.c — system-to-glyph mapping. 22 procedural glyphs. |
 
 ### Audio & Voice Experience (NEW — from Gabriel vision 2026-03-20)
 
@@ -255,7 +255,7 @@ Every stream session: check which MVPs your work addresses. If none — you're b
 | S130 | **Tufte audit of all render passes** — Apply 12-point visual checklist to each of 22+ passes. Remove theme-dependent colors from astronomical renders. | ✅ STARTED (95e8b60). text_pass cosmos-scope labels use `theme_cosmos_constant()`. Sun/planet labels now theme-independent. |
 | S131 | **Visual Design System application** — Apply 7-principle standard (`.context/standards/VISUAL_DESIGN_SYSTEM.md`) to card rendering, text, overlays. | ✅ STARTED (032e902). Visual hierarchy constants in `golden_layout.h`: GL_TEXT_HEADLINE/BODY/CAPTION, GL_OPACITY levels, fibonacci spacing. |
 | S132 | **Star rendering quality** — Current stars are simple points. Add magnitude-based brightness, color from spectral type, twinkle. MEGA shader task. | ❌ NOT STARTED. VISUALS waiting on MEGA. |
-| S133 | **Planet surface shaders** — Current planets are flat spheres. Add atmospheric scattering, texture, phase angle lighting. MEGA shader task. | ❌ NOT STARTED. Shader digests exist (5 shader-specific digests). |
+| S133 | **Planet surface shaders** — Current planets are flat spheres. Add atmospheric scattering, texture, phase angle lighting. MEGA shader task. | ✅ **BUILT** (1dcd7df). Noise texture + Lambertian lighting. Fresnel glow (413c71f). |
 | S134 | **Galaxy/Milky Way rendering** — Background galaxy band. Shader digest exists. MEGA shader task. | ✅ BUILT (9339b26). Domain-warped FBM, dust lanes, core glow. noise_shader extended. 78 test LOC. |
 
 ### Statistics & Mathematical Displays (from MEGA audit)
