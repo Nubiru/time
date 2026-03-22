@@ -76,6 +76,11 @@
                     <button type="submit" class="tb-btn text-accent" style="margin-left:1em;min-height:44px">Reveal</button>
                 </form>
                 <div id="birth-result" class="text-primary" style="margin-top:0.8em"></div>
+                <div style="margin-top:var(--sp-4);padding-top:var(--sp-3);border-top:1px solid var(--glass-border)">
+                    <div class="text-muted" style="font-size:var(--font-size-compact);margin-bottom:var(--sp-2)">Location (unlocks ascendant, prayer times, sunrise)</div>
+                    <button id="gps-btn" class="tb-btn text-accent" style="min-height:44px">Use GPS</button>
+                    <span id="loc-display" class="text-secondary" style="margin-left:var(--sp-3);font-size:var(--font-size-compact)"></span>
+                </div>
             </div>
         </div>
 
@@ -292,6 +297,43 @@
                     }
                 } catch(ex) { /* ignore parse errors */ }
             }
+        }
+
+        /* GPS location — wire to observer_lat/lon */
+        var gpsBtn = document.getElementById('gps-btn');
+        var locDisplay = document.getElementById('loc-display');
+        if (gpsBtn) {
+            /* Restore saved location */
+            var savedLoc = localStorage.getItem('time_location');
+            if (savedLoc) {
+                try {
+                    var loc = JSON.parse(savedLoc);
+                    if (Module && Module._ui_set_location)
+                        Module._ui_set_location(loc.lat, loc.lon);
+                    if (locDisplay)
+                        locDisplay.textContent = loc.lat.toFixed(2) + ', ' + loc.lon.toFixed(2);
+                } catch(ex) {}
+            }
+            gpsBtn.addEventListener('click', function() {
+                if (!navigator.geolocation) {
+                    if (locDisplay) locDisplay.textContent = 'GPS not available';
+                    return;
+                }
+                gpsBtn.textContent = 'Locating...';
+                navigator.geolocation.getCurrentPosition(function(pos) {
+                    var lat = pos.coords.latitude;
+                    var lon = pos.coords.longitude;
+                    if (Module && Module._ui_set_location)
+                        Module._ui_set_location(lat, lon);
+                    localStorage.setItem('time_location', JSON.stringify({lat:lat, lon:lon}));
+                    if (locDisplay) locDisplay.textContent = lat.toFixed(2) + ', ' + lon.toFixed(2);
+                    gpsBtn.textContent = 'Updated';
+                    setTimeout(function() { gpsBtn.textContent = 'Use GPS'; }, 2000);
+                }, function(err) {
+                    if (locDisplay) locDisplay.textContent = 'Permission denied';
+                    gpsBtn.textContent = 'Use GPS';
+                });
+            });
         }
 
         /* Locale toggle — L key cycles EN→ES→AR→ZH */

@@ -864,6 +864,16 @@ EMSCRIPTEN_KEEPALIVE int ui_get_locale(void) {
     return g_state.locale;
 }
 
+EMSCRIPTEN_KEEPALIVE void ui_set_location(double lat, double lon) {
+    if (lat < -90.0 || lat > 90.0) return;
+    if (lon < -180.0 || lon > 180.0) return;
+    g_state.observer_lat = lat;
+    g_state.observer_lon = lon;
+}
+
+EMSCRIPTEN_KEEPALIVE double ui_get_lat(void) { return g_state.observer_lat; }
+EMSCRIPTEN_KEEPALIVE double ui_get_lon(void) { return g_state.observer_lon; }
+
 EMSCRIPTEN_KEEPALIVE void ui_set_view(int view_id) {
     if (view_id < 0 || view_id > 1) return;
     g_state.view = vs_set_view(g_state.view, view_id);

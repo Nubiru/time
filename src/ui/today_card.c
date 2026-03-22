@@ -57,6 +57,17 @@
 #include "daily_haab_layout.h"
 #include "daily_kabbalah_layout.h"
 
+/* Interpret modules — human meaning from raw numbers */
+#include "../systems/astrology/astrology_interpret.h"
+#include "../systems/tzolkin/tzolkin_interpret.h"
+#include "../systems/iching/iching_interpret.h"
+#include "../systems/chinese/chinese_interpret.h"
+#include "../systems/hebrew/hebrew_interpret.h"
+#include "../systems/islamic/islamic_interpret.h"
+#include "../systems/human_design/human_design_interpret.h"
+#include "../systems/gregorian/gregorian_interpret.h"
+#include "../systems/geology/geology_interpret.h"
+
 /* ------------------------------------------------------------------ */
 
 static card_content_t empty_card(void)
@@ -90,8 +101,18 @@ static card_content_t make_gregorian(double jd)
 static card_content_t make_tzolkin(double jd)
 {
     tzolkin_day_t tz = tzolkin_from_jd(jd);
-    const char *seal_name = tzolkin_seal_name(tz.seal);
-    return card_format_tzolkin(tz.seal, tz.tone, tz.kin, seal_name);
+    tzolkin_interp_t ti = ti_interpret(tz.kin, tz.seal, tz.tone);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Kin Maya");
+    if (ti.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", ti.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "Kin %d — %s %s",
+                 tz.kin, tzolkin_tone_name(tz.tone), tzolkin_seal_name(tz.seal));
+    if (ti.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", ti.detail);
+    return c;
 }
 
 static card_content_t make_haab(double jd)
@@ -207,12 +228,19 @@ static card_content_t make_hindu(double jd, double sun_lon, double moon_lon)
 static card_content_t make_astrology(double sun_lon, double moon_lon)
 {
     int sun_sign  = zodiac_sign(sun_lon);
-    double sun_deg = zodiac_degree(sun_lon);
     int moon_sign = zodiac_sign(moon_lon);
-    double moon_deg = zodiac_degree(moon_lon);
-    /* No ascendant without observer latitude/LST — pass 0 */
-    return card_format_astrology(sun_sign, sun_deg, moon_sign, moon_deg,
-                                 0, 0.0);
+    astrology_interp_t ai = ai_interpret(sun_sign, moon_sign, 0);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Astrology");
+    if (ai.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", ai.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "Sun in %s, Moon in %s",
+                 zodiac_sign_name(sun_sign), zodiac_sign_name(moon_sign));
+    if (ai.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", ai.detail);
+    return c;
 }
 
 static card_content_t make_human_design(double sun_lon)
