@@ -86,6 +86,7 @@ time_add_test(NAME test_deep_sky        TEST tests/render/test_deep_sky.c       
 time_add_test(NAME test_deep_sky_pack  TEST tests/render/test_deep_sky_pack.c  DEPS deep_sky_pack deep_sky)
 time_add_test(NAME test_milkyway_pack  TEST tests/render/test_milkyway_pack.c  DEPS milkyway_pack noise_shader shader_builder)
 time_add_test(NAME test_zoom_fade      TEST tests/render/test_zoom_fade.c      DEPS)
+time_add_test(NAME test_stardust_pack TEST tests/render/test_stardust_pack.c DEPS stardust_pack)
 time_add_test(NAME test_bodygraph_pack TEST tests/render/test_bodygraph_pack.c DEPS bodygraph_pack bodygraph)
 time_add_test(NAME test_earth_pack    TEST tests/render/test_earth_pack.c    DEPS earth_pack earth_globe earth_atmosphere)
 time_add_test(NAME test_tree_pack    TEST tests/render/test_tree_pack.c    DEPS tree_pack tree_geometry sefirot)
@@ -601,6 +602,8 @@ time_add_test(NAME test_audio_event TEST tests/ui/test_audio_event.c
          tamil_calendar myanmar zoroastrian calendar_fixed)
 time_add_test(NAME test_audio_culture TEST tests/ui/test_audio_culture.c
     DEPS audio_culture)
+time_add_test(NAME test_audio_focus_timbre TEST tests/ui/test_audio_focus_timbre.c
+    DEPS audio_focus_timbre)
 time_add_test(NAME test_audio_meditation TEST tests/ui/test_audio_meditation.c
     DEPS audio_meditation golden_layout chakra)
 time_add_test(NAME test_pianist_score TEST tests/ui/test_pianist_score.c

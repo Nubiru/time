@@ -41,6 +41,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/diffraction.c
     ${CMAKE_CURRENT_SOURCE_DIR}/deep_sky_pack.c
     ${CMAKE_CURRENT_SOURCE_DIR}/milkyway_pack.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/stardust_pack.c
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_globe.c
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_atmosphere.c
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_pack.c
@@ -140,6 +141,7 @@ if(NOT EMSCRIPTEN)
     add_library(time_tree_pack           OBJECT tree_pack.c)
     add_library(time_hexagram_geometry   OBJECT hexagram_geometry.c)
     add_library(time_milkyway_pack       OBJECT milkyway_pack.c)
+    add_library(time_stardust_pack      OBJECT stardust_pack.c)
     add_library(time_moon_pack           OBJECT moon_pack.c)
     add_library(time_orbit_trail_pack    OBJECT orbit_trail_pack.c)
     add_library(time_planet_pack         OBJECT planet_pack.c)
