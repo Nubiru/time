@@ -833,6 +833,14 @@ time_add_test(NAME test_daily_bahai_layout TEST tests/ui/test_daily_bahai_layout
     DEPS daily_bahai_layout bahai bahai_interpret i18n content_i18n LABELS unit)
 time_add_test(NAME test_daily_tamil_layout TEST tests/ui/test_daily_tamil_layout.c
     DEPS daily_tamil_layout tamil_calendar tamil_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_astronomy_layout TEST tests/ui/test_daily_astronomy_layout.c
+    DEPS daily_astronomy_layout lunar astronomy_interpret i18n content_i18n julian sidereal LABELS unit)
+time_add_test(NAME test_daily_tarot_layout TEST tests/ui/test_daily_tarot_layout.c
+    DEPS daily_tarot_layout tarot tarot_interpret i18n content_i18n LABELS unit)
+time_add_test(NAME test_daily_numerology_layout TEST tests/ui/test_daily_numerology_layout.c
+    DEPS daily_numerology_layout numerology numerology_interpret i18n content_i18n julian LABELS unit)
+time_add_test(NAME test_daily_chakra_layout TEST tests/ui/test_daily_chakra_layout.c
+    DEPS daily_chakra_layout chakra chakra_interpret i18n content_i18n LABELS unit)
 
 # Platform tests
 time_add_test(NAME test_storage_bridge TEST tests/platform/test_storage_bridge.c DEPS storage_bridge)

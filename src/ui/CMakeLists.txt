@@ -152,6 +152,10 @@ set(UI_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_myanmar_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_bahai_layout.c
     ${CMAKE_CURRENT_SOURCE_DIR}/daily_tamil_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_astronomy_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_tarot_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_numerology_layout.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/daily_chakra_layout.c
     PARENT_SCOPE
 )
 
@@ -305,6 +309,10 @@ if(NOT EMSCRIPTEN)
     add_library(time_daily_myanmar_layout OBJECT daily_myanmar_layout.c)
     add_library(time_daily_bahai_layout OBJECT daily_bahai_layout.c)
     add_library(time_daily_tamil_layout OBJECT daily_tamil_layout.c)
+    add_library(time_daily_astronomy_layout OBJECT daily_astronomy_layout.c)
+    add_library(time_daily_tarot_layout OBJECT daily_tarot_layout.c)
+    add_library(time_daily_numerology_layout OBJECT daily_numerology_layout.c)
+    add_library(time_daily_chakra_layout OBJECT daily_chakra_layout.c)
     add_library(time_daily_greeting OBJECT daily_greeting.c)
     # ui_bridge.c, audio_engine.c are Emscripten-only (S1) — no native OBJECT lib
 endif()
