@@ -544,11 +544,11 @@ void test_select_all_seen_returns_zero(void)
     we_context_t ctx = we_context_default();
     /* Mark all quotes as seen */
     int total = wisdom_quote_count();
-    int seen[256]; /* enough for all quotes */
-    for (int i = 0; i < total && i < 256; i++) {
+    int seen[512]; /* enough for all quotes */
+    for (int i = 0; i < total && i < 512; i++) {
         seen[i] = i;
     }
-    we_selection_t sel = we_select(&ctx, seen, total < 256 ? total : 256);
+    we_selection_t sel = we_select(&ctx, seen, total < 512 ? total : 512);
     TEST_ASSERT_EQUAL_INT(0, sel.count);
 }
 
@@ -590,11 +590,11 @@ void test_best_quote_all_seen_returns_negative(void)
 {
     we_context_t ctx = we_context_default();
     int total = wisdom_quote_count();
-    int seen[256];
-    for (int i = 0; i < total && i < 256; i++) {
+    int seen[512];
+    for (int i = 0; i < total && i < 512; i++) {
         seen[i] = i;
     }
-    int best = we_best_quote(&ctx, seen, total < 256 ? total : 256);
+    int best = we_best_quote(&ctx, seen, total < 512 ? total : 512);
     TEST_ASSERT_EQUAL_INT(-1, best);
 }
 

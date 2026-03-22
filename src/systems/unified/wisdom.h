@@ -1,8 +1,8 @@
 /* wisdom.h -- Curated wisdom quotes from great minds across civilizations.
  *
- * 199 quotes spanning Greek, Eastern, Islamic, Indian, Mayan/Indigenous,
- * Hebrew, Modern Science, and Other traditions. Each quote is tagged by
- * knowledge-system domain for algorithmic retrieval.
+ * 261 quotes spanning Greek, Eastern, Islamic, Indian, Mayan/Indigenous,
+ * Hebrew, Modern Science, Hindu-Theosophical, and Other traditions.
+ * Each quote is tagged by knowledge-system domain for algorithmic retrieval.
  *
  * Supports: tag-based filtering, culture-based search, author search,
  * culture counting, and distinct culture enumeration.

@@ -2,7 +2,7 @@
   "meta": {
     "description": "Every human whose intellectual work feeds the Time codebase",
     "last_updated": "2026-03-21",
-    "total_contributors": 265
+    "total_contributors": 271
   },
   "contributors": [
     {
@@ -5346,6 +5346,55 @@
       "role": "Author/Channel",
       "contribution": "A Course in Miracles — time-specific wisdom, holy instant, illusion of time",
       "source": "A Course in Miracles (1976)"
+    },
+    {
+      "name": "Domenico Agostini",
+      "role": "Iranian Studies scholar, translator of the Bundahišn from Middle Persian (Pahlavi)",
+      "contribution": "First modern English translation of the complete Bundahišn. Zoroastrian creation cosmology: Time as Arena (7th View), 6 creations in 365 days, 30 named days per month, 12 months, 5 Gāhānbār festivals, star-generals (Sirius/Deneb/Vega/Ursa Major), planets as demonic agents, frawahr free will doctrine, Zurwān (God of Time).",
+      "source": "The Bundahišn: The Zoroastrian Book of Creation (OUP, 2020)",
+      "added_by": "DEPTH stream S50"
+    },
+    {
+      "name": "Samuel Thrope",
+      "role": "Scholar of Iranian and Semitic literatures, co-translator of the Bundahišn",
+      "contribution": "Co-translated the Bundahišn with extensive scholarly commentary. Revealed the Bundahišn's relationship to time: 'Creation begins with time.' The Introduction traces how the text searches for lost time across 36 chapters.",
+      "source": "The Bundahišn: The Zoroastrian Book of Creation (OUP, 2020)",
+      "added_by": "DEPTH stream S50"
+    },
+    {
+      "name": "Zarathustra (Zoroaster)",
+      "role": "Prophet of Ahura Mazdā (~1000 BCE), founder of Zoroastrianism, author of the Gāthās",
+      "contribution": "Founded the world's oldest revealed religion. The Gāthās (17 hymns in Old Avestan, language almost identical to Vedic Sanskrit) established cosmic dualism: Ahura Mazdā (later Ohrmazd) vs Angra Mainyu (later Ahriman). Originated concepts later adopted by Judaism (angels/demons), Christianity (God/Satan, resurrection), and Islam (bridge of judgment). Time itself as purposeful creation.",
+      "source": "Avesta (Gāthās), referenced in the Bundahišn",
+      "added_by": "DEPTH stream S50"
+    },
+    {
+      "name": "James C. VanderKam",
+      "role": "Professor of Hebrew Scriptures (University of Notre Dame), Dead Sea Scrolls scholar",
+      "contribution": "The 364-day solar calendar as Qumran's alternative to the Jerusalem lunisolar calendar. Calendar dispute as primary cause of sectarian separation. David's psalm numbers encoding the 364-day year (3,600/364/52/30/4). Pentacontad festivals (49-day intervals). The three Hebrew month-naming systems (Canaanite→numbered→Babylonian). Evidence that calendrical difference could split communities and define religious identity.",
+      "source": "Calendars in the Dead Sea Scrolls: Measuring Time (Routledge, 1998)",
+      "added_by": "DEPTH stream S51"
+    },
+    {
+      "name": "Annie Jaubert",
+      "role": "French scholar, historian of Jewish and Christian liturgy",
+      "contribution": "Two-calendar solution to the Last Supper chronology: Jesus celebrated Passover on Tuesday evening (old priestly 364-day calendar) and died on Friday (official lunisolar calendar). Demonstrated that the 364-day calendar underlies the Book of Jubilees and early Christian liturgical practice. Proved that festivals always fall on fixed weekdays in the 364-day system.",
+      "source": "La date de la cène (1957), referenced by VanderKam",
+      "added_by": "DEPTH stream S51"
+    },
+    {
+      "name": "Ian Proudfoot",
+      "role": "SE Asian Studies scholar (Australian National University), historian of Malay calendrics",
+      "contribution": "Demonstrated that no standard Muslim calendar has ever existed. Documented the SE Asian octaval (8-year) cycle as alternative to the Middle Eastern trigesimal (30-year). Javanese Hindu-Islamic calendar hybrid (Śaka era + Islamic months + 5-day pasaran). The 5×7=35 day wetonan cycle parallels the Tzolkin's 13×20 principle. Abjad mnemonic for month-start weekdays.",
+      "source": "Old Muslim Calendars of Southeast Asia (Brill, 2006)",
+      "added_by": "DEPTH stream S52"
+    },
+    {
+      "name": "Yogi Ramacharaka (William Walker Atkinson)",
+      "role": "Author, New Thought / Hindu-Theosophical teacher",
+      "contribution": "7 wisdom quotes on eternal soul, time dimensions, karmic cycles, and introspective seeking. Hindu-Theosophical voice archetype bridging Vedanta and Western esotericism.",
+      "source": "Life After Death (1912)",
+      "added_by": "LANGUAGE stream S50"
     }
   ]
 }
