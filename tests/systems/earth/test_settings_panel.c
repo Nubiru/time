@@ -391,6 +391,127 @@ void test_option_label_invalid_option(void) {
     TEST_ASSERT_NULL(sp_option_label(&panel, 0, 99));
 }
 
+/* ===== Collapsible Sections ===== */
+
+void test_build_all_expanded_by_default(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    TEST_ASSERT_EQUAL_UINT32(0, panel.collapsed_mask);
+}
+
+void test_toggle_section_collapses(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    panel = sp_toggle_section(panel, 0);
+    TEST_ASSERT_EQUAL_INT(1, sp_is_collapsed(&panel, 0));
+}
+
+void test_toggle_section_twice_expands(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    panel = sp_toggle_section(panel, 1);
+    panel = sp_toggle_section(panel, 1);
+    TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel, 1));
+}
+
+void test_is_collapsed_false_by_default(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    for (int i = 0; i < panel.section_count; i++) {
+        TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel, i));
+    }
+}
+
+void test_is_collapsed_after_toggle(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    panel = sp_toggle_section(panel, 2);
+    TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel, 0));
+    TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel, 1));
+    TEST_ASSERT_EQUAL_INT(1, sp_is_collapsed(&panel, 2));
+    TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel, 3));
+}
+
+void test_is_collapsed_invalid_section(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel, -1));
+    TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel, 99));
+}
+
+void test_collapse_mask_default_zero(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    TEST_ASSERT_EQUAL_UINT32(0, sp_collapse_mask(&panel));
+}
+
+void test_collapse_mask_after_toggles(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    panel = sp_toggle_section(panel, 0);
+    panel = sp_toggle_section(panel, 2);
+    /* bits 0 and 2 set = 0b0101 = 5 */
+    TEST_ASSERT_EQUAL_UINT32(5, sp_collapse_mask(&panel));
+}
+
+void test_set_collapse_mask(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    panel = sp_set_collapse_mask(panel, 0x0A); /* bits 1 and 3 */
+    TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel, 0));
+    TEST_ASSERT_EQUAL_INT(1, sp_is_collapsed(&panel, 1));
+    TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel, 2));
+    TEST_ASSERT_EQUAL_INT(1, sp_is_collapsed(&panel, 3));
+}
+
+void test_set_collapse_mask_roundtrip(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    panel = sp_toggle_section(panel, 1);
+    panel = sp_toggle_section(panel, 3);
+    uint32_t mask = sp_collapse_mask(&panel);
+
+    /* Rebuild panel and restore mask */
+    sp_panel_t panel2 = sp_build(&p);
+    panel2 = sp_set_collapse_mask(panel2, mask);
+    TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel2, 0));
+    TEST_ASSERT_EQUAL_INT(1, sp_is_collapsed(&panel2, 1));
+    TEST_ASSERT_EQUAL_INT(0, sp_is_collapsed(&panel2, 2));
+    TEST_ASSERT_EQUAL_INT(1, sp_is_collapsed(&panel2, 3));
+}
+
+void test_expanded_count_all_expanded(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    TEST_ASSERT_EQUAL_INT(4, sp_expanded_count(&panel));
+}
+
+void test_expanded_count_one_collapsed(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    panel = sp_toggle_section(panel, 2);
+    TEST_ASSERT_EQUAL_INT(3, sp_expanded_count(&panel));
+}
+
+void test_expanded_count_all_collapsed(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    for (int i = 0; i < panel.section_count; i++) {
+        panel = sp_toggle_section(panel, i);
+    }
+    TEST_ASSERT_EQUAL_INT(0, sp_expanded_count(&panel));
+}
+
+void test_toggle_invalid_section_no_change(void) {
+    up_prefs_t p = up_default();
+    sp_panel_t panel = sp_build(&p);
+    uint32_t before = sp_collapse_mask(&panel);
+    panel = sp_toggle_section(panel, -1);
+    TEST_ASSERT_EQUAL_UINT32(before, sp_collapse_mask(&panel));
+    panel = sp_toggle_section(panel, 99);
+    TEST_ASSERT_EQUAL_UINT32(before, sp_collapse_mask(&panel));
+}
+
 /* ===== main ===== */
 
 int main(void) {
@@ -473,6 +594,22 @@ int main(void) {
     RUN_TEST(test_option_label_theme);
     RUN_TEST(test_option_label_invalid_section);
     RUN_TEST(test_option_label_invalid_option);
+
+    /* Collapsible Sections (14) */
+    RUN_TEST(test_build_all_expanded_by_default);
+    RUN_TEST(test_toggle_section_collapses);
+    RUN_TEST(test_toggle_section_twice_expands);
+    RUN_TEST(test_is_collapsed_false_by_default);
+    RUN_TEST(test_is_collapsed_after_toggle);
+    RUN_TEST(test_is_collapsed_invalid_section);
+    RUN_TEST(test_collapse_mask_default_zero);
+    RUN_TEST(test_collapse_mask_after_toggles);
+    RUN_TEST(test_set_collapse_mask);
+    RUN_TEST(test_set_collapse_mask_roundtrip);
+    RUN_TEST(test_expanded_count_all_expanded);
+    RUN_TEST(test_expanded_count_one_collapsed);
+    RUN_TEST(test_expanded_count_all_collapsed);
+    RUN_TEST(test_toggle_invalid_section_no_change);
 
     return UNITY_END();
 }

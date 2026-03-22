@@ -272,3 +272,38 @@ const char *sp_option_label(const sp_panel_t *panel, int section, int option) {
     if (option < 0 || option >= panel->sections[section].option_count) return NULL;
     return panel->sections[section].options[option].label;
 }
+
+/* --- Collapsible Sections --- */
+
+sp_panel_t sp_toggle_section(sp_panel_t panel, int section) {
+    if (section < 0 || section >= panel.section_count) return panel;
+    panel.collapsed_mask ^= (1u << (unsigned)section);
+    return panel;
+}
+
+int sp_is_collapsed(const sp_panel_t *panel, int section) {
+    if (!panel) return 0;
+    if (section < 0 || section >= panel->section_count) return 0;
+    return (panel->collapsed_mask & (1u << (unsigned)section)) ? 1 : 0;
+}
+
+uint32_t sp_collapse_mask(const sp_panel_t *panel) {
+    if (!panel) return 0;
+    return panel->collapsed_mask;
+}
+
+sp_panel_t sp_set_collapse_mask(sp_panel_t panel, uint32_t mask) {
+    panel.collapsed_mask = mask;
+    return panel;
+}
+
+int sp_expanded_count(const sp_panel_t *panel) {
+    if (!panel) return 0;
+    int count = 0;
+    for (int i = 0; i < panel->section_count; i++) {
+        if (!(panel->collapsed_mask & (1u << (unsigned)i))) {
+            count++;
+        }
+    }
+    return count;
+}

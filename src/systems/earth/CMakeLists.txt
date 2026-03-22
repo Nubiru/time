@@ -38,6 +38,7 @@ set(EARTH_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/diamond_room.c
     ${CMAKE_CURRENT_SOURCE_DIR}/earth_fraction.c
     ${CMAKE_CURRENT_SOURCE_DIR}/pop_today.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/ps_dashboard.c
     PARENT_SCOPE
 )
 if(NOT EMSCRIPTEN)
@@ -80,4 +81,5 @@ if(NOT EMSCRIPTEN)
     add_library(time_diamond_room    OBJECT diamond_room.c)
     add_library(time_earth_fraction  OBJECT earth_fraction.c)
     add_library(time_pop_today       OBJECT pop_today.c)
+    add_library(time_ps_dashboard   OBJECT ps_dashboard.c)
 endif()
