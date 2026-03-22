@@ -45,6 +45,7 @@
 #include "daily_geology_layout.h"
 #include "daily_earth_layout.h"
 #include "../systems/earth/pop_today.h"
+#include "../systems/earth/earth_fraction.h"
 #include "daily_coptic_layout.h"
 #include "daily_ethiopian_layout.h"
 #include "daily_japanese_layout.h"
@@ -407,9 +408,19 @@ static card_content_t make_earth(double jd, double lat, double lon)
              el.sun_elevation_deg,
              el.sun_elevation_deg >= 0.0 ? "above" : "below");
 
-    /* Line3: population perspective (deep time context) */
-    if (pop.has_data && pop.perspective_section[0] != '\0')
-        snprintf(c.line3, sizeof(c.line3), "%.127s", pop.perspective_section);
+    /* Line3: earth_fraction awe fact — rotates daily */
+    {
+        int fcount = ef_fact_count();
+        if (fcount > 0) {
+            int fi = (int)jd % fcount;
+            if (fi < 0) fi = -fi;
+            earth_fraction_t ef = ef_fact_get(fi);
+            if (ef.visual_analogy)
+                snprintf(c.line3, sizeof(c.line3), "%.127s", ef.visual_analogy);
+            else if (ef.description)
+                snprintf(c.line3, sizeof(c.line3), "%.127s", ef.description);
+        }
+    }
 
     if (el.polar_day)
         snprintf(c.detail, sizeof(c.detail), "Polar day — midnight sun");
