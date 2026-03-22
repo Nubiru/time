@@ -13,6 +13,7 @@
 #include <GLES3/gl3.h>
 #include "../shader.h"
 #include "../post_process.h"
+#include "../depth_visual.h"
 
 /* --- Module-static GL handles --- */
 
@@ -61,6 +62,7 @@ static GLint  s_pp_comp_loc_time;
 static GLint  s_pp_comp_loc_depth;
 static GLint  s_pp_comp_loc_dof_focus;
 static GLint  s_pp_comp_loc_dof_strength;
+static GLint  s_pp_comp_loc_tint;
 
 static GLuint s_pp_godrays_program;
 static GLint  s_pp_gr_loc_frame;
@@ -215,6 +217,7 @@ int post_pass_init(int width, int height) {
     s_pp_comp_loc_depth = glGetUniformLocation(s_pp_composite_program, "u_depth");
     s_pp_comp_loc_dof_focus = glGetUniformLocation(s_pp_composite_program, "u_dof_focus");
     s_pp_comp_loc_dof_strength = glGetUniformLocation(s_pp_composite_program, "u_dof_strength");
+    s_pp_comp_loc_tint = glGetUniformLocation(s_pp_composite_program, "u_tint");
 
     /* God ray radial blur shader (GPU Gems 3, Ch 13) */
     s_pp_godrays_program = shader_create_program(
@@ -353,6 +356,15 @@ void post_pass_end(const render_frame_t *frame) {
     glUniform1f(s_pp_comp_loc_grain_intensity,
                 s_pp_config.grain_enabled ? s_pp_config.grain_intensity : 0.0f);
     glUniform1f(s_pp_comp_loc_time, frame->time_sec);
+
+    /* Depth tier background tint — subtle color wash per navigation layer */
+    {
+        dv_tier_t tier = dv_tier_from_zoom(frame->log_zoom);
+        dv_tint_t tint = dv_tier_tint(tier);
+        float blend = dv_tier_blend(frame->log_zoom, tier);
+        glUniform4f(s_pp_comp_loc_tint,
+                    tint.r, tint.g, tint.b, tint.a * blend);
+    }
 
     draw_quad();
 

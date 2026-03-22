@@ -236,6 +236,7 @@ static const char *s_composite_frag =
     "uniform float u_time;\n"
     "uniform float u_dof_focus;\n"
     "uniform float u_dof_strength;\n"
+    "uniform vec4 u_tint;\n"
     "out vec4 frag_color;\n"
     "\n"
     "float grain_hash(vec2 p) {\n"
@@ -289,6 +290,9 @@ static const char *s_composite_frag =
     "    /* Film grain */\n"
     "    float grain = (grain_hash(v_uv * 500.0 + u_time) - 0.5) * u_grain_intensity;\n"
     "    color += grain;\n"
+    "\n"
+    "    /* Depth tier tint — subtle color wash for navigation depth cues */\n"
+    "    color = mix(color, u_tint.rgb, u_tint.a);\n"
     "\n"
     "    frag_color = vec4(color, 1.0);\n"
     "}\n";
