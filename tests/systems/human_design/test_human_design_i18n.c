@@ -37,7 +37,7 @@ static void test_locale_es_generator(void)
 
 static void test_locale_fallback_to_en(void)
 {
-    human_design_interp_t r = hdi_interpret_locale(1, 1, 1, 3, 1, I18N_LOCALE_DE);
+    human_design_interp_t r = hdi_interpret_locale(1, 1, 1, 3, 1, I18N_LOCALE_RU);
     TEST_ASSERT_EQUAL_STRING("Gen", r.glyph);
     TEST_ASSERT_NOT_NULL(strstr(r.glance, "Generator"));
 }

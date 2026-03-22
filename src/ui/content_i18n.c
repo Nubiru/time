@@ -41,6 +41,9 @@ static const content_table_t content_tables[I18N_LOCALE_COUNT] = {
 #ifdef GEN_CONTENT_JA_COUNT
     [I18N_LOCALE_JA] = { gen_content_ja, GEN_CONTENT_JA_COUNT },
 #endif
+#ifdef GEN_CONTENT_DE_COUNT
+    [I18N_LOCALE_DE] = { gen_content_de, GEN_CONTENT_DE_COUNT },
+#endif
 #ifdef GEN_CONTENT_PT_COUNT
     [I18N_LOCALE_PT] = { gen_content_pt, GEN_CONTENT_PT_COUNT },
 #endif
