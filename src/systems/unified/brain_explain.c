@@ -42,10 +42,11 @@ static const br_explanation_t EXPLANATIONS[] = {
       "direct astronomical observation embedded in religious practice." },
 
     { CD_SYS_HEBREW, CD_SYS_ISLAMIC, BR_EXPLAIN_SHARED_SOURCE,
-      "Both track the same moon",
+      "Both track the same moon — and share divine vocabulary",
       "Both are lunar calendars counting from the same synodic month "
-      "(29.53 days). Hebrew adds intercalary months to stay solar-aligned; "
-      "Islamic does not, drifting through the seasons." },
+      "(29.53 days). Hebrew adds intercalary months; Islamic drifts through "
+      "seasons. Beyond astronomy, they share theology: Quranic sakīnah "
+      "(divine peace) directly parallels Hebrew shekinah (divine presence)." },
 
     { CD_SYS_HEBREW, CD_SYS_BUDDHIST, BR_EXPLAIN_SHARED_SOURCE,
       "Lunar month boundaries",
@@ -91,10 +92,11 @@ static const br_explanation_t EXPLANATIONS[] = {
       "lunar calculations, adopted via Indian astronomical influence." },
 
     { CD_SYS_ICHING, CD_SYS_CHINESE, BR_EXPLAIN_TRANSMISSION,
-      "I Ching is Chinese divination",
-      "The I Ching is a Chinese text (c. 1000 BCE). Its 8 trigrams map "
-      "to compass directions, seasons, and family relationships in "
-      "Chinese cosmology." },
+      "I Ching is the root of Chinese cosmology",
+      "The I Ching (c. 1000 BCE) underpins Chinese cosmology. Its trigram "
+      "arrangements derive from He Tu (55 dots) and Lo Shu (magic square, "
+      "sum 15). Five Elements and Ten Stems were integrated with Eight "
+      "Trigrams by Sung scholars, sharing a single numerical foundation." },
 
     { CD_SYS_ZOROASTRIAN, CD_SYS_PERSIAN, BR_EXPLAIN_TRANSMISSION,
       "Same calendar, different eras",
@@ -158,9 +160,11 @@ static const br_explanation_t EXPLANATIONS[] = {
       "same principle of interlocking sub-cycles." },
 
     { CD_SYS_ICHING, CD_SYS_HEBREW, BR_EXPLAIN_CONVERGENT,
-      "Different traditions, no contact",
-      "Chinese divination (I Ching) and Hebrew calendar — entirely "
-      "separate cultural streams with no known historical transmission." },
+      "Combinatorial completeness from opposite sides of the world",
+      "64 hexagrams exhaust all 6-line binary combinations. 22 Hebrew "
+      "letters generate 231 gates (C(22,2) pairs). Both traditions "
+      "independently discovered that all possible states can be enumerated "
+      "from a small set of simple elements." },
 
     { CD_SYS_CELTIC, CD_SYS_TZOLKIN, BR_EXPLAIN_CONVERGENT,
       "No known contact",
@@ -279,14 +283,7 @@ static const br_explanation_t EXPLANATIONS[] = {
       "which was originally calibrated to the heliacal rising of Sirius "
       "— a direct astronomical observation." },
 
-    /* --- Batch 3: I Ching numerological cross-system pairs (Digest 086) --- */
-
-    { CD_SYS_ICHING, CD_SYS_CHINESE, BR_EXPLAIN_SHARED_SOURCE,
-      "He Tu and Lo Shu — shared numerical cosmology",
-      "The I Ching's trigram arrangements derive from He Tu (55 dots) and "
-      "Lo Shu (45 dots, 3x3 magic square). Chinese cosmology's Five Elements "
-      "and Ten Stems were integrated with the Eight Trigrams by Sung dynasty "
-      "scholars, sharing the same numerical foundation." },
+    /* --- Batch 3: I Ching cross-system pairs (Digests 086, 087) --- */
 
     { CD_SYS_ICHING, CD_SYS_HINDU, BR_EXPLAIN_CONVERGENT,
       "Binary completeness in independent traditions",
@@ -294,13 +291,6 @@ static const br_explanation_t EXPLANATIONS[] = {
       "Hindu panchanga uses 30 tithis per month and 27 nakshatras — both "
       "are systematic divisions of cycles. Independent yet structurally "
       "analogous approaches to encoding cyclical time." },
-
-    { CD_SYS_ICHING, CD_SYS_HEBREW, BR_EXPLAIN_CONVERGENT,
-      "Combinatorial completeness",
-      "64 hexagrams exhaust all 6-line binary combinations. The 22 Hebrew "
-      "letters generate 231 gates (C(22,2) pairs). Both traditions discovered "
-      "combinatorial completeness independently — the idea that all possible "
-      "states can be enumerated from simple elements." },
 
     { CD_SYS_ICHING, CD_SYS_ASTROLOGY, BR_EXPLAIN_CONVERGENT,
       "Cyclic archetypes from different sources",
@@ -475,6 +465,88 @@ static const br_explanation_t EXPLANATIONS[] = {
       "Thai and Myanmar calendars share Surya Siddhanta parameters and "
       "Theravada Buddhist purpose. Historical warfare and cultural exchange "
       "between Siam and Burma reinforced their calendrical similarities." },
+
+    /* --- Batch 6: Inbox consumption (27 items from DEPTH/NERVE/MEGA) --- */
+
+    { CD_SYS_ASTRONOMY, CD_SYS_CHINESE, BR_EXPLAIN_SHARED_SOURCE,
+      "24 solar terms track the ecliptic",
+      "Chinese 24 jié qì (solar terms) divide the ecliptic into 15-degree "
+      "segments — direct astronomical observation of solar longitude. The "
+      "calendar's intercalation rule (no major solar term = leap month) is "
+      "an astronomical algorithm." },
+
+    { CD_SYS_CHINESE, CD_SYS_CELTIC, BR_EXPLAIN_CONVERGENT,
+      "Independent 8-point year from same astronomy",
+      "Chinese jié qì and Celtic Sabbats independently mark the same 8 "
+      "astronomical points: 4 solstices/equinoxes plus 4 cross-quarter days. "
+      "Different cultures, different continents, same sky geometry." },
+
+    { CD_SYS_HEBREW, CD_SYS_PERSIAN, BR_EXPLAIN_CONVERGENT,
+      "Spring anchors: Nisan and Nowruz",
+      "Both calendars anchor their year to spring. Nisan (Hebrew) begins "
+      "near the vernal equinox via Metonic intercalation. Nowruz (Persian) "
+      "IS the exact equinox moment. Independent solutions to the same "
+      "seasonal observation." },
+
+    { CD_SYS_ICHING, CD_SYS_TZOLKIN, BR_EXPLAIN_CONVERGENT,
+      "Both assign qualitative meaning to each day",
+      "The I Ching's 64 hexagrams describe states of change. The Tzolkin's "
+      "260 kin describe daily energies. Both are oracular systems that give "
+      "each time-position a unique character — China and Mesoamerica, no "
+      "contact, same impulse." },
+
+    { CD_SYS_ICHING, CD_SYS_BUDDHIST, BR_EXPLAIN_CONVERGENT,
+      "Present moment as complete reality",
+      "I Ching hexagrams describe the quality of NOW — not prediction but "
+      "diagnosis. Buddhism says the present moment is all that truly exists. "
+      "Both traditions center on the radical sufficiency of this instant." },
+
+    { CD_SYS_ICHING, CD_SYS_ISLAMIC, BR_EXPLAIN_CONVERGENT,
+      "Number-symbol systems for decoding meaning",
+      "Chinese I Ching uses hexagram numbers to encode all states of change. "
+      "Islamic Jafr uses numerical values of Quranic letters to reveal hidden "
+      "patterns. Independent number-symbol traditions from different "
+      "civilizations." },
+
+    { CD_SYS_HINDU, CD_SYS_PERSIAN, BR_EXPLAIN_CONVERGENT,
+      "Indo-Iranian spring celebrations",
+      "Hindu Vasant Panchami and Persian Nowruz both celebrate spring's "
+      "arrival. Sharing Indo-Iranian linguistic roots (Avestan/Sanskrit), "
+      "these traditions diverged millennia ago yet both anchor renewal "
+      "to the same astronomical event." },
+
+    { CD_SYS_ASTRONOMY, CD_SYS_JAPANESE, BR_EXPLAIN_SHARED_SOURCE,
+      "Sekki solar terms from ecliptic observation",
+      "Japanese 24 sekki (solar terms) divide the ecliptic into 15-degree "
+      "segments, adopted from Chinese astronomical tradition. Risshin "
+      "(spring start) at solar longitude 315 degrees is a direct "
+      "astronomical measurement." },
+
+    { CD_SYS_ASTRONOMY, CD_SYS_KOREAN, BR_EXPLAIN_SHARED_SOURCE,
+      "Korean solar terms via Chinese astronomy",
+      "Korea adopted the Chinese system of 24 solar terms tracking solar "
+      "longitude along the ecliptic. These astronomical markers govern "
+      "agricultural timing and festival dates." },
+
+    { CD_SYS_ASTRONOMY, CD_SYS_MYANMAR, BR_EXPLAIN_SHARED_SOURCE,
+      "Surya Siddhanta astronomical parameters",
+      "Myanmar's calendar uses solar and lunar parameters from the Indian "
+      "Surya Siddhanta astronomical text. Eclipse calculations and "
+      "intercalation rules are direct astronomical computations." },
+
+    { CD_SYS_ASTROLOGY, CD_SYS_BUDDHIST, BR_EXPLAIN_CONVERGENT,
+      "Cosmic renewal cycles",
+      "The astrological Great Year (~26,000 years of precession) and "
+      "Buddhist Kalpas (world-cycles of creation and destruction) both "
+      "describe cosmic-scale patterns of renewal. Hindu Yugas parallel "
+      "both. Independent traditions, convergent intuition." },
+
+    { CD_SYS_CHINESE, CD_SYS_ISLAMIC, BR_EXPLAIN_CONVERGENT,
+      "Silk Road coexistence, independent structures",
+      "Chinese lunisolar and Islamic pure lunar calendars coexisted across "
+      "Central and South Asia via the Silk Road. Despite centuries of "
+      "cultural exchange, their calendar structures remained independent — "
+      "one tracks the sun and moon, the other the moon alone." },
 };
 
 static const int EXPLANATION_COUNT =

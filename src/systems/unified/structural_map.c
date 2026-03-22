@@ -29,7 +29,7 @@ static const char *SYSTEM_NAMES[SYS_COUNT] = {
 
 /* ===== Sacred Number Concordances ===== */
 
-#define CONCORDANCE_COUNT 10
+#define CONCORDANCE_COUNT 12
 
 static const concordance_t CONCORDANCES[CONCORDANCE_COUNT] = {
     {
@@ -82,6 +82,15 @@ static const concordance_t CONCORDANCES[CONCORDANCE_COUNT] = {
                      NULL }
     },
     {
+        .number = 18,
+        .description = "Sacred life number",
+        .system_count = 3,
+        .systems = { "Hindu (18 Gita chapters, 18 Mahabharata parvas)",
+                     "Hebrew (chai = 18, gematria of life)",
+                     "Buddhism (18 dhatus, elements of cognition)",
+                     NULL, NULL, NULL }
+    },
+    {
         .number = 22,
         .description = "Alphabetic-symbolic bridge",
         .system_count = 3,
@@ -117,6 +126,14 @@ static const concordance_t CONCORDANCES[CONCORDANCE_COUNT] = {
                      NULL, NULL, NULL }
     },
     {
+        .number = 231,
+        .description = "Gates of creation",
+        .system_count = 2,
+        .systems = { "Kabbalah (231 gates = C(22,2) letter pairs, Sefer Yetzirah)",
+                     "Tzolkin (Synchronotron sum 1..21 = 231)",
+                     NULL, NULL, NULL, NULL }
+    },
+    {
         .number = 260,
         .description = "Galactic cycle",
         .system_count = 2,
@@ -128,7 +145,7 @@ static const concordance_t CONCORDANCES[CONCORDANCE_COUNT] = {
 
 /* Sacred numbers in ascending order */
 static const int SACRED_NUMBERS[CONCORDANCE_COUNT] = {
-    3, 4, 7, 10, 12, 22, 27, 64, 108, 260
+    3, 4, 7, 10, 12, 18, 22, 27, 64, 108, 231, 260
 };
 
 /* ===== 7 Classical Planet Correspondences ===== */

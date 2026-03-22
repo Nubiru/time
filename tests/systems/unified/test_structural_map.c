@@ -43,7 +43,7 @@ void test_system_name_invalid(void)
 void test_concordance_count(void)
 {
     int count = structural_concordance_count();
-    TEST_ASSERT_EQUAL_INT(10, count);
+    TEST_ASSERT_EQUAL_INT(12, count);
 }
 
 void test_concordance_get_first(void)
@@ -102,7 +102,7 @@ void test_concordance_get_invalid_index(void)
 
 void test_sacred_number_count(void)
 {
-    TEST_ASSERT_EQUAL_INT(10, structural_sacred_number_count());
+    TEST_ASSERT_EQUAL_INT(12, structural_sacred_number_count());
 }
 
 void test_sacred_number_first(void)
@@ -112,7 +112,7 @@ void test_sacred_number_first(void)
 
 void test_sacred_number_last(void)
 {
-    TEST_ASSERT_EQUAL_INT(260, structural_sacred_number(9));
+    TEST_ASSERT_EQUAL_INT(260, structural_sacred_number(11));
 }
 
 void test_sacred_number_invalid(void)

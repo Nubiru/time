@@ -111,6 +111,16 @@ static const sc_date_def_t DATE_LIST[] = {
     { 1986,  1, 28, "Challenger disaster",                     "historical" },
     { 1969, 12, 24, "Apollo 8 Earthrise photograph",           "astronomical" },
     { 2024,  4,  8, "Great North American Eclipse",            "astronomical" },
+
+    /* Human civilization milestones (Sapiens — Harari, Digest 103) */
+    { 1784,  1,  1, "First factory schedule (Arkwright)",      "historical" },
+    { 1847,  1,  1, "Greenwich time adopted for railways",     "historical" },
+    { 1880,  1,  1, "Britain legislates national time",        "historical" },
+    { 1202,  1,  1, "Fibonacci's Liber Abaci (phi + finance)", "historical" },
+    { 1929, 10, 29, "Wall Street Crash (Black Tuesday)",       "historical" },
+    { 1602,  1,  1, "Amsterdam Stock Exchange (first)",        "historical" },
+    { 1969,  7, 21, "First humans walk on the Moon",           "historical" },
+    { 1455,  2, 23, "Gutenberg Bible printed",                 "historical" },
 };
 
 static const int DATE_COUNT = (int)(sizeof(DATE_LIST) / sizeof(DATE_LIST[0]));
