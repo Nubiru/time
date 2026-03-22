@@ -10,13 +10,13 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 
 | # | MVP | Description | Status |
 |---|-----|-------------|--------|
-| L1 | **Today in All Systems** | Open Time → see today's date in 25+ calendar systems simultaneously | Data: ✅ Display: ❌ |
-| L2 | **Your Birth Moment** | Enter birthday → see the sky as it was, your natal chart, your Kin, your hexagram, everything | Data: ✅ Display: ❌ |
-| L3 | **The Daily Narrative** | Time tells you what today MEANS — convergences, energies, themes across traditions | Engine: ✅ Display: ❌ |
+| L1 | **Today in All Systems** | Open Time → see today's date in 25+ calendar systems simultaneously | Data: ✅ Display: ✅ WIRED. `today_card_for_system()` covers 21 systems. `cs_select()` shows up to 5 cards simultaneously, zoom-adaptive. MSDF text. 19/19 daily layouts enriched. |
+| L2 | **Your Birth Moment** | Enter birthday → see the sky as it was, your natal chart, your Kin, your hexagram, everything | Data: ✅ Input: ✅ WIRED (P key, 87c364c). Shows Kin. natal_chart_pass started. Birth sky (B key) working. |
+| L3 | **The Daily Narrative** | Time tells you what today MEANS — convergences, energies, themes across traditions | Engine: ✅ Display: ✅ WIRED. `brain_narrative_compose()` → `headline` in render_frame → bottom-center MSDF text. Depth-tiered templates (654f658). Locale-aware (387279c). |
 | L4 | **Earth Through Time** | Cinematic 4.5Ga voyage: Pangea → continents, dinosaurs → humans, chemical composition, population counter | Data: partial Display: ❌ |
 | L5 | **The Concentric Wheel** | Layered information — zoom from today → cycle → era → cosmos. Fly through depth. 3D card navigation. | Module: ✅ Wired: partial |
 | L6 | **Sound of the Spheres** | Planetary frequencies, convergence chords, viewpoint soundscapes. Pianist recordings. | Engine: ✅ Content: ❌ |
-| L7 | **21 Languages** | Every text in 21 languages with poetic voice influenced by humanity's greatest minds | UI labels: ✅ 111 keys × 21 langs. Content: ✅ EN 3534 / ES 3533 / PT 3534 keys. Spanish + Portuguese COMPLETE. 2/21 languages done. Wisdom voice: 10 archetypes defined. |
+| L7 | **21 Languages** | Every text in 21 languages with poetic voice influenced by humanity's greatest minds | Content: ✅ **7 locales** (EN+ES+PT+AR+HE+ZH+**HI**). Hindi 100% (bd6d135). Locale toggle WIRED. **228 wisdom quotes DISPLAYED** (9a4946b). 3647 EN keys. |
 | L8 | **The "Enter Time" Experience** | Click threshold → cinematic zoom → solar system reveals → first hint → discovery | CSS: ✅ Animation: ✅ Wiring: ✅ (commit ff0b1fd). Camera fly-in active on load. Skip on key/touch. |
 | L9 | **Personal Space (Diamond Room)** | Your identity across all systems. Birth chart + Kin + hexagram + HD. Customizable 3D space. | Data: ✅ Display: ❌ |
 | L10 | **Wave Watch & Earth View** | Tide, surf, weather from astronomical computation. 24h forecast. Surfer's dream. | Data: ✅ Display: ❌ |
@@ -43,7 +43,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | S7 | Wisdom quotes correlated to context | ✅ Engine built, ❌ display |
 | S8 | Fun facts with convergence triggers | ✅ Built, ❌ display |
 | S9 | Earth geological timeline data | ✅ geo_time, tectonic, fossil |
-| S10 | Human population history (109B ever, 8B now) | ✅ Built (`human_population.h/.c`, 49 tests). Display: ❌ needs card adapter |
+| S10 | Human population history (109B ever, 8B now) | ✅ **WIRED** (975094c). pop_today enriches Earth card. daily_greeting module added. NERVE expand spec → INFRA delivery. |
 | S11 | Chemical composition of Earth through time | ❌ NOT BUILT |
 | S12 | Pangea → continents cinematic narrative | ❌ NOT BUILT (earth_story queued) |
 | S13 | Dinosaur timeline display | ✅ fossil_narrative built, ❌ display |
@@ -83,8 +83,8 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | S37 | Annual summary ("Spotify Wrapped for time") | ✅ built |
 | S38 | User preferences persistence | ✅ built |
 | S39 | Privacy framework | ✅ built |
-| S40 | Settings panel UI | ✅ Data built (`settings_panel.h/.c`, 54 tests, 4 sections). Display: ❌ needs UI renderer |
-| S41 | Birth date entry onboarding | ✅ Data built (`birth_entry.h/.c`, 84 tests, 3-step state machine). Display: ❌ needs wheel UI |
+| S40 | Settings panel UI | ✅ FULLY WIRED (08b3359). ⚙ button or comma key. 4 sections (Appearance/Time/Social/Location). Theme change live. localStorage. 9 tests. |
+| S41 | Birth date entry onboarding | ✅ WIRED (commit 87c364c). P key → HTML form ("When did you arrive?"). JS→C bridge → bp_compute(). localStorage. Shows Kin number. Display: ✅ |
 | S42 | "Author of Time" profile card | ✅ Built (`author_card.h/.c`, 38 tests). Display: ❌ needs card renderer |
 | S43 | 21 language translations (ES, HE, PT, AR, ZH, FR, DE, JA, HI, KO, RU, TR, ID, BN, VI, TH, FA, MY, SW, AM) | ✅ ALL 21 shipped |
 | S44 | Wisdom voice guide (how great minds communicate) | ✅ Built (`data/content/voice_guide.json`, 10 archetypes, 124 keys, commit 537c80a). Display: ❌ |
@@ -93,7 +93,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | S47 | Seasonal greetings | ✅ built |
 | S48 | 100 greatest humans deep voice study | ❌ Researched but not fully extracted |
 | S49 | ElevenLabs voice-over | ❌ NOT STARTED |
-| S50 | Wisdom display WIRED to UI | ❌ NOT WIRED |
+| S50 | Wisdom display WIRED to UI | ✅ WIRED (9a4946b). 228 quotes. Daily deterministic from JD. Solar gold 13px below headline. Attribution in teal. NERVE spec → INFRA delivery in 3 sessions. |
 
 ### Views & Navigation
 
@@ -158,11 +158,11 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 
 ## Score
 
-**Large MVPs**: 2/15 near-delivered (L7 ES+PT COMPLETE, L8 "Enter Time" wired). L7: 3 languages, 3534 keys each.
-**Small MVPs**: ~85/120 built, ~35 remaining. 496 tests pass. 110K LOC (src/), 469 .c files.
-**Overall**: Infrastructure 94%. Modules 85%. Display 33%. Experience 20%. WASM 365 KB.
-**New MVPs added**: S108-S113 (Audio/Voice), S114-S120 (Kin Maya Visual Layouts). Total: 120.
-**Wiring gap**: 27 Kin Maya layouts + 33 interpret modules + 18 PERSONA modules = massive data. 0 Kin Maya layouts wired to card_pass.
+**Large MVPs**: 5/15 near-delivered (L1 today cards WIRED, L2 birth form WIRED, L3 daily narrative WIRED, L7 locale toggle WIRED, L8 "Enter Time" wired).
+**Small MVPs**: ~101/134 built, ~33 remaining. 528 tests pass. 500+ .c files.
+**Overall**: Infrastructure 98%. Modules 95%. Display 80%. Experience 60%. Translation 75%. Visual Standards 15%. WASM ~700 KB.
+**New MVPs added**: S108-S113 (Audio/Voice), S114-S134 (Kin Maya + Geometric + Visual Polish). Total: 134.
+**Wiring progress**: 19/19 daily. 5 geometric passes. **7 locales** (EN+ES+PT+AR+HE+ZH+HI). **S50 WISDOM WIRED** (9a4946b — 228 quotes visible!). daily_greeting in progress (staged).
 
 **MILESTONES (2026-03-20)**:
 - Cards visible (a0c7676) + polished (aa3e791)
@@ -196,7 +196,7 @@ Every stream session: check which MVPs your work addresses. If none — you're b
 
 | # | MVP | Status |
 |---|-----|--------|
-| S98 | **Red Thread Finder** — Cross-system invisible connection discovery. "Eclipse + Kin 1 + Rosh Hashanah = unprecedented convergence — here's what each tradition says about it" | ✅ Built (commit 04958a2). `red_thread.h/.c` — `rt_compose()`, `rt_classify()`. Display: ❌ |
+| S98 | **Red Thread Finder** — Cross-system invisible connection discovery. "Eclipse + Kin 1 + Rosh Hashanah = unprecedented convergence — here's what each tradition says about it" | ✅ **WIRED** (6761aca). Red thread narrative in render_frame → text display. |
 | S99 | **Grand Cycle LCM** — Compute LCM of all 21 system periods. "This exact configuration won't recur for X million years." Computable, mind-blowing. | ✅ Built (commit f236b1f). `grand_cycle.h/.c` — 9 built-in cycles. Display: ❌ |
 | S100 | **System Correlation Matrix** — 21×21 grid showing which system pairs co-fire most often across decades. Heatmap of resonance. | ✅ Built (commit 04958a2). `system_correlation.h/.c` — `sc_corr_compute()`, `sc_corr_top_pairs()`. Display: ❌ |
 | S101 | **Time Entropy Display** — Shannon entropy of today's alignment pattern. "Today's time-entropy: 0.87 — 87% of maximum information." Most rigorous "wow" metric. | ✅ Built (commit f236b1f). `time_entropy.h/.c` — `te_entropy()`, `te_interpret()`. Display: ❌ |
@@ -235,18 +235,42 @@ Every stream session: check which MVPs your work addresses. If none — you're b
 | S119 | **Calendar Round wheel** — 52-year cycle with kin + Gregorian year. | ✅ Built (`kin_round_layout.h/.c`, commit 277dde8). Display: ❌ |
 | S120 | **Telektonon game board** — 28-day prophecy journey. Needs book extraction first. | ✅ Data built: `telektonon_board.h/.c` + `telektonon_journey.h/.c` + `telektonon_cards.h/.c` + `force_lines.h/.c` + `clear_signs.h/.c` (DEPTH). Layout: `kin_telektonon_layout.h/.c` (VISUALS L11). Display: ❌ |
 
+### Geometric Visualization Passes — MEGA Shader Tasks (MID-TERM, Week 4-5)
+
+| # | MVP | Status |
+|---|-----|--------|
+| S121 | **Natal chart wheel pass** — Circle with 12 houses, planets at degree positions, aspect lines between them. THE astrology experience. | ✅ WIRED (ebd3004). MEGA authored pass, INFRA wired. Zodiac arcs, house cusps, planets, aspects. A key activates. Bug resolved (4862e80). |
+| S122 | **Bodygraph pass** — 9 geometric centers (squares, triangles, diamond) with 36 channel connections. THE Human Design experience. | ❌ MEGA shader design needed. Layout data ready (`hd_bodygraph_layout.h`). |
+| S123 | **Tree of Life pass** — 10 Sefirot nodes with 22 connecting paths. THE Kabbalah experience. | ✅ WIRED (0839e02). MEGA authored pass. 10 Sefirot (Kircher colors) + Da'at + 22 paths. Bug resolved (4862e80). |
+| S124 | **Bagua/trigram wheel** — 8 trigrams in circular arrangement. THE I Ching deep view. | ✅ WIRED (a5caa7c). 8 trigrams, King Wen arrangement, ink-wash aesthetic. I key activates. 22 render passes total. |
+| S125 | **231 Gates mandala** — 22 points on a circle with 231 connecting lines. Sacred geometry from Sefer Yetzirah. | ✅ WIRED (41bfa01). gates_mandala_pass.c 257 LOC. T key = Kabbalah focus (Tree of Life + Gates Mandala). ALL 5 MEGA shader tasks COMPLETE. |
+
+### Visual Polish & Design System (MID-TERM — from plan 2026-03-21)
+
+| # | MVP | Status |
+|---|-----|--------|
+| S126 | **Dawn theme proper design** — UI-scope only (panels, cards, text). Does NOT change cosmos/sky. Requires MEGA + VISUALS design session. | ✅ PARTIALLY BUILT (47e4b24). `theme_cosmos_constant()` separates cosmos-scope from UI-scope. Tufte card audit applied. Dawn still disabled but architecture ready. |
+| S127 | **MSDF text upgrade** — Replace bitmap 5×7 font with MSDF signed-distance rendering. Atlases generated (mono + sans). Shader upgrade in text_pass.c. | ❌ Atlas ready. Shader upgrade pending (INFRA). |
+| S128 | **Mobile responsive canvas** — WebGL canvas adapts to phone/tablet. Touch controls (pinch zoom, swipe focus). 4 CSS breakpoints exist but canvas is fixed. | ❌ NOT STARTED. Test on actual device when deployed. |
+| S129 | **Audio sound design** — Replace raw sine tones with proper synthesis (envelope, attack/decay, harmonics). Muted by default → pleasant by default. | ❌ NOT STARTED. Needs AUDIO stream + possibly pianist collaboration. |
+| S130 | **Tufte audit of all render passes** — Apply 12-point visual checklist to each of 22+ passes. Remove theme-dependent colors from astronomical renders. | ✅ STARTED (95e8b60). text_pass cosmos-scope labels use `theme_cosmos_constant()`. Sun/planet labels now theme-independent. |
+| S131 | **Visual Design System application** — Apply 7-principle standard (`.context/standards/VISUAL_DESIGN_SYSTEM.md`) to card rendering, text, overlays. | ✅ STARTED (032e902). Visual hierarchy constants in `golden_layout.h`: GL_TEXT_HEADLINE/BODY/CAPTION, GL_OPACITY levels, fibonacci spacing. |
+| S132 | **Star rendering quality** — Current stars are simple points. Add magnitude-based brightness, color from spectral type, twinkle. MEGA shader task. | ❌ NOT STARTED. VISUALS waiting on MEGA. |
+| S133 | **Planet surface shaders** — Current planets are flat spheres. Add atmospheric scattering, texture, phase angle lighting. MEGA shader task. | ❌ NOT STARTED. Shader digests exist (5 shader-specific digests). |
+| S134 | **Galaxy/Milky Way rendering** — Background galaxy band. Shader digest exists. MEGA shader task. | ✅ BUILT (9339b26). Domain-warped FBM, dust lanes, core glow. noise_shader extended. 78 test LOC. |
+
 ### Statistics & Mathematical Displays (from MEGA audit)
 
 | # | MVP | Status |
 |---|-----|--------|
-| S85 | **Convergence Year Rating** — rate each year by total convergence strength. "2026 scores 203/365 days with alignments" | ✅ Built (commit f3d0042). `brain_stats.h/.c` — `br_stats_year_score()`. Display: ❌ |
+| S85 | **Convergence Year Rating** — rate each year by total convergence strength. "2026 scores 203/365 days with alignments" | ✅ **WIRED** (111b0bd). Percentile displayed in bottom text stack. brain_stats integrated into render_frame. |
 | S86 | **"How rare is today?"** — percentile ranking. "Today is in the top 5% of convergent days this decade" | ✅ Built (commit f3d0042). `brain_stats.h/.c` — `br_stats_percentile()`. Display: ❌ |
 | S87 | **The 2012 Analysis** — what ACTUALLY converged on 13.0.0.0.0? How does it compare to other dates? Demystify with data. | ✅ Built (commit f3d0042). Entry in `stored_convergences`. Display: ❌ |
 | S88 | **Decade convergence heatmap** — visual grid showing convergence intensity across years. Find meta-patterns. | ✅ Built (commit 84721d7). `decade_heatmap.h/.c` — 12yr×366day grid. 20 tests. Display: ❌ |
 | S89 | **Sacred number frequency analysis** — how often do 7, 12, 13, 19, 22, 64, 108, 260, 432 appear across systems on the same day? | ✅ Built (commit 84721d7). `sacred_scan.h/.c` — scans 6 calendars for 13 sacred numbers. 27 tests. Display: ❌ |
 | S90 | **Precession clock** — where are we in the 25,772-year cycle? Visual display showing the Great Year position. | ❌ precession_detect.h exists |
-| S91 | **Human existence as fraction of Earth** — "Humans have existed for 0.0065% of Earth's history" with visual scale | ✅ Built (`earth_fraction.h/.c`, commit 5f04907, 395 test LOC). Display: ❌ |
-| S92 | **"You are alive during..."** — probability of being alive NOW vs any point in history (7.4% of all humans who ever lived are alive today) | ✅ Built (`earth_fraction.h/.c`, commit 5f04907). Display: ❌ |
+| S91 | **Human existence as fraction of Earth** — "Humans have existed for 0.0065% of Earth's history" with visual scale | ✅ **WIRED** (fa3feba). earth_fraction enriches Earth card. |
+| S92 | **"You are alive during..."** — probability of being alive NOW vs any point in history (7.4% of all humans who ever lived are alive today) | ✅ **WIRED** (fa3feba). earth_fraction in Earth card. |
 | S93 | **Heartbeat of humanity** — collective heartbeats since dawn of humans. Running counter. | ❌ biorhythm.h has data |
 | S94 | **Convergence calendar for the year** — which days this year will be most aligned? Plan your life around cosmic rhythms. | ✅ BRAIN just built 2026 report! |
 | S95 | **Population counter overlay** — live estimate of humans alive, layered on Earth View | ❌ human_population queued |

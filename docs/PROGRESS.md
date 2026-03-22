@@ -5,19 +5,20 @@
 
 ---
 
-## Progress Bars (updated 2026-03-21)
+## Progress Bars (updated 2026-03-22 — MEGA cycle)
 
 ```
-Infrastructure:  █████████████████████  95%   MSDF atlases, 515 tests, purity clean, dep checker, WASM 618 KB
-Modules/Data:    ██████████████████░░░  88%   ~90/120 MVPs (515 tests, 481 files, 110K+ LOC)
-Display/Wiring:  ████████░░░░░░░░░░░░  38%   27 Kin Maya + 7 world system layouts. Oracle+wavespell WIRED.
-Experience:      ██████░░░░░░░░░░░░░░  25%   Enter Time + focus + oracle cross + wavespell + convergence + audio
-Translation:     ██████████░░░░░░░░░░  48%   EN+ES+PT+AR (4 langs). 20 wisdom voices. Archetype poems.
-Art Assets:      ██████░░░░░░░░░░░░░░  25%   359 PNGs across Kin Maya + zodiac + planets. 72 layout modules.
-Audio:           ███░░░░░░░░░░░░░░░░░  12%   S108 seal tones + S111 convergence chords LIVE
-Personalization: ██░░░░░░░░░░░░░░░░░░   8%   diamond_room + usage_interest
+Infrastructure:  █████████████████████  98%   528 tests, E2E 17/17, theme audit CLEAN, canvas resize, audio envelope
+Modules/Data:    ████████████████████░  95%   ~101/134 MVPs (528 tests, 505 files). pop_today + daily_greeting.
+Display/Wiring:  █████████████████████  82%   S50 wisdom + S10 pop + S134 GALAXY UPGRADE + 19/19 daily + 5 geometric
+Experience:      █████████████████░░░  62%   228 wisdom VISIBLE + pop on Earth card + galaxy dust lanes + 17/17 E2E
+Translation:     ██████████████████░░  75%   7 locales (EN+ES+PT+AR+HE+ZH+HI). Hindi 100%. 3647 keys.
+Art Assets:      ██████░░░░░░░░░░░░░░  25%   89 optimized DALL-E + 72 layout modules
+Audio:           ████░░░░░░░░░░░░░░░░  15%   S108+S111 LIVE + envelope fix + muted default
+Personalization: █████░░░░░░░░░░░░░░░  22%   Birth form + locale + settings + birth sky fix + canvas resize
 Voice:           ░░░░░░░░░░░░░░░░░░░░   0%   Gabriel → ElevenLabs → multilingual
-Knowledge Depth: ████████░░░░░░░░░░░░  30%   103 digests. Kin Maya + Astrology FULLY extracted. I Ching next.
+Knowledge Depth: ██████████████████░░  80%   153 digests. ALL 15 V2 systems + Tufte + GPU Gems. 3/15 V2 UI/UX re-reads.
+Visual Standards:██████░░░░░░░░░░░░░░  20%   S126 theme scope done. S130+S131 started. Krug+RefUI specs queued.
 ```
 
 ### How Each Bar Advances
@@ -39,13 +40,15 @@ Knowledge Depth: ████████░░░░░░░░░░░░  3
 
 | Pipeline | Produced | Consumed | Ratio | Status |
 |----------|----------|----------|-------|--------|
-| Book digests | 103 | ~45 routed to streams | 44% | 🟡 Improving — NERVE T13 routing every session |
+| Book digests | 128+ | ~50 routed to streams | 39% | 🟡 Improving — NERVE routing every session |
 | Art assets | 359 PNGs | ~90 optimized to 3 tiers | 25% display-ready | 🟡 ART optimizing |
-| Translation keys | 10,614 × 4 langs | Displayed via card_pass text | ~30% in browser | 🟡 MSDF upgrade pending |
-| Kin Maya layouts | 27 modules | 2 WIRED (oracle + wavespell) | 7% wired | 🔴 INFRA continues |
-| World system layouts | 7 modules (Chinese/Islamic/Buddhist/Hindu) | 0 wired | 0% | 🔴 INFRA next batch |
+| Translation keys | 3639 × 6 langs | Displayed via card_pass text | ~35% in browser | 🟡 MSDF upgrade pending |
+| Kin Maya layouts | 27 modules | 2 WIRED (oracle + wavespell) + I Ching/HD focus overlays | 15% wired | 🟡 INFRA continues |
+| Daily layouts | 19 modules | **19/19 WIRED** (02b5a7f Haab+Kabbalah enriched) | **100% wired** | 🟢 COMPLETE |
+| World system layouts | 18 modules | **17/18 consumed** (94%). Only prayer_times remains (needs lat/lon). | 94% | 🟢 |
 | Visual inventories | 1 complete (Kin Maya) + Astrology in progress | 72 layout modules total | growing | 🟡 |
-| Wisdom voice passages | 57 passages extracted | 20 in voice_guide.json | 35% | 🟡 LANGUAGE integrating |
+| Wisdom voice passages | 185 passages extracted | **228 in wisdom.c** (574283d). 4 NERVE archetypes consumed in 1 commit! | **100%+** | 🟢 PROVEN — wisdom.c now EXCEEDS NERVE extractions |
+| BRAIN inbox | 27+ items received | 27 consumed (8eb9bfc) — 12 explain pairs, 2 concordances, 8 dates | **100%** | 🟢 |
 | Voice | Gabriel records poems → ElevenLabs clone → multilingual narration | All archetype poems + daily narrative narrated in 21 languages |
 
 ---
@@ -118,8 +121,20 @@ Knowledge Depth: ████████░░░░░░░░░░░░  3
 
 | Bar | Target | How |
 |-----|--------|-----|
-| Display | 38%→55% | INFRA wires world system layouts + MSDF text |
-| Experience | 25%→40% | I Ching display, natal chart, depth navigation |
+| Display | 66%→75% | Tufte audit of passes + MSDF text + theme scope separation |
+| Experience | 45%→55% | Visual polish (no more flashing) + depth navigation + audio design |
+| Visual Standards | 5%→30% | Apply 7 principles to card pass + ring pass + planet pass |
+| Translation | 57%→65% | Hebrew to 50% + 6th language consideration |
+
+## Visual Polish Roadmap (S126-S134)
+
+| Phase | Items | Target |
+|-------|-------|--------|
+| **Phase 1: Fix what's broken** | S126 theme scope, S130 Tufte audit, Shift+T disabled | Week 4 |
+| **Phase 2: Text quality** | S127 MSDF text upgrade | Week 4-5 |
+| **Phase 3: Audio design** | S129 proper synthesis, envelope, harmonics | Week 5 |
+| **Phase 4: Shader art** | S132 stars, S133 planets, S134 galaxy | Week 5-6 |
+| **Phase 5: Platform** | S128 mobile responsive, deployment | Week 6+ |
 | Translation | 48%→55% | 5th language + wisdom passages integrated |
 | Knowledge | 30%→40% | I Ching + Hebrew fully extracted |
 | Art | 25%→35% | Mudras v3 + zodiac optimized + I Ching procedural |
