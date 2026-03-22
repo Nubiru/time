@@ -14,10 +14,12 @@
 #ifndef TIME_NOISE_SHADER_H
 #define TIME_NOISE_SHADER_H
 
-/* GLSL ES 3.00 simplex noise functions.
- * Provides: snoise2(vec2), snoise3(vec3), fbm2(vec2), fbm3(vec3).
+/* GLSL ES 3.00 noise function library.
+ * Provides: snoise2(vec2), snoise3(vec3), fbm2(vec2), fbm3(vec3),
+ *           hash21(vec2), vnoise(vec2), vfbm(vec2).
+ * Simplex noise for quality, value noise for cheap detail layers.
  * Prepend this to any fragment shader that needs noise.
- * ~80 lines of GLSL. */
+ * ~110 lines of GLSL. */
 const char *noise_shader_source(void);
 
 #endif /* TIME_NOISE_SHADER_H */

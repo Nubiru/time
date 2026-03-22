@@ -569,6 +569,74 @@ void test_frag_source_has_output(void)
     TEST_ASSERT_NOT_NULL(strstr(src, "frag_color"));
 }
 
+/* 56. Fragment shader has value noise hash function */
+void test_frag_source_has_value_noise(void)
+{
+    const char *src = mw_frag_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "hash21"));
+    TEST_ASSERT_NOT_NULL(strstr(src, "vnoise"));
+    TEST_ASSERT_NOT_NULL(strstr(src, "vfbm"));
+}
+
+/* 57. Fragment shader has cosine palette function */
+void test_frag_source_has_cosine_palette(void)
+{
+    const char *src = mw_frag_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "mw_palette"));
+}
+
+/* 58. Fragment shader has domain-warped density field */
+void test_frag_source_has_domain_warp(void)
+{
+    const char *src = mw_frag_source();
+    /* Double domain warp: q and r warp layers */
+    TEST_ASSERT_NOT_NULL(strstr(src, "base_uv + 3.0 * q"));
+    TEST_ASSERT_NOT_NULL(strstr(src, "base_uv + 3.0 * r"));
+}
+
+/* 59. Fragment shader has dust absorption */
+void test_frag_source_has_dust_absorption(void)
+{
+    const char *src = mw_frag_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "dust_mask"));
+    TEST_ASSERT_NOT_NULL(strstr(src, "transmission"));
+}
+
+/* 60. Fragment shader has galactic center glow */
+void test_frag_source_has_core_glow(void)
+{
+    const char *src = mw_frag_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "core_glow"));
+    TEST_ASSERT_NOT_NULL(strstr(src, "MW_CENTER_GOLD"));
+}
+
+/* 61. Fragment shader has warm-to-cool color constants */
+void test_frag_source_has_color_constants(void)
+{
+    const char *src = mw_frag_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "MW_CORE_WARM"));
+    TEST_ASSERT_NOT_NULL(strstr(src, "MW_EDGE_COOL"));
+    TEST_ASSERT_NOT_NULL(strstr(src, "MW_CENTER_GOLD"));
+}
+
+/* 62. Fragment shader has noise-modulated edge */
+void test_frag_source_has_edge_noise(void)
+{
+    const char *src = mw_frag_source();
+    TEST_ASSERT_NOT_NULL(strstr(src, "edge_noise"));
+}
+
+/* 63. Shader source fits within builder capacity (no overflow) */
+void test_frag_source_reasonable_length(void)
+{
+    const char *src = mw_frag_source();
+    TEST_ASSERT_NOT_NULL(src);
+    size_t len = strlen(src);
+    /* Must fit in 16KB shader builder */
+    TEST_ASSERT_TRUE(len > 500);
+    TEST_ASSERT_TRUE(len < 16000);
+}
+
 /* ======================================================================
  * main
  * ====================================================================== */
@@ -643,6 +711,16 @@ int main(void)
     RUN_TEST(test_vert_source_has_brightness);
     RUN_TEST(test_frag_source_has_noise);
     RUN_TEST(test_frag_source_has_output);
+
+    /* Enhanced shader features (S134) */
+    RUN_TEST(test_frag_source_has_value_noise);
+    RUN_TEST(test_frag_source_has_cosine_palette);
+    RUN_TEST(test_frag_source_has_domain_warp);
+    RUN_TEST(test_frag_source_has_dust_absorption);
+    RUN_TEST(test_frag_source_has_core_glow);
+    RUN_TEST(test_frag_source_has_color_constants);
+    RUN_TEST(test_frag_source_has_edge_noise);
+    RUN_TEST(test_frag_source_reasonable_length);
 
     return UNITY_END();
 }
