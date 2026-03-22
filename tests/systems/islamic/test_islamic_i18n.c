@@ -100,11 +100,11 @@ static void test_locale_es_dhul_hijjah(void)
 static void test_locale_fallback_to_en(void)
 {
     hijri_date_t d = { 1446, 1, 10 };
-    islamic_interp_t ru = isi_interpret_locale(d, I18N_LOCALE_RU);
-    /* RU has no content table — falls back to EN */
-    TEST_ASSERT_EQUAL_STRING("1", ru.glyph);
-    TEST_ASSERT_NOT_NULL(strstr(ru.glance, "Muharram"));
-    TEST_ASSERT_NOT_NULL(strstr(ru.glance, "First month"));
+    islamic_interp_t ko = isi_interpret_locale(d, I18N_LOCALE_KO);
+    /* KO has no content table — falls back to EN */
+    TEST_ASSERT_EQUAL_STRING("1", ko.glyph);
+    TEST_ASSERT_NOT_NULL(strstr(ko.glance, "Muharram"));
+    TEST_ASSERT_NOT_NULL(strstr(ko.glance, "First month"));
 }
 
 /* ---- All months produce output ---- */
