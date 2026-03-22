@@ -489,44 +489,35 @@ void main_loop(void) {
     /* --- Clear + draw (post-process wraps all passes) --- */
     post_pass_begin(&frame);
 
-    sky_pass_draw(&frame);  /* Preetham sky dome — Earth View only */
+    /* === P0 SIMPLIFY: Only 5 core passes until visual quality verified ===
+     * Re-enable one at a time after confirming each looks good in browser. */
     if (ps_is_enabled(&sched, PASS_STARS))         star_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_PLANET))         planet_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_CARD))           card_pass_draw(&frame);
+    if (ps_is_enabled(&sched, PASS_TEXT))           text_pass_draw(&frame);
+
+    /* --- DISABLED passes (re-enable after visual verification) ---
+    sky_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_CONSTELLATION)) constellation_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_DEEP_SKY))      deep_sky_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_MILKYWAY))       milkyway_pass_draw(&frame);
-    stardust_pass_draw(&frame); /* procedural background stars — zoom-faded */
+    stardust_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_DIFFRACTION))    diffraction_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_ORBIT_TRAIL))    orbit_trail_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_PLANET))         planet_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_SATURN))         saturn_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_MOON))           moon_pass_draw(&frame);
-    /* Zodiac ring + knowledge rings: only in Astrology focus or overview */
-    if (ps_is_enabled(&sched, PASS_ZODIAC) &&
-        (frame.focus_mode == 0 || frame.focus_mode == 1))
-        zodiac_pass_draw(&frame);
-    if (frame.focus_mode == 0) {
-        ring_pass_draw(&frame);  /* concentric knowledge system rings — overview only */
-        diamond_room_pass_draw(&frame); /* E7 icosahedron wireframe — overview only */
-    }
-    convergence_pass_draw(&frame);  /* brain convergence connection lines */
+    zodiac_pass_draw(&frame);
+    ring_pass_draw(&frame);
+    diamond_room_pass_draw(&frame);
+    convergence_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_EARTH))          earth_pass_draw(&frame);
-
-    /* System-specific geometric passes — only draw when focused (BUG 5 fix) */
-    if (frame.focus_mode == 5) { /* FOCUS_MODE_HD */
-        if (ps_is_enabled(&sched, PASS_BODYGRAPH))  bodygraph_pass_draw(&frame);
-    }
-    if (frame.focus_mode == 3) { /* FOCUS_MODE_ICHING */
-        if (ps_is_enabled(&sched, PASS_HEXAGRAM))   hexagram_pass_draw(&frame);
-        bagua_pass_draw(&frame);
-    }
-    if (frame.focus_mode == 6) { /* FOCUS_MODE_KABBALAH */
-        tree_of_life_pass_draw(&frame);
-        gates_mandala_pass_draw(&frame);
-    }
-    if (frame.focus_mode == 1) natal_chart_pass_draw(&frame); /* Astrology */
-    /* S88 heatmap_pass deferred — dh_score() not yet implemented */
-    if (ps_is_enabled(&sched, PASS_CARD))           card_pass_draw(&frame);
-    if (ps_is_enabled(&sched, PASS_TEXT))           text_pass_draw(&frame);
+    bodygraph_pass_draw(&frame);
+    hexagram_pass_draw(&frame);
+    bagua_pass_draw(&frame);
+    tree_of_life_pass_draw(&frame);
+    gates_mandala_pass_draw(&frame);
+    natal_chart_pass_draw(&frame);
+    --- end disabled passes */
 
     post_pass_end(&frame);
 

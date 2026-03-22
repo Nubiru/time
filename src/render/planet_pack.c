@@ -273,6 +273,7 @@ static const char *s_pp_frag_body =
     "    vec3 rim_color = mix(v_color, vec3(0.4, 0.6, 1.0), 0.5);\n"
     "    col += rim_color * rim;\n"
     "\n"
+    "    if (alpha < 0.01) discard;\n"
     "    frag_color = vec4(col, alpha);\n"
     "}\n";
 

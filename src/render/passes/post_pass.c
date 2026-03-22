@@ -242,9 +242,7 @@ int post_pass_init(int width, int height) {
 
 void post_pass_begin(const render_frame_t *frame) {
     (void)frame;
-    /* Cosmos space-black — hardcoded per visual design Principle 1.
-     * Theme-dependent clear color caused Dawn flash bug. */
-    glClearColor(0.024f, 0.027f, 0.036f, 1.0f);
+    /* glClearColor set ONCE in gl_init — never here (caused Dawn flash bug) */
 
     if (s_pp_active) {
         glBindFramebuffer(GL_FRAMEBUFFER, s_pp_scene_fbo);
