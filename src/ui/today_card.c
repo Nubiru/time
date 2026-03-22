@@ -50,6 +50,8 @@
 #include "daily_korean_layout.h"
 #include "daily_persian_layout.h"
 #include "daily_thai_layout.h"
+#include "daily_haab_layout.h"
+#include "daily_kabbalah_layout.h"
 
 /* ------------------------------------------------------------------ */
 
@@ -90,13 +92,21 @@ static card_content_t make_tzolkin(double jd)
 
 static card_content_t make_haab(double jd)
 {
-    haab_date_t h = haab_from_jd(jd);
+    daily_haab_layout_t dhl = daily_haab_compute(jd);
     card_content_t c;
     memset(&c, 0, sizeof(c));
     snprintf(c.title, sizeof(c.title), "Haab");
     snprintf(c.line1, sizeof(c.line1), "%d %s",
-             h.day, haab_month_name(h.month));
-    snprintf(c.line2, sizeof(c.line2), "Month %d of 19", h.month + 1);
+             dhl.date.day, dhl.month_name ? dhl.month_name : "");
+    if (dhl.month_meaning && dhl.month_meaning[0])
+        snprintf(c.line2, sizeof(c.line2), "%s", dhl.month_meaning);
+    if (dhl.is_wayeb)
+        snprintf(c.line3, sizeof(c.line3), "Wayeb — 5 nameless days");
+    else if (dhl.vinal_wisdom && dhl.vinal_wisdom[0])
+        snprintf(c.line3, sizeof(c.line3), "%s", dhl.vinal_wisdom);
+    if (dhl.round_fmt[0])
+        snprintf(c.detail, sizeof(c.detail), "Round: %s | Day %d/365",
+                 dhl.round_fmt, dhl.day_of_year + 1);
     return c;
 }
 
@@ -217,12 +227,22 @@ static card_content_t make_human_design(double sun_lon)
 
 static card_content_t make_kabbalah(double jd)
 {
-    /* Cycle through 10 Sefirot based on day */
-    int idx = ((int)floor(jd + 0.5)) % SEFIROT_COUNT;
-    if (idx < 0) idx += SEFIROT_COUNT;
-    sefirah_t s = sefirot_get(idx);
-    /* No daily path — pass -1 */
-    return card_format_kabbalah(s.id, s.name, s.meaning, -1, NULL);
+    daily_kabbalah_layout_t dkl = daily_kabbalah_compute(jd);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Kabbalah");
+    if (dkl.sefirah_name && dkl.sefirah_meaning)
+        snprintf(c.line1, sizeof(c.line1), "%s — %s",
+                 dkl.sefirah_name, dkl.sefirah_meaning);
+    if (dkl.pillar_name && dkl.triad_name)
+        snprintf(c.line2, sizeof(c.line2), "%s Pillar, %s Triad",
+                 dkl.pillar_name, dkl.triad_name);
+    if (dkl.hebrew_letter && dkl.tarot)
+        snprintf(c.line3, sizeof(c.line3), "Path: %s — %s",
+                 dkl.hebrew_letter, dkl.tarot);
+    if (dkl.meditation && dkl.meditation[0])
+        snprintf(c.detail, sizeof(c.detail), "%s", dkl.meditation);
+    return c;
 }
 
 static card_content_t make_geology(double jd)
