@@ -79,12 +79,16 @@ void main_loop(void) {
     if (!g_state.birth_sky.active)
         g_state.simulation_jd += g_state.time_speed * dt_sec;
 
-    /* Smooth time navigation: exponential approach to target JD */
+    /* Smooth time navigation: exponential approach to target JD.
+     * Target co-moves with time_speed so the relative gap only closes
+     * from the approach, not from simulation advancing through it. */
     if (g_state.time_target_jd != 0.0) {
+        if (!g_state.birth_sky.active)
+            g_state.time_target_jd += g_state.time_speed * dt_sec;
         double diff = g_state.time_target_jd - g_state.simulation_jd;
-        double approach = diff * (1.0 - exp(-8.0 * dt_sec)); /* ~0.87 per frame at 60fps */
+        double approach = diff * (1.0 - exp(-8.0 * dt_sec));
         g_state.simulation_jd += approach;
-        if (fabs(diff) < 0.001) { /* close enough — snap */
+        if (fabs(diff) < 0.001) {
             g_state.simulation_jd = g_state.time_target_jd;
             g_state.time_target_jd = 0.0;
         }
