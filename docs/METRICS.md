@@ -1,29 +1,29 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-22 (INFRA session 84)
+**Last refreshed**: 2026-03-22 (INFRA session 91)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 512 |
-| Header files (.h) | 516 |
-| Lines of code (src/) | 119,572 |
-| Lines of tests | 214,000+ |
-| Test suites (CTest) | 534 |
-| Render pass files | 24 |
+| Source files (.c) | 519 |
+| Header files (.h) | 523 |
+| Lines of code (src/) | 120,975 |
+| Lines of tests | 215,000+ |
+| Test suites (CTest) | 537 |
+| Render pass files | 28 |
 | Knowledge systems | 34 |
-| Pure modules | 465+ |
-| Stateful modules | 33 |
+| Pure modules | 475+ |
+| Stateful modules | 37 |
 | Contributors | 283 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 534 |
-| Test functions (RUN_TEST) | 20,157 |
-| Test assertions (TEST_ASSERT) | 34,601 |
+| Test suites (CTest) | 537 |
+| Test functions (RUN_TEST) | 20,200+ |
+| Test assertions (TEST_ASSERT) | 34,700+ |
 | Failures | 0 |
 | CTest time | ~0.9s (with -j12) |
 | E2E tests (Playwright) | 17 (5 basic + 12 visual) |
@@ -88,14 +88,14 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (534/534, ~1s) |
+| CTest -j12 | PASS (537/537, ~1s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
 | WASM build | PASS (737 KB Release — 34 systems, 23 passes, god rays + DOF) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
 
-## Render Pipeline (24 passes)
+## Render Pipeline (28 passes)
 
 | # | Pass | Layer | Type |
 |---|------|-------|------|
@@ -122,7 +122,11 @@
 | 21 | text_pass | TEXT | Text rendering (3D labels + 2D MSDF cards) |
 | 22 | ring_pass | RINGS | Concentric knowledge system rings |
 | 23 | convergence_pass | CONVERGENCE | Cross-system convergence visuals |
-| 24 | post_pass | (wraps all) | FBO bloom + tonemap + god rays + DOF + vignette |
+| 25 | diamond_room_pass | OVERVIEW | E7 icosahedron wireframe + knowledge glow |
+| 26 | sky_pass | EARTH_VIEW | Preetham physically-based sky dome |
+| 27 | aspect_lines_pass | BIRTH_SKY | S106 natal aspect lines (trine/square/conjunction) |
+| 28 | calendar_round_pass | FOCUS_KIN | S104 52-year Calendar Round mandala |
+| 29 | post_pass | (wraps all) | FBO bloom + tonemap + god rays + DOF + vignette |
 
 ## Purity
 
@@ -162,12 +166,12 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 771,358 bytes (753 KB) |
+| Raw .wasm | 800,850 bytes (782 KB) |
 | Build mode | Release (-Os) |
 | MSDF font atlas | JetBrains Mono 512×512 RGB (~250 KB in binary) |
 | Sans atlas | Excluded (MSDF_SANS_ENABLED not set) |
 | Gzipped | ~300 KB |
-| Delta since session 74 | +16 KB (stardust, spring zoom, focus blend, constellation labels) |
+| Delta since session 84 | +29 KB (sky, constellation labels, diamond room, aspect lines, calendar round) |
 
 ## God Functions (>100 lines)
 
@@ -193,21 +197,21 @@
 | 1073 | text_pass.c | Candidate: split cards/labels/overlays |
 | 756 | card_pass.c | Render pass with multiple overlays |
 
-## Health (INFRA sweep — 2026-03-22, session 84)
+## Health (INFRA sweep — 2026-03-22, session 91)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (512 .c files, 1 expected orphan: sdf_glyph.c — deferred) |
+| Build system sync | OK (519 .c files, 0 orphans — sdf_glyph registered) |
 | Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (534/534 tests, ~1s) — use -j12 |
-| WASM build | PASS (753 KB Release — 24 passes, god rays, DOF, stardust) |
+| Native build | PASS (537/537 tests, ~1s) — use -j12 |
+| WASM build | PASS (782 KB Release — 28 passes, god rays, DOF, sky dome, diamond room) |
 | E2E tests | PASS (5/5 basic + 12 visual) |
 | Coverage | 96.0% lines, 99.98% functions |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
-| Render pipeline | 24/24 passes |
+| Render pipeline | 28/28 passes (4 new: diamond_room, sky, aspect_lines, calendar_round) |
 | Theme audit | CLEAN — 23/23 passes audited. Cosmos-scope uses theme_cosmos_constant(). UI-scope uses theme_get(). Zero leakage. |
 | Canvas resize | WIRED — ui_on_resize KEEPALIVE, debounced JS listener (session 59) |
 | Audio envelope | WIRED — setTargetAtTime, attack/release envelope, volume 0.12 (session 59) |
