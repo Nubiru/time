@@ -46,6 +46,8 @@
 #include "daily_earth_layout.h"
 #include "../systems/earth/pop_today.h"
 #include "../systems/earth/earth_fraction.h"
+#include "../systems/earth/heartbeat_counter.h"
+#include "../systems/earth/pop_counter.h"
 #include "daily_coptic_layout.h"
 #include "daily_ethiopian_layout.h"
 #include "daily_japanese_layout.h"
@@ -422,16 +424,27 @@ static card_content_t make_earth(double jd, double lat, double lon)
         }
     }
 
-    if (el.polar_day)
-        snprintf(c.detail, sizeof(c.detail), "Polar day — midnight sun");
-    else if (el.polar_night)
-        snprintf(c.detail, sizeof(c.detail), "Polar night — no sunrise");
-    else if (pop.has_data && pop.fraction_section[0] != '\0')
-        snprintf(c.detail, sizeof(c.detail), "%.255s", pop.fraction_section);
-    else
-        snprintf(c.detail, sizeof(c.detail), "%s | %.1fh daylight | Sun %.1f\xc2\xb0",
-                 el.season_name ? el.season_name : "",
-                 el.day_length_hours, el.sun_elevation_deg);
+    /* Detail: heartbeat + pop counter or polar day/night */
+    {
+        int year = (int)(2000.0 + (jd - 2451545.0) / 365.25);
+        hb_counter_t hb = hb_compute(year);
+        pc_counter_t pc = pc_compute(year, 0.0);
+
+        if (el.polar_day)
+            snprintf(c.detail, sizeof(c.detail), "Polar day — %.127s", hb.poetic_text);
+        else if (el.polar_night)
+            snprintf(c.detail, sizeof(c.detail), "Polar night — %.127s", hb.poetic_text);
+        else if (hb.poetic_text[0] != '\0' && pc.rate_text[0] != '\0')
+            snprintf(c.detail, sizeof(c.detail), "%.120s | %.120s",
+                     hb.poetic_text, pc.rate_text);
+        else if (hb.poetic_text[0] != '\0')
+            snprintf(c.detail, sizeof(c.detail), "%.255s", hb.poetic_text);
+        else if (pop.has_data && pop.fraction_section[0] != '\0')
+            snprintf(c.detail, sizeof(c.detail), "%.255s", pop.fraction_section);
+        else
+            snprintf(c.detail, sizeof(c.detail), "%s | %.1fh daylight",
+                     el.season_name ? el.season_name : "", el.day_length_hours);
+    }
     return c;
 }
 

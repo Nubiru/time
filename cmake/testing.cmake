@@ -533,7 +533,7 @@ time_add_test(NAME test_today_card     TEST tests/ui/test_today_card.c
     coptic_interpret ethiopian_interpret persian_interpret japanese_interpret korean_interpret thai_interpret
     kabbalah_interpret tree_geometry
     gregorian_interpret geology_interpret earth_fraction daylight seasons solar_events
-    pop_today human_population earth_fraction)
+    pop_today human_population earth_fraction heartbeat_counter pop_counter)
 time_add_test(NAME test_daily_greeting  TEST tests/ui/test_daily_greeting.c  DEPS daily_greeting content_i18n i18n)
 time_add_test(NAME test_zodiac_glyphs   TEST tests/ui/test_zodiac_glyphs.c   DEPS zodiac_glyphs)
 time_add_test(NAME test_hexagram_visual TEST tests/ui/test_hexagram_visual.c  DEPS hexagram_visual iching)
