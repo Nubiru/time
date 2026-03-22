@@ -109,7 +109,7 @@ time_add_test(NAME test_earth_globe    TEST tests/render/test_earth_globe.c     
 time_add_test(NAME test_hexagram_geometry TEST tests/render/test_hexagram_geometry.c DEPS hexagram_geometry iching color_theory color)
 time_add_test(NAME test_moon_pack      TEST tests/render/test_moon_pack.c       DEPS moon_pack moon_data kepler planets orbit)
 time_add_test(NAME test_orbit_trail_pack TEST tests/render/test_orbit_trail_pack.c DEPS orbit_trail_pack orbit kepler planet_data)
-time_add_test(NAME test_planet_pack    TEST tests/render/test_planet_pack.c     DEPS planet_pack planets orbit kepler planet_data atmo_ring)
+time_add_test(NAME test_planet_pack    TEST tests/render/test_planet_pack.c     DEPS planet_pack planets orbit kepler planet_data atmo_ring noise_shader shader_builder)
 time_add_test(NAME test_planet_surface_pack TEST tests/render/test_planet_surface_pack.c DEPS planet_surface_pack orbit kepler planet_data noise_shader shader_builder)
 time_add_test(NAME test_saturn_ring_pack TEST tests/render/test_saturn_ring_pack.c DEPS saturn_ring_pack)
 time_add_test(NAME test_star_field     TEST tests/render/test_star_field.c      DEPS star_field star_catalog star_catalog_ext constellation star_colors)
@@ -372,6 +372,7 @@ time_add_test(NAME test_pop_today TEST tests/systems/earth/test_pop_today.c DEPS
 time_add_test(NAME test_persona_card TEST tests/systems/earth/test_persona_card.c DEPS persona_card card_data)
 time_add_test(NAME test_usage_interest TEST tests/systems/earth/test_usage_interest.c DEPS usage_interest)
 time_add_test(NAME test_diamond_room TEST tests/systems/earth/test_diamond_room.c DEPS diamond_room)
+time_add_test(NAME test_ps_dashboard TEST tests/systems/earth/test_ps_dashboard.c DEPS ps_dashboard golden_layout)
 
 # Tzolkin extended tests
 time_add_test(NAME test_cr_cycle        TEST tests/systems/tzolkin/test_cr_cycle.c      DEPS cr_cycle haab tzolkin julian)

@@ -13,6 +13,8 @@
 
 #include "planet_pack.h"
 #include "atmo_ring.h"
+#include "noise_shader.h"
+#include "shader_builder.h"
 
 #include "../systems/astronomy/orbit.h"
 #include "../systems/astronomy/planet_data.h"
@@ -217,17 +219,21 @@ static const char PP_PLANET_VERT[] =
     "    v_atmo = a_atmo;\n"
     "}\n";
 
-/* Planet billboard fragment shader.
- * Circular disc with atmospheric glow ring.
- * v_atmo controls glow width (0 = no glow, 0.08 = Earth-like). */
-static const char PP_PLANET_FRAG[] =
+/* Planet billboard fragment shader — preamble (before noise library) */
+static const char *s_pp_frag_preamble =
     "#version 300 es\n"
     "precision highp float;\n"
     "\n"
     "in vec3 v_color;\n"
     "in float v_atmo;\n"
+    "uniform float u_time;\n"
     "out vec4 frag_color;\n"
-    "\n"
+    "\n";
+
+/* Planet billboard fragment shader — body (after noise library).
+ * Procedural surface noise + Lambertian lighting + Fresnel rim.
+ * Uses fbm2/snoise2 from noise_shader.h for surface detail. */
+static const char *s_pp_frag_body =
     "void main() {\n"
     "    vec2 pc = gl_PointCoord - vec2(0.5);\n"
     "    float dist = length(pc) * 2.0;\n"
@@ -236,6 +242,29 @@ static const char PP_PLANET_FRAG[] =
     "    float glow = (1.0 - smoothstep(0.75, glow_edge, dist)) * 0.4;\n"
     "    float alpha = max(body, glow);\n"
     "    vec3 col = mix(v_color * 0.6, v_color, body);\n"
+    "\n"
+    "    /* Procedural surface noise + Lambertian lighting.\n"
+    "     * Project billboard to pseudo-sphere for 3D surface. */\n"
+    "    if (body > 0.5) {\n"
+    "        vec2 uv = pc * 2.0 / 0.7;\n"
+    "        float r2 = dot(uv, uv);\n"
+    "        if (r2 < 1.0) {\n"
+    "            float z = sqrt(1.0 - r2);\n"
+    "            vec3 sp = vec3(uv.x, uv.y, z);\n"
+    "\n"
+    "            /* Surface noise: latitude-stretched FBM for banding effect.\n"
+    "             * Gas giants: strong bands. Rocky: terrain-like. */\n"
+    "            float lat = sp.y;\n"
+    "            float lon = atan(sp.z, sp.x);\n"
+    "            float surface = fbm2(vec2(lat * 6.0, lon * 2.0 + u_time * 0.01));\n"
+    "            surface = surface * 0.12 + 0.88;\n"
+    "            col *= surface;\n"
+    "\n"
+    "            /* Lambertian diffuse lighting (fixed sun direction) */\n"
+    "            float ndl = max(dot(sp, vec3(0.577, 0.577, 0.577)), 0.15);\n"
+    "            col *= ndl;\n"
+    "        }\n"
+    "    }\n"
     "\n"
     "    /* Fresnel rim glow — atmospheric scattering at grazing angles.\n"
     "     * v_atmo (thickness_ratio 0.02-0.08) scaled to visible range.\n"
@@ -246,6 +275,22 @@ static const char PP_PLANET_FRAG[] =
     "\n"
     "    frag_color = vec4(col, alpha);\n"
     "}\n";
+
+/* Concatenated planet fragment source: preamble + noise lib + body */
+static shader_src_t s_pp_frag_src;
+static int s_pp_frag_built = 0;
+
+static const char *build_planet_frag_source(void)
+{
+    if (!s_pp_frag_built) {
+        shader_src_init(&s_pp_frag_src);
+        shader_src_append(&s_pp_frag_src, s_pp_frag_preamble);
+        shader_src_append(&s_pp_frag_src, noise_shader_source());
+        shader_src_append(&s_pp_frag_src, s_pp_frag_body);
+        s_pp_frag_built = 1;
+    }
+    return shader_src_get(&s_pp_frag_src);
+}
 
 /* Orbit trail line vertex shader.
  * Uniforms: u_mvp (mat4).
@@ -286,7 +331,7 @@ const char *pp_planet_vert_source(void)
 
 const char *pp_planet_frag_source(void)
 {
-    return PP_PLANET_FRAG;
+    return build_planet_frag_source();
 }
 
 const char *pp_trail_vert_source(void)

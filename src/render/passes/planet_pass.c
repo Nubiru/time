@@ -40,6 +40,7 @@ static GLuint s_sun_vbo;
 static GLuint s_pp_program;
 static GLint  s_pp_loc_mvp;
 static GLint  s_pp_loc_scale;
+static GLint  s_pp_loc_time;
 static GLuint s_pp_vao;
 static GLuint s_pp_vbo;
 
@@ -131,6 +132,7 @@ int planet_pass_init(void) {
     }
     s_pp_loc_mvp   = glGetUniformLocation(s_pp_program, "u_mvp");
     s_pp_loc_scale = glGetUniformLocation(s_pp_program, "u_scale_factor");
+    s_pp_loc_time  = glGetUniformLocation(s_pp_program, "u_time");
 
     /* Pre-allocate planet VBO: 8 planets x 8 floats */
     glGenVertexArrays(1, &s_pp_vao);
@@ -218,6 +220,7 @@ void planet_pass_draw(const render_frame_t *frame) {
             glUseProgram(s_pp_program);
             glUniformMatrix4fv(s_pp_loc_mvp, 1, GL_FALSE, frame->view_proj.m);
             glUniform1f(s_pp_loc_scale, 800.0f);
+            glUniform1f(s_pp_loc_time, frame->time_sec);
 
             glBindVertexArray(s_pp_vao);
             glBindBuffer(GL_ARRAY_BUFFER, s_pp_vbo);
