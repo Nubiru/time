@@ -1,29 +1,29 @@
 # Time — Project Metrics
 
-**Last refreshed**: 2026-03-22 (INFRA session 74)
+**Last refreshed**: 2026-03-22 (INFRA session 81)
 
 ## Codebase
 
 | Metric | Count |
 |--------|-------|
-| Source files (.c) | 505 |
-| Header files (.h) | 508 |
-| Lines of code (src/) | 117,835 |
-| Lines of tests | 212,000+ |
-| Test suites (CTest) | 528 |
-| Render pass files | 23 |
+| Source files (.c) | 510 |
+| Header files (.h) | 514 |
+| Lines of code (src/) | 119,133 |
+| Lines of tests | 213,000+ |
+| Test suites (CTest) | 532 |
+| Render pass files | 24 |
 | Knowledge systems | 34 |
-| Pure modules | 450+ |
-| Stateful modules | 32 |
+| Pure modules | 460+ |
+| Stateful modules | 33 |
 | Contributors | 283 |
 
 ## Testing
 
 | Metric | Count |
 |--------|-------|
-| Test suites (CTest) | 528 |
-| Test functions (RUN_TEST) | 19,986 |
-| Test assertions (TEST_ASSERT) | 34,308 |
+| Test suites (CTest) | 532 |
+| Test functions (RUN_TEST) | 20,091 |
+| Test assertions (TEST_ASSERT) | 34,479 |
 | Failures | 0 |
 | CTest time | ~0.9s (with -j12) |
 | E2E tests (Playwright) | 17 (5 basic + 12 visual) |
@@ -88,14 +88,14 @@
 | Target | Status |
 |--------|--------|
 | CMake native | PASS (zero warnings) |
-| CTest -j12 | PASS (528/528, ~1s) |
+| CTest -j12 | PASS (532/532, ~1s) |
 | Sanitizer build | PASS (benchmarks excluded, 0 ASan/UBSan findings) |
 | WASM build | PASS (737 KB Release — 34 systems, 23 passes, god rays + DOF) |
 | CI/CD | GitHub Actions (`native` + `wasm` jobs) |
 | TODOs in code | 1 (earth_pass.c — Earth View mode gate) |
 | Build system | Per-directory CMakeLists.txt + PRODUCTION/STAGING/DEVELOPMENT defines |
 
-## Render Pipeline (23 passes)
+## Render Pipeline (24 passes)
 
 | # | Pass | Layer | Type |
 |---|------|-------|------|
@@ -103,25 +103,26 @@
 | 2 | constellation_pass | STARS | IAU boundary lines |
 | 3 | deep_sky_pass | STARS | Messier DSO billboards |
 | 4 | milkyway_pass | GALAXY | Galaxy band mesh |
-| 5 | diffraction_pass | STARS | Star diffraction spikes |
-| 6 | orbit_trail_pass | ORBITS | Keplerian orbit ellipses |
-| 7 | planet_pass | PLANETS | Sun + 8 planet sprites + trails |
-| 8 | saturn_pass | PLANETS | Saturn ring system |
-| 9 | moon_pass | PLANETS | 9 major moons + trails |
-| 10 | zodiac_pass | ZODIAC_RING | Ring + markers + aspects + cusps + glyphs |
-| 11 | earth_pass | PLANETS | Globe + coastlines + terminator + atmo |
-| 12 | bodygraph_pass | FOCUS_HD | HD 9 centers + channels + gates |
-| 13 | hexagram_pass | FOCUS_ICHING | I Ching hexagram lines |
-| 14 | tree_pass | FOCUS_KABBALAH | Kabbalah Sefirot + paths + pillars |
-| 15 | natal_chart_pass | FOCUS_ASTRO | Zodiac arcs + house cusps + planet positions + aspects |
-| 16 | tree_of_life_pass | FOCUS_KABBALAH | 10 Sefirot circles + 22 colored paths |
-| 17 | bagua_pass | FOCUS_ICHING | 8 trigrams circle |
-| 18 | gates_mandala_pass | FOCUS_KABBALAH | 22 Hebrew letters + 231 golden lines |
-| 19 | card_pass | CARDS | Info card backgrounds + borders |
-| 20 | text_pass | TEXT | Text rendering (3D labels + 2D MSDF cards) |
-| 21 | ring_pass | RINGS | Concentric knowledge system rings |
-| 22 | convergence_pass | CONVERGENCE | Cross-system convergence visuals |
-| 23 | post_pass | (wraps all) | FBO bloom + tonemap + vignette |
+| 5 | stardust_pass | DEEP_SKY | Procedural background star field |
+| 6 | diffraction_pass | STARS | Star diffraction spikes |
+| 7 | orbit_trail_pass | ORBITS | Keplerian orbit ellipses |
+| 8 | planet_pass | PLANETS | Sun + 8 planet sprites + trails |
+| 9 | saturn_pass | PLANETS | Saturn ring system |
+| 10 | moon_pass | PLANETS | 9 major moons + trails |
+| 11 | zodiac_pass | ZODIAC_RING | Ring + markers + aspects + cusps + glyphs |
+| 12 | earth_pass | PLANETS | Globe + coastlines + terminator + atmo |
+| 13 | bodygraph_pass | FOCUS_HD | HD 9 centers + channels + gates |
+| 14 | hexagram_pass | FOCUS_ICHING | I Ching hexagram lines |
+| 15 | tree_pass | FOCUS_KABBALAH | Kabbalah Sefirot + paths + pillars |
+| 16 | natal_chart_pass | FOCUS_ASTRO | Zodiac arcs + house cusps + planet positions + aspects |
+| 17 | tree_of_life_pass | FOCUS_KABBALAH | 10 Sefirot circles + 22 colored paths |
+| 18 | bagua_pass | FOCUS_ICHING | 8 trigrams circle |
+| 19 | gates_mandala_pass | FOCUS_KABBALAH | 22 Hebrew letters + 231 golden lines |
+| 20 | card_pass | CARDS | Info card backgrounds + borders |
+| 21 | text_pass | TEXT | Text rendering (3D labels + 2D MSDF cards) |
+| 22 | ring_pass | RINGS | Concentric knowledge system rings |
+| 23 | convergence_pass | CONVERGENCE | Cross-system convergence visuals |
+| 24 | post_pass | (wraps all) | FBO bloom + tonemap + god rays + DOF + vignette |
 
 ## Purity
 
@@ -161,12 +162,12 @@
 
 | Metric | Value |
 |--------|-------|
-| Raw .wasm | 754,340 bytes (737 KB) |
+| Raw .wasm | 771,358 bytes (753 KB) |
 | Build mode | Release (-Os) |
 | MSDF font atlas | JetBrains Mono 512×512 RGB (~250 KB in binary) |
 | Sans atlas | Excluded (MSDF_SANS_ENABLED not set) |
 | Gzipped | ~300 KB |
-| Delta since session 60 | +74 KB (god rays, DOF, wisdom, signature search, onboarding) |
+| Delta since session 74 | +16 KB (stardust, spring zoom, focus blend, constellation labels) |
 
 ## God Functions (>100 lines)
 
@@ -192,21 +193,21 @@
 | 1073 | text_pass.c | Candidate: split cards/labels/overlays |
 | 756 | card_pass.c | Render pass with multiple overlays |
 
-## Health (INFRA sweep — 2026-03-22, session 74)
+## Health (INFRA sweep — 2026-03-22, session 81)
 
 | Check | Status |
 |-------|--------|
 | Git integrity | OK |
-| Build system sync | OK (505 .c files, 0 orphans) |
+| Build system sync | OK (510 .c files, 0 orphans) |
 | Purity audit | CLEAN (P1-P5 all zones) |
-| Native build | PASS (528/528 tests, ~1s) — use -j12 |
-| WASM build | PASS (737 KB Release — god rays + DOF post-processing) |
+| Native build | PASS (532/532 tests, ~1s) — use -j12 |
+| WASM build | PASS (753 KB Release — 24 passes, god rays, DOF, stardust) |
 | E2E tests | PASS (5/5 basic + 12 visual) |
 | Coverage | 96.0% lines, 99.98% functions |
 | Git hooks | pre-commit (domain safety, blocks .context/.claude) — active |
 | Dead code | 0 |
 | Naked TODOs | 1 (earth_pass.c — Earth View mode gate) |
-| Render pipeline | 23/23 passes (4 new geometric: natal_chart, tree_of_life, bagua, gates_mandala) |
+| Render pipeline | 24/24 passes (+stardust since last sweep) |
 | Theme audit | CLEAN — 23/23 passes audited. Cosmos-scope uses theme_cosmos_constant(). UI-scope uses theme_get(). Zero leakage. |
 | Canvas resize | WIRED — ui_on_resize KEEPALIVE, debounced JS listener (session 59) |
 | Audio envelope | WIRED — setTargetAtTime, attack/release envelope, volume 0.12 (session 59) |
