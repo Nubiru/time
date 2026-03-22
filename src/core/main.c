@@ -59,6 +59,7 @@
 #include "../systems/unified/time_entropy.h"
 #include "../systems/unified/system_correlation.h"
 #include "../systems/earth/author_card.h"
+#include "../ui/share_moment.h"
 #include <string.h>
 #endif
 
@@ -883,6 +884,20 @@ EMSCRIPTEN_KEEPALIVE void ui_set_location(double lat, double lon) {
 
 EMSCRIPTEN_KEEPALIVE double ui_get_lat(void) { return g_state.observer_lat; }
 EMSCRIPTEN_KEEPALIVE double ui_get_lon(void) { return g_state.observer_lon; }
+
+EMSCRIPTEN_KEEPALIVE const char *ui_get_share_text(void) {
+    /* Use headline as share text — already computed daily */
+    return g_state.headline;
+}
+
+EMSCRIPTEN_KEEPALIVE const char *ui_get_share_url(void) {
+    static char buf[512];
+    sm_moment_t m = sm_current(g_state.simulation_jd, g_state.view.current_view,
+                               g_state.camera.log_zoom,
+                               g_state.observer_lat, g_state.observer_lon);
+    sm_format_url(m, buf, sizeof(buf));
+    return buf;
+}
 
 EMSCRIPTEN_KEEPALIVE void ui_set_view(int view_id) {
     if (view_id < 0 || view_id > 1) return;

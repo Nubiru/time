@@ -54,6 +54,7 @@
                 <span id="tb-speed" class="text-secondary">1x</span>
                 <span id="tb-date" class="text-primary"></span>
                 <button id="tb-now" class="tb-btn text-accent" title="Jump to Now (N)">Now</button>
+                <button id="tb-share" class="tb-btn" title="Share this moment">Share</button>
             </div>
         </div>
 
@@ -244,6 +245,26 @@
         var tbNow = document.getElementById('tb-now');
         if (tbNow) tbNow.addEventListener('click', function() {
             if (Module && Module._ui_jump_to_now) Module._ui_jump_to_now();
+        });
+        var tbShare = document.getElementById('tb-share');
+        if (tbShare) tbShare.addEventListener('click', function() {
+            if (!Module || !Module._ui_get_share_text) return;
+            var textPtr = Module._ui_get_share_text();
+            var text = textPtr ? UTF8ToString(textPtr) : 'Time — A Visual Study';
+            var urlPtr = Module._ui_get_share_url();
+            var url = urlPtr ? ('https://nubiru.github.io/time/' + UTF8ToString(urlPtr)) : 'https://nubiru.github.io/time/';
+            if (navigator.share) {
+                navigator.share({ title: 'Time', text: text, url: url }).catch(function() {});
+            } else {
+                navigator.clipboard.writeText(text + '\n' + url).then(function() {
+                    var t = document.getElementById('toast-area');
+                    if (t) {
+                        t.textContent = 'Copied to clipboard';
+                        t.classList.add('visible');
+                        setTimeout(function() { t.classList.remove('visible'); }, 1500);
+                    }
+                });
+            }
         });
 
         /* Timeline scrubber — drag to navigate time */
