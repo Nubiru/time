@@ -67,6 +67,12 @@
 #include "../systems/human_design/human_design_interpret.h"
 #include "../systems/gregorian/gregorian_interpret.h"
 #include "../systems/geology/geology_interpret.h"
+#include "../systems/coptic/coptic_interpret.h"
+#include "../systems/ethiopian/ethiopian_interpret.h"
+#include "../systems/persian/persian_interpret.h"
+#include "../systems/japanese/japanese_interpret.h"
+#include "../systems/korean/korean_interpret.h"
+#include "../systems/thai/thai_interpret.h"
 
 /* ------------------------------------------------------------------ */
 
@@ -325,50 +331,52 @@ static card_content_t make_geology(double jd)
 
 static card_content_t make_coptic(double jd)
 {
-    daily_coptic_layout_t dcl = daily_coptic_compute(jd);
     coptic_date_t cd = coptic_from_jd(jd);
-    const char *mname = coptic_month_name(cd.month);
-    card_content_t c = card_format_coptic(cd.year, cd.month, cd.day, mname);
-    if (dcl.liturgy && dcl.liturgy[0])
-        snprintf(c.line3, sizeof(c.line3), "%s", dcl.liturgy);
-    if (dcl.feast_name && dcl.feast_name[0])
-        snprintf(c.detail, sizeof(c.detail), "%s — %s",
-                 dcl.origin ? dcl.origin : "", dcl.feast_name);
-    else if (dcl.origin && dcl.origin[0])
-        snprintf(c.detail, sizeof(c.detail), "%s", dcl.origin);
+    coptic_interp_t ci = cci_interpret(cd.month, cd.day, 0);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Coptic");
+    if (ci.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", ci.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%d %s %d",
+                 cd.day, coptic_month_name(cd.month), cd.year);
+    if (ci.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", ci.detail);
     return c;
 }
 
 static card_content_t make_ethiopian(double jd)
 {
-    daily_ethiopian_layout_t del = daily_ethiopian_compute(jd);
     ethiopian_date_t ed = ethiopian_from_jd(jd);
-    const char *mname = ethiopian_month_name(ed.month);
-    card_content_t c = card_format_ethiopian(ed.year, ed.month, ed.day, mname);
-    if (del.season && del.season[0])
-        snprintf(c.line3, sizeof(c.line3), "%s", del.season);
-    if (del.feast_name && del.feast_name[0])
-        snprintf(c.detail, sizeof(c.detail), "%s — %s",
-                 del.meaning ? del.meaning : "", del.feast_name);
-    else if (del.meaning && del.meaning[0])
-        snprintf(c.detail, sizeof(c.detail), "%s", del.meaning);
+    ethiopian_interp_t ei = eti_interpret(ed.month, ed.day, 0);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Ethiopian");
+    if (ei.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", ei.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%d %s %d",
+                 ed.day, ethiopian_month_name(ed.month), ed.year);
+    if (ei.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", ei.detail);
     return c;
 }
 
 static card_content_t make_persian(double jd)
 {
-    daily_persian_layout_t dpl = daily_persian_compute(jd);
     persian_date_t pd = persian_from_jd(jd);
-    const char *mname = persian_month_name(pd.month);
-    card_content_t c = card_format_persian(pd.year, pd.month, pd.day, mname);
-    if (dpl.weekday_name && dpl.weekday_name[0])
-        snprintf(c.line3, sizeof(c.line3), "%s — %s",
-                 dpl.weekday_name, dpl.season ? dpl.season : "");
-    if (dpl.festival_name && dpl.festival_name[0])
-        snprintf(c.detail, sizeof(c.detail), "%s", dpl.festival_name);
-    else if (dpl.meaning && dpl.meaning[0])
-        snprintf(c.detail, sizeof(c.detail), "%s: %s",
-                 mname, dpl.meaning);
+    persian_interp_t pi = pi_interpret(pd.month, pd.day, 0);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Persian");
+    if (pi.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", pi.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "%d %s %d",
+                 pd.day, persian_month_name(pd.month), pd.year);
+    if (pi.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", pi.detail);
     return c;
 }
 
@@ -376,69 +384,54 @@ static card_content_t make_japanese(double jd, double sun_lon)
 {
     daily_japanese_layout_t djl = daily_japanese_compute(jd, sun_lon);
     japanese_date_t jd_date = japanese_from_jd(jd);
+    japanese_interp_t ji = ji_interpret(jd_date.era_index, jd_date.era_year,
+                                         djl.rokuyo, djl.sekki);
     card_content_t c;
     memset(&c, 0, sizeof(c));
     snprintf(c.title, sizeof(c.title), "Japanese");
-    snprintf(c.line1, sizeof(c.line1), "%s %d",
-             japanese_era_name(jd_date.era_index), jd_date.era_year);
-    if (djl.rokuyo_name && djl.rokuyo_name[0])
-        snprintf(c.line2, sizeof(c.line2), "%s — %s",
-                 djl.rokuyo_name, djl.rokuyo_meaning ? djl.rokuyo_meaning : "");
+    if (ji.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", ji.glance);
     else
-        snprintf(c.line2, sizeof(c.line2), "%d-%02d-%02d",
-                 jd_date.greg_year, jd_date.month, jd_date.day);
-    if (djl.sekki_name && djl.sekki_name[0])
-        snprintf(c.line3, sizeof(c.line3), "%s %s",
-                 djl.sekki_kanji ? djl.sekki_kanji : "", djl.sekki_name);
-    if (djl.animal_name && djl.animal_name[0])
-        snprintf(c.detail, sizeof(c.detail), "%s %s | %s %d",
-                 djl.animal_kanji ? djl.animal_kanji : "", djl.animal_name,
+        snprintf(c.line1, sizeof(c.line1), "%s %d",
                  japanese_era_name(jd_date.era_index), jd_date.era_year);
+    if (ji.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", ji.detail);
     return c;
 }
 
 static card_content_t make_korean(double jd)
 {
-    daily_korean_layout_t dkl = daily_korean_compute(jd);
     korean_date_t kd = korean_from_jd(jd);
+    korean_interp_t ki = ki_interpret(kd.dangun_year, kd.animal, kd.element,
+                                       kd.polarity, -1);
     card_content_t c;
     memset(&c, 0, sizeof(c));
     snprintf(c.title, sizeof(c.title), "Korean");
-    snprintf(c.line1, sizeof(c.line1), "Dangun %d", kd.dangun_year);
-    if (dkl.sexagenary && dkl.sexagenary[0])
-        snprintf(c.line2, sizeof(c.line2), "%s %s — %s",
-                 dkl.element_name ? dkl.element_name : "",
-                 dkl.animal_name ? dkl.animal_name : "",
-                 dkl.sexagenary);
+    if (ki.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", ki.glance);
     else
-        snprintf(c.line2, sizeof(c.line2), "%s %s",
-                 korean_element_name(kd.element),
+        snprintf(c.line1, sizeof(c.line1), "Dangun %d — %s %s",
+                 kd.dangun_year, korean_element_name(kd.element),
                  korean_animal_name(kd.animal));
-    snprintf(c.line3, sizeof(c.line3), "Lunar %d/%d",
-             kd.lunar_month, kd.lunar_day);
-    if (dkl.festival_name && dkl.festival_name[0])
-        snprintf(c.detail, sizeof(c.detail), "%s", dkl.festival_name);
-    else
-        snprintf(c.detail, sizeof(c.detail),
-                 "Dangun %d | %s %s",
-                 kd.dangun_year,
-                 korean_element_name(kd.element),
-                 korean_animal_name(kd.animal));
+    if (ki.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", ki.detail);
     return c;
 }
 
 static card_content_t make_thai(double jd)
 {
-    daily_thai_layout_t dtl = daily_thai_compute(jd);
     thai_date_t td = thai_from_jd(jd);
-    const char *mname = thai_month_name(td.month);
-    card_content_t c = card_format_thai(td.be_year, td.month, td.day, mname);
-    if (dtl.season && dtl.season[0])
-        snprintf(c.line3, sizeof(c.line3), "%s", dtl.season);
-    if (dtl.festival_name && dtl.festival_name[0])
-        snprintf(c.detail, sizeof(c.detail), "%s", dtl.festival_name);
-    else if (dtl.origin && dtl.origin[0])
-        snprintf(c.detail, sizeof(c.detail), "%s", dtl.origin);
+    thai_interp_t ti = tti_interpret(td.be_year, td.month, td.day, 0);
+    card_content_t c;
+    memset(&c, 0, sizeof(c));
+    snprintf(c.title, sizeof(c.title), "Thai");
+    if (ti.glance[0])
+        snprintf(c.line1, sizeof(c.line1), "%.127s", ti.glance);
+    else
+        snprintf(c.line1, sizeof(c.line1), "BE %d %s %d",
+                 td.be_year, thai_month_name(td.month), td.day);
+    if (ti.detail[0])
+        snprintf(c.detail, sizeof(c.detail), "%.255s", ti.detail);
     return c;
 }
 
