@@ -127,6 +127,16 @@ static const sc_date_def_t DATE_LIST[] = {
 
     /* Calendar / textual discoveries */
     { 1947,  1,  1, "Dead Sea Scrolls discovered (Qumran)",   "historical" },
+
+    /* Financial history milestones (Ascent of Money — Ferguson, Digest 112) */
+    { 1694,  7, 27, "Bank of England founded",                 "historical" },
+    { 1792,  5, 17, "NYSE founded (Buttonwood Agreement)",     "historical" },
+    { 1971,  8, 15, "Nixon ends gold standard",                "historical" },
+    { 2008,  9, 15, "Lehman Brothers collapse (subprime)",     "historical" },
+
+    /* Religious / philosophical milestones */
+    { 1844,  5, 23, "Declaration of the Bab (Bahai origin)",   "historical" },
+    {  632,  6,  8, "Death of Prophet Muhammad",               "historical" },
 };
 
 static const int DATE_COUNT = (int)(sizeof(DATE_LIST) / sizeof(DATE_LIST[0]));
