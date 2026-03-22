@@ -160,6 +160,33 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
         return EM_TRUE;
     }
 
+    /* N: return to NOW — smooth time navigation back to real current moment */
+    if (!e->shiftKey && (e->key[0] == 'n' || e->key[0] == 'N') && e->key[1] == '\0') {
+        /* Compute real current JD from wall clock */
+        double now_jd = 2440587.5 + (emscripten_date_now() / 86400000.0);
+
+        /* Exit birth sky mode if active */
+        if (g_input_state->birth_sky.active) {
+            g_input_state->birth_sky.active = false;
+            g_input_state->birth_flight = bf_cancel(g_input_state->birth_flight);
+        }
+
+        /* Smooth approach to real time */
+        g_input_state->time_target_jd = now_jd;
+        g_input_state->time_speed = 1.0; /* resume real-time */
+        g_input_state->prev_speed = 1.0;
+
+        EM_ASM({
+            var t = document.getElementById('toast-area');
+            if (t) {
+                t.textContent = 'Now';
+                t.classList.add('visible');
+                setTimeout(function() { t.classList.remove('visible'); }, 1200);
+            }
+        });
+        return EM_TRUE;
+    }
+
     /* E: switch to Earth View (toggle Space ↔ Earth) with camera choreography */
     if ((e->key[0] == 'e' || e->key[0] == 'E') && e->key[1] == '\0' && !e->shiftKey) {
         int cur = g_input_state->view.current_view;
@@ -257,15 +284,15 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
     /* B (no shift): toggle birth sky view with camera choreography */
     if (!e->shiftKey && (e->key[0] == 'b' || e->key[0] == 'B') && e->key[1] == '\0') {
         if (g_input_state->birth_sky.active) {
-            /* Exit birth view: restore real simulation time */
+            /* Exit birth view: smooth return to saved time */
             g_input_state->birth_sky.active = false;
             if (g_input_state->saved_jd > 0.0)
-                g_input_state->simulation_jd = g_input_state->saved_jd;
+                g_input_state->time_target_jd = g_input_state->saved_jd;
             g_input_state->birth_flight = bf_cancel(g_input_state->birth_flight);
         } else {
-            /* Enter birth view: save current JD and jump to birth moment */
+            /* Enter birth view: save current JD, smooth scrub to birth moment */
             g_input_state->saved_jd = g_input_state->simulation_jd;
-            g_input_state->simulation_jd = g_input_state->birth_sky.jd;
+            g_input_state->time_target_jd = g_input_state->birth_sky.jd;
             g_input_state->birth_sky.active = true;
             /* Smooth camera transition */
             camera_pose_t current_pose = camera_pose_create(

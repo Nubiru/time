@@ -121,6 +121,12 @@ static const sc_date_def_t DATE_LIST[] = {
     { 1602,  1,  1, "Amsterdam Stock Exchange (first)",        "historical" },
     { 1969,  7, 21, "First humans walk on the Moon",           "historical" },
     { 1455,  2, 23, "Gutenberg Bible printed",                 "historical" },
+
+    /* Astronomical / archaeological convergences */
+    {  690,  7, 20, "Palenque triple conjunction (Saturn/Jupiter/Mars in Scorpio)", "astronomical" },
+
+    /* Calendar / textual discoveries */
+    { 1947,  1,  1, "Dead Sea Scrolls discovered (Qumran)",   "historical" },
 };
 
 static const int DATE_COUNT = (int)(sizeof(DATE_LIST) / sizeof(DATE_LIST[0]));

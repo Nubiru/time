@@ -547,6 +547,49 @@ static const br_explanation_t EXPLANATIONS[] = {
       "Central and South Asia via the Silk Road. Despite centuries of "
       "cultural exchange, their calendar structures remained independent — "
       "one tracks the sun and moon, the other the moon alone." },
+
+    /* --- Batch 7: Zoroastrian coverage + Dead Sea Scrolls + Glosario --- */
+
+    { CD_SYS_ASTRONOMY, CD_SYS_ZOROASTRIAN, BR_EXPLAIN_SHARED_SOURCE,
+      "Stars as divine army vs measured objects",
+      "Fixed stars form God's army in Zoroastrian cosmology; wandering "
+      "planets are demonic agents. Retrograde motion is evil fighting back. "
+      "Astronomy observes the same sky without moral narrative — both see "
+      "identical positions, but one reads purpose where the other reads physics." },
+
+    { CD_SYS_HINDU, CD_SYS_ZOROASTRIAN, BR_EXPLAIN_TRANSMISSION,
+      "Shared Indo-Iranian astronomical heritage",
+      "27 Zoroastrian lunar mansions parallel the 27 Hindu nakshatras. Both "
+      "descend from a shared Proto-Indo-Iranian tradition that split circa "
+      "2000 BCE. The same sky was divided into the same 27 segments by "
+      "cultures that were once one." },
+
+    { CD_SYS_HEBREW, CD_SYS_ZOROASTRIAN, BR_EXPLAIN_TRANSMISSION,
+      "Zoroastrian influence via Babylonian exile",
+      "Dualism, resurrection, bridge of judgment, and 7 heavens entered "
+      "Jewish thought during the Babylonian exile (6th century BCE), when "
+      "Jews encountered Zoroastrian theology directly." },
+
+    { CD_SYS_ISLAMIC, CD_SYS_ZOROASTRIAN, BR_EXPLAIN_TRANSMISSION,
+      "Persian-Islamic theological transmission",
+      "Bridge of judgment (Chinvat becomes Sirat), resurrection, and 7 "
+      "heavens — Zoroastrian concepts transmitted through Persian-Islamic "
+      "contact after the Arab conquest of Persia in the 7th century." },
+
+    { CD_SYS_ASTROLOGY, CD_SYS_ZOROASTRIAN, BR_EXPLAIN_SHARED_SOURCE,
+      "Star generals and celestial hierarchy",
+      "Zoroastrian cosmology assigns 4 star-generals to the cardinal "
+      "directions: Sirius (east), Deneb (south), Vega (west), Ursa Major "
+      "(north), with Polaris as supreme commander. Western astrology maps "
+      "fixed stars similarly — both traditions read hierarchy in the sky." },
+
+    { CD_SYS_HEBREW, CD_SYS_EGYPTIAN, BR_EXPLAIN_CONVERGENT,
+      "364 vs 365: one day changes theology",
+      "The Qumran community used a 364-day calendar (52 perfect weeks, "
+      "festivals always on the same weekday). Egypt's 365-day civil "
+      "calendar added 5 epagomenal days. One day's difference created "
+      "a religious schism — proof that calendar math carries theological "
+      "weight." },
 };
 
 static const int EXPLANATION_COUNT =

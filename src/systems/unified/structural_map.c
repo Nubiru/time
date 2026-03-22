@@ -29,7 +29,7 @@ static const char *SYSTEM_NAMES[SYS_COUNT] = {
 
 /* ===== Sacred Number Concordances ===== */
 
-#define CONCORDANCE_COUNT 12
+#define CONCORDANCE_COUNT 13
 
 static const concordance_t CONCORDANCES[CONCORDANCE_COUNT] = {
     {
@@ -102,9 +102,18 @@ static const concordance_t CONCORDANCES[CONCORDANCE_COUNT] = {
     {
         .number = 27,
         .description = "Lunar mansions",
-        .system_count = 2,
+        .system_count = 3,
         .systems = { "Nakshatras",
                      "I Ching trigram triples (3^3)",
+                     "Zoroastrian lunar mansions (Indo-Iranian heritage)",
+                     NULL, NULL, NULL }
+    },
+    {
+        .number = 52,
+        .description = "Calendar completeness",
+        .system_count = 2,
+        .systems = { "Qumran 364-day calendar (52 perfect weeks)",
+                     "Maya Calendar Round (52 Haab years = 18,980 days)",
                      NULL, NULL, NULL, NULL }
     },
     {
@@ -145,7 +154,7 @@ static const concordance_t CONCORDANCES[CONCORDANCE_COUNT] = {
 
 /* Sacred numbers in ascending order */
 static const int SACRED_NUMBERS[CONCORDANCE_COUNT] = {
-    3, 4, 7, 10, 12, 18, 22, 27, 64, 108, 231, 260
+    3, 4, 7, 10, 12, 18, 22, 27, 52, 64, 108, 231, 260
 };
 
 /* ===== 7 Classical Planet Correspondences ===== */
