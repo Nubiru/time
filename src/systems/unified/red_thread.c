@@ -137,9 +137,28 @@ int rt_compose_insight(const br_result_t *result, int insight_index,
         }
     }
 
-    /* Add the best explanation as the thread */
-    if (best_explain && best_explain->brief && remaining > 1) {
-        append(out->narrative, &pos, &remaining, "%s.", best_explain->brief);
+    /* Add explanations: lead with detail when room allows, then briefs */
+    if (best_explain && remaining > 1) {
+        if (best_explain->detail && remaining > 200) {
+            append(out->narrative, &pos, &remaining, "%s", best_explain->detail);
+        } else if (best_explain->brief) {
+            append(out->narrative, &pos, &remaining, "%s.", best_explain->brief);
+        }
+    }
+
+    /* Add a second explanation if room allows */
+    if (total_pairs > 1 && remaining > 80) {
+        const br_explanation_t *second = NULL;
+        for (int i = 0; i < insight->system_count && !second; i++) {
+            for (int j = i + 1; j < insight->system_count && !second; j++) {
+                const br_explanation_t *e = br_explain_lookup(
+                    insight->systems[i], insight->systems[j]);
+                if (e && e != best_explain) second = e;
+            }
+        }
+        if (second && second->brief) {
+            append(out->narrative, &pos, &remaining, " %s.", second->brief);
+        }
     }
 
     /* Classify the relationship */
