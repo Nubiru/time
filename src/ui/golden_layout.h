@@ -169,4 +169,27 @@ float gl_zoom_factor(int level);
  * Returns 0.0 (fully faded) to 1.0 (fully visible). */
 float gl_scale_fade(float value, int level, int total_levels);
 
+/* --- Visual Hierarchy (Refactoring UI principle) ---
+ * Restraint creates hierarchy. Only 3 text sizes per view,
+ * 3 opacity levels, fibonacci spacing. Render passes should
+ * use these named indices instead of arbitrary size values.
+ *
+ * Typography hierarchy (index into gl_type_scale_t.sizes[]):
+ *   At base=13px: headline=21px, body=13px, caption=8px (Fibonacci!) */
+#define GL_TEXT_HEADLINE  2   /* sizes[2] = base * phi      (~21px) */
+#define GL_TEXT_BODY      3   /* sizes[3] = base             (13px) */
+#define GL_TEXT_CAPTION   4   /* sizes[4] = base * phi^-1    (~8px) */
+
+/* Opacity hierarchy (index into gl_opacity_t.values[]):
+ *   Active=1.0, secondary=phi^-1=0.618, tertiary=phi^-2=0.382 */
+#define GL_OPACITY_ACTIVE     0   /* 1.000 — primary/focused element */
+#define GL_OPACITY_SECONDARY  1   /* 0.618 — supporting element */
+#define GL_OPACITY_TERTIARY   2   /* 0.382 — background/contextual */
+
+/* Spacing hierarchy (index into gl_spacing_t.values[]):
+ *   Tight=3px, normal=8px, wide=21px (Fibonacci at base=8) */
+#define GL_SPACE_TIGHT   2   /* values[2] — within a group */
+#define GL_SPACE_NORMAL  4   /* values[4] — base (between elements) */
+#define GL_SPACE_WIDE    6   /* values[6] — between sections */
+
 #endif /* TIME_GOLDEN_LAYOUT_H */
