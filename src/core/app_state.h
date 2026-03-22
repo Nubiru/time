@@ -99,6 +99,7 @@ typedef struct {
     char   wisdom_author[64];    /* cached wisdom quote author */
     char   percentile_text[64];  /* "Day #47 of 365 — top 12.9%" */
     char   red_thread[256];      /* convergence narrative (truncated from 512) */
+    char   grand_cycle[128];     /* "This configuration won't recur for X years" */
     float  convergence_strength; /* 0.0-1.0 from brain scan */
     br_visual_frame_t brain_visual; /* cached visual encoding for convergence_pass + ring glow */
 

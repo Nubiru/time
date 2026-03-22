@@ -50,6 +50,7 @@
 #include "../systems/unified/wisdom.h"
 #include "../systems/unified/brain_stats.h"
 #include "../systems/unified/red_thread.h"
+#include "../systems/unified/grand_cycle.h"
 #include <string.h>
 #endif
 
@@ -274,6 +275,7 @@ void main_loop(void) {
     memcpy(frame.wisdom_author, g_state.wisdom_author, sizeof(frame.wisdom_author));
     memcpy(frame.percentile_text, g_state.percentile_text, sizeof(frame.percentile_text));
     memcpy(frame.red_thread, g_state.red_thread, sizeof(frame.red_thread));
+    memcpy(frame.grand_cycle, g_state.grand_cycle, sizeof(frame.grand_cycle));
     frame.brain_visual = g_state.brain_visual;
 
     /* Planet data for natal chart pass */
@@ -481,6 +483,21 @@ int main(void) {
 
     /* Initialize audio engine (WebAudio oscillators + reverb) */
     audio_engine_init();
+
+    /* Grand cycle — compute once (doesn't change) */
+    {
+        gc_result_t gc;
+        if (gc_compute(&gc) && gc.lcm_years > 0.0) {
+            if (gc.lcm_years >= 1e6)
+                snprintf(g_state.grand_cycle, sizeof(g_state.grand_cycle),
+                         "Grand Cycle: %.1f million years until this exact configuration recurs",
+                         gc.lcm_years / 1e6);
+            else
+                snprintf(g_state.grand_cycle, sizeof(g_state.grand_cycle),
+                         "Grand Cycle: %.0f years until this exact configuration recurs",
+                         gc.lcm_years);
+        }
+    }
 
     printf("Controls: Space=pause, 1-5=speed, -=reverse, T=trails, H=hud, Shift+T=theme, Shift+M=meditate, Shift+0-6=scale\n");
 
