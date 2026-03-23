@@ -37,6 +37,7 @@
 #include "../render/passes/gates_mandala_pass.h"
 #include "../render/passes/stardust_pass.h"
 #include "../render/passes/diamond_room_pass.h"
+#include "../render/passes/wheel_pass.h"
 #include "../render/passes/sky_pass.h"
 #include "../render/earth_view_frame.h"
 #include "../systems/astronomy/planets.h"
@@ -489,47 +490,36 @@ void main_loop(void) {
     /* --- Clear + draw (post-process wraps all passes) --- */
     post_pass_begin(&frame);
 
-    /* === P0 SIMPLIFY: Core passes + safe sky elements ===
-     * Tier 1 (always): stars, planets, cards, text
-     * Tier 2 (re-enabled S88): constellation lines, moon, orbit trails, stardust
-     * Tier 3 (view-gated): sky dome, earth globe — only in Earth View
-     * Tier 4 (focus-gated): geometric system passes — only when focused
-     * DISABLED: milkyway, deep_sky, diffraction, ring, zodiac, diamond_room,
-     *           convergence, saturn — need visual QA in browser first */
+    /* === WHEEL FIRST: Stars behind, wheel on top ===
+     * Only 3 active passes: star_pass + wheel_pass + post_pass.
+     * Everything else commented out until wheel visual is confirmed. */
 
-    /* Tier 1: Core visual foundation */
     if (ps_is_enabled(&sched, PASS_STARS))         star_pass_draw(&frame);
+    wheel_pass_draw(&frame);  /* THE Concentric Wheel of Time — SDF golden circles */
+
+    /* --- ALL OTHER PASSES DISABLED (re-enable after wheel is confirmed) ---
     if (ps_is_enabled(&sched, PASS_CONSTELLATION)) constellation_pass_draw(&frame);
     stardust_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_ORBIT_TRAIL))    orbit_trail_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_PLANET))         planet_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_MOON))           moon_pass_draw(&frame);
-
-    /* Tier 3: View-gated passes */
-    if (effective_view == 1) { /* Earth View only */
+    if (effective_view == 1) {
         sky_pass_draw(&frame);
         if (ps_is_enabled(&sched, PASS_EARTH))      earth_pass_draw(&frame);
     }
-
-    /* Tier 4: Focus-gated geometric passes */
-    if (frame.focus_mode == 5) { /* FOCUS_MODE_HD */
+    if (frame.focus_mode == 5)
         if (ps_is_enabled(&sched, PASS_BODYGRAPH))  bodygraph_pass_draw(&frame);
-    }
-    if (frame.focus_mode == 3) { /* FOCUS_MODE_ICHING */
+    if (frame.focus_mode == 3) {
         if (ps_is_enabled(&sched, PASS_HEXAGRAM))   hexagram_pass_draw(&frame);
         bagua_pass_draw(&frame);
     }
-    if (frame.focus_mode == 6) { /* FOCUS_MODE_KABBALAH */
+    if (frame.focus_mode == 6) {
         tree_of_life_pass_draw(&frame);
         gates_mandala_pass_draw(&frame);
     }
-    if (frame.focus_mode == 1) natal_chart_pass_draw(&frame); /* Astrology */
-
-    /* Overlay passes — always last before post */
+    if (frame.focus_mode == 1) natal_chart_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_CARD))           card_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_TEXT))           text_pass_draw(&frame);
-
-    /* --- DISABLED (need browser visual QA) ---
     if (ps_is_enabled(&sched, PASS_DEEP_SKY))      deep_sky_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_MILKYWAY))       milkyway_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_DIFFRACTION))    diffraction_pass_draw(&frame);
@@ -673,6 +663,7 @@ int main(void) {
     gates_mandala_pass_init();
     stardust_pass_init();
     diamond_room_pass_init();
+    wheel_pass_init();
     sky_pass_init();
     /* S88 heatmap_pass + S90 precession_pass deferred — incomplete MEGA shaders */
     if (card_pass_init() != 0) return 1;

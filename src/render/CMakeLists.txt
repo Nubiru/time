@@ -104,6 +104,7 @@ set(RENDER_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/gates_mandala_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/stardust_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/diamond_room_pass.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/passes/wheel_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/sky_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/card_pass.c
     ${CMAKE_CURRENT_SOURCE_DIR}/passes/text_pass.c
