@@ -5458,6 +5458,41 @@
       "contribution": "Editor of ShaderX/GPU Pro series — comprehensive shader technique collections that advanced real-time rendering knowledge.",
       "source": "ShaderX3: Advanced Rendering with DirectX and OpenGL (2004)",
       "added_by": "VISUALS stream S49"
+    },
+    {
+      "name": "Graham Wills",
+      "role": "Visualization researcher, SPSS/IBM",
+      "contribution": "Polar transforms for cyclic time, aspect ratio banking, faceting by time, sqrt time distortion, double-ended color scales for temporal data.",
+      "source": "Visualizing Time: Designing Graphical Representations for Statistical Data (Springer, 2012)",
+      "added_by": "NERVE session 79"
+    },
+    {
+      "name": "Colin Ware",
+      "role": "Visual perception scientist, University of New Hampshire",
+      "contribution": "3-object working memory limit for display design, pre-attentive feature pop-out theory, three-stage visual processing model, Gestalt grouping principles for information displays.",
+      "source": "Visual Thinking for Design (Morgan Kaufmann, 2008)",
+      "added_by": "NERVE session 79"
+    },
+    {
+      "name": "Noah Iliinsky",
+      "role": "Information architect, IBM",
+      "contribution": "4 valid uses of circular layouts (cyclical/direction/fraction/area), edit ruthlessly principle, redundant encoding, semantic proximity in ring ordering.",
+      "source": "Designing Data Visualizations (O'Reilly, 2011)",
+      "added_by": "NERVE session 80"
+    },
+    {
+      "name": "George Daniels",
+      "role": "Master watchmaker, inventor of co-axial escapement",
+      "contribution": "Complication display principles: one subdial per function, ≤96 wave subdivisions, clean center, reverse dial for overflow, craftsmanship philosophy.",
+      "source": "Watchmaking (Philip Wilson, 1981/1999)",
+      "added_by": "NERVE session 80"
+    },
+    {
+      "name": "György Kepes",
+      "role": "Bauhaus artist, MIT professor, founder of Center for Advanced Visual Studies",
+      "contribution": "Visual field theory: warm/cool depth illusion, dynamic asymmetry over static balance, empty space as structure, gaussian force fields, complementary color depth.",
+      "source": "Language of Vision (Paul Theobald, 1944/1969)",
+      "added_by": "NERVE session 80"
     }
   ]
 }

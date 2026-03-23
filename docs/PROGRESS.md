@@ -5,20 +5,20 @@
 
 ---
 
-## Progress Bars (updated 2026-03-22 — MEGA cycle)
+## Progress Bars (updated 2026-03-23 — NERVE session 79)
 
 ```
-Infrastructure:  █████████████████████  98%   532 tests, E2E 17/17, stardust, heartbeat+pop counters, constellation labels
-Modules/Data:    ████████████████████░  96%   ~108/134 MVPs. S107 SDF glyphs authored. 10 locales.
-Display/Wiring:  ██████████████████░░  82%   PHASE 1 COMPLETE: 17/21 systems show human meaning. 4 remaining. Birth interpret wired.
-Experience:      ████████████████░░░░  62%   Cards show "White Cosmic Wizard" not "Kin 234." Share button. GPS. Audio slider. 12 locales.
-Translation:     ████████████████████░  80%   **10 locales** (EN+ES+PT+AR+HE+ZH+HI+FR+JA+**DE**). German 100%.
+Infrastructure:  █████████████████████  99%   552 tests, 30 passes, 35 systems, WASM ~300KB gzip
+Modules/Data:    ████████████████████░  96%   ~115/134 MVPs. 535 .c files. 124K LOC (src/).
+Display/Wiring:  ███████████████████░  90%   35/35 systems wired. 33 daily layouts. All interpret cards. Timeline+share+GPS.
+Experience:      ████████████████░░░░  75%   Cards show human meaning. 21 locales. Share button. Birth profile. Audio slider.
+Translation:     █████████████████████ 100%   **21 locales** (15 hand-crafted + 6 auto-adapted). L key cycles all 21.
 Art Assets:      ██████░░░░░░░░░░░░░░  25%   89 DALL-E + S107 SDF glyphs (22 procedural). Integration pending.
-Audio:           ████████░░░░░░░░░░░░  25%   Focus timbres + zoom layers + convergence + envelope + star brightness ramp
-Personalization: ██████░░░░░░░░░░░░░░  24%   Birth form + locale + settings + author card + pop/heartbeat counters
+Audio:           ████████░░░░░░░░░░░░  25%   Focus timbres + Kepler voice (3686d65) + convergence + volume slider
+Personalization: ██████████░░░░░░░░░░  30%   Birth form + locale + settings + author card + interest reordering + birth interpret
 Voice:           ░░░░░░░░░░░░░░░░░░░░   0%   Gabriel → ElevenLabs
-Knowledge Depth: ██████████████████░░  83%   161 digests. ALL V2 done.
-Visual Standards:████████████░░░░░░░░  35%   Fresnel + stardust + zoom_fade + Itten/Albers fixes + focus_blend + constellation labels
+Knowledge Depth: ██████████████████░░  83%   161+ digests. ALL V2 done.
+Visual Standards:████████████░░░░░░░░  35%   Fresnel + stardust + depth_visual + constellation labels + sky_pack
 ```
 
 ### How Each Bar Advances
@@ -42,9 +42,9 @@ Visual Standards:████████████░░░░░░░░  3
 |----------|----------|----------|-------|--------|
 | Book digests | 128+ | ~50 routed to streams | 39% | 🟡 Improving — NERVE routing every session |
 | Art assets | 359 PNGs | ~90 optimized to 3 tiers | 25% display-ready | 🟡 ART optimizing |
-| Translation keys | 3639 × 6 langs | Displayed via card_pass text | ~35% in browser | 🟡 MSDF upgrade pending |
-| Kin Maya layouts | 27 modules | 2 WIRED (oracle + wavespell) + I Ching/HD focus overlays | 15% wired | 🟡 INFRA continues |
-| Daily layouts | 19 modules | **19/19 WIRED** (02b5a7f Haab+Kabbalah enriched) | **100% wired** | 🟢 COMPLETE |
+| Translation keys | 3647 × 21 langs | Displayed via card_pass text + L key locale cycle | ~80% in browser | 🟢 21 locales wired |
+| Kin Maya layouts | 27 modules | Oracle + wavespell + calendar_round_pass (bdb4fac). Focus overlays for all 5 modes. | 30% wired | 🟡 INFRA continues |
+| Daily layouts | 33 modules | **33/33 WIRED** (d8c9353 final 4 — astronomy, tarot, numerology, chakra) | **100% wired** | 🟢 COMPLETE |
 | World system layouts | 18 modules | **17/18 consumed** (94%). Only prayer_times remains (needs lat/lon). | 94% | 🟢 |
 | Visual inventories | 1 complete (Kin Maya) + Astrology in progress | 72 layout modules total | growing | 🟡 |
 | Wisdom voice passages | 185 passages extracted | **228 in wisdom.c** (574283d). 4 NERVE archetypes consumed in 1 commit! | **100%+** | 🟢 PROVEN — wisdom.c now EXCEEDS NERVE extractions |

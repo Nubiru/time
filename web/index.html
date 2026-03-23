@@ -622,12 +622,13 @@
 
     {{{ SCRIPT }}}
 
-    <!-- Service worker disabled during development (causes stale cache on soft refresh)
     <script>
+    /* Unregister any old service worker that's caching stale JS */
     if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('./service-worker.js');
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+            for (var i = 0; i < regs.length; i++) regs[i].unregister();
+        });
     }
     </script>
-    -->
 </body>
 </html>

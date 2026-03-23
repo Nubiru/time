@@ -163,7 +163,7 @@ void hud_update(double jd, double time_speed,
 
     EM_ASM({
         var hud = document.getElementById('time-hud');
-        if (hud) hud.innerHTML = UTF8ToString($0);
+        if (hud) hud.innerHTML = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
     }, html);
 }
 

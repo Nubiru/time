@@ -53,7 +53,7 @@ static void inject_theme_css(void) {
             el.id = id;
             document.head.appendChild(el);
         }
-        el.textContent = ':root {\n' + UTF8ToString($0) + '}';
+        el.textContent = ':root {\n' + (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0) + '}';
     }, css_buf);
 }
 
@@ -76,7 +76,11 @@ void ui_bridge_init(void) {
         lang_buf[0] = '\0';
         EM_ASM({
             var lang = (navigator.language || "en").substring(0, 2).toLowerCase();
-            stringToUTF8(lang, $0, 16);
+            var enc = new TextEncoder();
+            var b = enc.encode(lang);
+            var len = Math.min(b.length, 15);
+            HEAPU8.set(b.subarray(0, len), $0);
+            HEAPU8[$0 + len] = 0;
         }, lang_buf);
         s_locale = i18n_locale_from_code(lang_buf);
 
@@ -90,7 +94,7 @@ void ui_bridge_init(void) {
     ui_html_help(help_buf, UI_HTML_BUF_SIZE);
     EM_ASM({
         var el = document.getElementById('help-content');
-        if (el) el.innerHTML = UTF8ToString($0);
+        if (el) el.innerHTML = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
     }, help_buf);
 
     /* --- Layer panel: generate HTML from layer_panel data --- */
@@ -99,7 +103,7 @@ void ui_bridge_init(void) {
     ui_html_layers(default_mask, layer_buf, UI_HTML_BUF_SIZE);
     EM_ASM({
         var el = document.getElementById('layer-content');
-        if (el) el.innerHTML = UTF8ToString($0);
+        if (el) el.innerHTML = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
     }, layer_buf);
 
     /* --- Command palette: generate initial results (all commands) --- */
@@ -108,7 +112,7 @@ void ui_bridge_init(void) {
     ui_html_cmd_results(&all_cmds, cmd_buf, UI_HTML_BUF_SIZE);
     EM_ASM({
         var el = document.getElementById('cmd-results');
-        if (el) el.innerHTML = UTF8ToString($0);
+        if (el) el.innerHTML = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
     }, cmd_buf);
 
     /* --- Register command search input handler --- */
@@ -118,7 +122,11 @@ void ui_bridge_init(void) {
             input.addEventListener('input', function() {
                 var str = this.value;
                 var buf = Module._ui_get_search_buf();
-                Module.stringToUTF8(str, buf, 256);
+                var enc = new TextEncoder();
+                var b = enc.encode(str);
+                var len = Math.min(b.length, 255);
+                HEAPU8.set(b.subarray(0, len), buf);
+                HEAPU8[buf + len] = 0;
                 Module._ui_do_command_search();
             });
         }
@@ -141,7 +149,7 @@ void ui_bridge_init(void) {
         ui_html_settings(&panel, settings_buf, UI_HTML_BUF_SIZE);
         EM_ASM({
             var el = document.getElementById('settings-content');
-            if (el) el.innerHTML = UTF8ToString($0);
+            if (el) el.innerHTML = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
         }, settings_buf);
     }
 }
@@ -174,9 +182,9 @@ void ui_bridge_update_time(double jd, double speed) {
     EM_ASM({
         var el;
         el = document.getElementById('tb-date');
-        if (el) el.textContent = UTF8ToString($0);
+        if (el) el.textContent = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
         el = document.getElementById('tb-speed');
-        if (el) el.textContent = UTF8ToString($1);
+        if (el) el.textContent = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($1);
         el = document.getElementById('tb-pause');
         if (el) el.innerHTML = $2 ? '\u25B6' : '\u23F8';
     }, date_buf, speed_buf, is_paused);
@@ -257,7 +265,7 @@ static void settings_save_and_refresh(void) {
     ui_html_settings(&panel, html_buf, UI_HTML_BUF_SIZE);
     EM_ASM({
         var el = document.getElementById('settings-content');
-        if (el) el.innerHTML = UTF8ToString($0);
+        if (el) el.innerHTML = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
     }, html_buf);
 }
 
@@ -335,7 +343,7 @@ EMSCRIPTEN_KEEPALIVE void ui_do_command_search(void) {
     ui_html_cmd_results(&results, buf, UI_HTML_BUF_SIZE);
     EM_ASM({
         var el = document.getElementById('cmd-results');
-        if (el) el.innerHTML = UTF8ToString($0);
+        if (el) el.innerHTML = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
     }, buf);
 }
 

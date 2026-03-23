@@ -230,7 +230,7 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
                 EM_ASM({
                     var t = document.getElementById('toast-area');
                     if (t) {
-                        t.textContent = UTF8ToString($0);
+                        t.textContent = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
                         t.classList.add('visible');
                         setTimeout(function() { t.classList.remove('visible'); }, 1500);
                     }
@@ -352,7 +352,7 @@ static EM_BOOL on_key_down(int type, const EmscriptenKeyboardEvent *e, void *dat
             EM_ASM({
                 var t = document.getElementById('toast-area');
                 if (t) {
-                    t.textContent = UTF8ToString($0);
+                    t.textContent = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
                     t.classList.add('visible');
                     setTimeout(function() { t.classList.remove('visible'); }, 800);
                 }

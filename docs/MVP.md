@@ -13,18 +13,18 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 | L1 | **Today in All Systems** | Open Time → see today's date in 25+ calendar systems simultaneously | Data: ✅ Display: ✅ WIRED. `today_card_for_system()` covers 21 systems. `cs_select()` shows up to 5 cards simultaneously, zoom-adaptive. MSDF text. 19/19 daily layouts enriched. |
 | L2 | **Your Birth Moment** | Enter birthday → see the sky as it was, your natal chart, your Kin, your hexagram, everything | Data: ✅ Input: ✅ WIRED (P key, 87c364c). Shows Kin. natal_chart_pass started. Birth sky (B key) working. |
 | L3 | **The Daily Narrative** | Time tells you what today MEANS — convergences, energies, themes across traditions | Engine: ✅ Display: ✅ WIRED. `brain_narrative_compose()` → `headline` in render_frame → bottom-center MSDF text. Depth-tiered templates (654f658). Locale-aware (387279c). |
-| L4 | **Earth Through Time** | Cinematic 4.5Ga voyage: Pangea → continents, dinosaurs → humans, chemical composition, population counter | Data: partial Display: ❌ |
+| L4 | **Earth Through Time** | Cinematic 4.5Ga voyage: Pangea → continents, dinosaurs → humans, chemical composition, population counter | Data: partial Display: ✅ PARTIAL (a54c2d2) earth_timeline wired to Earth View E6. |
 | L5 | **The Concentric Wheel** | Layered information — zoom from today → cycle → era → cosmos. Fly through depth. 3D card navigation. | Module: ✅ Wired: partial |
 | L6 | **Sound of the Spheres** | Planetary frequencies, convergence chords, viewpoint soundscapes. Pianist recordings. | Engine: ✅ Content: ❌ |
-| L7 | **21 Languages** | Every text in 21 languages with poetic voice influenced by humanity's greatest minds | Content: ✅ **7 locales** (EN+ES+PT+AR+HE+ZH+**HI**). Hindi 100% (bd6d135). Locale toggle WIRED. **228 wisdom quotes DISPLAYED** (9a4946b). 3647 EN keys. |
+| L7 | **21 Languages** | Every text in 21 languages with poetic voice influenced by humanity's greatest minds | Content: ✅ **21 locales in C code** (15 hand-crafted JSON + 6 auto-adapted). L key cycles all 21 (49ab315). 3647 EN keys. **228 wisdom quotes DISPLAYED**. |
 | L8 | **The "Enter Time" Experience** | Click threshold → cinematic zoom → solar system reveals → first hint → discovery | CSS: ✅ Animation: ✅ Wiring: ✅ (commit ff0b1fd). Camera fly-in active on load. Skip on key/touch. |
 | L9 | **Personal Space (Diamond Room)** | Your identity across all systems. Birth chart + Kin + hexagram + HD. Customizable 3D space. | Data: ✅ Display: ❌ |
-| L10 | **Tidal Rhythms & Earth View** | Astronomical tidal forces (lunar/solar gravity). Honest label: "Tidal estimate" not "Surf forecast." Pure computation. | Data: ✅ Display: ❌ |
+| L10 | **Tidal Rhythms & Earth View** | Astronomical tidal forces (lunar/solar gravity). Honest label: "Tidal estimate" not "Surf forecast." Pure computation. | Data: ✅ Display: ✅ WIRED (3f50724). tide_predict on Earth card (rising/falling + spring/neap/king). |
 | L11 | **Named 3D Views** | Space View, Earth View, Galaxy View, Personal View, Deep Time View, Room View | Registry: ✅ Wired: 2/6 |
 | ~~L12~~ | ~~City View~~ | **REMOVED v1** — Requires external event APIs (restaurants, shows). Violates pure-computation philosophy. Reconsidered for v2 with backend. | ❌ DEFERRED |
 | ~~L13~~ | ~~Meet Someone Like You~~ | **REMOVED v1** — Requires backend user database + matching infrastructure. Reconsidered for v2. | ❌ DEFERRED |
 | L14 | **Voice of Time** | ElevenLabs narration in Gabriel's voice. Toggle: read / voice-on / voice-off. Accessibility. | ❌ NOT STARTED |
-| L15 | **Share a Moment** | Capture any moment as shareable URL + text + screenshot. Social virality. | Data: ✅ Display: ❌ |
+| L15 | **Share a Moment** | Capture any moment as shareable URL + text + screenshot. Social virality. | Data: ✅ Display: ✅ WIRED (1131cd6). Share button — navigator.share() + clipboard fallback. |
 
 ---
 
@@ -52,7 +52,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 
 | # | MVP | Status |
 |---|-----|--------|
-| S14 | 19 render passes wired | ✅ |
+| S14 | 30 render passes wired | ✅ (was 19, now 30 — precession, heatmap, aspect_lines, calendar_round, sky, constellation_label, depth_visual, diamond_room, natal_chart, planet_surface, bodygraph added) |
 | S15 | Pass scheduling by view + focus + LOD | ✅ |
 | S16 | Concentric ring renderer | ✅ wired, ❌ real data flowing |
 | S17 | Earth View (globe + coastlines + terminator) | ✅ pass exists |
@@ -123,7 +123,7 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 
 | # | MVP | Status |
 |---|-----|--------|
-| S65 | Human population counter (109B total, 8B alive) | ❌ NOT BUILT |
+| S65 | Human population counter (109B total, 8B alive) | ✅ **WIRED** (af6f483). Population counter on Earth card. (Duplicate of S95) |
 | S66 | Earth chemical composition timeline | ❌ NOT BUILT |
 | S67 | Pangea → continents cinematic narrative | ❌ earth_story queued |
 | S68 | Atmospheric evolution (reducing → oxidizing → ozone → modern) | ❌ climate_history has data |
@@ -158,10 +158,10 @@ This is the permanent product checklist. Every `/mega` cycle checks: which MVPs 
 
 ## Score
 
-**Large MVPs**: 5/15 near-delivered (L1 today cards WIRED, L2 birth form WIRED, L3 daily narrative WIRED, L7 locale toggle WIRED, L8 "Enter Time" wired).
-**Small MVPs**: ~107/134 built, ~27 remaining. 531 tests pass. 510+ .c files.
-**Overall**: Infrastructure 98%. Modules 96%. Display 88%. Experience 70%. Translation 78%. Visual Standards 30%. Audio 20%.
-**Wiring progress**: ALL Tier 1+2 WIRED (S50/S10/S85/S86/S91/S92/S96/S98/S99/S100/S101/S42). **9 locales**. Planet Fresnel glow. Stardust shader. Zoom easing polish. Audio focus timbres. **~30/111 NERVE V2 actions consumed.**
+**Large MVPs**: 7/13 near-delivered (L1 today cards, L2 birth form, L3 daily narrative, L7 21 locales, L8 "Enter Time", L15 share button, L4 earth timeline partial). L12/L13 deferred.
+**Small MVPs**: ~115/134 built. 552 tests pass. 535 .c files. 30 render passes. 35 calendar systems wired.
+**Overall**: Infrastructure 98%. Modules 96%. Display 90%. Experience 75%. Translation 100% (21 locales). Visual Standards 35%. Audio 25%.
+**Wiring progress**: 21 locales. 35 systems in today_card. 33 daily layouts. 30 render passes. Timeline scrubber. Share button. GPS location. Audio volume slider. Birth profile interpret. Constellation labels. Precession + heatmap passes.
 
 **MILESTONES (2026-03-20)**:
 - Cards visible (a0c7676) + polished (aa3e791)
@@ -199,7 +199,7 @@ Every stream session: check which MVPs your work addresses. If none — you're b
 | S99 | **Grand Cycle LCM** — Compute LCM of all 21 system periods. "This exact configuration won't recur for X million years." Computable, mind-blowing. | ✅ **WIRED** (76a60e1+8a69418). grand_cycle in app_state + render_frame + text display. |
 | S100 | **System Correlation Matrix** — 21×21 grid showing which system pairs co-fire most often across decades. Heatmap of resonance. | ✅ **WIRED** (39c0592). "Strongest resonance: X ↔ Y" displayed in bottom text stack. |
 | S101 | **Time Entropy Display** — Shannon entropy of today's alignment pattern. "Today's time-entropy: 0.87 — 87% of maximum information." Most rigorous "wow" metric. | ✅ **WIRED** (3c2a638). te_entropy in app_state + render_frame + text display. |
-| S102 | **Time Travel Explorer** — Navigate to any date in history, see all 25+ systems at that moment. Historical exploration mode. | ❌ ts_compute works for any JD |
+| S102 | **Time Travel Explorer** — Navigate to any date in history, see all 25+ systems at that moment. Historical exploration mode. | ✅ **WIRED** (ec6465b). Timeline scrubber + ui_set_jd. R key + smooth time navigation (31d1d06). |
 | S103 | **Deep Tzolkin Experience** — 260-day interactive board, wavespell journey, Dreamspell game mechanics. Juan's daily Kin energy page. | 🔄 Data modules: kin_board (260 cells), kin_oracle, kin_wavespell_journey, kin_daily_chrono, kin_pulsar, kin_castle, kin_moon_page, heptad_gate. Display: ❌ |
 | S104 | **Calendar Round Flower** — 52-year visualization showing Tzolkin + Haab interlocking cycles. Sacred geometry mandala. | ✅ Built (`kin_round_layout.h/.c`, 24 tests, commit 277dde8). Display: ❌ |
 
@@ -265,9 +265,9 @@ Every stream session: check which MVPs your work addresses. If none — you're b
 | S85 | **Convergence Year Rating** — rate each year by total convergence strength. "2026 scores 203/365 days with alignments" | ✅ **WIRED** (111b0bd). Percentile displayed in bottom text stack. brain_stats integrated into render_frame. |
 | S86 | **"How rare is today?"** — percentile ranking. "Today is in the top 5% of convergent days this decade" | ✅ **WIRED** (111b0bd). `percentile_text` in render_frame → bottom text stack. Was actually wired with S85. |
 | S87 | **The 2012 Analysis** — what ACTUALLY converged on 13.0.0.0.0? How does it compare to other dates? Demystify with data. | ✅ Built (commit f3d0042). Entry in `stored_convergences`. Display: ❌ |
-| S88 | **Decade convergence heatmap** — visual grid showing convergence intensity across years. Find meta-patterns. | ✅ Built (commit 84721d7). `decade_heatmap.h/.c` — 12yr×366day grid. 20 tests. Display: ❌ |
+| S88 | **Decade convergence heatmap** — visual grid showing convergence intensity across years. Find meta-patterns. | ✅ Built (a22ed74). heatmap_pass.c exists. Display: ❌ NOT in main.c draw loop. |
 | S89 | **Sacred number frequency analysis** — how often do 7, 12, 13, 19, 22, 64, 108, 260, 432 appear across systems on the same day? | ✅ Built (commit 84721d7). `sacred_scan.h/.c` — scans 6 calendars for 13 sacred numbers. 27 tests. Display: ❌ |
-| S90 | **Precession clock** — where are we in the 25,772-year cycle? Visual display showing the Great Year position. | ❌ precession_detect.h exists |
+| S90 | **Precession clock** — where are we in the 25,772-year cycle? Visual display showing the Great Year position. | ✅ Built (a22ed74). precession_pass.c exists. Display: ❌ NOT in main.c draw loop. |
 | S91 | **Human existence as fraction of Earth** — "Humans have existed for 0.0065% of Earth's history" with visual scale | ✅ **WIRED** (fa3feba). earth_fraction enriches Earth card. |
 | S92 | **"You are alive during..."** — probability of being alive NOW vs any point in history (7.4% of all humans who ever lived are alive today) | ✅ **WIRED** (fa3feba). earth_fraction in Earth card. |
 | S93 | **Heartbeat of humanity** — collective heartbeats since dawn of humans. Running counter. | ✅ **WIRED** (af6f483). Heartbeat counter on Earth card. |

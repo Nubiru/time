@@ -1,6 +1,9 @@
 /* storage_bridge_wasm.c — Browser localStorage implementation.
- * WASM-only (S1): uses EM_ASM, Emscripten APIs, browser localStorage.
- * Mirrors the storage_bridge_native.c API contract. */
+ * WASM-only (S1): uses EM_ASM, browser localStorage.
+ *
+ * NOTE: Uses HEAPU8 + TextEncoder/TextDecoder directly instead of
+ * Emscripten helpers (UTF8ToString, stringToUTF8, lengthBytesUTF8)
+ * because emcc 5.x removed those from default exports. */
 
 #ifdef __EMSCRIPTEN__
 
@@ -8,6 +11,12 @@
 #include <emscripten.h>
 #include <string.h>
 #include <stdio.h>
+
+/* Helper JS snippets used across EM_ASM blocks:
+ *   _r(ptr)        = read C string from WASM memory → JS string
+ *   _w(str,ptr,max) = write JS string → WASM memory, returns bytes written
+ *   _bl(str)       = byte length of string in UTF-8
+ */
 
 /* ------------------------------------------------------------------ */
 /* sb_save                                                              */
@@ -17,11 +26,11 @@ void sb_save(const char *key, const char *value)
 {
     if (!key || !value) return;
     EM_ASM({
+        var d = new TextDecoder();
+        function _r(p) { var e=p; while(HEAPU8[e])e++; return d.decode(HEAPU8.subarray(p,e)); }
         try {
-            localStorage.setItem(UTF8ToString($0), UTF8ToString($1));
-        } catch (e) {
-            /* QuotaExceededError — silently drop like native when full. */
-        }
+            localStorage.setItem(_r($0), _r($1));
+        } catch (e) {}
     }, key, value);
 }
 
@@ -35,22 +44,22 @@ int sb_load(const char *key, char *buf, int buf_size)
     buf[0] = '\0';
 
     int written = EM_ASM_INT({
-        var val = localStorage.getItem(UTF8ToString($0));
+        var d = new TextDecoder();
+        var enc = new TextEncoder();
+        function _r(p) { var e=p; while(HEAPU8[e])e++; return d.decode(HEAPU8.subarray(p,e)); }
+
+        var val = localStorage.getItem(_r($0));
         if (val === null) return 0;
-        var maxLen = $2 - 1; /* leave room for null terminator */
+        var maxLen = $2 - 1;
         if (maxLen <= 0) return 0;
-        var len = lengthBytesUTF8(val);
-        if (len > maxLen) {
-            /* Truncate: encode only what fits. */
-            val = val.substring(0, maxLen);
-            len = lengthBytesUTF8(val);
-            while (len > maxLen) {
-                val = val.substring(0, val.length - 1);
-                len = lengthBytesUTF8(val);
-            }
+
+        var encoded = enc.encode(val);
+        if (encoded.length > maxLen) {
+            encoded = encoded.subarray(0, maxLen);
         }
-        stringToUTF8(val, $1, $2);
-        return len;
+        HEAPU8.set(encoded, $1);
+        HEAPU8[$1 + encoded.length] = 0;
+        return encoded.length;
     }, key, buf, buf_size);
 
     return written;
@@ -64,7 +73,9 @@ int sb_exists(const char *key)
 {
     if (!key) return 0;
     return EM_ASM_INT({
-        return localStorage.getItem(UTF8ToString($0)) !== null ? 1 : 0;
+        var d = new TextDecoder();
+        function _r(p) { var e=p; while(HEAPU8[e])e++; return d.decode(HEAPU8.subarray(p,e)); }
+        return localStorage.getItem(_r($0)) !== null ? 1 : 0;
     }, key);
 }
 
@@ -76,7 +87,9 @@ void sb_delete(const char *key)
 {
     if (!key) return;
     EM_ASM({
-        localStorage.removeItem(UTF8ToString($0));
+        var d = new TextDecoder();
+        function _r(p) { var e=p; while(HEAPU8[e])e++; return d.decode(HEAPU8.subarray(p,e)); }
+        localStorage.removeItem(_r($0));
     }, key);
 }
 
@@ -127,27 +140,23 @@ int sb_export_json(char *buf, int buf_size)
     if (!buf || buf_size <= 0) return 0;
 
     return EM_ASM_INT({
+        var enc = new TextEncoder();
         var obj = {};
         for (var i = 0; i < localStorage.length; i++) {
             var k = localStorage.key(i);
-            if (k) {
-                obj[k] = localStorage.getItem(k);
-            }
+            if (k) obj[k] = localStorage.getItem(k);
         }
         var json = JSON.stringify(obj);
         var maxLen = $1 - 1;
         if (maxLen <= 0) return 0;
-        var len = lengthBytesUTF8(json);
-        if (len > maxLen) {
-            json = json.substring(0, maxLen);
-            len = lengthBytesUTF8(json);
-            while (len > maxLen) {
-                json = json.substring(0, json.length - 1);
-                len = lengthBytesUTF8(json);
-            }
+
+        var encoded = enc.encode(json);
+        if (encoded.length > maxLen) {
+            encoded = encoded.subarray(0, maxLen);
         }
-        stringToUTF8(json, $0, $1);
-        return len;
+        HEAPU8.set(encoded, $0);
+        HEAPU8[$0 + encoded.length] = 0;
+        return encoded.length;
     }, buf, buf_size);
 }
 
@@ -159,7 +168,9 @@ void sb_download_file(const char *filename, const char *data, int data_len)
 {
     if (!filename || !data || data_len <= 0) return;
     EM_ASM({
-        var fname = UTF8ToString($0);
+        var d = new TextDecoder();
+        function _r(p) { var e=p; while(HEAPU8[e])e++; return d.decode(HEAPU8.subarray(p,e)); }
+        var fname = _r($0);
         var ptr   = $1;
         var len   = $2;
         var bytes = HEAPU8.slice(ptr, ptr + len);
@@ -176,58 +187,28 @@ void sb_download_file(const char *filename, const char *data, int data_len)
 }
 
 /* ------------------------------------------------------------------ */
-/* sb_request_geolocation (async via EMSCRIPTEN_KEEPALIVE callback)     */
+/* sb_request_geolocation                                               */
 /* ------------------------------------------------------------------ */
 
-static sb_geo_callback_t s_geo_cb = NULL;
+static sb_geo_callback_t s_geo_cb;
 
-EMSCRIPTEN_KEEPALIVE
-void sb_geo_result(int success, double lat, double lon)
+EMSCRIPTEN_KEEPALIVE void sb_geo_success(double lat, double lon)
 {
-    if (s_geo_cb) {
-        s_geo_cb(success, lat, lon);
-        s_geo_cb = NULL;
-    }
+    if (s_geo_cb) s_geo_cb(1, lat, lon);
 }
 
 void sb_request_geolocation(sb_geo_callback_t callback)
 {
-    if (!callback) return;
     s_geo_cb = callback;
-
     EM_ASM({
-        if (!navigator.geolocation) {
-            _sb_geo_result(0, 0.0, 0.0);
-            return;
-        }
-        navigator.geolocation.getCurrentPosition(
-            function(pos) {
-                _sb_geo_result(1, pos.coords.latitude, pos.coords.longitude);
-            },
-            function(err) {
-                _sb_geo_result(0, 0.0, 0.0);
-            },
-            { timeout: 10000, maximumAge: 300000 }
-        );
-    });
-}
-
-/* ------------------------------------------------------------------ */
-/* sb_reset                                                             */
-/* ------------------------------------------------------------------ */
-
-void sb_reset(void)
-{
-    EM_ASM({
-        var toRemove = [];
-        for (var i = 0; i < localStorage.length; i++) {
-            var k = localStorage.key(i);
-            if (k && k.substring(0, 5) === "time.") {
-                toRemove.push(k);
-            }
-        }
-        for (var j = 0; j < toRemove.length; j++) {
-            localStorage.removeItem(toRemove[j]);
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                if (Module._sb_geo_success) {
+                    Module._sb_geo_success(pos.coords.latitude, pos.coords.longitude);
+                }
+            }, function(err) {
+                /* Geolocation denied or unavailable — no-op */
+            }, { enableHighAccuracy: false, timeout: 10000 });
         }
     });
 }
