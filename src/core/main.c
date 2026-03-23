@@ -484,20 +484,25 @@ void main_loop(void) {
         frame.viewport_height = vp[3] > 0 ? vp[3] : 1080;
     }
 
-    /* --- Get pass schedule from view state --- */
+    /* Pass schedule disabled during wheel design phase
     pass_schedule_t sched = vs_blended_schedule(&g_state.view);
+    */
 
-    /* --- Clear + draw (post-process wraps all passes) --- */
+    /* --- WHEEL DESIGN PHASE: bypass post-processing for pure #060709 background ---
+     * Post-process applies tone mapping + gamma that brightens the background.
+     * Render directly to default framebuffer during wheel design.
+     * Restore post_pass_begin/end when adding elements back.
+     */
+    glViewport(0, 0, frame.viewport_width, frame.viewport_height);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    wheel_pass_draw(&frame);
+
+    /* POST-PROCESSING DISABLED — restore when wheel design validated:
     post_pass_begin(&frame);
+    */
 
-    /* === WHEEL FIRST: Stars behind, wheel on top ===
-     * Only 3 active passes: star_pass + wheel_pass + post_pass.
-     * Everything else commented out until wheel visual is confirmed. */
-
+    /* ALL PASSES BELOW DISABLED — uncomment ONE AT A TIME after wheel is confirmed.
     if (ps_is_enabled(&sched, PASS_STARS))         star_pass_draw(&frame);
-    wheel_pass_draw(&frame);  /* THE Concentric Wheel of Time — SDF golden circles */
-
-    /* --- ALL OTHER PASSES DISABLED (re-enable after wheel is confirmed) ---
     if (ps_is_enabled(&sched, PASS_CONSTELLATION)) constellation_pass_draw(&frame);
     stardust_pass_draw(&frame);
     if (ps_is_enabled(&sched, PASS_ORBIT_TRAIL))    orbit_trail_pass_draw(&frame);
@@ -528,19 +533,18 @@ void main_loop(void) {
     ring_pass_draw(&frame);
     diamond_room_pass_draw(&frame);
     convergence_pass_draw(&frame);
-    --- end disabled */
-
     post_pass_end(&frame);
+    */
 
     /* --- Time HUD overlay --- */
+    /* HUD + time bar disabled during wheel design phase
     if (g_state.show_hud &&
         layer_is_visible(g_state.layer_state, LAYER_HUD))
         hud_update(g_state.simulation_jd, g_state.time_speed,
                    g_state.observer_lat, g_state.observer_lon,
                    g_state.camera.log_zoom);
-
-    /* --- Update time bar display --- */
     ui_bridge_update_time(g_state.simulation_jd, g_state.time_speed);
+    */
 
     /* --- Audio: compute score + pulse, feed engine --- */
     {
@@ -683,8 +687,9 @@ int main(void) {
     /* Initialize UI bridge — populate panels with data from pure modules */
     ui_bridge_init();
 
-    /* Initialize audio engine (WebAudio oscillators + reverb) */
+    /* Audio disabled during wheel design phase (stops console warnings)
     audio_engine_init();
+    */
 
     /* Grand cycle — compute once (doesn't change) */
     {
@@ -871,7 +876,7 @@ EMSCRIPTEN_KEEPALIVE void ui_show_birth_profile(void) {
 
     EM_ASM({
         var el = document.getElementById('birth-result');
-        if (el) el.innerHTML = UTF8ToString($0);
+        if (el) el.innerHTML = (function(p){var e=p;while(HEAPU8[e])e++;return new TextDecoder().decode(HEAPU8.subarray(p,e))})($0);
     }, html);
 }
 

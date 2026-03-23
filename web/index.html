@@ -5,6 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Time</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+    /* WHEEL DESIGN PHASE: hide all UI overlays */
+    #help-btn, #settings-btn, #time-bar, #time-hud,
+    #enter-screen, #help-panel, #settings-panel, #birth-panel,
+    #cmd-palette, #layer-panel, #toast-area, #first-hint,
+    .focus-badge, #focus-badges, #timeline-track, #ui-overlay {
+        display: none !important;
+    }
+    </style>
 </head>
 <body>
     <div id="enter-screen">
@@ -104,6 +113,34 @@
         <div id="first-hint" class="hint">Press <kbd>?</kbd> for controls</div>
     </div>
 
+    <script>
+    /* Polyfill Emscripten string helpers for emcc 5.x (removed from default exports) */
+    if (typeof lengthBytesUTF8 === 'undefined') {
+        window.lengthBytesUTF8 = function(str) {
+            return new TextEncoder().encode(str).length;
+        };
+    }
+    if (typeof UTF8ToString === 'undefined') {
+        window.UTF8ToString = function(ptr, maxLen) {
+            if (!ptr) return '';
+            var HEAPU8 = Module.HEAPU8 || new Uint8Array(Module.wasmMemory ? Module.wasmMemory.buffer : 0);
+            var end = ptr;
+            if (maxLen) { var limit = ptr + maxLen; while (end < limit && HEAPU8[end]) end++; }
+            else { while (HEAPU8[end]) end++; }
+            return new TextDecoder().decode(HEAPU8.subarray(ptr, end));
+        };
+    }
+    if (typeof stringToUTF8 === 'undefined') {
+        window.stringToUTF8 = function(str, outPtr, maxLen) {
+            var HEAPU8 = Module.HEAPU8 || new Uint8Array(Module.wasmMemory ? Module.wasmMemory.buffer : 0);
+            var encoded = new TextEncoder().encode(str);
+            var len = Math.min(encoded.length, maxLen - 1);
+            HEAPU8.set(encoded.subarray(0, len), outPtr);
+            HEAPU8[outPtr + len] = 0;
+            return len;
+        };
+    }
+    </script>
     <script>
     (function() {
         'use strict';
