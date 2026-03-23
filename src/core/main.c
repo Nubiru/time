@@ -644,7 +644,11 @@ int main(void) {
         }
     }
 
-    /* Initialize render passes */
+    /* Initialize render passes — WHEEL DESIGN PHASE: only wheel + post active */
+    wheel_pass_init();
+    if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
+
+    /* All other passes disabled during wheel design — uncomment when re-enabling:
     if (star_pass_init() != 0) return 1;
     if (constellation_pass_init() != 0) return 1;
     if (planet_pass_init() != 0) return 1;
@@ -667,12 +671,10 @@ int main(void) {
     gates_mandala_pass_init();
     stardust_pass_init();
     diamond_room_pass_init();
-    wheel_pass_init();
     sky_pass_init();
-    /* S88 heatmap_pass + S90 precession_pass deferred — incomplete MEGA shaders */
     if (card_pass_init() != 0) return 1;
     if (text_pass_init() != 0) return 1;
-    if (post_pass_init((int)css_w, (int)css_h) != 0) return 1;
+    */
 
     /* Initialize timing — start at the actual current date/time */
     g_state.prev_time_ms = emscripten_get_now();

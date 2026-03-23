@@ -77,7 +77,14 @@ if(EMSCRIPTEN)
         -sWASM=1
         -sSTACK_SIZE=524288
         -sALLOW_MEMORY_GROWTH=1
-        "-sEXPORTED_RUNTIME_METHODS=['stringToUTF8']"
+        "-sEXPORTED_RUNTIME_METHODS=['HEAPU8','UTF8ToString','stringToUTF8','lengthBytesUTF8']"
+        "-sEXPORTED_FUNCTIONS=['_main','_malloc','_free']"
+        # emcc 5.x auto-generates UTF8ToString/stringToUTF8/lengthBytesUTF8 calls
+        # inside EM_ASM blocks when char* args are passed. These are NOT in our C code —
+        # Emscripten injects them. -sASSERTIONS=0 disables the missing-symbol check.
+        # web/pre.js polyfills these via TextEncoder/TextDecoder for the actual runtime.
+        -sASSERTIONS=0
+        "SHELL:--pre-js ${CMAKE_SOURCE_DIR}/web/pre.js"
         "SHELL:--shell-file ${CMAKE_SOURCE_DIR}/web/index.html"
     )
 
