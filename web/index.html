@@ -23,6 +23,105 @@
 
     <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
 
+    <!-- Wheel section overlays — 5 systems around the outer ring -->
+    <style>
+    .wheel-section {
+        position: fixed;
+        color: rgba(255, 217, 140, 0.85);
+        font-family: 'JetBrains Mono', monospace, sans-serif;
+        pointer-events: none;
+        z-index: 10;
+        white-space: nowrap;
+    }
+    .ws-name {
+        font-size: clamp(8px, 1.0vmin, 12px);
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        opacity: 0.55;
+    }
+    .ws-value {
+        font-size: clamp(10px, 1.3vmin, 15px);
+        letter-spacing: 0.06em;
+        margin-top: 1px;
+    }
+    .ws-sub {
+        font-size: clamp(9px, 1.1vmin, 13px);
+        opacity: 0.5;
+        margin-top: 1px;
+    }
+    </style>
+
+    <div class="wheel-section" id="wheel-gregorian">
+        <div class="ws-name">Gregorian</div>
+        <div class="ws-value" id="greg-date"></div>
+        <div class="ws-sub" id="greg-time"></div>
+    </div>
+    <div class="wheel-section" id="wheel-astrology">
+        <div class="ws-name">Astrology</div>
+        <div class="ws-value">Sun in Aries</div>
+    </div>
+    <div class="wheel-section" id="wheel-kinmaya">
+        <div class="ws-name">Kin Maya</div>
+        <div class="ws-value">White Cosmic Wizard</div>
+    </div>
+    <div class="wheel-section" id="wheel-iching">
+        <div class="ws-name">I Ching</div>
+        <div class="ws-value">Hexagram 25 · Innocence</div>
+    </div>
+    <div class="wheel-section" id="wheel-hebrew">
+        <div class="ws-name">Hebrew</div>
+        <div class="ws-value">12 Adar II</div>
+    </div>
+
+    <script>
+    /* Live Gregorian clock */
+    (function updateGregorian() {
+        var now = new Date();
+        var days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        var months = ['January','February','March','April','May','June',
+                      'July','August','September','October','November','December'];
+        var d = document.getElementById('greg-date');
+        var t = document.getElementById('greg-time');
+        if (d) d.textContent = days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+        if (t) t.textContent = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+        setTimeout(updateGregorian, 1000);
+    })();
+
+    /* Position 5 section labels around the wheel at their angular centers */
+    (function() {
+        var PI = Math.PI, SEC = 2 * PI / 5;
+        var sections = [
+            { id: 'wheel-gregorian', angle: PI / 2 },
+            { id: 'wheel-astrology', angle: PI / 2 - SEC },
+            { id: 'wheel-kinmaya',   angle: PI / 2 - 2 * SEC },
+            { id: 'wheel-iching',    angle: PI / 2 - 3 * SEC },
+            { id: 'wheel-hebrew',    angle: PI / 2 - 4 * SEC }
+        ];
+        function layout() {
+            var W = window.innerWidth, H = window.innerHeight;
+            var R = Math.min(W, H) * 0.48;
+            var tr = R * 1.05; /* text radius: just outside outer ring */
+            var cx = W * 0.5, cy = H * 0.5;
+            sections.forEach(function(s) {
+                var el = document.getElementById(s.id);
+                if (!el) return;
+                var c = Math.cos(s.angle), sn = Math.sin(s.angle);
+                el.style.left = (cx + tr * c) + 'px';
+                el.style.top = (cy - tr * sn) + 'px';
+                /* Anchor text so it radiates outward from center */
+                var tx = c > 0.3 ? '0%' : c < -0.3 ? '-100%' : '-50%';
+                var ty = sn > 0.3 ? '-100%' : sn < -0.3 ? '0%' : '-50%';
+                el.style.transform = 'translate(' + tx + ',' + ty + ')';
+                el.style.textAlign = c > 0.3 ? 'left' : c < -0.3 ? 'right' : 'center';
+            });
+        }
+        layout();
+        var tmr;
+        window.addEventListener('resize', function() { clearTimeout(tmr); tmr = setTimeout(layout, 50); });
+    })();
+    </script>
+
     <div id="ui-overlay">
         <div id="time-hud"></div>
         <div id="settings-btn" class="corner-btn corner-btn-settings" title="Settings (,)">&#9881;<span class="keybadge">,</span></div>
